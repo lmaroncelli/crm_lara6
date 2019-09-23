@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.crm_lara6')
 
 @section('content')
 
