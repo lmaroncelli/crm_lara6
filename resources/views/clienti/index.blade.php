@@ -52,12 +52,12 @@
                             <input type="text" name="q" value="{{\Request::get('q')}}" class="form-control m-input m-input--pill m-input--air" placeholder="Cerca per nome o ID">
                             <span class="m-input-icon__icon m-input-icon__icon--left">
                                 <span>
-                                    <i class="la la-user"></i>
+                                    <i class="far fa-user"></i>
                                 </span>
                             </span>
                             <span class="m-input-icon__icon m-input-icon__icon--right">
                                 <span>
-                                    <i class="la la-search"></i>
+                                    <i class="fas fa-search searching"></i>
                                 </span>
                             </span>
                         </div>
@@ -83,12 +83,12 @@
                             <input type="text" name="qf" value="{{\Request::get('qf')}}" class="form-control m-input m-input--pill m-input--air" placeholder="Cerca nel campo">
                             <span class="m-input-icon__icon m-input-icon__icon--left">
                                 <span>
-                                    <i class="la la-tags"></i>
+                                    <i class="far fa-tags"></i>
                                 </span>
                             </span>
                             <span class="m-input-icon__icon m-input-icon__icon--right">
                                 <span>
-                                    <i class="la la-search"></i>
+                                    <i class="fas fa-search searching"></i>
                                 </span>
                             </span>
                         </div>
@@ -106,12 +106,12 @@
                             <input type="text" name="qc" value="{{\Request::get('qc')}}" class="form-control m-input m-input--pill m-input--air" placeholder="Cerca nei contatti">
                             <span class="m-input-icon__icon m-input-icon__icon--left">
                                 <span>
-                                    <i class="la la-user-secret"></i>
+                                    <i class="far fa-user-secret"></i>
                                 </span>
                             </span>
                             <span class="m-input-icon__icon m-input-icon__icon--right">
                                 <span>
-                                    <i class="la la-search"></i>
+                                    <i class="fas fa-search searching"></i>
                                 </span>
                             </span>
                         </div>
@@ -228,31 +228,24 @@
 
 
 @section('js')
-    <script src="{{ asset('js/bootstrap-switch.js') }}" type="text/javascript"></script>
     <script type="text/javascript" charset="utf-8">
+         
+          $(".searching").click(function(){
+              $("#searchForm").submit();
+          });
 
-        jQuery(document).ready(function(){
-            
-            $(".la-search").click(function(){
+          $(".attivo_check").on('switchChange.bootstrapSwitch', function (event, state) {
+              $("#searchForm").submit();
+          });
+
+
+          $('.order').click(function(){
+              var orderby = $(this).data("orderby");
+              var order = $(this).data("order");
+              $("#orderby").val(orderby);
+              $("#order").val(order);
                 $("#searchForm").submit();
-            });
-
-            $(".attivo_check").on('switchChange.bootstrapSwitch', function (event, state) {
-                $("#searchForm").submit();
-            });
-
-
-            $('.order').click(function(){
-                var orderby = $(this).data("orderby");
-                var order = $(this).data("order");
-                $("#orderby").val(orderby);
-                $("#order").val(order);
-                 $("#searchForm").submit();
-            });
-
-          
-        });
-    
+          });
 
     </script>
 @endsection
