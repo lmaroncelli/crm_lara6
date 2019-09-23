@@ -57,6 +57,7 @@
       </li>
     </ul>
   </header>
+  
   <div class="app-body">
 
     <div class="sidebar">
@@ -134,6 +135,7 @@
     </main> {{-- end main   --}}
   
   </div> {{-- app-body  --}}
+
   <footer class="app-footer">
     <div>
     <a href="https://coreui.io/pro/">CoreUI Pro</a>
@@ -144,6 +146,7 @@
     <a href="https://coreui.io/pro/">CoreUI Pro</a>
     </div>
   </footer>
-   @yield('js')
+  
+  @yield('js')
 </body>
 </html>
