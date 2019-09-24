@@ -60,21 +60,21 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-    // //////////////
-    // // CONTATTI //
-    // //////////////
-    // Route::model('contatti', 'App\Contatto');
-    // Route::resource('contatti', 'ContattiController')/*->middleware('log')*/;
-    // Route::post('/gestisci-contatti-ajax', 'ClientiController@gestisciContattiAjax');
+    //////////////
+    // CONTATTI //
+    //////////////
+    Route::model('contatti', 'App\Contatto');
+    Route::resource('contatti', 'ContattiController')/*->middleware('log')*/;
+    Route::post('/gestisci-contatti-ajax', 'ClientiController@gestisciContattiAjax');
 
 
-    // //////////////
-    // // SCOCIETA //
-    // //////////////
-    // Route::model('societa', 'App\Societa');
-    // Route::resource('societa', 'SocietaController')/*->middleware('log')*/;
+    //////////////
+    // SCOCIETA //
+    //////////////
+    Route::model('societa', 'App\Societa');
+    Route::resource('societa', 'SocietaController')/*->middleware('log')*/;
 
-    // Route::get('societa/fatture/{societa_id}', 'SocietaController@fatture')->name('societa-fatture');
+    Route::get('societa/fatture/{societa_id}', 'SocietaController@fatture')->name('societa-fatture');
 
 
     // /////////////

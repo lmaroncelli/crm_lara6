@@ -14,3 +14,5 @@ const mix = require('laravel-mix');
 mix.js('resources/js/app.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css');
 mix.version();
+
+mix.copy('node_modules/select2/dist/css/select2.min.css','public/css/select2.min.css')

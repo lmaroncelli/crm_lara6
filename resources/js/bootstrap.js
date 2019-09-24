@@ -12,6 +12,7 @@ try {
 
     require('bootstrap');
     require('bootstrap-switch');
+    require('select2');
     require('perfect-scrollbar')
     require('@coreui/coreui/dist/js/coreui.min.js');
 

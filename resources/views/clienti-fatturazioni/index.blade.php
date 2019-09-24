@@ -1,65 +1,67 @@
-@extends('layouts.lara_crm')
+@extends('layouts.coreui.crm_lara6')
 
 @section('content')
 
+@include('layouts.coreui.menu_sezioni_clienti') 
+
 <div class="row">
-    <div class="col-xl-12 sezioni-cliente">
-
-        <!--begin:: Widgets/Tasks -->
-        <div class="m-portlet m-portlet--last m-portlet--head-lg m-portlet--responsive-mobile" id="main_portlet">
-         
-            @include('menu_sezioni_clienti') 
-
-            <div class="m-portlet__body">
-                <div class="tab-content">
-                    <div class="m-section">
-                        <div class="m-section__heading">
-                            Elenco Società  <button type="button" class="btn btn-warning" data-toggle="modal" data-keyboard="false" data-backdrop="static" data-target="#m_modal_contatti">Aggiungi Società</button>
-                        </div>
-                         <div class="m-section__content">
-                            @if ($cliente->societa->count())
-                            <table class="table table-responsive-sm m-table m-table--head-bg-success table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Ragione sociale</th>
-                                        <th>Abi</th>
-                                        <th>Cab</th>
-                                        <th>Note</th>
-                                        <th></th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($cliente->societa as $s)
-                                        <tr>
-                                            <td><a href="{{ route('clienti-fatturazioni.edit', $s->id) }}"> {{optional($s->ragioneSociale)->nome}} </a></td>
-                                            <td>{{$s->abi}}</td>
-                                            <td>{{$s->cab}}</td>
-                                            <td>{!!$s->note!!}</td>
-                                            <td>
-                                              <a href="{{ route('societa-fatture', $s->id) }}" class="btn btn-info m-btn m-btn--icon m-btn--icon-only">
-                                                <i class="fa fa-euro-sign"></i>
-                                              </a>
-                                            </td>
-                                            <td>
-                                              <form action="{{ route('clienti-fatturazioni.destroy', ['id' => $s->id]) }}" method="POST" accept-charset="utf-8" class="deleteForm" id="delete-riga-form">
-                                                  @csrf
-                                                  <a href="#" style="margin-bottom: 5px!important;" class="delete btn btn-danger m-btn m-btn--icon m-btn--icon-only"> 
-                                                      <i class="la la-trash"></i>
-                                                  </a>
-                                              </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            @endif
-                        </div>
-                    </div>
-                </div>     
-            </div>
-        </div> {{-- m-port  let --}}
-
+  <div class="col-sm-2">
+    <div class="callout callout-info b-t-1 b-r-1 b-b-1">
+       Elenco società
+      @if (isset($clienti))
+      <br>
+      <strong class="h4">{{$clienti->total()}}</strong>
+      @endif
+    </div>
+  </div><!--/.col-->
+  <div class="to-right">
+      <div class="callout callout-noborder">
+        <button type="button" class="btn btn-warning" data-toggle="modal" data-keyboard="false" data-backdrop="static" data-target="#m_modal_contatti">Aggiungi Società</button>
+        </a>
+      </div>
+    </div><!--/.col-->
+</div>
+<div class="row">
+    <div class="col">
+                        
+      @if ($cliente->societa->count())
+      <table class="table table-responsive-sm m-table m-table--head-bg-success table-hover">
+          <thead>
+              <tr>
+                  <th>Ragione sociale</th>
+                  <th>Abi</th>
+                  <th>Cab</th>
+                  <th>Note</th>
+                  <th></th>
+                  <th></th>
+              </tr>
+          </thead>
+          <tbody>
+              @foreach ($cliente->societa as $s)
+                  <tr>
+                      <td><a href="{{ route('clienti-fatturazioni.edit', $s->id) }}"> {{optional($s->ragioneSociale)->nome}} </a></td>
+                      <td>{{$s->abi}}</td>
+                      <td>{{$s->cab}}</td>
+                      <td>{!!$s->note!!}</td>
+                      <td>
+                        <a href="{{ route('societa-fatture', $s->id) }}" class="btn btn-info m-btn m-btn--icon m-btn--icon-only">
+                          <i class="fa fa-euro-sign"></i>
+                        </a>
+                      </td>
+                      <td>
+                        <form action="{{ route('clienti-fatturazioni.destroy', ['id' => $s->id]) }}" method="POST" accept-charset="utf-8" class="deleteForm" id="delete-riga-form">
+                            @csrf
+                            <a href="#" style="margin-bottom: 5px!important;" class="delete btn btn-danger m-btn m-btn--icon m-btn--icon-only"> 
+                                <i class="la la-trash"></i>
+                            </a>
+                        </form>
+                      </td>
+                  </tr>
+              @endforeach
+          </tbody>
+      </table>
+      @endif
+        
     </div>{{-- col --}}
 </div>{{-- row --}}
 
