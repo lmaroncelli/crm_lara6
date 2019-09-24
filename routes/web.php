@@ -51,12 +51,12 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('clienti', 'ClientiController')/*->middleware('log')*/;
 
 
-    // Route::get('clienti/fatturazioni/{cliente_id}', 'ClientiFatturazioniController@index')->name('clienti-fatturazioni');
-    // Route::get('clienti/fatturazioni-edit/{societa_id}', 'ClientiFatturazioniController@edit')->name('clienti-fatturazioni.edit');
-    // Route::post('clienti/fatturazioni-update/{societa_id}', 'ClientiFatturazioniController@update')->name('clienti-fatturazioni.update');
-    // Route::post('clienti/fatturazioni-destroy/{societa_id}', 'ClientiFatturazioniController@destroy')->name('clienti-fatturazioni.destroy');
+    Route::get('clienti/fatturazioni/{cliente_id}', 'ClientiFatturazioniController@index')->name('clienti-fatturazioni');
+    Route::get('clienti/fatturazioni-edit/{societa_id}', 'ClientiFatturazioniController@edit')->name('clienti-fatturazioni.edit');
+    Route::post('clienti/fatturazioni-update/{societa_id}', 'ClientiFatturazioniController@update')->name('clienti-fatturazioni.update');
+    Route::post('clienti/fatturazioni-destroy/{societa_id}', 'ClientiFatturazioniController@destroy')->name('clienti-fatturazioni.destroy');
 
-    // Route::get('/associa-societa-ajax', 'ClientiFatturazioniController@associaSocietaAjax');
+    Route::get('/associa-societa-ajax', 'ClientiFatturazioniController@associaSocietaAjax');
 
 
 

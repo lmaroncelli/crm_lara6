@@ -16,3 +16,26 @@
     position: absolute;
     right: 15px;
 }
+
+
+/* fino a 768px la label deve essere a dx poi a sx */
+label.text-change {
+  text-align: left !important;
+  margin-top: 10px;
+}
+
+
+/*  ingrandisco un po il carattere da usare nella scheda del cliente */
+.text-muted {
+  font-size: 90%;
+}
+
+
+/*  da 768 in avanti */
+@media (min-width: 768px) {
+
+  label.text-change {
+    text-align: right !important;
+  }
+
+}

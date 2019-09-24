@@ -1,346 +1,325 @@
-@extends('layouts.lara_crm')
+@extends('layouts.coreui.crm_lara6')
 
 @section('content')
 
-<div class="row">
-    <div class="col-xl-12 sezioni-cliente">
 
+@include('layouts.coreui.menu_sezioni_clienti') 
 
-			<!--begin::Portlet-->
-			<div class="m-portlet m-portlet--last m-portlet--head-lg m-portlet--responsive-mobile" id="main_portlet"">
-			
-        @include('menu_sezioni_clienti') 
+<div class="row mt-5">
+    <div class="col-md-12 sezioni-cliente">
+      @if ($cliente->exists)
+        
+        <form action="{{ route('clienti.destroy', $cliente->id) }}" method="POST" id="record_delete">
+          {{ method_field('DELETE') }}
+          {!! csrf_field() !!}
+          <input type="hidden" name="id" value="{{$cliente->id}}">
+        </form>
 
-
-			<div class="m-portlet__body">
-
-	          @if ($cliente->exists)
-	          	
-	          	<form action="{{ route('clienti.destroy', $cliente->id) }}" method="POST" id="record_delete">
-	          		{{ method_field('DELETE') }}
-	          	  {!! csrf_field() !!}
-	          	  <input type="hidden" name="id" value="{{$cliente->id}}">
-	          	</form>
-
-	          	<form class="m-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed" role="form" action="{{ route('clienti.update', $cliente->id) }}" method="POST">
-	          	{{ method_field('PUT') }}
-	          @else
-	          	<form class="m-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed" role="form" action="{{ route('clienti.store') }}" method="POST" enctype="multipart/form-data">
-	          @endif
-	          	{!! csrf_field() !!}
-									
-									{{-- Attivo-AttivoIA --}}
-               		<div class="form-group m-form__group row">
-               			<label class="col-lg-2 col-form-label" for="attivo">Stato:</label>
-               			<div class="col-lg-3">
-               					<select class="form-control m-input" id="attivo" name="attivo">
-               							<option value="1" @if ( $cliente->attivo == 1 || old('attivo') == 1 ) selected="selected" @endif>Attivo</option>
-               							<option value="0" @if ( $cliente->attivo == 0 || (old('attivo') !== null && old('attivo') == 0) ) selected="selected" @endif>NON Attivo</option>
-               					</select>
-												
-												@if (!is_null($cliente->data_attivazione) || !is_null($cliente->data_disattivazione))
-
-	               					<span class="m-form__help">
-	               						@if ($cliente->attivo)
-	               						<span class="m-badge m-badge--success m-badge--wide data_attivazione">
-	               							{{optional($cliente->data_attivazione)->format('d/m/Y')}}
-	               						</span>
-	               						@else
-	               						<span class="m-badge m-badge--danger m-badge--wide data_attivazione">
-	               							{{optional($cliente->data_disattivazione)->format('d/m/Y')}}
-	               						</span>
-	               						@endif
-	               					</span>
-
-												@endif
-               			</div>
-               			<label class="col-lg-2 col-form-label" for="attivo_IA">Infoalberghi:</label>
-               			<div class="col-lg-3">
-               					<select class="form-control m-input" id="attivo_IA" name="attivo_IA">
-               							<option value="1" @if ( $cliente->attivo_IA == 1 || old('attivo_IA') == 1 ) selected="selected" @endif>Attivo</option>
-               							<option value="0" @if ( $cliente->attivo_IA == 0 || (old('attivo_IA') !== null && old('attivo_IA') == 0) ) selected="selected" @endif>NON Attivo</option>
-               					</select>
-
-												@if (!is_null($cliente->data_attivazione_IA) || !is_null($cliente->data_disattivazione_IA))
-												
-               					<span class="m-form__help">
-               						@if ($cliente->attivo_IA)
-               						<span class="m-badge m-badge--success m-badge--wide data_attivazione">
-               							{{optional($cliente->data_attivazione_IA)->format('d/m/Y')}}
-               						</span>
-               						@else
-               						<span class="m-badge m-badge--danger m-badge--wide data_attivazione">
-               							{{optional($cliente->data_disattivazione_IA)->format('d/m/Y')}}
-               						</span>
-               						@endif
-               					</span>
-												
-												@endif
-               			</div>
-               		</div>
-									{{-- \Attivo-AttivoIA --}}
-
-
-									{{-- Nome-Tipo --}}
-	             		<div class="form-group m-form__group row">
-	             			<label class="col-lg-2 col-form-label" for="nome">Nome:</label>
-	             			<div class="col-lg-3">
-	             				<input type="text" name="nome" id="nome" value="{{ old('nome') != '' ?  old('nome') : $cliente->nome}}"  class="form-control m-input" placeholder="Nome">
-	             			</div>
-	             			<label class="col-lg-2 col-form-label" for="tipo_id">Tipo:</label>
-	             			<div class="col-lg-3">
-	             					<select class="form-control m-input" id="tipo_id" name="tipo_id">
-	             						@foreach ($tipi_cliente as $tipo_id => $tipo)
-	             							<option value="{{$tipo_id}}" @if ($cliente->tipo_id == $tipo_id || old('tipo_id') == $tipo_id ) selected="selected" @endif>{{$tipo}}</option>
-	             						@endforeach
-	             					</select>
-	             			</div>
-	             		</div>
-									{{-- \Nome-Tipo --}}
-
-									{{-- Indirizzo-Categoria --}}
-	             		<div class="form-group m-form__group row">
-	             			<label class="col-lg-2 col-form-label" for="indirizzo">Indirizzo:</label>
-	             			<div class="col-lg-3">
-	             				<input type="text" name="indirizzo" id="indirizzo" value="{{ old('indirizzo') != '' ?  old('indirizzo') : $cliente->indirizzo}}"  class="form-control m-input" placeholder="Nome">
-	             			</div>
-	             			<label class="col-lg-2 col-form-label" for="categoria_id">Categoria:</label>
-	             			<div class="col-lg-3">
-	             					<select class="form-control m-input" id="categoria_id" name="categoria_id">
-	             						<option value="6">Altro</option>
-	             						@foreach ($cataegorie_cliente as $categoria_id => $categoria)
-	             							<option value="{{$categoria_id}}" @if ($cliente->categoria_id == $categoria_id || old('categoria_id') == $categoria_id ) selected="selected" @endif>{{$categoria}}</option>
-	             						@endforeach
-	             					</select>
-	             			</div>
-	             		</div>
-									{{-- \Indirizzo-Categoria --}}
-
-
-									{{-- Città-CAP --}}
-	             		<div class="form-group m-form__group row">
-	             			<label class="col-lg-2 col-form-label" for="localita_id">Località:</label>
-	             			<div class="col-lg-3">
-	             					<select class="form-control m-input" id="localita_id" name="localita_id">
-	             						<option value="6">Altro</option>
-	             						@foreach ($localita_cliente as $localita_id => $localita)
-	             							<option value="{{$localita_id}}" @if ($cliente->localita_id == $localita_id || old('localita_id') == $localita_id ) selected="selected" @endif>{{$localita}}</option>
-	             						@endforeach
-	             					</select>
-	             			</div>
-	             			<label class="col-lg-2 col-form-label" id="luogo">{{$cliente->localita->comune->nome}} ({{$cliente->localita->comune->provincia->sigla}}) - {{$cliente->localita->comune->provincia->regione->nome}}</label>
-	             			<label class="col-lg-2 col-form-label" for="cap">CAP:</label>
-	             			<div class="col-lg-3">
-	             				<input type="text" name="cap" id="cap" value="{{ old('cap') != '' ?  old('cap') : $cliente->cap}}"  class="form-control m-input" placeholder="CAP">
-	             			</div>
-	             		</div>
-									{{-- \Città-CAP --}}
-
-									{{-- Telefono-Fax --}}
-	             		<div class="form-group m-form__group row">
-	             			<label class="col-lg-2 col-form-label" for="telefono">Telefono:</label>
-	             			<div class="col-lg-3">
-	             				<input type="text" name="telefono" id="telefono" value="{{ old('telefono') != '' ?  old('telefono') : $cliente->telefono}}"  class="form-control m-input" placeholder="Telefono">
-	             			</div>
-	             			<label class="col-lg-2 col-form-label" for="fax">FAX:</label>
-	             			<div class="col-lg-3">
-	             				<input type="text" name="fax" id="fax" value="{{ old('fax') != '' ?  old('fax') : $cliente->fax}}"  class="form-control m-input" placeholder="FAX">
-	             			</div>
-	             		</div>
-									{{-- \Telefono-Fax --}}
-
-									{{-- cellulare-Skype --}}
-	             		<div class="form-group m-form__group row">
-	             			<label class="col-lg-2 col-form-label" for="cell">Cellulare:</label>
-	             			<div class="col-lg-3">
-	             				<input type="text" name="cell" id="cell" value="{{ old('cell') != '' ?  old('cell') : $cliente->cell}}"  class="form-control m-input" placeholder="Cellulare">
-	             			</div>
-	             			<label class="col-lg-2 col-form-label" for="skype">Skype:</label>
-	             			<div class="col-lg-3">
-	             				<input type="text" name="skype" id="skype" value="{{ old('skype') != '' ?  old('skype') : $cliente->skype}}"  class="form-control m-input" placeholder="Skype">
-	             			</div>
-	             		</div>
-									{{-- \cellulare-Skype --}}
-
-									{{-- WhatsApp-Sms --}}
-	             		<div class="form-group m-form__group row">
-	             			<label class="col-lg-2 col-form-label" for="whatsapp">WhatsApp:</label>
-	             			<div class="col-lg-3">
-	             				<input type="text" name="whatsapp" id="whatsapp" value="{{ old('whatsapp') != '' ?  old('whatsapp') : $cliente->whatsapp}}"  class="form-control m-input" placeholder="WhatsApp">
-	             			</div>
-	             			<label class="col-lg-2 col-form-label" for="sms">Sms:</label>
-	             			<div class="col-lg-3">
-	             				<input type="text" name="sms" id="sms" value="{{ old('sms') != '' ?  old('sms') : $cliente->sms}}"  class="form-control m-input" placeholder="Sms">
-	             			</div>
-	             		</div>
-									{{-- \WhatsApp-Sms --}}
-
-									{{-- Web-Email --}}
-	             		<div class="form-group m-form__group row">
-	             			<label class="col-lg-2 col-form-label" for="web">Web:</label>
-	             			<div class="col-lg-3 input-group">
-	             				<input type="text" name="web" id="web" value="{{ old('web') != '' ?  old('web') : $cliente->web}}"  class="form-control m-input" placeholder="Web">
-	             				@if ($cliente->web != '')
-		             				<div class="input-group-append">
-		             					<a href="{{$cliente->web}}" target="_blank" class="btn btn-warning" title="Vai">Vai!</a>
-		             				</div>
-	             				@endif
-	             			</div>
-	             			<label class="col-lg-2 col-form-label" for="email">Email:</label>
-	             			<div class="col-lg-3">
-	             				<input type="text" name="email" id="email" value="{{ old('email') != '' ?  old('email') : $cliente->email}}"  class="form-control m-input" placeholder="Email">
-	             			</div>
-	             		</div>
-									{{-- \Web-Email --}}
-									
-									
-									{{-- Associato-Visibile --}}
-	             		<div class="form-group m-form__group row">
-	             			<label class="col-lg-2 col-form-label" for="associato">Associato:</label>
-	             			<div class="col-lg-3">
-	             				<select class="form-control m-select2" id="associato" multiple name="associato">
-													<option></option>
-													<optgroup label="Associato a">
-													@foreach ($commerciali as $id => $nome)
-														<option value="{{$id}}" @if ( in_array($id, $cliente->commercialiAssociatiIds()) ) selected="selected" @endif >{{$nome}}</option>
-													@endforeach
-													</optgroup>
-												</select>
-	             			</div>
-	             			<label class="col-lg-2 col-form-label" for="visibile">Visibile:</label>
-	             			<div class="col-lg-3">
-	             					<select class="form-control m-select2" id="visibile" multiple name="visibile">
-														<option></option>
-														<optgroup label="Visibile a">
-														@foreach ($commerciali as $id => $nome)
-															<option value="{{$id}}" @if ( in_array($id, $cliente->commercialiVisibilitaIds()) ) selected="selected" @endif >{{$nome}}</option>
-														@endforeach
-														</optgroup>
-													</select>
-	             			</div>
-	             		</div>
-									{{-- \Associato-Visibile --}}
-									
-									@if ($cliente->exists)
-										{{-- Contatti --}}
-										<div class="m-content">
-											<div class="row">
-												<div class="offset-lg-1 col-lg-10" style="padding: 10px; 0">
-													<button type="button" class="btn btn-warning" data-toggle="modal" data-keyboard="false" data-backdrop="static" data-target="#m_modal_contatti">Associa contatti al ciente</button>
-												</div>
-											</div>
-											<div class="row">
-											<div class="offset-lg-1 col-lg-10">
-
-													<!--begin::Portlet-->
-													<div class="m-portlet m-portlet--tabs m-portlet--success m-portlet--head-solid-bg m-portlet--head-sm">
-														<div class="m-portlet__head">
-															<div class="m-portlet__head-caption">
-																<div class="m-portlet__head-title">
-																	<h3 class="m-portlet__head-text">
-																		Contatti
-																	</h3>
-																</div>
-															</div>
-															<div class="m-portlet__head-tools">
-																<ul class="nav nav-tabs m-tabs m-tabs-line  m-tabs-line--right" role="tablist">
-																	@foreach ($cliente->contatti as $key => $contatto)
-																	<li class="nav-item m-tabs__item">
-																		<a class="nav-link m-tabs__link @if ($key == 0)active @endif" data-toggle="tab" href="#m_tabs_7_{{$key}}" role="tab">
-																			{{$contatto->nome}}
-																		</a>
-																	</li>
-																	@endforeach
-																</ul>
-															</div>
-														</div>
-														<div class="m-portlet__body">
-															<div class="tab-content">
-																@foreach ($cliente->contatti as $key => $contatto)
-																<div class="tab-pane @if ($key == 0)active @endif" id="m_tabs_7_{{$key}}" role="tabpanel">
-																	<ul class="content_contatto">
-																		@foreach ($contatto->viewColumns() as $colonna)
-																		@if ($contatto->$colonna != '')
-																				@if ($colonna == 'fea_doc_nome')
-																					<li class="fea_doc_nome"><a href="{{ asset('contrattti/documenti_fea/'.$contatto->$colonna) }}" title="Fea"><i class="fea_doc fa fa-file-pdf"></i></a></li>
-																				@elseif($colonna == 'nome')
-																					<li><span><i class="fa fa-user"></i> {!!$contatto->$colonna!!}</span></li>
-																				@else
-																					<li><span>{{$colonna}}:</span> {!!$contatto->$colonna!!}</li>
-																				@endif
-																		@endif
-																		@endforeach
-																		<li class="dissocia">
-																			<a href="#" data-contatto="{{$contatto->id}}" class="dissocia_contatto btn btn-danger m-btn m-btn--icon m-btn--icon-only m-btn--custom m-btn--pill m-btn--air">
-																				<i class="fa fa-user-slash"></i>
-																				<span class="associazione_contatto ">Elimina associazione con questo contatto</span>
-																			</a>
-																		</li>
-																	</ul>
-																	
-																</div>
-																@endforeach
-															</div>
-														</div>
-													</div>
-
-											</div>
-											</div>
-										</div>
-										{{-- \Contatti --}}
-									@endif
-
-									@if ($cliente->exists && !is_null($cliente->gruppo))
-										{{-- GRUPPI --}}
-											<div class="m-content">
-												<div class="row">
-													<div class="offset-lg-1 col-lg-10" style="padding: 10px; 0">
-														<div class="m-section">
-															<h3 class="m-section__heading">
-																{{$cliente->gruppo->nome}}
-															</h3>
-															<div class="m-section__content container_gruppo">
-																@foreach ($cliente->gruppo->clienti as $cliente_gruppo)
-																	@if ($cliente_gruppo->id != $cliente->id)
-																		<a href="{{ route('clienti.edit',['id' => $cliente_gruppo->id]) }}" class="@if(!$cliente_gruppo->attivo) disattivato @endif">{{$cliente_gruppo->nome}} (ID {{$cliente_gruppo->id_info}})</a>
-																	@endif
-																@endforeach
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										{{-- \GRUPPI --}}
-									@endif
-									
-
-            		</form>
-
-            	</div> {{-- m-portlet__body --}}
-						
+        <form class="" role="form" action="{{ route('clienti.update', $cliente->id) }}" method="POST">
+        {{ method_field('PUT') }}
+      @else
+        <form class="" role="form" action="{{ route('clienti.store') }}" method="POST" enctype="multipart/form-data">
+      @endif
+        {!! csrf_field() !!}
             
-            	<div class="m-portlet__foot m-portlet__no-border m-portlet__foot--fit">
-            		<div class="m-form__actions m-form__actions--solid">
-            			<div class="row">
-            				<div class="col-lg-2"></div>
-            				<div class="col-lg-10">
-            					<button type="reset" class="btn btn-success">
-            						@if ($cliente->exists)
-            							Modifica
-            						@else
-            							Crea
-            						@endif
-            					</button>
-            					<a href="{{ url('clienti') }}" title="Annulla" class="btn btn-secondary">Annulla</a>
-            				</div>
-            			</div>
-            		</div>
-            	</div>
+            {{-- Attivo-AttivoIA --}}
+            <div class="form-group row">
+              <label class="col-md-2 text-change" for="attivo">Stato:</label>
+              <div class="col-md-3">
+                  <select class="form-control" id="attivo" name="attivo">
+                      <option value="1" @if ( $cliente->attivo == 1 || old('attivo') == 1 ) selected="selected" @endif>Attivo</option>
+                      <option value="0" @if ( $cliente->attivo == 0 || (old('attivo') !== null && old('attivo') == 0) ) selected="selected" @endif>NON Attivo</option>
+                  </select>
+                  
+                  @if (!is_null($cliente->data_attivazione) || !is_null($cliente->data_disattivazione))
 
-     
-        </div> {{-- m-portlet --}}
+                    <span class="m-form__help">
+                      @if ($cliente->attivo)
+                      <span class="data_attivazione">
+                        {{optional($cliente->data_attivazione)->format('d/m/Y')}}
+                      </span>
+                      @else
+                      <span class="data_attivazione">
+                        {{optional($cliente->data_disattivazione)->format('d/m/Y')}}
+                      </span>
+                      @endif
+                    </span>
 
-		</div>{{-- col --}}
+                  @endif
+              </div>
+              <label class="col-md-2 text-change" for="attivo_IA">Infoalberghi:</label>
+              <div class="col-md-3">
+                  <select class="form-control" id="attivo_IA" name="attivo_IA">
+                      <option value="1" @if ( $cliente->attivo_IA == 1 || old('attivo_IA') == 1 ) selected="selected" @endif>Attivo</option>
+                      <option value="0" @if ( $cliente->attivo_IA == 0 || (old('attivo_IA') !== null && old('attivo_IA') == 0) ) selected="selected" @endif>NON Attivo</option>
+                  </select>
+
+                  @if (!is_null($cliente->data_attivazione_IA) || !is_null($cliente->data_disattivazione_IA))
+                  
+                  <span class="m-form__help">
+                    @if ($cliente->attivo_IA)
+                    <span class="data_attivazione">
+                      {{optional($cliente->data_attivazione_IA)->format('d/m/Y')}}
+                    </span>
+                    @else
+                    <span class="data_attivazione">
+                      {{optional($cliente->data_disattivazione_IA)->format('d/m/Y')}}
+                    </span>
+                    @endif
+                  </span>
+                  
+                  @endif
+              </div>
+            </div>
+            {{-- \Attivo-AttivoIA --}}
+
+
+            {{-- Nome-Tipo --}}
+            <div class="form-group row">
+              <label class="col-md-2 text-change" for="nome">Nome:</label>
+              <div class="col-md-3">
+                <input type="text" name="nome" id="nome" value="{{ old('nome') != '' ?  old('nome') : $cliente->nome}}"  class="form-control" placeholder="Nome">
+              </div>
+              <label class="col-md-2 text-change" for="tipo_id">Tipo:</label>
+              <div class="col-md-3">
+                  <select class="form-control" id="tipo_id" name="tipo_id">
+                    @foreach ($tipi_cliente as $tipo_id => $tipo)
+                      <option value="{{$tipo_id}}" @if ($cliente->tipo_id == $tipo_id || old('tipo_id') == $tipo_id ) selected="selected" @endif>{{$tipo}}</option>
+                    @endforeach
+                  </select>
+              </div>
+            </div>
+            {{-- \Nome-Tipo --}}
+
+            {{-- Indirizzo-Categoria --}}
+            <div class="form-group row">
+              <label class="col-md-2 text-change" for="indirizzo">Indirizzo:</label>
+              <div class="col-md-3">
+                <input type="text" name="indirizzo" id="indirizzo" value="{{ old('indirizzo') != '' ?  old('indirizzo') : $cliente->indirizzo}}"  class="form-control" placeholder="Nome">
+              </div>
+              <label class="col-md-2 text-change" for="categoria_id">Categoria:</label>
+              <div class="col-md-3">
+                  <select class="form-control" id="categoria_id" name="categoria_id">
+                    <option value="6">Altro</option>
+                    @foreach ($cataegorie_cliente as $categoria_id => $categoria)
+                      <option value="{{$categoria_id}}" @if ($cliente->categoria_id == $categoria_id || old('categoria_id') == $categoria_id ) selected="selected" @endif>{{$categoria}}</option>
+                    @endforeach
+                  </select>
+              </div>
+            </div>
+            {{-- \Indirizzo-Categoria --}}
+
+
+            {{-- Città-CAP --}}
+            <div class="form-group row">
+              <label class="col-md-2 text-change" for="localita_id">Località:</label>
+              <div class="col-md-3">
+                  <select class="form-control" id="localita_id" name="localita_id">
+                    <option value="6">Altro</option>
+                    @foreach ($localita_cliente as $localita_id => $localita)
+                      <option value="{{$localita_id}}" @if ($cliente->localita_id == $localita_id || old('localita_id') == $localita_id ) selected="selected" @endif>{{$localita}}</option>
+                    @endforeach
+                  </select>
+              </div>
+              <label class="col-md-1 text-change" id="luogo">{{$cliente->localita->comune->nome}} ({{$cliente->localita->comune->provincia->sigla}}) - {{$cliente->localita->comune->provincia->regione->nome}}</label>
+              <label class="col-md-1 text-change" for="cap">CAP:</label>
+              <div class="col-md-3">
+                <input type="text" name="cap" id="cap" value="{{ old('cap') != '' ?  old('cap') : $cliente->cap}}"  class="form-control" placeholder="CAP">
+              </div>
+            </div>
+            {{-- \Città-CAP --}}
+
+            {{-- Telefono-Fax --}}
+            <div class="form-group row">
+              <label class="col-md-2 text-change" for="telefono">Telefono:</label>
+              <div class="col-md-3">
+                <input type="text" name="telefono" id="telefono" value="{{ old('telefono') != '' ?  old('telefono') : $cliente->telefono}}"  class="form-control" placeholder="Telefono">
+              </div>
+              <label class="col-md-2 text-change" for="fax">FAX:</label>
+              <div class="col-md-3">
+                <input type="text" name="fax" id="fax" value="{{ old('fax') != '' ?  old('fax') : $cliente->fax}}"  class="form-control" placeholder="FAX">
+              </div>
+            </div>
+            {{-- \Telefono-Fax --}}
+
+            {{-- cellulare-Skype --}}
+            <div class="form-group row">
+              <label class="col-md-2 text-change" for="cell">Cellulare:</label>
+              <div class="col-md-3">
+                <input type="text" name="cell" id="cell" value="{{ old('cell') != '' ?  old('cell') : $cliente->cell}}"  class="form-control" placeholder="Cellulare">
+              </div>
+              <label class="col-md-2 text-change" for="skype">Skype:</label>
+              <div class="col-md-3">
+                <input type="text" name="skype" id="skype" value="{{ old('skype') != '' ?  old('skype') : $cliente->skype}}"  class="form-control" placeholder="Skype">
+              </div>
+            </div>
+            {{-- \cellulare-Skype --}}
+
+            {{-- WhatsApp-Sms --}}
+            <div class="form-group row">
+              <label class="col-md-2 text-change" for="whatsapp">WhatsApp:</label>
+              <div class="col-md-3">
+                <input type="text" name="whatsapp" id="whatsapp" value="{{ old('whatsapp') != '' ?  old('whatsapp') : $cliente->whatsapp}}"  class="form-control" placeholder="WhatsApp">
+              </div>
+              <label class="col-md-2 text-change" for="sms">Sms:</label>
+              <div class="col-md-3">
+                <input type="text" name="sms" id="sms" value="{{ old('sms') != '' ?  old('sms') : $cliente->sms}}"  class="form-control" placeholder="Sms">
+              </div>
+            </div>
+            {{-- \WhatsApp-Sms --}}
+
+            {{-- Web-Email --}}
+            <div class="form-group row">
+              <label class="col-md-2 text-change" for="web">Web:</label>
+              <div class="col-md-3 input-group">
+                <input type="text" name="web" id="web" value="{{ old('web') != '' ?  old('web') : $cliente->web}}"  class="form-control" placeholder="Web">
+                @if ($cliente->web != '')
+                  <div class="input-group-append">
+                    <a href="{{$cliente->web}}" target="_blank" class="btn btn-warning" title="Vai">Vai!</a>
+                  </div>
+                @endif
+              </div>
+              <label class="col-md-2 text-change" for="email">Email:</label>
+              <div class="col-md-3">
+                <input type="text" name="email" id="email" value="{{ old('email') != '' ?  old('email') : $cliente->email}}"  class="form-control" placeholder="Email">
+              </div>
+            </div>
+            {{-- \Web-Email --}}
+            
+            
+            {{-- Associato-Visibile --}}
+            <div class="form-group row">
+              <label class="col-md-2 text-change" for="associato">Associato:</label>
+              <div class="col-md-3">
+                <select class="form-control m-select2" id="associato" multiple name="associato">
+                    <option></option>
+                    <optgroup label="Associato a">
+                    @foreach ($commerciali as $id => $nome)
+                      <option value="{{$id}}" @if ( in_array($id, $cliente->commercialiAssociatiIds()) ) selected="selected" @endif >{{$nome}}</option>
+                    @endforeach
+                    </optgroup>
+                  </select>
+              </div>
+              <label class="col-md-2 text-change" for="visibile">Visibile:</label>
+              <div class="col-md-3">
+                  <select class="form-control m-select2" id="visibile" multiple name="visibile">
+                      <option></option>
+                      <optgroup label="Visibile a">
+                      @foreach ($commerciali as $id => $nome)
+                        <option value="{{$id}}" @if ( in_array($id, $cliente->commercialiVisibilitaIds()) ) selected="selected" @endif >{{$nome}}</option>
+                      @endforeach
+                      </optgroup>
+                    </select>
+              </div>
+            </div>
+            {{-- \Associato-Visibile --}}
+            
+            @if ($cliente->exists)
+              {{-- Contatti --}}
+              <div class="m-content">
+                <div class="row">
+                  <div class="offset-lg-1 col-md-10" style="padding: 10px; 0">
+                    <button type="button" class="btn btn-warning" data-toggle="modal" data-keyboard="false" data-backdrop="static" data-target="#m_modal_contatti">Associa contatti al ciente</button>
+                  </div>
+                </div>
+                <div class="row">
+                <div class="offset-lg-1 col-md-10">
+
+                    <!--begin::Portlet-->
+                    <div class="m-portlet m-portlet--tabs m-portlet--success m-portlet--head-solid-bg m-portlet--head-sm">
+                      <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                          <div class="m-portlet__head-title">
+                            <h3 class="m-portlet__head-text">
+                              Contatti
+                            </h3>
+                          </div>
+                        </div>
+                        <div class="m-portlet__head-tools">
+                          <ul class="nav nav-tabs m-tabs m-tabs-line  m-tabs-line--right" role="tablist">
+                            @foreach ($cliente->contatti as $key => $contatto)
+                            <li class="nav-item m-tabs__item">
+                              <a class="nav-link m-tabs__link @if ($key == 0)active @endif" data-toggle="tab" href="#m_tabs_7_{{$key}}" role="tab">
+                                {{$contatto->nome}}
+                              </a>
+                            </li>
+                            @endforeach
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="m-portlet__body">
+                        <div class="tab-content">
+                          @foreach ($cliente->contatti as $key => $contatto)
+                          <div class="tab-pane @if ($key == 0)active @endif" id="m_tabs_7_{{$key}}" role="tabpanel">
+                            <ul class="content_contatto">
+                              @foreach ($contatto->viewColumns() as $colonna)
+                              @if ($contatto->$colonna != '')
+                                  @if ($colonna == 'fea_doc_nome')
+                                    <li class="fea_doc_nome"><a href="{{ asset('contrattti/documenti_fea/'.$contatto->$colonna) }}" title="Fea"><i class="fea_doc fa fa-file-pdf"></i></a></li>
+                                  @elseif($colonna == 'nome')
+                                    <li><span><i class="fa fa-user"></i> {!!$contatto->$colonna!!}</span></li>
+                                  @else
+                                    <li><span>{{$colonna}}:</span> {!!$contatto->$colonna!!}</li>
+                                  @endif
+                              @endif
+                              @endforeach
+                              <li class="dissocia">
+                                <a href="#" data-contatto="{{$contatto->id}}" class="dissocia_contatto btn btn-danger m-btn m-btn--icon m-btn--icon-only m-btn--custom m-btn--pill m-btn--air">
+                                  <i class="fa fa-user-slash"></i>
+                                  <span class="associazione_contatto ">Elimina associazione con questo contatto</span>
+                                </a>
+                              </li>
+                            </ul>
+                            
+                          </div>
+                          @endforeach
+                        </div>
+                      </div>
+                    </div>
+
+                </div>
+                </div>
+              </div>
+              {{-- \Contatti --}}
+            @endif
+
+            @if ($cliente->exists && !is_null($cliente->gruppo))
+              {{-- GRUPPI --}}
+                <div class="m-content">
+                  <div class="row">
+                    <div class="offset-lg-1 col-md-10" style="padding: 10px; 0">
+                      <div class="m-section">
+                        <h3 class="m-section__heading">
+                          {{$cliente->gruppo->nome}}
+                        </h3>
+                        <div class="m-section__content container_gruppo">
+                          @foreach ($cliente->gruppo->clienti as $cliente_gruppo)
+                            @if ($cliente_gruppo->id != $cliente->id)
+                              <a href="{{ route('clienti.edit',['id' => $cliente_gruppo->id]) }}" class="@if(!$cliente_gruppo->attivo) disattivato @endif">{{$cliente_gruppo->nome}} (ID {{$cliente_gruppo->id_info}})</a>
+                            @endif
+                          @endforeach
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {{-- \GRUPPI --}}
+            @endif
+            
+
+          </form>
+
+    
+          <button type="reset" class="btn btn-success">
+            @if ($cliente->exists)
+              Modifica
+            @else
+              Crea
+            @endif
+          </button>
+          <a href="{{ url('clienti') }}" title="Annulla" class="btn btn-secondary">Annulla</a>
+            
+    </div>{{-- col --}}
 </div>{{-- row --}}
 
 

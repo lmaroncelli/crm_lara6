@@ -159,7 +159,7 @@
                       @foreach ($clienti as $cliente)
                         <tr>
                             <th scope="row"><a href="" title=""></a>{{$cliente->id_info}}</th>
-                            <td> <a href="{{ route('clienti.edit',['id' => $cliente->id]) }}" title="Modifica cliente">{{$cliente->nome}}</a></td>
+                            <td> <a href="{{ route('clienti.edit',$cliente->id) }}" title="Modifica cliente">{{$cliente->nome}}</a></td>
                             <td>{{optional($cliente->localita)->nome}}</td>
                             <td>{{optional($cliente->categoria)->categoria}}</td>
                             <td>{!!$cliente->stato($icon = true)!!}</td>

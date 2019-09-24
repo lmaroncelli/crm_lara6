@@ -29,7 +29,17 @@
     
     <main class="main">
       <div class="container-fluid">
-      @yield('content')
+        <div class="row mt-4">
+          <div class="col">
+            
+            <div class="card"> 
+              <div class="card-body">
+                @yield('content')
+              </div>
+            </div>
+          
+          </div>
+        </div>
       </div>
     </main> {{-- end main   --}}
   
