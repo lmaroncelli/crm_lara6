@@ -38,6 +38,9 @@
           </thead>
           <tbody>
               @foreach ($cliente->societa as $s)
+                  <form action="{{ route('clienti-fatturazioni.destroy', $s->id) }}" method="post" id="delete_item_{{$s->id}}">
+                    @csrf
+                  </form>
                   <tr>
                       <td><a href="{{ route('clienti-fatturazioni.edit', $s->id) }}"> {{optional($s->ragioneSociale)->nome}} </a></td>
                       <td>{{$s->abi}}</td>
@@ -49,12 +52,7 @@
                         </a>
                       </td>
                       <td>
-                        <form action="{{ route('clienti-fatturazioni.destroy', ['id' => $s->id]) }}" method="POST" accept-charset="utf-8" class="deleteForm" id="delete-riga-form">
-                            @csrf
-                            <a href="#" style="margin-bottom: 5px!important;" class="delete btn btn-danger m-btn m-btn--icon m-btn--icon-only"> 
-                                <i class="la la-trash"></i>
-                            </a>
-                        </form>
+                        <td><a  data-id="{{$s->id}}" href="" class="delete btn btn-danger"><i class="fas fa-trash-alt"></i></a></td>
                       </td>
                   </tr>
               @endforeach
@@ -101,7 +99,7 @@
                 @foreach ($ragioneSociale as $r)
                     @foreach ($r->societa as $s)
                       <tr class="societa">
-                          <td><a href="#" data-id="{{$s->id}}" data-nome="{{$r->nome}}"  class="societa_fattura" title="Fattura a questa società">{{$r->nome}}</a></td>
+                          <td><a data-id="{{$s->id}}" data-nome="{{$r->nome}}"  class="societa_fattura" title="Fattura a questa società">{{$r->nome}}</a></td>
                           <td>{{optional($s->cliente)->nome}}</td>
                           <td>{{optional($s->cliente)->id_info}}</td>
                           <td>{{$r->note}}</td>

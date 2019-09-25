@@ -81,8 +81,14 @@ class ClientiFatturazioniController extends Controller
 
 		}
 
-	public function destroy(Request $request)
+	public function destroy($societa_id)
 		{
-		dd('Elimina!!!');
+    $societa = Societa::find($societa_id);
+    $cliente_id = $societa->cliente_id;
+		$societa->cliente()->dissociate();
+
+    $societa->save();
+    
+    return redirect()->route('clienti-fatturazioni',$cliente_id)->with('status', 'Societa di fatturazione elimnata correttamente!');
 		}
 }

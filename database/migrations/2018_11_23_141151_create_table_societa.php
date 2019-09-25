@@ -15,8 +15,8 @@ class CreateTableSocieta extends Migration
     {
         Schema::create('tblSocieta', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer("cliente_id")->unsigned()->default(0);
-            $table->integer("ragionesociale_id")->unsigned()->default(0);
+            $table->integer("cliente_id")->unsigned()->nullable()->default(0);
+            $table->integer("ragionesociale_id")->unsigned()->nullable()->default(0);
             $table->text('note')->nullable()->default(null);
             $table->string('banca')->nullable();
             $table->string('abi')->nullable();

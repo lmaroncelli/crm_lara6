@@ -37,6 +37,28 @@
             
             <div class="card"> 
               <div class="card-body">
+                @if ($errors->any())
+                  <div class="row">
+                    <div class="col-md-6 offset-md-3">
+                      <div class="alert alert-danger">
+                          <ul>
+                              @foreach ($errors->all() as $error)
+                                  <li>{{ $error }}</li>
+                              @endforeach
+                          </ul>
+                      </div> 
+                    </div>
+                  </div>
+                @endif
+                @if (session('status'))
+                  <div class="row">
+                    <div class="col-md-6 offset-md-3">
+                      <div class="alert alert-success">
+                          {{ session('status') }}
+                      </div>
+                    </div>
+                  </div>
+                @endif
                 @yield('content')
               </div>
             </div>
@@ -51,6 +73,17 @@
   @include('layouts.coreui.footer')
   
   <script src="{{ asset('js/sweetalert2.min.js') }}"></script>
+  <script type="text/javascript">
+
+    $(".delete").click(function(e){
+      e.preventDefault();
+      var id = $(this).data("id");
+      if(window.confirm('Eliminare?')){
+        $("form#delete_item_"+id).submit();
+      }
+    })
+
+  </script>
   @yield('js')
 </body>
 </html>
