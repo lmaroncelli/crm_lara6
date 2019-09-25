@@ -8,16 +8,15 @@
   </div><!--/.col-->
 </div>
 <div>
-
 </div>
 <div class="row">
     <div class="col-md-12">
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a class="nav-link active" href="{{ route('clienti.edit',$cliente->id) }}">Dati cliente</a>
+          <a class="nav-link @if($controller=='ClientiController') active @endif"  href="{{ route('clienti.edit',$cliente->id) }}">Dati cliente</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{ route('clienti-fatturazioni',['cliente_id' => $cliente->id]) }}">Fatturazione</a>
+          <a class="nav-link @if($controller=='ClientiFatturazioniController')  active @endif"  href="{{ route('clienti-fatturazioni',['cliente_id' => $cliente->id]) }}">Fatturazione</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Servizi Venduti</a>

@@ -11,6 +11,7 @@
 
     <!-- Scripts -->
     <script src="{{ mix('js/app.js') }}"></script>
+    
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -19,6 +20,7 @@
     <!-- Styles -->
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/select2.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/sweetalert2.min.css') }}" rel="stylesheet">
 </head>
 <body class="app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show">
   @include('layouts.coreui.header')
@@ -47,7 +49,8 @@
   </div> {{-- app-body  --}}
 
   @include('layouts.coreui.footer')
-
+  
+  <script src="{{ asset('js/sweetalert2.min.js') }}"></script>
   @yield('js')
 </body>
 </html>

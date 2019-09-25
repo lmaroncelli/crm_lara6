@@ -8,7 +8,6 @@
 <div class="row mt-5">
     <div class="col-md-12 sezioni-cliente">
       @if ($cliente->exists)
-        
         <form action="{{ route('clienti.destroy', $cliente->id) }}" method="POST" id="record_delete">
           {{ method_field('DELETE') }}
           {!! csrf_field() !!}

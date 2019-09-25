@@ -144,7 +144,7 @@
                                },
                         success: function(data) {
                           location.reload();
-                          Swal({
+                          Swal.fire({
                             type: 'success',
                             title: 'Perfetto',
                             text: 'La società è passata a questo cliente!',
@@ -171,5 +171,4 @@
     
 
     </script>
-    <script src="{{ asset('js/sweetalert2.js') }}" type="text/javascript"></script>
 @endsection
