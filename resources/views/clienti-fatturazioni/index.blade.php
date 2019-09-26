@@ -8,9 +8,9 @@
   <div class="col-sm-2">
     <div class="callout callout-info b-t-1 b-r-1 b-b-1">
        Elenco società
-      @if (isset($clienti))
+      @if ($cliente->societa->count())
       <br>
-      <strong class="h4">{{$clienti->total()}}</strong>
+      <strong class="h4">{{$cliente->societa->count()}}</strong>
       @endif
     </div>
   </div><!--/.col-->
@@ -21,49 +21,8 @@
       </div>
     </div><!--/.col-->
 </div>
-<div class="row">
-    <div class="col">
-                        
-      @if ($cliente->societa->count())
-      <table class="table table-responsive-sm m-table m-table--head-bg-success table-hover">
-          <thead>
-              <tr>
-                  <th>Ragione sociale</th>
-                  <th>Abi</th>
-                  <th>Cab</th>
-                  <th>Note</th>
-                  <th></th>
-                  <th></th>
-              </tr>
-          </thead>
-          <tbody>
-              @foreach ($cliente->societa as $s)
-                  <form action="{{ route('clienti-fatturazioni.destroy', $s->id) }}" method="post" id="delete_item_{{$s->id}}">
-                    @csrf
-                  </form>
-                  <tr>
-                      <td><a href="{{ route('clienti-fatturazioni.edit', $s->id) }}"> {{optional($s->ragioneSociale)->nome}} </a></td>
-                      <td>{{$s->abi}}</td>
-                      <td>{{$s->cab}}</td>
-                      <td>{!!$s->note!!}</td>
-                      <td>
-                        <a href="{{ route('societa-fatture', $s->id) }}" class="btn btn-info m-btn m-btn--icon m-btn--icon-only">
-                          <i class="fa fa-euro-sign"></i>
-                        </a>
-                      </td>
-                      <td>
-                        <td><a  data-id="{{$s->id}}" href="" class="delete btn btn-danger"><i class="fas fa-trash-alt"></i></a></td>
-                      </td>
-                  </tr>
-              @endforeach
-          </tbody>
-      </table>
-      @endif
-        
-    </div>{{-- col --}}
-</div>{{-- row --}}
 
-
+@include('clienti-fatturazioni._lista_societa_cliente')
 
 
 {{-- MODAL elenco societa --}}
@@ -121,52 +80,6 @@
 
 @section('js')
   
-    <script type="text/javascript" charset="utf-8">
-
-        jQuery(document).ready(function(){
-
-            $(".societa_fattura").click(function(e){
-                e.preventDefault();
-                var societa_id = $(this).data("id");
-                ///////////////////////////////////////////////////
-                // Ajax call per associare la società al cliente //
-                ///////////////////////////////////////////////////
-                console.log('societa_id ='+societa_id);
-                jQuery.ajax({
-                        url: '<?=url("associa-societa-ajax") ?>',
-                        type: "get",
-                        async: false,
-                        data : { 
-                                'cliente_id': {{$cliente->id}},
-                               'societa_id': societa_id,        
-                               },
-                        success: function(data) {
-                          location.reload();
-                          Swal.fire({
-                            type: 'success',
-                            title: 'Perfetto',
-                            text: 'La società è passata a questo cliente!',
-                          })
-                        }
-                 });
-
-            });
-
-
-
-            /* ricerca nelle societa in popup modale */
-            $("#myInput").on("keyup", function() {
-                var value = $(this).val().toLowerCase();
-                $("tr.societa").filter(function() {
-                  $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-                });
-                var visible_rows = $('tr.societa:visible').length;
-                jQuery("#n_societa").html(visible_rows);
-              });
-
-
-        });
+  @include('clienti-fatturazioni._js_modal')
     
-
-    </script>
 @endsection

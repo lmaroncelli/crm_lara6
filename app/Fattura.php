@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Fattura;
 use App\Pagamento;
 use App\RigaDiFatturazione;
 use App\Societa;
@@ -219,6 +218,28 @@ class Fattura extends Model
   public function getPrefatturaDaAssociare()
     {
       return $this->numero_fattura. ' ' . $this->data->format('d/m/Y'). ' ' .$this->pagamento->nome;
+    }
+
+
+  public function destroyMe()
+    {
+      foreach (self::righe as $row) 
+        {
+        $row->delete();
+        }
+      foreach (self::scadenze as $row) 
+        {
+        $row->delete();
+        }
+
+      // Detach all prefatture from the fattura...
+      self::prefatture()->detach();
+      
+      // Detach all fatture from the prefattura...
+      self::fatture()->detach();  
+
+
+      self::delete();
     }
 
 

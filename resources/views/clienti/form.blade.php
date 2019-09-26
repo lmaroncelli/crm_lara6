@@ -304,19 +304,21 @@
                 </div>
               {{-- \GRUPPI --}}
             @endif
+
+            <button type="submit" class="btn btn-success">
+              @if ($cliente->exists)
+                Modifica
+              @else
+                Crea
+              @endif
+            </button>
+            <a href="{{ url('clienti') }}" title="Annulla" class="btn btn-secondary">Annulla</a>
+
             
 
           </form>
 
     
-          <button type="reset" class="btn btn-success">
-            @if ($cliente->exists)
-              Modifica
-            @else
-              Crea
-            @endif
-          </button>
-          <a href="{{ url('clienti') }}" title="Annulla" class="btn btn-secondary">Annulla</a>
             
     </div>{{-- col --}}
 </div>{{-- row --}}

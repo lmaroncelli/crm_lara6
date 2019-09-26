@@ -196,7 +196,10 @@ class SocietaController extends Controller
      */
     public function destroy($id)
     {
-        //
+      $societa = Societa::find($id);
+      $societa->destroyMe();
+
+      return redirect()->route("societa.index")->with('status', 'Societa eliminata correttamente!');
     }
 
 

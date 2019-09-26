@@ -1,10 +1,8 @@
 /* Utilizzo il component callout senza bordo nell'header dell'elenco clienti */
 
-
 .callout-noborder {
   border-left: 0px;
 }
-
 
 
 .navbar {
@@ -12,6 +10,7 @@
 }
 
 
+/*  bottone crea nuovo a dx */
 .to-right {
     position: absolute;
     right: 15px;
@@ -29,6 +28,12 @@ label.text-change {
 .text-muted {
   font-size: 90%;
 }
+
+/*  ordinamento sulle colonne */
+th.order {
+  cursor: pointer;
+}
+
 
 
 /*  da 768 in avanti */

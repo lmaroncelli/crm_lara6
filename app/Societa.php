@@ -36,6 +36,25 @@ class Societa extends Model
   {
       return $this->hasMany(Fattura::class, 'societa_id', 'id')->where('tipo_id', 'PF');
   }
+
+
+
+  public function destroyMe()
+    {
+    
+      foreach (self::fatture as $fattura) 
+        {
+        $fattura->destroyMe();;
+        }
+      
+      foreach (self::prefatture as $prefattura) 
+        {
+        $prefattura->destroyMe();
+        }
+
+      self::delete();
+    
+    }
    
 
 }

@@ -82,21 +82,19 @@
                       </thead>
                       <tbody>
                           @foreach ($societa as $s)
-                            <tr>
+                              <form action="{{ route('societa.destroy',$s->id) }}" method="POST" id="delete_item_{{$s->id}}">
+                                  @csrf
+                                  @method('DELETE')
+                              </form>
+                              <tr>
                                 <th scope="row"><a href="{{ route('societa.edit',['id' => $s->id]) }}" title="Modifica societa">{{optional($s->ragioneSociale)->nome}}</a></th>
                                 <td>{{optional($s->cliente)->nome}}</td>
                                 <td>{{optional($s->cliente)->id_info}}</td>
                                 <td>{{$s->note}}</td>
                                 <td>
-                                  <form action="{{ route('societa.destroy', ['id' => $s->id]) }}" method="POST" accept-charset="utf-8" class="deleteForm" id="delete-riga-form">
-                                      @csrf
-                                      @method('DELETE')
-                                      <a href="#" style="margin-bottom: 5px!important;" class="delete btn btn-danger m-btn m-btn--icon m-btn--icon-only"> 
-                                          <i class="la la-trash"></i>
-                                      </a>
-                                  </form>
+                                  <a data-id="{{$s->id}}" href="#" class="delete btn btn-danger"><i class="fas fa-trash-alt"></i></a>
                                 </td>
-                            </tr>
+                              </tr>
                           @endforeach
                       </tbody>
                   </table>
@@ -132,28 +130,6 @@
                 $("#order").val(order);
                  $("#searchForm").submit();
             });
-
-
-
-            $(".delete").click(function(e){
-              e.preventDefault();
-              swal.fire({
-                title: 'Sei sicuro?',
-                text: "Operazione irreversibile!",
-                type: 'question',
-                showCancelButton: true,
-                cancelButtonColor: '#c4c5d6',
-                confirmButtonColor: '#d33',
-                confirmButtonText: 'Sì, elimina!'
-              }).then((result) => { 
-                    if (result.value) {
-                     //$("#delete-riga-form").submit();
-                     $(this).closest("form.deleteForm").submit();
-                    }
-                })
-
-            });
-
           
         });
     

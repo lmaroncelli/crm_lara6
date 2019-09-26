@@ -19,8 +19,8 @@ class CreateTableFatture extends Migration
             $table->string('numero_fattura',50)->nullable()->default('');
             $table->string('numero_prefattura',50)->nullable()->default('');
             $table->date('data')->nullable()->default(null);
-            $table->integer("pagamento_id")->default(0);
-            $table->integer("societa_id")->unsigned()->default(0);
+            $table->integer("pagamento_id")->nullable()->default(0);
+            $table->integer("societa_id")->unsigned()->nullable()->default(0);
             $table->text('note')->nullable()->default(null);
             $table->decimal('totale', 10, 2)->default(0.00);
             $table->decimal('da_fatturare', 10, 2)->default(0.00);

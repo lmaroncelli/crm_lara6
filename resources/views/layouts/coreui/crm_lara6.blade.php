@@ -73,15 +73,28 @@
   @include('layouts.coreui.footer')
   
   <script src="{{ asset('js/sweetalert2.min.js') }}"></script>
+
   <script type="text/javascript">
 
     $(".delete").click(function(e){
-      e.preventDefault();
-      var id = $(this).data("id");
-      if(window.confirm('Eliminare?')){
-        $("form#delete_item_"+id).submit();
-      }
-    })
+          e.preventDefault();
+          var id = $(this).data("id");
+
+          swal.fire({
+            title: 'Sei sicuro?',
+            text: "Operazione irreversibile!",
+            type: 'question',
+            showCancelButton: true,
+            cancelButtonColor: '#c4c5d6',
+            confirmButtonColor: '#d33',
+            confirmButtonText: 'Sì, elimina!'
+          }).then((result) => { 
+                if (result.value) {
+                  $("form#delete_item_"+id).submit();
+                }
+            })
+
+    });
 
   </script>
   @yield('js')
