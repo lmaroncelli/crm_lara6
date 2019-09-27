@@ -77,30 +77,30 @@ Route::middleware(['auth'])->group(function () {
     Route::get('societa/fatture/{societa_id}', 'SocietaController@fatture')->name('societa-fatture');
 
 
-    // /////////////
-    // // FATTURE //
-    // /////////////
-    // //Route::model('fatture', 'App\Fattura');
-    // Route::resource('fatture', 'FattureController')/*->middleware('log')*/;
+    /////////////
+    // FATTURE //
+    /////////////
+    //Route::model('fatture', 'App\Fattura');
+    Route::resource('fatture', 'FattureController')/*->middleware('log')*/;
     
-    // // sovrascrivo create
-    // Route::get('fatture/create/{tipo_id?}', 'FattureController@create')->name('fatture.create');
+    // sovrascrivo create
+    Route::get('fatture/create/{tipo_id?}', 'FattureController@create')->name('fatture.create');
     
-    // // sovrascrivo edit
-    // Route::get('fatture/{fattura_id}/edit/{rigafattura_id?}/{scadenza_fattura_id?}', 'FattureController@edit')->name('fatture.edit');
+    // sovrascrivo edit
+    Route::get('fatture/{fattura_id}/edit/{rigafattura_id?}/{scadenza_fattura_id?}', 'FattureController@edit')->name('fatture.edit');
 
-    // Route::post('fatture/add-scadenza', 'FattureController@addScadenza')->name('fatture.add-scadenza');
-    // Route::post('fatture/update-scadenza/{scadenza_fattura_id}', 'FattureController@updateScadenza')->name('fatture.update-scadenza');
-    // Route::get('fatture/load-scadenza/{scadenza_fattura_id}', 'FattureController@loadScadenza')->name('fatture.load-scadenza');
-    //  Route::post('fatture/delete-scadenza', 'FattureController@deleteScadenza')->name('fatture.delete-scadenza');
+    Route::post('fatture/add-scadenza', 'FattureController@addScadenza')->name('fatture.add-scadenza');
+    Route::post('fatture/update-scadenza/{scadenza_fattura_id}', 'FattureController@updateScadenza')->name('fatture.update-scadenza');
+    Route::get('fatture/load-scadenza/{scadenza_fattura_id}', 'FattureController@loadScadenza')->name('fatture.load-scadenza');
+     Route::post('fatture/delete-scadenza', 'FattureController@deleteScadenza')->name('fatture.delete-scadenza');
 
 
-    // Route::post('fatture/add-riga', 'FattureController@addRiga')->name('fatture.add-riga');
-    // Route::post('fatture/add-note', 'FattureController@addNote')->name('fatture.add-note');
-    // Route::get('fatture/load-riga/{rigafattura_id}', 'FattureController@loadRiga')->name('fatture.load-riga');
-    // Route::post('fatture/update-riga/{rigafattura_id}', 'FattureController@updateRiga')->name('fatture.update-riga');
-    // Route::post('fatture/delete-riga', 'FattureController@deleteRiga')->name('fatture.delete-riga');    
-    // Route::post('/fatture-prefatture-ajax', 'FattureController@fatturePrefattureAjax');
+    Route::post('fatture/add-riga', 'FattureController@addRiga')->name('fatture.add-riga');
+    Route::post('fatture/add-note', 'FattureController@addNote')->name('fatture.add-note');
+    Route::get('fatture/load-riga/{rigafattura_id}', 'FattureController@loadRiga')->name('fatture.load-riga');
+    Route::post('fatture/update-riga/{rigafattura_id}', 'FattureController@updateRiga')->name('fatture.update-riga');
+    Route::post('fatture/delete-riga', 'FattureController@deleteRiga')->name('fatture.delete-riga');    
+    Route::post('/fatture-prefatture-ajax', 'FattureController@fatturePrefattureAjax');
 
-    // Route::post('/last-fatture-ajax', 'FattureController@lastFattureAjax');
+    Route::post('/last-fatture-ajax', 'FattureController@lastFattureAjax');
 });

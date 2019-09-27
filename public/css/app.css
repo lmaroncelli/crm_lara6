@@ -4460,6 +4460,22 @@ th.order {
 
 
 
+/*  header della societa ul li */
+
+.text-muted ul {
+    margin: 0;
+    padding-left: 0;
+}
+
+
+.text-muted ul li {
+  display: inline;
+  margin-right: 20px;  
+}
+
+
+
+
 /*  da 768 in avanti */
 @media (min-width: 768px) {
 

@@ -146,14 +146,5 @@
             $("#searchForm").submit();
           });
 
-
-          $('.order').click(function(){
-              var orderby = $(this).data("orderby");
-              var order = $(this).data("order");
-              $("#orderby").val(orderby);
-              $("#order").val(order);
-                $("#searchForm").submit();
-          });
-
     </script>
 @endsection

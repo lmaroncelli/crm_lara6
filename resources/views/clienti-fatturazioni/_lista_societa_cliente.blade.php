@@ -18,7 +18,7 @@
                   <form action="{{ route('clienti-fatturazioni.destroy', $s->id) }}" method="post" id="delete_item_{{$s->id}}">
                     @csrf
                   </form>
-                  <tr>
+                  <tr @if ( isset($societa) && $societa->id == $s->id ) class="table-info" @endif>
                       <td><a href="{{ route('clienti-fatturazioni.edit', $s->id) }}"> {{optional($s->ragioneSociale)->nome}} </a></td>
                       <td>{{$s->abi}}</td>
                       <td>{{$s->cab}}</td>

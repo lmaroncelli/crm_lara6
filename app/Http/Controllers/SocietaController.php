@@ -219,7 +219,7 @@ class SocietaController extends Controller
 
         $ragioneSociale = $societa->ragioneSociale;
 
-        return view('societa.fatture', compact('ragioneSociale', 'fatture', 'prefatture'));
+        return view('societa.fatture', compact('ragioneSociale', 'fatture', 'prefatture','societa_id'));
 
 
       }

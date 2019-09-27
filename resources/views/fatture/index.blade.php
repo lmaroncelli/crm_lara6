@@ -1,4 +1,4 @@
-@extends('layouts.lara_crm')
+@extends('layouts.coreui.crm_lara6')
 
 @section('content')
 
@@ -205,37 +205,6 @@
             $(".attivo_check").on('switchChange.bootstrapSwitch', function (event, state) {
                 $("#searchForm").submit();
             });
-
-
-            $('.order').click(function(){
-                var orderby = $(this).data("orderby");
-                var order = $(this).data("order");
-                $("#orderby").val(orderby);
-                $("#order").val(order);
-                 $("#searchForm").submit();
-            });
-
-
-
-            $(".delete").click(function(e){
-              e.preventDefault();
-              swal({
-                title: 'Sei sicuro?',
-                text: "Operazione irreversibile!",
-                type: 'question',
-                showCancelButton: true,
-                cancelButtonColor: '#c4c5d6',
-                confirmButtonColor: '#d33',
-                confirmButtonText: 'Sì, elimina!'
-              }).then((result) => { 
-                    if (result.value) {
-                     //$("#delete-riga-form").submit();
-                     $(this).closest("form.deleteForm").submit();
-                    }
-                })
-
-            });
-
           
         });
     
