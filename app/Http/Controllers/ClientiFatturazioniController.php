@@ -21,9 +21,11 @@ class ClientiFatturazioniController extends Controller
 		
 		$societa_ids =  $cliente->societa->pluck('id')->toArray();		
 
-		$ragioneSociale = RagioneSociale::getListForSelectModal($societa_ids);
+    $ragioneSociale = RagioneSociale::getListForSelectModal($societa_ids);
+    
+    $bread = [route('clienti.index') => 'Cienti', $cliente->nome];
 
-		return view('clienti-fatturazioni.index', compact('cliente','ragioneSociale'));
+		return view('clienti-fatturazioni.index', compact('cliente','ragioneSociale', 'bread'));
 		}
 
 

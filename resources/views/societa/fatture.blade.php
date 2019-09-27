@@ -5,8 +5,6 @@
 <div class="row">
     <div class="col-xl-12 sezioni-societa">
 
-        
-
           @include('layouts.coreui.menu_sezioni_societa') 
             
             @if (isset($fatture))
@@ -16,17 +14,9 @@
                       <thead>
                           <tr>
                               
-                              <th class="order" data-orderby="numero_fattura" @if (\Request::get('orderby') == 'numero_fattura' && \Request::get('order') == 'asc') data-order='desc' @else data-order='asc' @endif>
-                                  N.fattura 
-                                  @if (\Request::get('orderby') == 'numero_fattura') 
-                                      @if (\Request::get('order') == 'asc')
-                                          <i class="fa fa-sort-numeric-down"></i>
-                                      @else 
-                                          <i class="fa fa-sort-numeric-up"></i> 
-                                      @endif
-                                  @endif
-                              </th>
                               
+                              <th>N.fattura</th>
+
                               <th class="order" data-orderby="data" @if (\Request::get('orderby') == 'data' && \Request::get('order') == 'asc') data-order='desc' @else data-order='asc' @endif>
                                   Data 
                                   @if (\Request::get('orderby') == 'data') 
@@ -38,9 +28,9 @@
                                   @endif
                               </th>
                               
-                              <th class="order" data-orderby="nome_pagamento" @if (\Request::get('orderby') == 'nome_pagamento' && \Request::get('order') == 'asc') data-order='desc' @else data-order='asc' @endif>
+                              <th class="order" data-orderby="pagamento_id" @if (\Request::get('orderby') == 'pagamento_id' && \Request::get('order') == 'asc') data-order='desc' @else data-order='asc' @endif>
                                   Pagamento 
-                                  @if (\Request::get('orderby') == 'nome_pagamento') 
+                                  @if (\Request::get('orderby') == 'pagamento_id') 
                                       @if (\Request::get('order') == 'asc')
                                           <i class="fa fa-sort-alpha-down"></i>
                                       @else 
@@ -51,27 +41,9 @@
 
                               <th>Totale</th>
 
-                              <th class="order" data-orderby="nome_societa" @if (\Request::get('orderby') == 'nome_societa' && \Request::get('order') == 'asc') data-order='desc' @else data-order='asc' @endif>
-                                  Societa 
-                                  @if (\Request::get('orderby') == 'nome_societa') 
-                                      @if (\Request::get('order') == 'asc')
-                                          <i class="fa fa-sort-alpha-down"></i>
-                                      @else 
-                                          <i class="fa fa-sort-alpha-up"></i> 
-                                      @endif
-                                  @endif
-                              </th>
+                              <th>Societa</th>
                               
-                              <th class="order" data-orderby="nome_cliente" @if (\Request::get('orderby') == 'nome_cliente' && \Request::get('order') == 'asc') data-order='desc' @else data-order='asc' @endif>
-                                  Cliente 
-                                  @if (\Request::get('orderby') == 'nome_cliente') 
-                                      @if (\Request::get('order') == 'asc')
-                                          <i class="fa fa-sort-alpha-down"></i>
-                                      @else 
-                                          <i class="fa fa-sort-alpha-up"></i> 
-                                      @endif
-                                  @endif
-                              </th>
+                              <th>Cliente</th>
                               <th></th>
                           </tr>
                       </thead>
@@ -104,7 +76,7 @@
               </div>
                 
             @endif
-      >
+            
     </div>
    
 </div>

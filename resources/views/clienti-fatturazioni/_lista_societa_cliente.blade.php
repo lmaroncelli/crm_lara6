@@ -24,7 +24,7 @@
                       <td>{{$s->cab}}</td>
                       <td>{!!$s->note!!}</td>
                       <td>
-                        <a href="{{ route('societa-fatture', $s->id) }}" class="btn btn-info m-btn m-btn--icon m-btn--icon-only">
+                        <a href="{{ route('societa-fatture',  [$cliente->id, $s->id]) }}" class="btn btn-info m-btn m-btn--icon m-btn--icon-only">
                           <i class="fa fa-euro-sign"></i>
                         </a>
                       </td>

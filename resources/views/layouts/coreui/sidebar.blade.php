@@ -1,6 +1,20 @@
 <div class="sidebar">
   <nav class="sidebar-nav">
     <ul class="nav">
+
+      <li class="nav-item">
+        <a class="nav-link active" href="{{ route('clienti.index') }}">
+        Clienti
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link active" href="{{ route('societa.index') }}">
+        Società
+        </a>
+      </li>
+
+
       <li class="nav-title">Components</li>
         <li class="nav-item nav-dropdown">
           <a class="nav-link nav-dropdown-toggle" href="#">

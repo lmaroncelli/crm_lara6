@@ -4456,6 +4456,11 @@ label.text-change {
 /*  ordinamento sulle colonne */
 th.order {
   cursor: pointer;
+  text-decoration: underline;
+}
+
+th.order:hover {
+  text-decoration: none;
 }
 
 

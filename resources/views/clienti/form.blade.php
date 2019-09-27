@@ -2,7 +2,6 @@
 
 @section('content')
 
-
 @include('layouts.coreui.menu_sezioni_clienti') 
 
 <div class="row mt-5">

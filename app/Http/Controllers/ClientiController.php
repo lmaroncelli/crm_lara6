@@ -242,7 +242,10 @@ class ClientiController extends Controller
      */
     public function edit(Cliente $cliente)
     {
-     return view('clienti.form', compact('cliente'));   
+    
+      $bread = [route('clienti.index') => 'Cienti', $cliente->nome];
+
+      return view('clienti.form', compact('cliente','bread'));   
     }
 
     /**

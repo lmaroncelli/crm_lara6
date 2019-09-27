@@ -291,7 +291,37 @@ class Utility extends Model
 			// se è 0 NON è SAN MARINO
 			return Localita::where('id',$localita_id)->whereIn('comune_id', $comuni_rsm_ids)->get()->count();
 
-		}
+    }
+    
+
+  public static function breadcrumb($bread = [])
+    {
+      $to_return = '';
+
+      if (count($bread)) 
+        {
+    
+        $to_return .= '<nav aria-label="breadcrumb">
+          <ol class="breadcrumb">';
+            $last = end($bread);
+            foreach ($bread as $url  => $nome) 
+              {
+              if($last == $nome)
+                {
+                $to_return .=  '<li class="breadcrumb-item active" aria-current="page">'.$nome.'</li>';
+                }
+              else
+                {
+                $to_return .=  '<li class="breadcrumb-item"><a href="'.$url.'">'.$nome.'</a></li>';
+                }
+              }
+        $to_return .= '</ol>
+        </nav>';
+        
+      }
+
+    return $to_return;
+    }
 
 
 

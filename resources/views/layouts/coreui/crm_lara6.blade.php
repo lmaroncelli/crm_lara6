@@ -29,9 +29,14 @@
   <div class="app-body">
 
      @include('layouts.coreui.sidebar')
-    
-    <main class="main">
-      <div class="container-fluid">
+
+     
+     <main class="main">
+       @if (isset($bread))
+        {!!Utility::breadcrumb($bread)!!}
+      @endif
+       @yield('breadcrump')
+       <div class="container-fluid">
         <div class="row mt-4">
           <div class="col">
             

@@ -16,7 +16,7 @@
   </div><!--/.col-->
 </div>
 
-<form action="{{ url('societa/fatture/'.$societa_id) }}" method="get" id="searchForm" accept-charset="utf-8">
+<form action="{{ url('societa/fatture/'.$cliente_id.'/'.$societa_id) }}" method="get" id="searchForm" accept-charset="utf-8">
     <input type="hidden" name="orderby" id="orderby" value="">
     <input type="hidden" name="order" id="order" value="">
 </form>

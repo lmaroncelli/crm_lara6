@@ -74,7 +74,7 @@ Route::middleware(['auth'])->group(function () {
     Route::model('societa', 'App\Societa');
     Route::resource('societa', 'SocietaController')/*->middleware('log')*/;
 
-    Route::get('societa/fatture/{societa_id}', 'SocietaController@fatture')->name('societa-fatture');
+    Route::get('societa/fatture/{cliente_id}/{societa_id}', 'SocietaController@fatture')->name('societa-fatture');
 
 
     /////////////

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Cliente;
 use App\Societa;
 use Illuminate\Http\Request;
 
@@ -205,21 +206,31 @@ class SocietaController extends Controller
 
 
 
-    public function fatture(Request $request, $societa_id = 0)
+    public function fatture(Request $request, $cliente_id = 0, $societa_id = 0)
       {
         if (!$societa_id) 
           {
            return back()->with('status', 'Specificare la società!');
           }
+        
+        $orderby = $request->filled('orderby') ? $request->get('orderby') : 'id';
+        $order = $request->filled('order') ? $request->get('order') : 'desc';
+        
 
         $societa = Societa::with(['ragioneSociale.localita.comune.provincia','cliente'])->find($societa_id);
 
-        $fatture = $societa->fatture;
+        
+        $fatture = $societa->fatture()->orderBy($orderby, $order)->get();
+
         $prefatture = $societa->prefatture;
 
         $ragioneSociale = $societa->ragioneSociale;
+        
+        $cliente = Cliente::find($cliente_id);
 
-        return view('societa.fatture', compact('ragioneSociale', 'fatture', 'prefatture','societa_id'));
+        $bread = [route('clienti.index') => 'Cienti', route('clienti-fatturazioni',$cliente->id) => $cliente->nome, 'Fatture'];
+
+        return view('societa.fatture', compact('ragioneSociale', 'fatture', 'prefatture', 'cliente_id','societa_id','bread'));
 
 
       }
