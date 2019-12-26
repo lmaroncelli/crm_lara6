@@ -69,3 +69,78 @@ try {
 installo fontawesome
 
 > npm install --save-dev @fortawesome/fontawesome-free
+
+
+
+
+# A casa
+
+Lo installo su Homestead
+
+luigi@luigihome:~/VirtualProjects$ git clone https://github.com/lmaroncelli/crm_lara6.git
+Cloning into 'crm_lara6'...
+
+
+i collego alla VM e aggiorno con composer
+
+vagrant@homestead:~/VirtualProjects/crm_lara6$ composer update
+
+
+modifico il file Homestead.yaml 
+
+sites:
+    - map: blog.xxx
+      to: /home/vagrant/VirtualProjects/blog/public
+    - map: crm_lara6.xxx
+      to: /home/vagrant/VirtualProjects/crm_lara6/public
+
+databases:
+    - blog
+    - crm_lara6
+
+
+e poi 
+
+> vagrant provision
+
+
+- DB
+
+in locale ho già un DB e lo esporto
+
+mysqldump -uroot -p lara_crm > lara_crm.sql
+
+e lo importo nel DB crm_lara6 della VM
+
+modifico l'hosts 
+
+192.168.10.10   crm_lara6.xxx www.crm_lara6.xxx
+
+
+
+#EVIDENZE
+
+
+La entry delle evidenze è del tipo /evidenze/index/<id_macro>
+
+
+
+In base alla macro passata devo creare la griglia corrispondente
+
+    > create_griglia_evidenze($data, $id_macro)
+        
+        trovo i tipi di evidenza associati alla macro (tblEVTipiEvidenze), trovo i mesi e
+
+        
+        > _create_evidenze_mese($id_macro, $tipi_evidenze, $mesi);
+
+            per ogni tipo_evidenza verifico che la tblEVTipiEvidenzeMesi abbia i costi associati per ogni mese (altrimenti li inserisco io a 0)
+
+            verifico che la tabella tblEVEvidenze contenga tante righe di tipo_evidenza quanto è scritto nel campo n_max_visibile della tblEVTipiEvidenze (quindi aggiungo o elimino dei tipi di evidenza in una determinata localita)
+
+        
+        per ogni tipo di evidenza:
+
+        - trovo le evidenze di quel tipo
+
+

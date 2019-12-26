@@ -2,8 +2,8 @@
 
 namespace App;
 
-use App\Cliente;
 use App\Localita;
+use App\TipoEvidenza;
 use Illuminate\Database\Eloquent\Model;
 
 class MacroLocalita extends Model
@@ -15,6 +15,11 @@ class MacroLocalita extends Model
    public function localita()
    {
        return $this->hasMany(Localita::class, 'macrolocalita_id', 'id');
+   }
+
+   public function tipiEvidenza()
+   {
+       return $this->hasMany(TipoEvidenza::class, 'macrolocalita_id', 'id');
    }
 
 }

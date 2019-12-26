@@ -5,6 +5,7 @@ namespace App;
 
 use App\Evidenza;
 use App\EvidenzaMese;
+use App\MacroLocalita;
 use Illuminate\Database\Eloquent\Model;
 
 class TipoEvidenza extends Model
@@ -21,6 +22,11 @@ class TipoEvidenza extends Model
    public function mesi()
    {
        return $this->belongsToMany(EvidenzaMese::class, 'tblEVTipiEvidenzeMesi', 'tipoevidenza_id', 'mese_id');
+   }
+
+   public function macroLocalita()
+   {
+       return $this->belongsTo(MacroLocalita::class, 'macrolocalita_id', 'id');
    }
 
 }

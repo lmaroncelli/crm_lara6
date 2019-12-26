@@ -103,4 +103,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/fatture-prefatture-ajax', 'FattureController@fatturePrefattureAjax');
 
     Route::post('/last-fatture-ajax', 'FattureController@lastFattureAjax');
+
+
+    
 });
