@@ -26,6 +26,9 @@ crea gli asset js e css (jQuery, bootstrap,...)
 
 Installo Free WebApp UI Kit built on top of Bootstrap 4  https://coreui.io/
 
+
+https://coreui.io/demo/2.0/#main.html
+
 https://github.com/coreui/coreui
 
 
@@ -139,8 +142,161 @@ In base alla macro passata devo creare la griglia corrispondente
             verifico che la tabella tblEVEvidenze contenga tante righe di tipo_evidenza quanto è scritto nel campo n_max_visibile della tblEVTipiEvidenze (quindi aggiungo o elimino dei tipi di evidenza in una determinata localita)
 
         
-        per ogni tipo di evidenza:
+        > per ogni tipo di evidenza:
 
-        - trovo le evidenze di quel tipo
+          - trovo le evidenze di quel tipo
 
+          - trovo i costi di quel tipo per ogni mese
+
+
+        > per ogni tipo di evidenza:
+
+          - trovo le evidenze
+
+          > per ogni evidenza
+
+            - interrogo la tblEVEvidenzeMesi x info acquistata, prelazionata, agente, hotel
+
+        
+    > disegno della griglia
+
+      __tipi_evidenze__
+      Array
+      (
+          [0] => stdClass Object
+              (
+                  [id] => 1
+                  [id_macro] => 1
+                  [nome] => OFFERTE SPECIALI
+                  [n_max_visibile] => 8
+                  [n_min_mesi] => 3
+                  [ordine] => 1
+                  [macrotipologia] => OFFERTE
+              )
+
+          [1] => stdClass Object
+              (
+                  [id] => 7
+                  [id_macro] => 1
+                  [nome] => LAST MINUTE GENERICI
+                  [n_max_visibile] => 8
+                  [n_min_mesi] => 3
+                  [ordine] => 2
+                  [macrotipologia] => OFFERTE
+              )
+          ....
+
+
+        __costi[id_tipo]__
+
+        Array
+        (
+            [1] => Array
+                (
+                    [1] => 50
+                    [2] => 80
+                    [3] => 150
+                    [4] => 150
+                    [5] => 180
+                    [6] => 180
+                    [7] => 180
+                    [8] => 150
+                    [9] => 120
+                    [10] => 50
+                    [11] => 80
+                    [12] => 80
+                )
+
+            [7] => Array
+                (
+                    [1] => 50
+                    [2] => 80
+                    [3] => 150
+                    [4] => 150
+                    [5] => 180
+                    [6] => 180
+                    [7] => 180
+                    [8] => 150
+                    [9] => 80
+                    [10] => 50
+                    [11] => 80
+                    [12] => 80
+                )
+
+
+
+
+        - loop sui tipi_evidenze
+
+           - per ogni mese visualizzo il costo di quel tipo (1a riga dei costi)
+           
+           > loop sulle evidenze del tipo id_tipo (ogni evidenza è 1 riga)
+
+              per ogni evidenza visualizzo le info associate (tabella tblEVEvidenzeMesi)
+
+
+
+
+
+**ATTENZIONE**
+
+https://laracasts.com/discuss/channels/eloquent/eager-loading-pivot-tables
+
+nella griglia faccio un loop sui mesi delle evidenze
+
+$evidenza->mesi e da qui trovo $item_ev_mese->pivot->cliente_id
+
+in realtà dovrei eagerloadare il ciente per avere $cliente->id_info
+
+
+Devo trasormare la relazione
+
+Ev (*) ------------ (*) EvMese
+
+intrducendo una nuova model EvEvidenzaNelMese
+
+
+Evidenza (1) ----- (*) EvidenzaNelMese (*) ----- (1) EvidenzaMese
+
+
+class Evidenza extends Model
+{
+    public function evidenzeNelMese()
+    {
+        return $this->hasMany('App\EvidenzaNelMese');
+    }
+}
+
+class EvidenzaMese extends Model
+{
+    public function evidenzeNelMese()
+    {
+        return $this->hasMany('App\EvidenzaNelMese');
+    }
+}
+
+class EvidenzaNelMese extends Model
+{
+    protected $table = 'tblEVEvidenzeMesi';
+
+    public function evidenza()
+    {
+        return $this->belongsTo('App\Evidenza');
+    }
+
+    public function mese()
+    {
+        return $this->belongsTo('App\EvidenzaMese');
+    }
+
+    public function cliente()
+    {
+        return $this->belongsTo('App\Cliente');
+    }
+}
+
+
+OPPURE 
+
+// preparo un array tale che $cliente[id] = id_info senza dover fare sempre la query per ogni cella
 

@@ -22,7 +22,7 @@ class Evidenza extends Model
 
    public function mesi()
    {
-       return $this->belongsToMany(EvidenzaMese::class, 'tblEVEvidenzeMesi', 'evidenza_id', 'mese_id');
+       return $this->belongsToMany(EvidenzaMese::class, 'tblEVEvidenzeMesi', 'evidenza_id', 'mese_id')->withPivot('cliente_id','user_id','acquistata','prelazionata','servizioweb_id','nome_hotel');
    }
 
    

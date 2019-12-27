@@ -21,12 +21,18 @@ class TipoEvidenza extends Model
 
    public function mesi()
    {
-       return $this->belongsToMany(EvidenzaMese::class, 'tblEVTipiEvidenzeMesi', 'tipoevidenza_id', 'mese_id');
+       return $this->belongsToMany(EvidenzaMese::class, 'tblEVTipiEvidenzeMesi', 'tipoevidenza_id', 'mese_id')->withPivot('costo');
    }
 
    public function macroLocalita()
    {
        return $this->belongsTo(MacroLocalita::class, 'macrolocalita_id', 'id');
    }
+
+
+   public function scopeOfMacro($query, $macro_id)
+    {
+        return $query->where('macrolocalita_id', $macro_id);
+    }
 
 }

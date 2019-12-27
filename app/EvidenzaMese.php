@@ -17,13 +17,13 @@ class EvidenzaMese extends Model
 
   public function tipiEvidenze()
    {
-       return $this->belongsToMany(TipoEvidenza::class, 'tblEVTipiEvidenzeMesi', 'mese_id', 'tipoevidenza_id');
+       return $this->belongsToMany(TipoEvidenza::class, 'tblEVTipiEvidenzeMesi', 'mese_id', 'tipoevidenza_id')->withPivot('costo');
    }
 
 
    public function evidenze()
    {
-       return $this->belongsToMany(Evidenza::class, 'tblEVEvidenzeMesi', 'mese_id', 'evidenza_id');
+       return $this->belongsToMany(Evidenza::class, 'tblEVEvidenzeMesi', 'mese_id', 'evidenza_id')->withPivot('cliente_id','user_id','acquistata','prelazionata','servizioweb_id','nome_hotel');
    }
 
 

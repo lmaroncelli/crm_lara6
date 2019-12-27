@@ -105,5 +105,15 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/last-fatture-ajax', 'FattureController@lastFattureAjax');
 
 
+
+
+    ///////////////
+    // EVIDENZE //
+    //////////////
+
+    Route::get('evidenze/{macro_id?}', 'EvidenzeController@index')->name('evidenze.view');
+
+
+
     
 });
