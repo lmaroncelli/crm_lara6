@@ -46,6 +46,16 @@
               </div>
             </form>
 
+
+            <div class="row legenda">
+              <ul>
+                @foreach ($commerciali as $id => $name)
+                    <li class="sfondo_{{$id}}">{{$name}}</li>
+                @endforeach
+                <li class="sfondo_prelazione">Prelazione</li>
+              </ul>
+            </div>
+
            
             <div class="m-portlet__body">
                 <div class="tab-content">
@@ -75,15 +85,41 @@
                                   </tr>
                                   <tr>
                                     <td>Costo mese</td>
+                                    @php
+                                        unset($mesi_non_vendibili);
+                                    @endphp
                                     @foreach ($tipo_evidenza->mesi as $item_tipo_ev_mese)
                                       <td>{{$item_tipo_ev_mese->pivot->costo}}</td>
+                                      @if ($item_tipo_ev_mese->pivot->costo == -1)
+                                        {{-- per ogni tipologia trovo i mesi non vendibili --}}
+                                        @php
+                                        $mesi_non_vendibili[] = $item_tipo_ev_mese->pivot->mese_id;  
+                                        @endphp
+                                      @endif
                                     @endforeach
                                   </tr>
                                   @foreach ($tipo_evidenza->evidenze as $evidenza)
                                     <tr>
                                       <td>{{$tipo_evidenza->nome}}</td>
                                       @foreach ($evidenza->mesi as $item_ev_mese)
-                                        <td>{{$item_ev_mese->pivot->cliente_id}}<br/>{{$item_ev_mese->pivot->user_id}}</td>
+                                        {{-- se il tipo di evidenza per questo mese ha costo -1 vuole dire che NON E' VENDIBILE --}}
+                                        @if (isset($mesi_non_vendibili) && in_array($item_ev_mese->pivot->mese_id, $mesi_non_vendibili))
+                                        
+                                          <td class="non_vendibile">&nbsp;</td>    
+                                        
+                                        @elseif($item_ev_mese->pivot->prelazionata)
+                                          {{-- se è prelazionata ha lo sfondo ad hoc ed il nome del commerciale che ha la prelazione --}}
+                                          <td class="sfondo_prelazione">
+                                            {{$clienti_to_info[$item_ev_mese->pivot->cliente_id]}}<br/>{{ucfirst($commerciali_nome[$item_ev_mese->pivot->user_id])}}
+                                          </td>
+                                        
+                                        @else
+                                          {{-- ha lo sfondo del commerciale senza nome --}}
+                                          <td class="sfondo_{{$item_ev_mese->pivot->user_id}}">
+                                            {{$clienti_to_info[$item_ev_mese->pivot->cliente_id]}}
+                                          </td>
+
+                                        @endif
                                       @endforeach
                                     </tr>
                                   @endforeach

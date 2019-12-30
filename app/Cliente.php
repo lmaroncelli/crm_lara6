@@ -106,6 +106,24 @@ class Cliente extends Model
      }
 
 
+    
+    public function scopeOfMacro($query,$macro_id = 0)
+    {
+      if (!$macro_id) 
+        {
+          return $query;
+        }
+      
+      $macro = MacroLocalita::find($macro_id);
+
+      $localita_ids = $macro->localita->pluck('id')->toArray();
+      
+
+       return $query->whereIn('localita_id',$localita_ids);
+      
+    }
+
+
 
 
     /**

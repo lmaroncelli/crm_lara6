@@ -4479,6 +4479,80 @@ th.order:hover {
 }
 
 
+/* GRIGLIA delle EVIDENZE */
+
+
+.non_vendibile {
+	background-color: #eee;
+}
+
+
+
+
+/* Paolo Panni*/
+.sfondo_5 {
+	background-color: orange;
+	color: #000;
+}
+
+/* Marzio Mini*/
+.sfondo_30 {
+	background-color: lightgreen;
+	color: #000;
+}
+
+
+/* Andrea Dalla Corte*/
+.sfondo_10 {
+	background-color: yellow;
+	color: #000;
+}
+
+
+/* Mirco Masi*/
+.sfondo_26 {
+	background-color: aqua;
+	color: #000;
+}
+
+/* Rosa Brigliadori */
+.sfondo_27 {
+	background-color: hotpink;
+	color: #000;
+}
+
+/* Andrea Sacchetti */
+.sfondo_11 {
+	background-color: #BE1400;
+	color: #fff;
+}
+
+.sfondo_prelazione {
+	background-color: #5D5D5D;
+	color:#fff;
+}
+
+
+.sfondo_8.acquistata_0, 
+.sfondo_10.acquistata_0, 
+.sfondo_26.acquistata_0,
+.sfondo_27.acquistata_0,
+.sfondo_5.acquistata_0{
+ 
+  box-shadow: 0 0 30px #333;
+  height: 0; 
+  width: 0; 
+}
+
+
+.legenda ul {
+  list-style-type: none;
+  width: 100%;
+}
+
+
+
+
 
 
 /*  da 768 in avanti */

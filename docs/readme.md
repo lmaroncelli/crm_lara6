@@ -121,7 +121,7 @@ modifico l'hosts
 
 
 
-#EVIDENZE
+# EVIDENZE
 
 
 La entry delle evidenze è del tipo /evidenze/index/<id_macro>
@@ -299,4 +299,13 @@ class EvidenzaNelMese extends Model
 OPPURE 
 
 // preparo un array tale che $cliente[id] = id_info senza dover fare sempre la query per ogni cella
+
+
+
+
+
+
+**colori commerciali**
+
+i colori associati agli id dei commercili li voglio mettere in un array che condivido con tutte le viste; devo utilizzare un supercontroller oppure un Trait
 
