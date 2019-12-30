@@ -4482,11 +4482,25 @@ th.order:hover {
 /* GRIGLIA delle EVIDENZE */
 
 
+.Content {
+    height: 600px;
+    overflow: auto;
+    background: #fff;
+}
+
 .non_vendibile {
 	background-color: #eee;
 }
 
-
+td.griglia_header {
+    height: 50px;
+    background-color: #1E1E1E;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle!important;
+    font-weight: bold;
+    font-size: 16px;
+}
 
 
 /* Paolo Panni*/
@@ -4549,6 +4563,14 @@ th.order:hover {
   list-style-type: none;
   width: 100%;
 }
+
+div.contenuto_cella {
+    margin: auto;
+    text-align: center;
+    height: 2.5em;
+    padding: 0;
+}
+
 
 
 

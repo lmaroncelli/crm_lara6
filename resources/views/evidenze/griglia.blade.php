@@ -28,6 +28,19 @@
                 </div>
             </div>
 
+
+            <div class="row legenda">
+              <ul>
+                @foreach ($commerciali as $id => $name)
+                    <li class="sfondo_{{$id}}">{{$name}}</li>
+                @endforeach
+                <li class="sfondo_prelazione">Prelazione</li>
+              </ul>
+            </div>
+
+            <h4 class="m-portlet__head-text" style="width: 100px;">
+                Località
+            </h3>
             {{--  Elenco macrolocalita  --}}
             <div class="row">
               <ul class="nav nav-tabs">
@@ -46,32 +59,20 @@
               </div>
             </form>
 
-
-            <div class="row legenda">
-              <ul>
-                @foreach ($commerciali as $id => $name)
-                    <li class="sfondo_{{$id}}">{{$name}}</li>
-                @endforeach
-                <li class="sfondo_prelazione">Prelazione</li>
-              </ul>
-            </div>
-
            
             <div class="m-portlet__body">
                 <div class="tab-content">
                     <div class="m-section">
                         <div class="m-section__content">
+                          <div class="Content">
                             <table class="table table-responsive-sm m-table m-table--head-bg-success table-hover">
-                              <tr>
-                                <td>griglia</td>
-                              </tr>
                               @php
                                   $macrotipologia_old = '';
                               @endphp
                               @foreach ($tipi_evidenza as $tipo_evidenza)
                                   @if ($tipo_evidenza->macrotipologia != $macrotipologia_old)
                                   <tr>
-                                    <td colspan="13">{{$tipo_evidenza->macrotipologia}}</td>
+                                    <td colspan="13" class="griglia_header">{{$tipo_evidenza->macrotipologia}}</td>
                                   </tr>
                                   @php
                                     $macrotipologia_old = $tipo_evidenza->macrotipologia;
@@ -110,13 +111,17 @@
                                         @elseif($item_ev_mese->pivot->prelazionata)
                                           {{-- se è prelazionata ha lo sfondo ad hoc ed il nome del commerciale che ha la prelazione --}}
                                           <td class="sfondo_prelazione">
-                                            {{$clienti_to_info[$item_ev_mese->pivot->cliente_id]}}<br/>{{ucfirst($commerciali_nome[$item_ev_mese->pivot->user_id])}}
+                                            <div class="contenuto_cella">
+                                              {{$clienti_to_info[$item_ev_mese->pivot->cliente_id]}}<br/>{{ucfirst($commerciali_nome[$item_ev_mese->pivot->user_id])}}
+                                            </div>
                                           </td>
                                         
                                         @else
                                           {{-- ha lo sfondo del commerciale senza nome --}}
                                           <td class="sfondo_{{$item_ev_mese->pivot->user_id}}">
-                                            {{$clienti_to_info[$item_ev_mese->pivot->cliente_id]}}
+                                            <div class="contenuto_cella">
+                                              {{$clienti_to_info[$item_ev_mese->pivot->cliente_id]}}
+                                            </div>
                                           </td>
 
                                         @endif
@@ -127,6 +132,7 @@
 
                               @endforeach
                             </table>
+                          </div>
                         </div>
                     </div>
                 </div>
