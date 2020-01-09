@@ -325,4 +325,28 @@ class Utility extends Model
 
 
 
+  public static function getAutocompleteJs($macro_id = 0)
+    {
+      if ($macro_id) 
+        {
+        $clienti = Cliente::with('localita')->attivo()->ofMacro($macro_id)->get();
+        } 
+      else 
+        {
+        $clienti = Cliente::with('localita')->attivo()->get();
+        }
+      
+      $autocomplete = [];
+      
+      foreach ($clienti as $c) 
+        {
+        $autocomplete[] = '"'. $c->id . ' - ' . addslashes($c->nome) . ' - ' . addslashes($c->localita->nome). '"';
+        }
+      
+      return "[" . implode(',', $autocomplete) . "]";
+      
+    }
+
+
+
 }

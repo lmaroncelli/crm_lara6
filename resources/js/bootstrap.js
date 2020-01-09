@@ -15,6 +15,7 @@ try {
     require('select2');
     require('perfect-scrollbar')
     require('@coreui/coreui/dist/js/coreui.min.js');
+    require('jquery-autocomplete/jquery.autocomplete.js');
 
 } catch (e) {}
 

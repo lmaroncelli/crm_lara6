@@ -309,3 +309,37 @@ OPPURE
 
 i colori associati agli id dei commercili li voglio mettere in un array che condivido con tutte le viste; devo utilizzare un supercontroller oppure un Trait
 
+
+
+## seleziona cliente
+
+innanzitutto ci vuole la funzione autocomplete che si trova nel package jqueryUI
+installo https://www.npmjs.com/package/jquery-autocomplete via npm
+
+
+> npm install --save jquery-autocomplete
+
+
+dalla documetazione:
+
+add this code after </body> in your document.
+
+<link type="text/css" rel="stylesheet" hr­ef="autocomplete.css"/>
+<script sr­c="jquery.min.js"></script>
+<scri­pt sr­c="autocomplete.js"></script>
+
+
+aggiungo in bootstrap.js
+
+ require('jquery-autocomplete/jquery.autocomplete.js');
+
+ e
+
+ // jquery-autocomplete
+@import '~jquery-autocomplete/jquery.autocomplete.css';
+
+in app.scss
+
+seguito da 
+
+> npm install && npm run dev

@@ -1,5 +1,22 @@
 @extends('layouts.coreui.crm_lara6')
 
+@section('js')
+    <script type="text/javascript">
+
+      $(function() {
+        var clientiDaAssegnare = {!!$clienti_autocomplete_js!!};
+        
+        $( ".clientiDaAssegnare" ).autocomplete({
+           dropdownWidth:'auto',
+           source: [clientiDaAssegnare]
+        });
+
+      });
+
+</script>
+@endsection
+
+
 @section('content')
 
 <div class="row">
@@ -53,13 +70,16 @@
             </div>
 
 
-            <form action="" method="get" id="searchForm" accept-charset="utf-8">
-              <div class="row">
-                Seleziona cliente
-              </div>
-            </form>
-
-           
+            <div class="row">
+                <form class="form-inline" id="searchForm" accept-charset="utf-8">
+                  <div class="input-group m-4">
+                    <label for="clientiDaAssegnare" class="m-1">SELEZIONA CLIENTE:</label>
+                    <input class="clientiDaAssegnare form-control" style="width:400px" placeholder="ID-nomehotel">     
+                  </div>
+                  <button type="button" class="btn btn-success btn-xs">OK</button>
+                </form>
+            </div>
+        
             <div class="m-portlet__body">
                 <div class="tab-content">
                     <div class="m-section">

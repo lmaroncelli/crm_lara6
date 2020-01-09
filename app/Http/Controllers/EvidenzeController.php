@@ -8,6 +8,7 @@ use App\TipoEvidenza;
 use App\MacroLocalita;
 use Illuminate\Http\Request;
 use App\Http\Controllers\MyController;
+use App\Utility;
 
 class EvidenzeController extends MyController
 {
@@ -35,6 +36,11 @@ class EvidenzeController extends MyController
         $commerciali_nome = $utenti_commerciali->pluck('username','id')->toArray();
         $commerciali_nome[0] = '';
 
-        return view('evidenze.griglia', compact('macro', 'macro_id','tipi_evidenza','clienti_to_info','commerciali','commerciali_nome'));
+
+        // preparo i dati per l'autocomplete della selezione hotel
+        // deve essere una stringa del tipo ["ID-nome","ID-nome",..] 
+        $clienti_autocomplete_js = Utility::getAutocompleteJs($macro_id = 0);
+
+        return view('evidenze.griglia', compact('macro', 'macro_id','tipi_evidenza','clienti_to_info','commerciali','commerciali_nome','clienti_autocomplete_js'));
       }
 }
