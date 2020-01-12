@@ -343,3 +343,41 @@ in app.scss
 seguito da 
 
 > npm install && npm run dev
+
+
+
+Quando ho selezionato il cliente faccio una chiamata ajax per mettere in sessione un array del tipo
+
+ $data_evidenza = array(
+    'id_cliente' => $cliente->id,
+    'id_info' => $id_info,
+    'id_agente' => $id_agente,
+    'nome_cliente' => $cliente->nome,
+    'nome_agente' => $cliente->commerciale,
+    'id_macro' => $id_macro
+    );
+
+
+
+
+
+
+
+## click sulle celle
+
+Ogni cella può essere:
+
+- prelazionata (grigia)
+- non vendibile (bianca)
+- assegnata ad un hotel/commerciale
+
+Ogni cella, a parte quelle non vendibili, ha gli attributi:
+
+data-id-evidenza="" data-id-mese="" data-id-hotel=""
+
+ed ha la classe clickable che ascolta l'ìevento click():
+
+- se non ho in sessione il cliente o il commerciale alert (selzionare il cliente)
+
+
+

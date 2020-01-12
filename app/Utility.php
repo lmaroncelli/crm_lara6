@@ -340,7 +340,7 @@ class Utility extends Model
       
       foreach ($clienti as $c) 
         {
-        $autocomplete[] = '"'. $c->id . ' - ' . addslashes($c->nome) . ' - ' . addslashes($c->localita->nome). '"';
+        $autocomplete[] = '"'. $c->id_info . ' - ' . addslashes($c->nome) . ' - ' . addslashes($c->localita->nome). '"';
         }
       
       return "[" . implode(',', $autocomplete) . "]";

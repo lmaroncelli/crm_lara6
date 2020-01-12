@@ -113,7 +113,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('evidenze/{macro_id?}', 'EvidenzeController@index')->name('evidenze.view');
 
-
+    Route::get('seleziona-cliente-evidenze-ajax', 'EvidenzeController@SelezionaClienteEvidenzeAjax')->name('seleziona-cliente-evidenze-ajax');
 
     
 });

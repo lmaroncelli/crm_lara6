@@ -39,8 +39,14 @@ class EvidenzeController extends MyController
 
         // preparo i dati per l'autocomplete della selezione hotel
         // deve essere una stringa del tipo ["ID-nome","ID-nome",..] 
-        $clienti_autocomplete_js = Utility::getAutocompleteJs($macro_id = 0);
+        $clienti_autocomplete_js = Utility::getAutocompleteJs($macro_id);
 
         return view('evidenze.griglia', compact('macro', 'macro_id','tipi_evidenza','clienti_to_info','commerciali','commerciali_nome','clienti_autocomplete_js'));
+      }
+
+    public function SelezionaClienteEvidenzeAjax(Request $request)
+      {
+      dd($request->all());
+
       }
 }

@@ -8,7 +8,48 @@
         
         $( ".clientiDaAssegnare" ).autocomplete({
            dropdownWidth:'auto',
-           source: [clientiDaAssegnare]
+           source: [clientiDaAssegnare],
+        }).on('selected.xdsoft',function(e,datum){
+          if(datum != null)
+            {
+              if (confirm('Sei sicuro di voler operare sulle evidenze come '+datum+' ?')) {
+                data = {
+                        item:datum,
+                        id_macro:"{{ $macro_id }}"
+                      };
+                      $.ajax({
+                          url:  "{{ route('seleziona-cliente-evidenze-ajax') }}",
+                          data: data,
+                          success: function(msg) {
+                              if (msg == 'ok') {
+                                window.location.reload(true);
+                                
+                              } else {
+                                window.alert(msg);
+                                $(".clientiDaAssegnare").val('');
+                                return;
+                              }
+
+                          }
+                      });// end ajax call
+              } // if confirm
+            }
+        });
+
+
+
+        // click su ogni cella della griglia
+
+        $(".clickable").click(function(e){
+
+          e.preventDefault();
+          
+          @if (!session()->has('nome_cliente') || !session()->has('nome_agente'))
+              alert('seleziona un cliente!');
+          @else
+            alert('bravo!');  
+          @endif
+
         });
 
       });
@@ -79,7 +120,7 @@
                   <button type="button" class="btn btn-success btn-xs">OK</button>
                 </form>
             </div>
-        
+            
             <div class="m-portlet__body">
                 <div class="tab-content">
                     <div class="m-section">
@@ -130,7 +171,7 @@
                                         
                                         @elseif($item_ev_mese->pivot->prelazionata)
                                           {{-- se è prelazionata ha lo sfondo ad hoc ed il nome del commerciale che ha la prelazione --}}
-                                          <td class="sfondo_prelazione">
+                                    <td class="clickable sfondo_prelazione" data-id-evidenza="{{$evidenza->id}}" data-id-mese="{{$item_ev_mese->pivot->mese_id}}" data-id-hotel="{{$item_ev_mese->pivot->cliente_id}}">
                                             <div class="contenuto_cella">
                                               {{$clienti_to_info[$item_ev_mese->pivot->cliente_id]}}<br/>{{ucfirst($commerciali_nome[$item_ev_mese->pivot->user_id])}}
                                             </div>
@@ -138,7 +179,7 @@
                                         
                                         @else
                                           {{-- ha lo sfondo del commerciale senza nome --}}
-                                          <td class="sfondo_{{$item_ev_mese->pivot->user_id}}">
+                                          <td class="clickable sfondo_{{$item_ev_mese->pivot->user_id}}" data-id-evidenza="{{$evidenza->id}}" data-id-mese="{{$item_ev_mese->pivot->mese_id}}" data-id-hotel="{{$item_ev_mese->pivot->cliente_id}}">
                                             <div class="contenuto_cella">
                                               {{$clienti_to_info[$item_ev_mese->pivot->cliente_id]}}
                                             </div>
