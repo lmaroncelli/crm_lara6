@@ -46,7 +46,36 @@ class EvidenzeController extends MyController
 
     public function SelezionaClienteEvidenzeAjax(Request $request)
       {
-      dd($request->all());
+        $id_macro = $request->get('macro_id');
 
+        // nella forma 1421 - Hotel Fantasy - Rimini
+        $item = $request->get('item');
+
+        list($id_info, $name) = explode("-", $item);
+
+        $cliente = Cliente::byIdInfo($id_info)->first();
+
+        $agente = $cliente->associato_a_commerciali()->first();
+
+        if (!is_null($agente)) 
+          {
+          # metto in sessione 
+          session([
+            'id_cliente' => $cliente->id,
+            'id_info' => $id_info,
+            'id_agente' => $agente->id,
+            'nome_cliente' => $cliente->nome,
+            'nome_agente' => $agente->name,
+            'id_macro' => $id_macro
+            ]);
+          
+
+          echo 'ok';
+          } 
+        else 
+          {
+          echo "Nessun id per il commerciale del cliente!!";
+          }
+        
       }
 }

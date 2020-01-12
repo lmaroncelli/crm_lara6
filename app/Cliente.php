@@ -123,6 +123,17 @@ class Cliente extends Model
       
     }
 
+    public function scopeByIdInfo($query, $id_info = 0)
+    {
+      if (!$id_info) 
+        {
+          return $query;
+        }
+ 
+       return $query->where('id_info',$id_info);
+      
+    }
+
 
 
 

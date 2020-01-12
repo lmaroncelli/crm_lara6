@@ -15,7 +15,7 @@
               if (confirm('Sei sicuro di voler operare sulle evidenze come '+datum+' ?')) {
                 data = {
                         item:datum,
-                        id_macro:"{{ $macro_id }}"
+                        macro_id:"{{ $macro_id }}"
                       };
                       $.ajax({
                           url:  "{{ route('seleziona-cliente-evidenze-ajax') }}",
