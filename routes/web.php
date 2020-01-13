@@ -115,5 +115,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('seleziona-cliente-evidenze-ajax', 'EvidenzeController@SelezionaClienteEvidenzeAjax')->name('seleziona-cliente-evidenze-ajax');
 
+    Route::get('assegna-mese-evidenza-ajax', 'EvidenzeController@AssegnaMeseEvidenzaAjax')->name('assegna-mese-evidenza-ajax');
+
+    
+
     
 });

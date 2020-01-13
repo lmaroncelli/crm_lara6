@@ -379,5 +379,15 @@ ed ha la classe clickable che ascolta l'ìevento click():
 
 - se non ho in sessione il cliente o il commerciale alert (selzionare il cliente)
 
+- altrimenti, prendo
+
+ id_agente: dalla sessione,
+id_cliente:  dalla sessione,
+id_evidenza: data attribute,
+id_mese: data attribute
+
+
+e faccio una chiamata ajax (admin/evidenze/assegna_mese_evidenza_ajax) che modifica la tabella evidenze_mese_model
+
 
 

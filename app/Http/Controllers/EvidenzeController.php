@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Cliente;
+use App\Utility;
+use App\Evidenza;
 use App\TipoEvidenza;
 use App\MacroLocalita;
 use Illuminate\Http\Request;
 use App\Http\Controllers\MyController;
-use App\Utility;
 
 class EvidenzeController extends MyController
 {
@@ -77,5 +78,36 @@ class EvidenzeController extends MyController
           echo "Nessun id per il commerciale del cliente!!";
           }
         
+      }
+
+    public function AssegnaMeseEvidenzaAjax(Request $request)
+      {
+      $id_agente = $request->get('id_agente');
+      $id_cliente = $request->get('id_cliente');
+      $id_evidenza = $request->get('id_evidenza');
+      $id_mese = $request->get('id_mese');
+
+      $evidenza = Evidenza::find($id_evidenza);
+
+      $ev_mese = $evidenza->mesi->where('numero',$id_mese)->first();
+      
+      // se NON E' acquistata
+      if (!$ev_mese->pivot->acquistata) 
+        {
+        
+        // If you need to update an existing row in your pivot table, you may use updateExistingPivot method
+        if ($ev_mese->pivot->cliente_id && $ev_mese->pivot->user_id) 
+          {
+          $evidenza->mesi()->updateExistingPivot($id_mese, ['cliente_id' => 0, 'user_id' => 0, 'prelazionata' => 0]);
+          } 
+        else 
+          {
+          $evidenza->mesi()->updateExistingPivot($id_mese, ['cliente_id' => $id_cliente, 'user_id' => $id_agente]);
+          }
+        
+        }
+      
+        echo "ok";
+
       }
 }

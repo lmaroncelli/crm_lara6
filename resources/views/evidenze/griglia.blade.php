@@ -45,12 +45,70 @@
           e.preventDefault();
           
           @if (!session()->has('nome_cliente') || !session()->has('nome_agente'))
-              alert('seleziona un cliente!');
+            
+            alert('seleziona un cliente!');
+          
           @else
-            alert('bravo!');  
+            
+            var id_evidenza = $(this).attr("data-id-evidenza");
+						var id_mese = $(this).attr("data-id-mese");
+            
+            var data = {
+              'id_agente': "{{ session('id_agente') }}",
+              'id_cliente': "{{ session('id_cliente') }}",
+              'id_evidenza': id_evidenza,
+              'id_mese': id_mese
+            }  
+
+             $.ajax({
+							        url: "{{ route('assegna-mese-evidenza-ajax') }}",
+							        data: data,
+							        success: function(msg) {
+							            if (msg == 'ok') {
+							              location.reload();
+							            } else {
+							              window.alert(msg);
+							            }
+							        }
+							    });
+
           @endif
 
         });
+
+
+
+        /**
+          * Store scroll position for and set it after reload
+          *
+          * @return {boolean} [loacalStorage is available]
+          */
+        $.fn.scrollPosReaload = function(){
+            if (localStorage) {
+                var posReader = localStorage["posStorage"];
+                if (posReader) {
+                    $('.Content').scrollTop(posReader);
+                    localStorage.removeItem("posStorage");
+                }
+                $(this).click(function(e) {
+                    localStorage["posStorage"] = $('.Content').scrollTop();
+                });
+
+                return true;
+            }
+
+            return false;
+        }
+
+        @foreach ($tipi_evidenza as $tipo_evidenza)
+          @foreach ($tipo_evidenza->evidenze as $evidenza)
+            
+            var id = '{{$evidenza->id}}';
+            $('#'+id).scrollPosReaload();
+
+          @endforeach
+        @endforeach
+
 
       });
 
@@ -161,7 +219,7 @@
                                     @endforeach
                                   </tr>
                                   @foreach ($tipo_evidenza->evidenze as $evidenza)
-                                    <tr>
+                                    <tr id ="{{$evidenza->id}}">
                                       <td>{{$tipo_evidenza->nome}}</td>
                                       @foreach ($evidenza->mesi as $item_ev_mese)
                                         {{-- se il tipo di evidenza per questo mese ha costo -1 vuole dire che NON E' VENDIBILE --}}
@@ -171,7 +229,7 @@
                                         
                                         @elseif($item_ev_mese->pivot->prelazionata)
                                           {{-- se è prelazionata ha lo sfondo ad hoc ed il nome del commerciale che ha la prelazione --}}
-                                    <td class="clickable sfondo_prelazione" data-id-evidenza="{{$evidenza->id}}" data-id-mese="{{$item_ev_mese->pivot->mese_id}}" data-id-hotel="{{$item_ev_mese->pivot->cliente_id}}">
+                                    <td class="clickable_prelazionata sfondo_prelazione" data-id-evidenza="{{$evidenza->id}}" data-id-mese="{{$item_ev_mese->pivot->mese_id}}" data-id-hotel="{{$item_ev_mese->pivot->cliente_id}}">
                                             <div class="contenuto_cella">
                                               {{$clienti_to_info[$item_ev_mese->pivot->cliente_id]}}<br/>{{ucfirst($commerciali_nome[$item_ev_mese->pivot->user_id])}}
                                             </div>
@@ -179,7 +237,7 @@
                                         
                                         @else
                                           {{-- ha lo sfondo del commerciale senza nome --}}
-                                          <td class="clickable sfondo_{{$item_ev_mese->pivot->user_id}}" data-id-evidenza="{{$evidenza->id}}" data-id-mese="{{$item_ev_mese->pivot->mese_id}}" data-id-hotel="{{$item_ev_mese->pivot->cliente_id}}">
+                                          <td class="clickable sfondo_{{$item_ev_mese->pivot->user_id}} acquistata_{{$item_ev_mese->pivot->acquistata}}" data-id-evidenza="{{$evidenza->id}}" data-id-mese="{{$item_ev_mese->pivot->mese_id}}" data-id-hotel="{{$item_ev_mese->pivot->cliente_id}}">
                                             <div class="contenuto_cella">
                                               {{$clienti_to_info[$item_ev_mese->pivot->cliente_id]}}
                                             </div>

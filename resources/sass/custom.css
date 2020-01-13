@@ -127,6 +127,7 @@ td.griglia_header {
 .sfondo_10.acquistata_0, 
 .sfondo_26.acquistata_0,
 .sfondo_27.acquistata_0,
+.sfondo_11.acquistata_0,
 .sfondo_5.acquistata_0{
  
   box-shadow: 0 0 30px #333;
@@ -147,6 +148,11 @@ div.contenuto_cella {
     padding: 0;
 }
 
+
+td.clickable:hover {
+  cursor: pointer;
+
+}
 
 
 
