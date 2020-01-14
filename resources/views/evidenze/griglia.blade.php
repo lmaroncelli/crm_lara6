@@ -256,7 +256,7 @@
                                         @endif
                                       @endforeach 
                                       {{-- /foreach mesi --}}
-                                      @if (session()->has('id_cliente') && $evidenza->mesi->where('pivot.acquistata',0)->where('pivot.prelazionata',0)->count())
+                                      @if (session()->has('id_cliente') && $evidenza->mesi->where('pivot.acquistata',0)->where('pivot.prelazionata',0)->where('pivot.cliente_id','!=',0)->count())
                                         <td>
                                           <input type="button" class="btn btn-primary btn-sm compra_evidenza" data-id-evidenza="{{$evidenza->id}}" name="compra_evidenza" value="Compra">
                                         </td>
