@@ -150,9 +150,18 @@ class EvidenzeController extends MyController
         echo "Niente da acquistare !";
         }
       
+    }
 
+  public function AnnullaAcquistoEvidenzaAjax(Request $request) 
+    {
+      $id_evidenza = $request->get('id_evidenza');
+      $id_mese = $request->get('id_mese');
 
+      $evidenza = Evidenza::find($id_evidenza);
 
+      $evidenza->mesi()->updateExistingPivot($id_mese, ['cliente_id' => 0, 'user_id' => 0, 'prelazionata' => 0, 'acquistata' => 0]);
+
+      echo "ok";
 
     }
 }

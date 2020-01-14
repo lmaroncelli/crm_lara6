@@ -40,7 +40,7 @@
 
         // click su ogni cella della griglia
 
-        $(".clickable").click(function(e){
+        $(".clickable:not(.acquistata_1)").click(function(e){
 
           e.preventDefault();
           
@@ -50,6 +50,8 @@
           
           @else
             
+            $(".spinner_lu").show();
+
             var id_evidenza = $(this).attr("data-id-evidenza");
 						var id_mese = $(this).attr("data-id-mese");
             
@@ -67,6 +69,55 @@
 							            if (msg == 'ok') {
 							              location.reload();
 							            } else {
+                            $(".spinner_lu").hide();
+							              window.alert(msg);
+							            }
+							        }
+							    });
+
+          @endif
+
+        });
+
+
+        $(".clickable.acquistata_1").click(function(e){
+
+          e.preventDefault();
+          
+          @if (!session()->has('nome_cliente') || !session()->has('nome_agente'))
+            
+            alert('seleziona un cliente!');
+          
+          @else
+          
+            var id_hotel = $(this).attr("data-id-hotel");
+            var id_cliente_session = {{ session('id_cliente') }};
+
+            if (id_cliente_session != id_hotel) {
+                  
+              alert('selezionare il cliente corretto!!'); 
+
+              return;
+            }
+
+            $(".spinner_lu").show();
+
+            var id_evidenza = $(this).attr("data-id-evidenza");
+						var id_mese = $(this).attr("data-id-mese");
+            
+            var data = {
+              'id_evidenza': id_evidenza,
+              'id_mese': id_mese
+            }  
+
+             $.ajax({
+							        url: "{{ route('annulla_acquisto_evidenza_ajax') }}",
+							        data: data,
+							        success: function(msg) {
+							            if (msg == 'ok') {
+							              location.reload();
+							            } else {
+                            $(".spinner_lu").hide();
 							              window.alert(msg);
 							            }
 							        }
@@ -84,7 +135,9 @@
             @if (!session('nome_cliente') || !session('nome_agente'))
               alert('selezionare il cliente'); return;
             @else
-            
+
+              $(".spinner_lu").show();
+              
               var id_evidenza = $(this).attr("data-id-evidenza");
               
               var data = {
@@ -101,6 +154,7 @@
                       if (msg == 'ok') {
                         location.reload();
                       } else {
+                        $(".spinner_lu").hide();
                         window.alert(msg);
                       }
                   }
@@ -227,8 +281,9 @@
                 <div class="tab-content">
                     <div class="m-section">
                         <div class="m-section__content">
+                          <div class="spinner_lu" style="display:none;"></div>
                           <div class="Content">
-                            <table class="table table-responsive-sm m-table m-table--head-bg-success table-hover table-bordered">
+                            <table class="table table-responsive-sm m-table m-table--head-bg-success table-bordered">
                               @php
                                   $macrotipologia_old = '';
                               @endphp
