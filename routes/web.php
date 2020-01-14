@@ -119,6 +119,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('cambia-cliente', 'EvidenzeController@CambiaCliente')->name('cambia-clinte');
 
+    Route::get('acquista-evidenza-ajax', 'EvidenzeController@AcquistaEvidenzaAjax')->name('acquista-evidenza-ajax');
+
+    
+
     
 
     

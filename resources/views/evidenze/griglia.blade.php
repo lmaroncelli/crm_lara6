@@ -77,6 +77,40 @@
         });
 
 
+        $(".compra_evidenza").click(function(e){
+
+            e.preventDefault();
+            
+            @if (!session('nome_cliente') || !session('nome_agente'))
+              alert('selezionare il cliente'); return;
+            @else
+            
+              var id_evidenza = $(this).attr("data-id-evidenza");
+              
+              var data = {
+                'id_agente': "{{ session('id_agente') }}",
+                'id_cliente': "{{ session('id_cliente') }}",
+                'id_foglio_servizi': 0,
+                'id_evidenza': id_evidenza,
+              }
+              
+              $.ajax({
+                  url: "{{ route('acquista-evidenza-ajax') }}",
+                  data: data,
+                  success: function(msg) {
+                      if (msg == 'ok') {
+                        location.reload();
+                      } else {
+                        window.alert(msg);
+                      }
+                  }
+              });        
+            
+            @endif
+            
+          });
+
+
 
         /**
           * Store scroll position for and set it after reload
@@ -289,17 +323,4 @@
     </div>
    
 </div>
-@endsection
-
-
-@section('js')
-    <script type="text/javascript" charset="utf-8">
-
-        jQuery(document).ready(function(){
-            
-           
-        });
-    
-
-    </script>
 @endsection

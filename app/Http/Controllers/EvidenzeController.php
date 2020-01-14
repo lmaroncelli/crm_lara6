@@ -122,4 +122,37 @@ class EvidenzeController extends MyController
         return redirect("evidenze/".$id_macro);
 
       }
+
+
+    public function AcquistaEvidenzaAjax(Request $request) {
+      $id_agente = $request->get('id_agente');
+      $id_cliente = $request->get('id_cliente');
+      $id_evidenza = $request->get('id_evidenza');
+      $id_foglio_servizi = $request->get('id_foglio_servizi');
+
+      $evidenza = Evidenza::find($id_evidenza);
+
+
+      $ev_da_acquistare = $evidenza->mesi->where('pivot.acquistata',0)->where('pivot.prelazionata',0)->where('pivot.cliente_id','!=',0);
+
+      if ($ev_da_acquistare->count()) 
+        {
+        foreach ($ev_da_acquistare as $evidenza_mese) 
+          {
+          $evidenza_mese->pivot->acquistata = 1;
+          $evidenza_mese->push();
+          }
+
+        echo "ok";
+        } 
+      else 
+        {
+        echo "Niente da acquistare !";
+        }
+      
+
+
+
+
+    }
 }
