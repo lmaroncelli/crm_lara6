@@ -110,4 +110,16 @@ class EvidenzeController extends MyController
         echo "ok";
 
       }
+
+
+
+    public function CambiaCliente(Request $request) 
+      {
+        $id_macro = session('id_macro');
+
+        $request->session()->forget(['id_cliente', 'id_info','id_agente','nome_cliente','nome_agente','id_macro']);
+
+        return redirect("evidenze/".$id_macro);
+
+      }
 }

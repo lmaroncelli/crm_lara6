@@ -170,13 +170,23 @@
 
 
             <div class="row">
-                <form class="form-inline" id="searchForm" accept-charset="utf-8">
-                  <div class="input-group m-4">
-                    <label for="clientiDaAssegnare" class="m-1">SELEZIONA CLIENTE:</label>
-                    <input class="clientiDaAssegnare form-control" style="width:400px" placeholder="ID-nomehotel">     
-                  </div>
-                  <button type="button" class="btn btn-success btn-xs">OK</button>
-                </form>
+                @if (session()->has('nome_cliente') && session()->has('nome_agente'))
+                  <form action="{{ route('cambia-clinte') }}">
+                    <div class="input-group m-4 alert alert-dark">
+                      CLIENTE SELEZIONATO: {{session('id_info')}} - {{session('nome_cliente')}}<br/>
+                      AGENTE: {{session('nome_agente')}}
+                      <button type="submit" id="cambia" class="btn btn-block btn-primary">CAMBIA</button>  
+                    </div>
+                  </form>
+                @else
+                  <form class="form-inline" id="searchForm" accept-charset="utf-8">
+                    <div class="input-group m-4">
+                      <label for="clientiDaAssegnare" class="m-1">SELEZIONA CLIENTE:</label>
+                      <input class="clientiDaAssegnare form-control" style="width:400px" placeholder="ID-nomehotel">     
+                    </div>
+                    <button type="button" class="btn btn-success btn-xs">OK</button>
+                  </form>
+                @endif
             </div>
             
             <div class="m-portlet__body">
@@ -184,14 +194,14 @@
                     <div class="m-section">
                         <div class="m-section__content">
                           <div class="Content">
-                            <table class="table table-responsive-sm m-table m-table--head-bg-success table-hover">
+                            <table class="table table-responsive-sm m-table m-table--head-bg-success table-hover table-bordered">
                               @php
                                   $macrotipologia_old = '';
                               @endphp
                               @foreach ($tipi_evidenza as $tipo_evidenza)
                                   @if ($tipo_evidenza->macrotipologia != $macrotipologia_old)
                                   <tr>
-                                    <td colspan="13" class="griglia_header">{{$tipo_evidenza->macrotipologia}}</td>
+                                    <td colspan="15" class="griglia_header">{{$tipo_evidenza->macrotipologia}}</td>
                                   </tr>
                                   @php
                                     $macrotipologia_old = $tipo_evidenza->macrotipologia;
@@ -244,7 +254,23 @@
                                           </td>
 
                                         @endif
-                                      @endforeach
+                                      @endforeach 
+                                      {{-- /foreach mesi --}}
+                                      @if (session()->has('id_cliente') && $evidenza->mesi->where('pivot.acquistata',0)->where('pivot.prelazionata',0)->count())
+                                        <td>
+                                          <input type="button" class="btn btn-primary btn-sm compra_evidenza" data-id-evidenza="{{$evidenza->id}}" name="compra_evidenza" value="Compra">
+                                        </td>
+                                        <td>
+                                          <input type="button" class="btn btn-success btn-sm prelaziona_evidenza" data-id-evidenza="{{$evidenza->id}}" name="prelaziona_evidenza" value="Prelaziona">
+                                        </td>
+                                      @else
+                                        <td>
+                                          <input type="button" class="btn btn-info btn-sm disabled" name="compra_evidenza" value="Compra">
+                                        </td>
+                                        <td>
+                                           <input type="button" class="btn btn-success btn-sm disabled" name="prelaziona_evidenza" value="Prelaziona">
+                                        </td>
+                                      @endif
                                     </tr>
                                   @endforeach
 
