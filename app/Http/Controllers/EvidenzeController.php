@@ -208,4 +208,64 @@ class EvidenzeController extends MyController
       echo "ok";
     }
 
+    public function AssegnaCostoTipoEvidenzaMeseAjax(Request $request) 
+    {
+      /**
+       dd($request->all());
+      array:3 [
+        "name" => null
+        "value" => "807"
+        "pk" => "1 | 2"
+      ]
+     */
+    
+    $costo = $request->get('value');
+    
+
+    $pk = $request->get('pk');
+
+    list($id_tipo_evidenza,$id_mese) = explode('|',$pk);
+
+    $tipo_evidenza = TipoEvidenza::find($id_tipo_evidenza);
+   
+    
+
+    // se il costo è empty devo metterlo -1 sul DB
+    if(empty($costo))
+      {
+      $tipo_evidenza->mesi()->updateExistingPivot($id_mese, ['costo' => -1]);
+      return response('ok', 200);
+      }
+    else 
+      {
+      $costo = ltrim($costo,'0');
+      }
+
+
+    if(!is_numeric($costo))
+    {
+      $costo = -1;
+    }
+
+    try 
+      {
+      if ($costo == -1) 
+        {
+        return response('', 400);
+        } 
+      else 
+        {
+        // aggiorno il costo nella tabelle tblEVTipiEvidenzeMesi
+        $tipo_evidenza->mesi()->updateExistingPivot($id_mese, ['costo' => $costo]);
+        return response('ok', 200);
+        }
+      
+      } 
+    catch (\Exception $e) 
+      {
+       return response($e->getMessage(), 400);
+      }
+
+    }
+
 }

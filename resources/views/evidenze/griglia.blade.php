@@ -251,7 +251,13 @@
           });
 
         $.fn.editable.defaults.mode = 'inline';
-        $('.costo').editable();
+        $.fn.editable.defaults.ajaxOptions = {type: "GET"};
+        $('.costo').editable({
+          error: function(response, newValue) {
+                        return '';
+                  },
+          
+        });
 
 
         /**
@@ -400,7 +406,13 @@
                                     @endphp
                                     @foreach ($tipo_evidenza->mesi as $item_tipo_ev_mese)
                                       <td>
-                                        <a href="#" class="costo" data-id-tipo-evidenza="{{$tipo_evidenza->id}}" data-id-mese="{{$item_tipo_ev_mese->numero}}">{{$item_tipo_ev_mese->pivot->costo}}</a>
+                                        <a href="#" class="costo" data-type="text" data-pk="{{$tipo_evidenza->id}} | {{$item_tipo_ev_mese->pivot->mese_id}}" data-url="{{ route('assegna_costo_tipo_evidenza_mese_ajax') }}" data-title="Inserisci il prezzo">
+                                          @if ($item_tipo_ev_mese->pivot->costo == -1)
+                                              //
+                                          @else
+                                              {{$item_tipo_ev_mese->pivot->costo}}
+                                          @endif
+                                        </a>
                                       </td>
                                       @if ($item_tipo_ev_mese->pivot->costo == -1)
                                         {{-- per ogni tipologia trovo i mesi non vendibili --}}

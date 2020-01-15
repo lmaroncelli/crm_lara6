@@ -124,6 +124,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('prelaziona-evidenza-ajax', 'EvidenzeController@PrelazionaEvidenzaAjax')->name('prelaziona-evidenza-ajax');
     Route::get('disassocia-mese-evidenza-prelazione-ajax', 'EvidenzeController@DisassociaMeseEvidenzaPrelazioneAjax')->name('disassocia-mese-evidenza-prelazione-ajax');
+
+    Route::get('assegna_costo_tipo_evidenza_mese_ajax', 'EvidenzeController@AssegnaCostoTipoEvidenzaMeseAjax')->name('assegna_costo_tipo_evidenza_mese_ajax');
+
+    
     
 
     

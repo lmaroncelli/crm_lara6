@@ -5301,6 +5301,22 @@ td.clickable:hover, td.clickable_prelazionata:hover {
 
 
 
+.glyphicon-ok:before {
+    content: "Salva";
+}
+.glyphicon-remove:before {
+    content: "Elimina";
+}
+.glyphicon {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+
 
 /*  da 768 in avanti */
 @media (min-width: 768px) {
