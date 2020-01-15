@@ -109,7 +109,8 @@ class Cliente extends Model
     
     public function scopeOfMacro($query,$macro_id = 0)
     {
-      if (!$macro_id) 
+      // se ci sono le macro Fiere e Parchi considero tutti i clienti e quindi non filtro !!
+      if ($macro_id <= 0) 
         {
           return $query;
         }

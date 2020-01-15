@@ -17,6 +17,9 @@ class EvidenzeController extends MyController
       {
         
         $macro = MacroLocalita::orderBy('ordine')->pluck('nome','id');
+        
+        $macro['-1'] = 'Parchi'; 
+        $macro['-2'] = 'Offerte Fiera'; 
 
         $utenti_commerciali = User::commerciale()->orderBy('name')->get();
 

@@ -418,10 +418,11 @@ seguito da
 > npm install && npm run dev
 
 
-NO!! LO DISINSTALLO
 
-npm uninstall --save bootstrap-editable
+# parchi e fiere
 
+
+hanno id_macro rispettivamente -1 e -2
 
 
 
