@@ -13,6 +13,7 @@
           if(datum != null)
             {
               if (confirm('Sei sicuro di voler operare sulle evidenze come '+datum+' ?')) {
+                 $(".spinner_lu").show();
                 data = {
                         item:datum,
                         macro_id:"{{ $macro_id }}"
@@ -25,6 +26,7 @@
                                 window.location.reload(true);
                                 
                               } else {
+                                 $(".spinner_lu").hide();
                                 window.alert(msg);
                                 $(".clientiDaAssegnare").val('');
                                 return;
@@ -165,6 +167,92 @@
           });
 
 
+        $(".prelaziona_evidenza").click(function(e){
+
+            e.preventDefault();
+            
+            @if (!session('nome_cliente') || !session('nome_agente'))
+              alert('selezionare il cliente'); return;
+            @else
+
+              $(".spinner_lu").show();
+              
+              var id_evidenza = $(this).attr("data-id-evidenza");
+              
+              var data = {
+                'id_agente': "{{ session('id_agente') }}",
+                'id_cliente': "{{ session('id_cliente') }}",
+                'id_foglio_servizi': 0,
+                'id_evidenza': id_evidenza,
+              }
+              
+              $.ajax({
+                  url: "{{ route('prelaziona-evidenza-ajax') }}",
+                  data: data,
+                  success: function(msg) {
+                      if (msg == 'ok') {
+                        location.reload();
+                      } else {
+                        $(".spinner_lu").hide();
+                        window.alert(msg);
+                      }
+                  }
+              });        
+            
+            @endif
+            
+          });
+
+
+          
+        $(".clickable_prelazionata").click(function(e){
+
+            e.preventDefault();
+            
+            @if (!session('nome_cliente') || !session('nome_agente'))
+              alert('selezionare il cliente'); return;
+            @else
+
+              var id_hotel = $(this).attr("data-id-hotel");
+              var id_cliente_session = {{ session('id_cliente') }};
+
+              if (id_cliente_session != id_hotel) {
+                    
+                alert('selezionare il cliente corretto!!'); 
+
+                return;
+              }
+
+              $(".spinner_lu").show();
+              
+              var id_evidenza = $(this).attr("data-id-evidenza");
+						  var id_mese = $(this).attr("data-id-mese");
+              
+              var data = {
+              'id_evidenza': id_evidenza,
+              'id_mese': id_mese
+              }  
+              
+              $.ajax({
+                  url: "{{ route('disassocia-mese-evidenza-prelazione-ajax') }}",
+                  data: data,
+                  success: function(msg) {
+                      if (msg == 'ok') {
+                        location.reload();
+                      } else {
+                        $(".spinner_lu").hide();
+                        window.alert(msg);
+                      }
+                  }
+              });        
+            
+            @endif
+            
+          });
+
+        $.fn.editable.defaults.mode = 'inline';
+        $('.costo').editable();
+
 
         /**
           * Store scroll position for and set it after reload
@@ -256,17 +344,18 @@
                 </ul>
             </div>
 
-
-            <div class="row">
+            @if ($macro_id)
+                
+              <div class="row">
                 @if (session()->has('nome_cliente') && session()->has('nome_agente'))
-                  <form action="{{ route('cambia-clinte') }}">
-                    <div class="input-group m-4 alert alert-dark">
-                      CLIENTE SELEZIONATO: {{session('id_info')}} - {{session('nome_cliente')}}<br/>
-                      AGENTE: {{session('nome_agente')}}
-                      <button type="submit" id="cambia" class="btn btn-block btn-primary">CAMBIA</button>  
-                    </div>
-                  </form>
-                @else
+                <form action="{{ route('cambia-clinte') }}">
+                  <div class="input-group m-4 alert alert-dark">
+                    CLIENTE SELEZIONATO: {{session('id_info')}} - {{session('nome_cliente')}}<br/>
+                    AGENTE: {{session('nome_agente')}}
+                    <button type="submit" id="cambia" class="btn btn-block btn-primary">CAMBIA</button>  
+                  </div>
+                </form>
+                  @else
                   <form class="form-inline" id="searchForm" accept-charset="utf-8">
                     <div class="input-group m-4">
                       <label for="clientiDaAssegnare" class="m-1">SELEZIONA CLIENTE:</label>
@@ -274,8 +363,10 @@
                     </div>
                     <button type="button" class="btn btn-success btn-xs">OK</button>
                   </form>
-                @endif
-            </div>
+                  @endif
+              </div>
+
+            @endif
             
             <div class="m-portlet__body">
                 <div class="tab-content">
@@ -308,7 +399,9 @@
                                         unset($mesi_non_vendibili);
                                     @endphp
                                     @foreach ($tipo_evidenza->mesi as $item_tipo_ev_mese)
-                                      <td>{{$item_tipo_ev_mese->pivot->costo}}</td>
+                                      <td>
+                                        <a href="#" class="costo" data-id-tipo-evidenza="{{$tipo_evidenza->id}}" data-id-mese="{{$item_tipo_ev_mese->numero}}">{{$item_tipo_ev_mese->pivot->costo}}</a>
+                                      </td>
                                       @if ($item_tipo_ev_mese->pivot->costo == -1)
                                         {{-- per ogni tipologia trovo i mesi non vendibili --}}
                                         @php
@@ -319,7 +412,7 @@
                                   </tr>
                                   @foreach ($tipo_evidenza->evidenze as $evidenza)
                                     <tr id ="{{$evidenza->id}}">
-                                      <td>{{$tipo_evidenza->nome}}</td>
+                                      <td>{{$tipo_evidenza->nome}}({{$tipo_evidenza->n_min_mesi}})</td>
                                       @foreach ($evidenza->mesi as $item_ev_mese)
                                         {{-- se il tipo di evidenza per questo mese ha costo -1 vuole dire che NON E' VENDIBILE --}}
                                         @if (isset($mesi_non_vendibili) && in_array($item_ev_mese->pivot->mese_id, $mesi_non_vendibili))

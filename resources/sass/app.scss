@@ -7,7 +7,6 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
-
 // coreUi css
 @import '~@coreui/coreui/dist/css/coreui.min.css';
 
@@ -16,6 +15,9 @@
 
 // jquery-autocomplete
 @import '~jquery-autocomplete/jquery.autocomplete.css';
+
+
+@import '~bootstrap-editable/css/bootstrap-editable.css';
 
 // custom.css
 @import 'custom.css';

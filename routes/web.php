@@ -122,6 +122,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('acquista-evidenza-ajax', 'EvidenzeController@AcquistaEvidenzaAjax')->name('acquista-evidenza-ajax');
     Route::get('annulla_acquisto_evidenza_ajax', 'EvidenzeController@AnnullaAcquistoEvidenzaAjax')->name('annulla_acquisto_evidenza_ajax');
 
+    Route::get('prelaziona-evidenza-ajax', 'EvidenzeController@PrelazionaEvidenzaAjax')->name('prelaziona-evidenza-ajax');
+    Route::get('disassocia-mese-evidenza-prelazione-ajax', 'EvidenzeController@DisassociaMeseEvidenzaPrelazioneAjax')->name('disassocia-mese-evidenza-prelazione-ajax');
+    
+
     
 
     

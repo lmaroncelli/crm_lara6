@@ -124,7 +124,8 @@ class EvidenzeController extends MyController
       }
 
 
-    public function AcquistaEvidenzaAjax(Request $request) {
+    public function AcquistaEvidenzaAjax(Request $request) 
+      {
       $id_agente = $request->get('id_agente');
       $id_cliente = $request->get('id_cliente');
       $id_evidenza = $request->get('id_evidenza');
@@ -150,7 +151,7 @@ class EvidenzeController extends MyController
         echo "Niente da acquistare !";
         }
       
-    }
+      }
 
   public function AnnullaAcquistoEvidenzaAjax(Request $request) 
     {
@@ -164,4 +165,47 @@ class EvidenzeController extends MyController
       echo "ok";
 
     }
+
+
+  public function PrelazionaEvidenzaAjax(Request $request) 
+    {
+    $id_agente = $request->get('id_agente');
+    $id_cliente = $request->get('id_cliente');
+    $id_evidenza = $request->get('id_evidenza');
+    $id_foglio_servizi = $request->get('id_foglio_servizi');
+
+    $evidenza = Evidenza::find($id_evidenza);
+
+
+    $ev_da_prelazionare = $evidenza->mesi->where('pivot.cliente_id',$id_cliente)->where('pivot.user_id',$id_agente)->where('pivot.acquistata',0)->where('pivot.prelazionata',0);
+
+    if ($ev_da_prelazionare->count()) 
+      {
+      foreach ($ev_da_prelazionare as $evidenza_mese) 
+        {
+        $evidenza_mese->pivot->prelazionata = 1;
+        $evidenza_mese->push();
+        }
+
+      echo "ok";
+      } 
+    else 
+      {
+      echo "Niente da prelazionare !";
+      }
+      
+    }
+
+  public function DisassociaMeseEvidenzaPrelazioneAjax(Request $request) 
+    {
+      $id_evidenza = $request->get('id_evidenza');
+      $id_mese = $request->get('id_mese');
+
+      $evidenza = Evidenza::find($id_evidenza);
+
+      $evidenza->mesi()->updateExistingPivot($id_mese, ['cliente_id' => 0, 'user_id' => 0, 'prelazionata' => 0]);
+
+      echo "ok";
+    }
+
 }

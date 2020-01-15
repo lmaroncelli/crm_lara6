@@ -391,3 +391,38 @@ e faccio una chiamata ajax (admin/evidenze/assegna_mese_evidenza_ajax) che modif
 
 
 
+
+
+# installo bootstrap editable
+
+https://www.npmjs.com/package/bootstrap-editable/v/1.0.1
+
+
+> npm install --save bootstrap-editable
+
+
+aggiungo in bootstrap.js
+
+ require('bootstrap-editable/js/index.js');
+
+
+ e
+
+
+@import '~bootstrap-editable/css/bootstrap-editable.css';
+
+in app.scss
+
+seguito da 
+
+> npm install && npm run dev
+
+
+NO!! LO DISINSTALLO
+
+npm uninstall --save bootstrap-editable
+
+
+
+
+

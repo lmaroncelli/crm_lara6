@@ -25,6 +25,7 @@
     },
     "dependencies": {
         "@coreui/coreui": "^2.1.12",
+        "bootstrap-editable": "^1.0.1",
         "bootstrap-switch": "^3.4.0",
         "jquery-autocomplete": "^1.2.8",
         "perfect-scrollbar": "^1.4.0",

@@ -149,7 +149,7 @@ div.contenuto_cella {
 }
 
 
-td.clickable:hover {
+td.clickable:hover, td.clickable_prelazionata:hover {
   cursor: pointer;
 
 }
