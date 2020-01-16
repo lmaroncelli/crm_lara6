@@ -135,8 +135,8 @@ Route::middleware(['auth'])->group(function () {
     ////////////////////////
 
     Route::get('contratto/{id?}', 'ContrattoDigitaleController@new')->name('contratto.new');
-    
-    Route::get('seleziona-cliente-contratto-digitale-ajax', 'ContrattoDigitaleController@SelezionaClienteContrattoDigitaleAjax')->name('seleziona-cliente-contratto-digitale-ajax');
+
+    Route::get('load-fatturazione-contratto-digitale-ajax', 'ContrattoDigitaleController@LoadFatturazioneContrattoDigitaleAjax')->name('load-fatturazione-contratto-digitale-ajax');
 
 
     
