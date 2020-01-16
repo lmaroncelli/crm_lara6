@@ -5301,20 +5301,42 @@ td.clickable:hover, td.clickable_prelazionata:hover {
 
 
 
+/* editable prezzi griglia evidenze  */
+
 .glyphicon-ok:before {
     content: "Salva";
 }
 .glyphicon-remove:before {
-    content: "Elimina";
+    content: "Annulla";
 }
 .glyphicon {
     display: inline-block;
-    font: normal normal normal 14px/1 FontAwesome;
-    font-size: inherit;
+    font-family: "Nunito", sans-serif;
+    font-style: initial;
+    font-size: 0.7rem;
+    font-weight: 400;
+    line-height: 1.6;
     text-rendering: auto;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+
+.editable-buttons {
+    margin-top: 5px;
+}
+
+
+
+/* CONTRATTI DIGITALI */
+
+.nascondi {
+  display: none!important;
+}
+
+
+
+
+
 
 
 

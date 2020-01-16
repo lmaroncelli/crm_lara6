@@ -393,7 +393,7 @@ e faccio una chiamata ajax (admin/evidenze/assegna_mese_evidenza_ajax) che modif
 
 
 
-# installo bootstrap editable
+## installo bootstrap editable
 
 https://www.npmjs.com/package/bootstrap-editable/v/1.0.1
 
@@ -419,11 +419,16 @@ seguito da
 
 
 
-# parchi e fiere
+## parchi e fiere
 
 
 hanno id_macro rispettivamente -1 e -2
 
 
 
+
+
+
+
+# Contratti digitali
 

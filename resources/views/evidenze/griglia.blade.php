@@ -406,7 +406,7 @@
                                     @endphp
                                     @foreach ($tipo_evidenza->mesi as $item_tipo_ev_mese)
                                       <td>
-                                        <a href="#" class="costo" data-type="text" data-pk="{{$tipo_evidenza->id}} | {{$item_tipo_ev_mese->pivot->mese_id}}" data-url="{{ route('assegna_costo_tipo_evidenza_mese_ajax') }}" data-title="Inserisci il prezzo">
+                                        <a href="#" class="costo" data-type="text" data-pk="{{$tipo_evidenza->id}} | {{$item_tipo_ev_mese->pivot->mese_id}}" data-url="{{ route('assegna-costo-tipo-evidenza-mese-ajax') }}" data-title="Inserisci il prezzo">
                                           @if ($item_tipo_ev_mese->pivot->costo == -1)
                                               //
                                           @else
