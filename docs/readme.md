@@ -1,3 +1,14 @@
+# CODICE
+
+
+SELECT COLUMN_NAME
+  FROM INFORMATION_SCHEMA.COLUMNS
+  WHERE TABLE_SCHEMA = 'crm' AND TABLE_NAME = 'fogli_servizi';
+
+  
+
+
+
 Per installare lo scaffolding con Vie e Bootstrap adesso bisogna installare prima questo package
 
 > composer require laravel/ui --dev
