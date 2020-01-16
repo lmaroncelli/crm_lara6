@@ -134,10 +134,11 @@ Route::middleware(['auth'])->group(function () {
     // CONTRATTI DIGITALI //
     ////////////////////////
 
-    Route::get('contratto/{id?}', 'ContrattoDigitaleController@new')->name('contratto.new');
-
-    Route::get('load-fatturazione-contratto-digitale-ajax', 'ContrattoDigitaleController@LoadFatturazioneContrattoDigitaleAjax')->name('load-fatturazione-contratto-digitale-ajax');
-
+    
+    Route::resource('contratto-digitale', 'ContrattiDigitaliController');
+    
+    Route::get('load-fatturazione-contratto-digitale-ajax', 'ContrattiDigitaliController@LoadFatturazioneContrattoDigitaleAjax')->name('load-fatturazione-contratto-digitale-ajax');
+    Route::get('load-referente-contratto-digitale-ajax', 'ContrattiDigitaliController@LoadReferenteContrattoDigitaleAjax')->name('load-referente-contratto-digitale-ajax');
 
     
     

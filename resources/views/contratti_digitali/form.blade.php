@@ -8,7 +8,8 @@
 
 		jQuery(document).ready(function(){
 
-        $(".toggle").click(function(){
+        $(".toggle").click(function(e){
+            e.preventDefault();
             $(".seleziona_cliente").toggleClass('nascondi');
             $(".dati_cliente").toggleClass('nascondi');
         });
@@ -38,6 +39,22 @@
                                 });
 
                                 $('#dati_fatturazione').fadeIn('fast', function(){
+
+                                  $.ajax({
+                                          url: "{{ route('load-referente-contratto-digitale-ajax') }}",
+                                          data: data,
+                                          success: function(msg) {
+                                              //alert(msg);
+                                              $('#dati_referente').fadeOut('fast', function(){
+                                                $('#dati_referente').html(msg);
+                                              });
+
+                                              $('#dati_referente').fadeIn('fast', function(){
+                                                // visibile submit button               
+                                                $("#continua").fadeIn('fast');
+                                              });
+                                          }
+                                      }); 
 
                                 });
 
@@ -84,13 +101,16 @@
     </div>{{-- col --}}
 </div>{{-- row --}}
 
+
+<form action="{{ route('contratto-digitale.store') }}" method="post">
+  @csrf
 <div class="row justify-content-between">
   <div class="col-lg-5">
     <div class="form-group">
-      <label for="cliente">Cliente</label> <a href="#" class="toggle">Nuovo cliente?</a>
+      <label for="cliente">Cliente</label> <a href="" class="toggle">Nuovo cliente?</a>
       
       <div class="input-group mb-3 dati_cliente">
-        <input class="clientiDaAssegnare form-control" style="width:400px" placeholder="Seleziona cliente...">     
+        <input name="item" class="clientiDaAssegnare form-control" style="width:400px" placeholder="Seleziona cliente...">     
         <button type="button" class="btn btn-success btn-xs">OK</button>
       </div>
       
@@ -119,10 +139,17 @@ Codice Fiscale:CCCCCCCCCCC"></textarea>
     <div class="form-group">
       <label for="referente">Dati Referente</label>
       <textarea id="referente" class="form-control dati_cliente nascondi" name="referente" rows="5" placeholder="Proprietario: Napoleone Bonaparte - 338-111222333"></textarea>
-      <div class="seleziona_cliente">Seleziona un cliente</div>
+      <div id="dati_referente" class="seleziona_cliente">Seleziona un cliente</div>
     </div>
   </div>
 </div>
+
+<div class="row">
+  <div class="col mt-5">
+    <button type="submit" class="btn btn-primary btn-xs">Salva e continua</button>
+  </div>
+</div>
+</form>
 
 
 @endsection
