@@ -19,11 +19,11 @@ class ServiziDigitaliTableSeeder extends Seeder
 
       $ServiziDigitali = collect($ServiziDigitali)->map(function($x){ return (array) $x; })->toArray(); 
 
-      DB::connection('mysql')->table('tblContrattiDigitali')->truncate();
+      DB::connection('mysql')->table('tblServiziDigitali')->truncate();
       
       foreach ($ServiziDigitali as $servizio) 
         {
-        DB::connection('mysql')->table('tblContrattiDigitali')->insert($servizio);
+        DB::connection('mysql')->table('tblServiziDigitali')->insert($servizio);
         }
     }
 }

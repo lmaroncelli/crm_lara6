@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Cliente;
 use App\Utility;
 use Illuminate\Http\Request;
 use App\Http\Controllers\MyController;
@@ -38,9 +39,23 @@ class ContrattiDigitaliController extends MyController
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-         dd($request->all());
-    }
+      {
+      
+      $validation_arr = ['fatturazione' => 'required', 'referente' => 'required'];
+      
+      $validatedData = $request->validate($validation_arr);
+
+      if ($request->has('item')) 
+        {
+        
+        } 
+      else 
+        {
+        
+        }
+      
+    
+      }
 
     /**
      * Display the specified resource.

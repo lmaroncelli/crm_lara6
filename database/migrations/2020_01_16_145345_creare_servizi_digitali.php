@@ -16,11 +16,11 @@ class CreareServiziDigitali extends Migration
         Schema::create('tblServiziDigitali', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('contratto_id')->unsigned();
-            $table->integer('servizio_scontato_id')->unsigned();
+            $table->integer('servizio_scontato_id')->unsigned()->nullable();
             $table->string('nome')->nullable()->default('null');
             $table->string('localita')->nullable()->default('null');
             $table->string('pagina')->nullable()->default('null');
-            $table->text('altro_servizio');
+            $table->text('altro_servizio')->nullable();
             $table->string('dal',50)->nullable()->default('null');
             $table->string('al',50)->nullable()->default('null');
             $table->integer('qta')->nullable()->default(1);

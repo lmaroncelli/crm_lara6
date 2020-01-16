@@ -110,7 +110,7 @@
       <label for="cliente">Cliente</label> <a href="" class="toggle">Nuovo cliente?</a>
       
       <div class="input-group mb-3 dati_cliente">
-        <input name="item" class="clientiDaAssegnare form-control" style="width:400px" placeholder="Seleziona cliente...">     
+        <input name="item" class="clientiDaAssegnare form-control" style="width:400px" placeholder="Seleziona cliente..." value="{{ old('item') }}" required>     
         <button type="button" class="btn btn-success btn-xs">OK</button>
       </div>
       
