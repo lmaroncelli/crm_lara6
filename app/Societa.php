@@ -38,6 +38,12 @@ class Societa extends Model
   }
 
 
+  public function scopeWithRagioneSociale($query, $rag_soc_id)
+    {
+        return $query->where('ragionesociale_id', $rag_soc_id);
+    }
+
+
 
   public function destroyMe()
     {

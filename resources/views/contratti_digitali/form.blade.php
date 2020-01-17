@@ -8,10 +8,25 @@
 
 		jQuery(document).ready(function(){
 
+        function swapRequiredProp(item)
+          {
+            if (item.prop('required')) {
+            item.prop('required', false);
+            } else {
+            item.prop('required', true);
+            }
+          }
+
         $(".toggle").click(function(e){
             e.preventDefault();
             $(".seleziona_cliente").toggleClass('nascondi');
             $(".dati_cliente").toggleClass('nascondi');
+
+            swapRequiredProp($('.clientiDaAssegnare'));
+            swapRequiredProp($('#fatturazione'));
+            swapRequiredProp($('#referente'));
+            swapRequiredProp($('#cliente'));
+
         });
 
         var clientiDaAssegnare = {!!$clienti_autocomplete_js!!};
@@ -80,75 +95,81 @@
 
 @section('content')
 
-
-<div class="row mt-2 row justify-content-between">
-    <div class="col-lg-5">
-     <div class="card card-accent-primary">
-        <div class="card-header">Contratto fornutura servizi</div>
-        <div class="card-body">
-            
-        </div>
-      </div>    
-    </div>{{-- col --}}
-
-
-    <div class="col-lg-4">
-     <div class="card card-accent-primary">
-        <div class="card-body text-center">
-            LOGO
-        </div>
-      </div>    
-    </div>{{-- col --}}
-</div>{{-- row --}}
-
-
 <form action="{{ route('contratto-digitale.store') }}" method="post">
   @csrf
-<div class="row justify-content-between">
-  <div class="col-lg-5">
-    <div class="form-group">
-      <label for="cliente">Cliente</label> <a href="" class="toggle">Nuovo cliente?</a>
-      
-      <div class="input-group mb-3 dati_cliente">
-        <input name="item" class="clientiDaAssegnare form-control" style="width:400px" placeholder="Seleziona cliente..." value="{{ old('item') }}" required>     
-        <button type="button" class="btn btn-success btn-xs">OK</button>
+  <div class="row mt-2 row justify-content-between">
+      <div class="col-lg-5">
+      <div class="card card-accent-primary text-center">
+          <div class="card-header">CONTRATTO FORNITURA SERVIZI</div>
+          <div class="card-body">
+              <div class="form-group">
+                <label for="id_commerciale">Nome Agente</label>
+                <select required id="id_commerciale" class="form-control" name="id_commerciale">
+                  <option value="">Seleziona</option>
+                  @foreach ($utenti_commerciali as $commerciale)
+                  <option value="{{$commerciale->id}}">{{$commerciale->name}}</option>
+                  @endforeach
+                </select>
+              </div>
+          </div>
+        </div>    
+      </div>{{-- col --}}
+
+
+      <div class="col-lg-4">
+      <div class="card card-accent-primary">
+          <div class="card-body text-center">
+              LOGO
+          </div>
+        </div>    
+      </div>{{-- col --}}
+  </div>{{-- row --}}
+
+  <div class="row justify-content-between">
+    <div class="col-lg-5">
+      <div class="form-group">
+        <label for="cliente">Cliente</label> <a href="" class="toggle">Nuovo cliente?</a>
+        
+        <div class="input-group mb-3 dati_cliente">
+          <input name="item" class="clientiDaAssegnare form-control" style="width:400px" placeholder="Seleziona cliente..." value="{{ old('item') }}" required>     
+          <button type="button" class="btn btn-success btn-xs">OK</button>
+        </div>
+        
+        <textarea id="cliente" class="form-control dati_cliente nascondi" name="cliente" rows="5" placeholder="ID - Hotel XXXXX
+  LOCALITA"></textarea>
+        
+        
       </div>
-      
-      <textarea id="cliente" class="form-control dati_cliente nascondi" name="cliente" rows="5" placeholder="ID - Hotel XXXXX
-LOCALITA"></textarea>
-      
-      
+    </div>
+
+    <div class="col-lg-5">
+      <div class="form-group">
+        <label for="fatturazione">Dati Fatturazione</label>
+        <textarea id="fatturazione" class="form-control dati_cliente nascondi" name="fatturazione" rows="5" placeholder="Hotel XXXXX s.a.s. di YYYYYY
+  Viale ZZZZZZ
+  CAP-LOCALITA(PROVINCIA) 
+  P.IVA: PPPPPP
+  Codice Fiscale:CCCCCCCCCCC"></textarea>
+        <div id="dati_fatturazione" class="seleziona_cliente">Seleziona un cliente</div>
+      </div>
     </div>
   </div>
 
-  <div class="col-lg-5">
-    <div class="form-group">
-      <label for="fatturazione">Dati Fatturazione</label>
-      <textarea id="fatturazione" class="form-control dati_cliente nascondi" name="fatturazione" rows="5" placeholder="Hotel XXXXX s.a.s. di YYYYYY
-Viale ZZZZZZ
-CAP-LOCALITA(PROVINCIA) 
-P.IVA: PPPPPP
-Codice Fiscale:CCCCCCCCCCC"></textarea>
-      <div id="dati_fatturazione" class="seleziona_cliente">Seleziona un cliente</div>
+  <div class="row">
+    <div class="col-lg-5">
+      <div class="form-group">
+        <label for="referente">Dati Referente</label>
+        <textarea id="referente" class="form-control dati_cliente nascondi" name="referente" rows="5" placeholder="Proprietario: Napoleone Bonaparte - 338-111222333"></textarea>
+        <div id="dati_referente" class="seleziona_cliente">Seleziona un cliente</div>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="col-lg-5">
-    <div class="form-group">
-      <label for="referente">Dati Referente</label>
-      <textarea id="referente" class="form-control dati_cliente nascondi" name="referente" rows="5" placeholder="Proprietario: Napoleone Bonaparte - 338-111222333"></textarea>
-      <div id="dati_referente" class="seleziona_cliente">Seleziona un cliente</div>
+  <div class="row">
+    <div class="col mt-5">
+      <button type="submit" class="btn btn-primary btn-xs">Salva e continua</button>
     </div>
   </div>
-</div>
-
-<div class="row">
-  <div class="col mt-5">
-    <button type="submit" class="btn btn-primary btn-xs">Salva e continua</button>
-  </div>
-</div>
 </form>
 
 

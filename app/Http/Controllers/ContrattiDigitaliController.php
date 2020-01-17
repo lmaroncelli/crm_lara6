@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 
+use App\User;
 use App\Cliente;
+use App\Societa;
 use App\Utility;
+use App\RagioneSociale;
 use Illuminate\Http\Request;
 use App\Http\Controllers\MyController;
 
@@ -29,7 +32,9 @@ class ContrattiDigitaliController extends MyController
     {
       $clienti_autocomplete_js = Utility::getAutocompleteJs();
 
-      return view('contratti_digitali.form', compact('clienti_autocomplete_js'));
+      $utenti_commerciali = User::commerciale()->orderBy('name')->get();
+
+      return view('contratti_digitali.form', compact('clienti_autocomplete_js', 'utenti_commerciali'));
     }
 
     /**
@@ -40,20 +45,63 @@ class ContrattiDigitaliController extends MyController
      */
     public function store(Request $request)
       {
-      
+    
       $validation_arr = ['fatturazione' => 'required', 'referente' => 'required'];
       
       $validatedData = $request->validate($validation_arr);
-
-      if ($request->has('item')) 
+      
+      dd($request->all());
+      if ($request->has('item') && $request->get('item') != '') 
         {
+        $item = $request->get('item');
+        list($id_info, $name) = explode("-", $item);
+
+        $cliente = Cliente::with('localita')->byIdInfo($id_info)->first();
+        $dati_cliente = $cliente->id_info . ' - ' .$cliente->nome."\n".$cliente->localita->nome;
+
+
+        $rag_soc = RagioneSociale::with('localita.comune.provincia')->find($request->get('fatturazione'));
+
+        $dati_fatturazione = $rag_soc->nome . "\n" .$rag_soc->indirizzo . "\n" . $rag_soc->cap . "-" .$rag_soc->localita->nome .'('. $rag_soc->localita->comune->provincia->sigla .") \nP.IVA: ". $rag_soc->piva . "\nCodice Fiscale: ".$rag_soc->cf;
+
+        $societa = Societa::withRagioneSociale($rag_soc->id);
         
+        // IBAN della società può essere già corretto oppure essere malformato
+        if($this->_guess_iban($societa->iban))
+          {
+          $iban = $societa->iban;
+          $iban_importato = "" ;
+          }
+        else
+          {
+          $iban = "" ;
+          $iban_importato = $societa->iban;
+          }
+
         } 
       else 
         {
         
         }
       
+
+        //  $data = array (
+        //  'user_id' => $id_commerciale,
+        //  'cliente_id' => $id_cliente,
+        //  'dati_cliente' => $dati_cliente,
+        //  'data_creazione' =>
+        //  'tipo_contratto' => $tipo_contratto,
+        //  'segnalatore' => $tipo_contratto_altro,
+        //  'dati_fatturazione' => $dati_fatturazione,
+        //  'dati_referente' => $referente,
+        //  'iban' => $iban,
+        //  'iban_importato' => $iban_importato,
+        //  'pec' => $pec,
+        //  'codice_destinatario' => $codice_destinatario,
+        //  'sito_web' => $sito_web,
+        //  'email' => $email,
+        //  'email_amministrativa' => $email_amministrativa,
+        // ); 
     
       }
 
@@ -147,5 +195,26 @@ class ContrattiDigitaliController extends MyController
 
       return view('contratti_digitali._referenti', compact('referenti'));
       
+      }
+    
+
+    /**
+      * IBAN della società può essere già corretto oppure essere malformato
+      *
+      * @param [type] $iban
+      * @return boolean
+      */
+    private function _guess_iban($iban)
+      {
+      $iban_check = explode(' ',$iban);
+
+      if (count($iban_check) == 4) 
+        {
+        return true;
+        } 
+      else 
+        {
+        return false;
+        }
       }
 }

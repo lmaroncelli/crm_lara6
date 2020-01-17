@@ -445,9 +445,4 @@ hanno id_macro rispettivamente -1 e -2
 
 
 
-Quando faccio il submit NON POSSO mettere required all'item perché se lo nascondo mi da errore
-
-An invalid form control with name='item' is not focusable.
-
-
 
