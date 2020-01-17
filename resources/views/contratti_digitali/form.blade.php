@@ -19,6 +19,11 @@
 
         $(".toggle").click(function(e){
             e.preventDefault();
+            
+            $(this).text(function(i, text){
+              return text === "Nuovo cliente?" ? "Cliente esistente?" : "Nuovo cliente?";
+            })
+
             $(".seleziona_cliente").toggleClass('nascondi');
             $(".dati_cliente").toggleClass('nascondi');
 
@@ -26,6 +31,15 @@
             swapRequiredProp($('#fatturazione'));
             swapRequiredProp($('#referente'));
             swapRequiredProp($('#cliente'));
+            swapRequiredProp($('.tipo_contratto'));
+
+            if($("#radio_nuovo_contratto").prop("checked")) {
+              $("#radio_nuovo_contratto").prop("checked", false);
+            } else {
+              $("#radio_nuovo_contratto").prop("checked", true);
+            }
+            
+            
 
         });
 
@@ -110,6 +124,20 @@
                   <option value="{{$commerciale->id}}">{{$commerciale->name}}</option>
                   @endforeach
                 </select>
+              </div>
+          </div>
+          <div class="card-header">TIPO CONTRATTO</div>
+          <div class="card-body">
+            <div class="form-group">
+                <input type="radio" class="tipo_contratto" id="radio_nuovo_contratto" value="nuovo" name="tipo_contratto" class="" id="nuovo" required>
+                <label for="nuovo">NUOVO</label>
+                <input type="radio" class="tipo_contratto" value="rinnovo" name="tipo_contratto" class="" id="rinnovo" required>
+                <label for="rinnovo">RINNOVO</label>
+                <input type="radio" class="tipo_contratto" value="cambio_gestione" name="tipo_contratto" class="" id="cambio_gestione" required>
+                <label for="cambio_gestione">CAMBIO GESTIONE</label>
+              </div>
+              <div class="input-group">
+                <input class="form-control" type="text" name="segnalatore" placeholder="Segnalato da ...">
               </div>
           </div>
         </div>    
