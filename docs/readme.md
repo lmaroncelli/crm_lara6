@@ -5,7 +5,25 @@ SELECT COLUMN_NAME
   FROM INFORMATION_SCHEMA.COLUMNS
   WHERE TABLE_SCHEMA = 'crm' AND TABLE_NAME = 'fogli_servizi';
 
-  
+
+
+
+
+# Riprendo 26/03/2020
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

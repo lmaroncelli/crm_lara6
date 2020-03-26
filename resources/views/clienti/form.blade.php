@@ -293,7 +293,7 @@
                         <div class="m-section__content container_gruppo">
                           @foreach ($cliente->gruppo->clienti as $cliente_gruppo)
                             @if ($cliente_gruppo->id != $cliente->id)
-                              <a href="{{ route('clienti.edit',['id' => $cliente_gruppo->id]) }}" class="@if(!$cliente_gruppo->attivo) disattivato @endif">{{$cliente_gruppo->nome}} (ID {{$cliente_gruppo->id_info}})</a>
+                              <a href="{{ route('clienti.edit',$cliente_gruppo->id) }}" class="@if(!$cliente_gruppo->attivo) disattivato @endif">{{$cliente_gruppo->nome}} (ID {{$cliente_gruppo->id_info}})</a>
                             @endif
                           @endforeach
                         </div>

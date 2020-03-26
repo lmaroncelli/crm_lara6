@@ -87,7 +87,7 @@
                                   @method('DELETE')
                               </form>
                               <tr>
-                                <th scope="row"><a href="{{ route('societa.edit',['id' => $s->id]) }}" title="Modifica societa">{{optional($s->ragioneSociale)->nome}}</a></th>
+                                <th scope="row"><a href="{{ route('societa.edit',$s->id) }}" title="Modifica societa">{{optional($s->ragioneSociale)->nome}}</a></th>
                                 <td>{{optional($s->cliente)->nome}}</td>
                                 <td>{{optional($s->cliente)->id_info}}</td>
                                 <td>{{$s->note}}</td>

@@ -146,18 +146,18 @@
                                 <tbody>
                                     @foreach ($fatture as $fattura)
                                       <tr>
-                                          <th scope="row"><a href="{{ route('fatture.edit',['id' => $fattura->id]) }}" title="Modifica fattura">{{$fattura->numero_fattura}}</a></th>
+                                          <th scope="row"><a href="{{ route('fatture.edit',$fattura->id) }}" title="Modifica fattura">{{$fattura->numero_fattura}}</a></th>
                                           <td> {{optional($fattura->data)->format('d/m/Y')}}</a></td>
                                           <td>{{optional($fattura->pagamento)->nome}}</td>
                                           <td>{{App\Utility::formatta_cifra($fattura->totale,'€')}}</td>
                                           <td>{!!optional(optional($fattura->societa)->ragioneSociale)->nome!!}</td>
                                           <td>{{optional(optional($fattura->societa)->cliente)->nome}}</td>
                                           <td>
-                                            <form action="{{ route('fatture.destroy', ['id' => $fattura->id]) }}" method="POST" accept-charset="utf-8" class="deleteForm" id="delete-riga-form">
+                                            <form action="{{ route('fatture.destroy', $fattura->id) }}" method="POST" accept-charset="utf-8" class="deleteForm" id="delete-riga-form">
                                                 @csrf
                                                 @method('DELETE')
                                                 <a href="#" style="margin-bottom: 5px!important;" class="delete btn btn-danger m-btn m-btn--icon m-btn--icon-only"> 
-                                                    <i class="la la-trash"></i>
+                                                    <i class="fas fa-trash-alt"></i>
                                                 </a>
                                             </form>
                                           </td>
