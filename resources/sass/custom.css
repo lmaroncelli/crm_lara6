@@ -235,10 +235,17 @@ td.clickable:hover, td.clickable_prelazionata:hover {
   margin-left: 50px;
 }
 
+form#form_contratto_digitale {
+  margin: 0 50px;
+}
 
+form#form_contratto_digitale label {
+  font-weight: bold;
+}
 
-
-
+input[type='radio'].condizioni_pagamento {
+  margin-left: 20px;
+}
 
 
 /*  da 768 in avanti */

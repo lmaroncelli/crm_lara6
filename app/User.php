@@ -55,6 +55,11 @@ class User extends Authenticatable
         return $this->clienti_associati->pluck('id')->toArray();
     }
 
+    public function contrattiDigitali()
+    {
+        return $this->hasMany('App\ContrattoDigitale', 'user_id', 'id');
+    }
+
     public function scopeCommerciale($query)
      {
          return $query->where('type_id','C');

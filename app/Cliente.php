@@ -91,6 +91,12 @@ class Cliente extends Model
     }
 
 
+    public function contrattiDigitali()
+    {
+        return $this->hasMany('App\ContrattoDigitale', 'cliente_id', 'id');
+    }
+
+
     ////////////////////////////////////////////////////////////////////////
     // servizi da fatturare per un cliente NON archiviato e SENZA fattura //
     ////////////////////////////////////////////////////////////////////////

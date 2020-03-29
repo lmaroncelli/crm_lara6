@@ -15,6 +15,20 @@
       </li>
 
 
+      <li class="nav-item">
+        <a class="nav-link active" href="{{ route('fatture.index') }}">
+        Fatture
+        </a>
+      </li>
+
+
+      <li class="nav-item">
+        <a class="nav-link active" href="{{ route('evidenze.view') }}">
+        Evidenze
+        </a>
+      </li>
+
+
       <li class="nav-title">Components</li>
         <li class="nav-item nav-dropdown">
           <a class="nav-link nav-dropdown-toggle" href="#">

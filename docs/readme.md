@@ -12,7 +12,7 @@ SELECT COLUMN_NAME
 # Riprendo 26/03/2020
 
 
-
+Laravel Framework 6.9.0
 
 
 
@@ -462,5 +462,15 @@ hanno id_macro rispettivamente -1 e -2
 # Contratti digitali
 
 
+1) cliente esistente
 
-
+array:8 [▼
+  "_token" => "yNjlxjc0UOxBRSddSO6Nz3Sjh7GuHMl68cio8HK7"
+  "id_commerciale" => "5"
+  "tipo_contratto" => "rinnovo"
+  "segnalatore" => null
+  "item" => "17 - Hotel Sabrina Rimini - Rimini Mare"
+  "cliente" => null
+  "fatturazione" => "11"
+  "referente" => null
+]

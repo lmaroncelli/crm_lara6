@@ -29,6 +29,13 @@ class Utility extends Model
   #IP a cui sono visibili i dettagli di debug (query ed altre info)
 	private static $ip_debug = ['127.0.0.1', '2.224.168.43'];
 
+	private static $condizioni_pagamento = [
+									'RIBA' => 'RIBA',
+									'ASSEGNO BANCARIO' => 'ASSEGNO BANCARIO',
+									'BONIFICO' => 'BONIFICO',
+									'CONTANTI' => 'CONTANTI',
+									'NESSUNO' => 'NESSUNO',
+									'GRATUITO' => 'GRATUITO']; 
 
 	/**
 	 * Prende l'id del visitatore
@@ -347,6 +354,11 @@ class Utility extends Model
       
     }
 
+
+	public static function getCondizioniPagamento()
+		{
+		return self::$condizioni_pagamento;
+		}
 
 
 }

@@ -11,9 +11,30 @@ class ContrattoDigitale extends Model
    protected $guarded = ['id'];
 
 
+   /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'data_creazione',
+    ];
+
+
+
    public function servizi()
    {
        return $this->hasMany('App\ServizioDigitale', 'contratto_id', 'id');
+   }
+
+   public function commerciale()
+   {
+       return $this->belongsTo('App\User', 'user_id', 'id');
+   }
+
+   public function cliente()
+   {
+       return $this->belongsTo('App\Cliente', 'cliente_id', 'id');
    }
    
 }
