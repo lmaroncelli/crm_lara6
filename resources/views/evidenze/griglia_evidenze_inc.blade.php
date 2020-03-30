@@ -30,13 +30,21 @@
                       @endphp
                       @foreach ($tipo_evidenza->mesi as $item_tipo_ev_mese)
                         <td>
-                          <a href="#" class="costo" data-type="text" data-pk="{{$tipo_evidenza->id}} | {{$item_tipo_ev_mese->pivot->mese_id}}" data-url="{{ route('assegna-costo-tipo-evidenza-mese-ajax') }}" data-title="Inserisci il prezzo">
+                          @if (isset($contratto_digitale))
                             @if ($item_tipo_ev_mese->pivot->costo == -1)
-                                //
+                            //
                             @else
-                                {{$item_tipo_ev_mese->pivot->costo}}
+                            {{$item_tipo_ev_mese->pivot->costo}}
                             @endif
-                          </a>
+                          @else
+                            <a href="#" class="costo" data-type="text" data-pk="{{$tipo_evidenza->id}} | {{$item_tipo_ev_mese->pivot->mese_id}}" data-url="{{ route('assegna-costo-tipo-evidenza-mese-ajax') }}" data-title="Inserisci il prezzo">
+                              @if ($item_tipo_ev_mese->pivot->costo == -1)
+                              //
+                              @else
+                              {{$item_tipo_ev_mese->pivot->costo}}
+                              @endif
+                            </a>
+                          @endif
                         </td>
                         @if ($item_tipo_ev_mese->pivot->costo == -1)
                           {{-- per ogni tipologia trovo i mesi non vendibili --}}

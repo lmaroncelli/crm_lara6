@@ -8,14 +8,48 @@
 
 		jQuery(document).ready(function(){
 
+        // click su ogni cella della griglia
 
-        $("#form_contratto_digitale").submit(function(){
-        
-              if($('#id_commerciale').val() == 0) {
-                 alert('Seleziona il commerciale');
-                  return false; 
-              }
-        });
+        $(".clickable:not(.acquistata_1)").click(function(e){
+
+            e.preventDefault();
+
+            @if (!session()->has('id_cliente') || !session()->has('id_agente'))
+              
+              alert('seleziona un cliente!');
+
+            @else
+              
+              $(".spinner_lu").show();
+
+              var id_evidenza = $(this).attr("data-id-evidenza");
+              var id_mese = $(this).attr("data-id-mese");
+              
+              var data = {
+                'id_agente': "{{ session('id_agente') }}",
+                'id_cliente': "{{ session('id_cliente') }}",
+                'id_evidenza': id_evidenza,
+                'id_mese': id_mese
+              }  
+
+              $.ajax({
+                        url: "{{ route('assegna-mese-evidenza-ajax') }}",
+                        data: data,
+                        success: function(msg) {
+                            if (msg == 'ok') {
+                              location.reload();
+                            } else {
+                              $(".spinner_lu").hide();
+                              window.alert(msg);
+                            }
+                        }
+                    });
+
+            @endif
+
+          });
+
+      
 
 		});
 	
@@ -25,7 +59,6 @@
 @endsection
 
 @section('content')
-<div class="spinner_lu" style="display:none;"></div>
 <form action="{{ route('contratto-digitale.update',$contratto->id) }}" method="post" id="form_contratto_digitale">
   @csrf
   @method('PUT')
@@ -35,13 +68,8 @@
           <div class="card-header">CONTRATTO FORNITURA SERVIZI</div>
           <div class="card-body">
               <div class="form-group">
-                <label for="id_commerciale">Nome Agente</label>
-                <select required id="id_commerciale" class="form-control" name="id_commerciale">
-                  <option value="0">Seleziona</option>
-                  @foreach ($utenti_commerciali as $commerciale)
-                  <option value="{{$commerciale->id}}" @if ($contratto->user_id == $commerciale->id) selected="selected" @endif>{{$commerciale->name}}</option>
-                  @endforeach
-                </select>
+                <label for="id_commerciale">Nome Agente:</label>
+                <label  class="form-check-label">{{ strtoupper($commerciale_contratto) }}</label>
               </div>
           </div>
           <div class="card-header">TIPO CONTRATTO</div>
@@ -173,7 +201,7 @@
           </label>
         </div>
         <div class="form-group col-sm-7">
-          <input class="form-control" id="data_pagamento" type="text" placeholder="">
+          <input class="form-control" class="data_pagamento" type="text" placeholder="">
         </div>
     </div>
   @endforeach
@@ -224,10 +252,27 @@
     </div>
   </div>
 </form>
-
+<hr>
+<div class="evidenze_contratto">
 {{-- griglia_evidenze --}}
-@include('evidenze.griglia_evidenze_inc')
+<h4 class="m-portlet__head-text" style="width: 100px;">
+  Località
+</h4>
+{{--  Elenco macrolocalita  --}}
+<div class="row">
+<ul class="nav nav-tabs nav-griglia">
+  @foreach ($macro as $id => $nome)
+    <li class="nav-item">
+      <a class="nav-link @if ($id == $macro_id) active @endif" href="{{ route('contratto-digitale.edit', ['contratto_id' => $contratto->id, 'macro_id' => $id]) }}">{{$nome}}</a>
+    </li>
+  @endforeach
+  </ul>
+</div>
+
+@include('evidenze.griglia_evidenze_inc', ['contratto_digitale' => 1])
 {{-- END griglia_evidenze --}}
+
+</div>
 
 @endsection
 

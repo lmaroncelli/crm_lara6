@@ -65,4 +65,5 @@ class User extends Authenticatable
          return $query->where('type_id','C');
      }
 
+
 }

@@ -8,6 +8,7 @@ use App\Cliente;
 use App\Societa;
 use App\Utility;
 use App\TipoEvidenza;
+use App\MacroLocalita;
 use App\RagioneSociale;
 use App\ContrattoDigitale;
 use Illuminate\Http\Request;
@@ -176,8 +177,8 @@ class ContrattiDigitaliController extends MyController
       // gestione IBAN
       $this->_gestione_iban($i1, $i2, $i3, $i4, $mostra_iban_importato, $contratto);
 
-      // elenco commerciali
-      $utenti_commerciali = User::commerciale()->orderBy('name')->get();
+     // commerciale selezionato
+     $commerciale_contratto = User::find($contratto->user_id)->name;
 
       // servizi già associati a questo contratto
       $servizi_assoc = $this->_servizi_associati($contratto);
@@ -185,18 +186,38 @@ class ContrattiDigitaliController extends MyController
       //condizioni di pagamento
       $condizioni_pagamento = Utility::getCondizioniPagamento();
 
+      
 
 
-      // GESTIONE GRISGLI EVIDENZE
-      if(!$macro_id)
+
+      // GESTIONE GRIGLIA EVIDENZE
+
+      //  IL CONTRATTO PUO' APPARTENERE AD UN CLIENTE GIA' ESISTENTE OPPURE A UNO NUOVO CHE NON ESISTE GIA' NEL CRM
+      if ($contratto->cliente_id == -1) 
         {
-        $macro_id = $contratto->cliente->localita->macrolocalita_id;
+        $macro = MacroLocalita::orderBy('ordine')->pluck('nome','id');
+        } 
+      else 
+        {
+        if(!$macro_id)
+          {
+          $macro_id = $contratto->cliente->localita->macrolocalita_id;
+
+          $macrolocalita = MacroLocalita::find($macro_id);
+          $macro[$macrolocalita->id] = $macrolocalita->nome; 
+          }
         }
+      $macro['-1'] = 'Parchi'; 
+      $macro['-2'] = 'Offerte Fiera';
 
       //==================================================//
       // CODICE COPIATO DA EvidenzeController@index DRY !!!
       // utilizzare un composer ????
       //==================================================//
+      
+      $utenti_commerciali = User::commerciale()->orderBy('name')->get();
+      $commerciali = $utenti_commerciali->pluck('name','id');
+
 
       $tipi_evidenza = TipoEvidenza::with(['macroLocalita','mesi','evidenze','evidenze.mesi'])->ofMacro($macro_id)->get(); 
 
@@ -212,10 +233,25 @@ class ContrattiDigitaliController extends MyController
       $commerciali_nome = $utenti_commerciali->pluck('username','id')->toArray();
       $commerciali_nome[0] = '';
 
+      //==================================================//
+      // CODICE COPIATO DA EvidenzeController@index DRY !!!
+      // utilizzare un composer ????
+      //==================================================//
 
 
+      
 
-      return view('contratti_digitali.form', compact('contratto','i1','i2','i3','i4', 'mostra_iban_importato', 'utenti_commerciali','servizi_assoc','condizioni_pagamento','tipi_evidenza','clienti_to_info','commerciali_nome'));
+      # metto in sessione 
+      session([
+        'id_cliente' => $contratto->cliente_id,
+        'id_info' => '',
+        'id_agente' => $contratto->user_id,
+        'nome_cliente' => '',
+        'nome_agente' => '',
+        'id_macro' => $macro_id
+        ]);
+   
+      return view('contratti_digitali.form', compact('contratto','i1','i2','i3','i4', 'mostra_iban_importato', 'commerciale_contratto','servizi_assoc','condizioni_pagamento','tipi_evidenza','clienti_to_info','commerciali_nome','macro','macro_id', 'utenti_commerciali', 'commerciali'));
 
     }
 

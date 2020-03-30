@@ -338,10 +338,10 @@
 
             <h4 class="m-portlet__head-text" style="width: 100px;">
                 Località
-            </h3>
+            </h4>
             {{--  Elenco macrolocalita  --}}
             <div class="row">
-              <ul class="nav nav-tabs">
+              <ul class="nav nav-tabs nav-griglia">
                 @foreach ($macro as $id => $nome)
                   <li class="nav-item">
                     <a class="nav-link @if ($id == $macro_id) active @endif" href="{{ route('evidenze.view', $id) }}">{{$nome}}</a>

@@ -160,7 +160,7 @@ td.clickable:hover, td.clickable_prelazionata:hover {
 
 
 .spinner_lu {
-   position: absolute;
+   position: fixed;
    left: 50%;
    top: 50%;
    height:170px;
@@ -236,7 +236,7 @@ td.clickable:hover, td.clickable_prelazionata:hover {
 }
 
 form#form_contratto_digitale {
-  margin: 0 50px;
+  margin: 0 35px;
 }
 
 form#form_contratto_digitale label {
@@ -245,6 +245,15 @@ form#form_contratto_digitale label {
 
 input[type='radio'].condizioni_pagamento {
   margin-left: 20px;
+}
+
+ul.nav-griglia {
+  margin-left:20px;
+}
+
+
+div.evidenze_contratto {
+  margin: 10px 35px;
 }
 
 
