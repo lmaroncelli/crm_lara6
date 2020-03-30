@@ -109,6 +109,17 @@
     </div>
   </div>
 
+  {{-- Iban importato --}}
+  @if ($mostra_iban_importato && $contratto->iban_importato != '')
+  <div class="form-group row">
+    <label class="col-md-3 col-form-label" for="text-input">IBAN IMPORTATO</label>
+    <div class="col-md-9">
+      <input class="form-control" id="iban_importato" type="text" name="iban_importato" placeholder="iban importato dal crm" value="{{$contratto->iban_importato}}">
+      <span class="help-block">Importato dal CRM (questo campo verrà automaticamente nascosto dopo aver compilato l'IBAN sottostante e salvato)</span>
+    </div>
+  </div>
+  @endif
+
   {{-- IBAN  --}}
   <div class="form-group row">
 
@@ -157,7 +168,9 @@
     <div class="row">
         <div class="form-check-inline form-group col-sm-3">
           <input class="form-check-input condizioni_pagamento" id="{{$cp}}" type="radio" value="{{$cp}}" name="condizioni_pagamento">
-          <label class="form-check-label" for="{{$cp}}">{{$cp}}</label>
+          <label class="form-check-label" for="{{$cp}}">
+            {{$cp}} @if ($cp == 'RIBA') (*) @endif
+          </label>
         </div>
         <div class="form-group col-sm-7">
           <input class="form-control" id="data_pagamento" type="text" placeholder="">
@@ -165,6 +178,45 @@
     </div>
   @endforeach
 
+  <div class="row">
+    <div class="form-group col-sm-8 offset-sm-2">
+      <label class="riba">* In caso di mancato saldo Ri.BA. alla scadenza contrattualmente determinata verrà effettuato l’addebito delle spese accessorie causa insoluto. Dette spese sono quantificabili in euro 7,00.</label>
+    </div>
+  </div>
+
+  {{-- Note --}}
+  <div class="form-group row">
+    <label class="col-md-3 col-form-label" for="text-input">NOTE</label>
+    <div class="col-md-9">
+      <textarea id="note" class="form-control" name="note" rows="5" placeholder="note">
+{{$contratto->note}}
+      </textarea>
+    </div>
+  </div>
+
+  {{-- Sito Web --}}
+  <div class="form-group row">
+    <label class="col-md-3 col-form-label" for="text-input">Sito web</label>
+    <div class="col-md-9">
+      <input class="form-control" id="sito_web" type="text" name="sito_web" placeholder="Sito web" value="{{$contratto->sito_web}}">
+    </div>
+  </div>
+
+  {{-- email --}}
+  <div class="form-group row">
+    <label class="col-md-3 col-form-label" for="text-input">Email</label>
+    <div class="col-md-9">
+      <input class="form-control" id="email" type="text" name="email" placeholder="Email" value="{{$contratto->email}}">
+    </div>
+  </div>
+
+  {{--  Email amministrativa --}}
+  <div class="form-group row">
+    <label class="col-md-3 col-form-label" for="text-input">Email amministrativa</label>
+    <div class="col-md-9">
+      <input class="form-control" id="email_amministrativa" type="text" name="email_amministrativa" placeholder="Email amministrativa" value="{{$contratto->email_amministrativa}}">
+    </div>
+  </div>
 
   <div class="row">
     <div class="col mt-5">

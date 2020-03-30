@@ -186,7 +186,7 @@ class ContrattiDigitaliController extends MyController
 
       $condizioni_pagamento = Utility::getCondizioniPagamento();
 
-      return view('contratti_digitali.form', compact('contratto','i1','i2','i3','i4','utenti_commerciali','servizi_assoc','condizioni_pagamento'));
+      return view('contratti_digitali.form', compact('contratto','i1','i2','i3','i4', 'mostra_iban_importato', 'utenti_commerciali','servizi_assoc','condizioni_pagamento'));
     }
 
     /**
