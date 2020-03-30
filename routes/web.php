@@ -134,8 +134,10 @@ Route::middleware(['auth'])->group(function () {
     // CONTRATTI DIGITALI //
     ////////////////////////
 
-    
     Route::resource('contratto-digitale', 'ContrattiDigitaliController');
+
+    // sovrascrivo edit
+    Route::get('contratto-digitale/{contratto_id}/edit/{macro_id?}', 'ContrattiDigitaliController@edit')->name('contratto-digitale.edit');
     
     Route::get('load-fatturazione-contratto-digitale-ajax', 'ContrattiDigitaliController@LoadFatturazioneContrattoDigitaleAjax')->name('load-fatturazione-contratto-digitale-ajax');
     Route::get('load-referente-contratto-digitale-ajax', 'ContrattiDigitaliController@LoadReferenteContrattoDigitaleAjax')->name('load-referente-contratto-digitale-ajax');

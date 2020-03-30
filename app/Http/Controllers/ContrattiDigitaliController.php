@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Cliente;
-use App\ContrattoDigitale;
 use App\Societa;
 use App\Utility;
+use App\TipoEvidenza;
 use App\RagioneSociale;
+use App\ContrattoDigitale;
 use Illuminate\Http\Request;
 use App\Http\Controllers\MyController;
 
@@ -168,7 +169,7 @@ class ContrattiDigitaliController extends MyController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, $macro_id = 0)
     {
       $contratto = ContrattoDigitale::find($id);
 
@@ -178,15 +179,44 @@ class ContrattiDigitaliController extends MyController
       // elenco commerciali
       $utenti_commerciali = User::commerciale()->orderBy('name')->get();
 
-
       // servizi già associati a questo contratto
       $servizi_assoc = $this->_servizi_associati($contratto);
 
-      //dd($contratto);
-
+      //condizioni di pagamento
       $condizioni_pagamento = Utility::getCondizioniPagamento();
 
-      return view('contratti_digitali.form', compact('contratto','i1','i2','i3','i4', 'mostra_iban_importato', 'utenti_commerciali','servizi_assoc','condizioni_pagamento'));
+
+
+      // GESTIONE GRISGLI EVIDENZE
+      if(!$macro_id)
+        {
+        $macro_id = $contratto->cliente->localita->macrolocalita_id;
+        }
+
+      //==================================================//
+      // CODICE COPIATO DA EvidenzeController@index DRY !!!
+      // utilizzare un composer ????
+      //==================================================//
+
+      $tipi_evidenza = TipoEvidenza::with(['macroLocalita','mesi','evidenze','evidenze.mesi'])->ofMacro($macro_id)->get(); 
+
+      // preparo un array tale che $clienti_to_info[id] = id_info senza dover fare sempre la query per ogni cella
+      // dovrei filtrare per macrolocalita
+      // scopeOfMacro($id_macro) x i clienti ??
+      $clienti_to_info = Cliente::attivo()->ofMacro($macro_id)->pluck('id_info','id')->toArray();
+      $clienti_to_info[-1] = '';
+      $clienti_to_info[0] = '';
+      
+
+      // preparo un array tale che $commerciale_nome[id_utente] = username senza dover fare sempre la query per ogni cella
+      $commerciali_nome = $utenti_commerciali->pluck('username','id')->toArray();
+      $commerciali_nome[0] = '';
+
+
+
+
+      return view('contratti_digitali.form', compact('contratto','i1','i2','i3','i4', 'mostra_iban_importato', 'utenti_commerciali','servizi_assoc','condizioni_pagamento','tipi_evidenza','clienti_to_info','commerciali_nome'));
+
     }
 
     /**

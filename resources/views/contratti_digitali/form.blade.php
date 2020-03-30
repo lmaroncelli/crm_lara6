@@ -225,6 +225,9 @@
   </div>
 </form>
 
+{{-- griglia_evidenze --}}
+@include('evidenze.griglia_evidenze_inc')
+{{-- END griglia_evidenze --}}
 
 @endsection
 
