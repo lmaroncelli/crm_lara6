@@ -1,61 +1,7 @@
 @extends('layouts.coreui.crm_lara6')
 
 
-@section('js')
-	<script type="text/javascript" charset="utf-8">
-		
-	
-
-		jQuery(document).ready(function(){
-
-        // click su ogni cella della griglia
-
-        $(".clickable:not(.acquistata_1)").click(function(e){
-
-            e.preventDefault();
-
-            @if (!session()->has('id_cliente') || !session()->has('id_agente'))
-              
-              alert('seleziona un cliente!');
-
-            @else
-              
-              $(".spinner_lu").show();
-
-              var id_evidenza = $(this).attr("data-id-evidenza");
-              var id_mese = $(this).attr("data-id-mese");
-              
-              var data = {
-                'id_agente': "{{ session('id_agente') }}",
-                'id_cliente': "{{ session('id_cliente') }}",
-                'id_evidenza': id_evidenza,
-                'id_mese': id_mese
-              }  
-
-              $.ajax({
-                        url: "{{ route('assegna-mese-evidenza-ajax') }}",
-                        data: data,
-                        success: function(msg) {
-                            if (msg == 'ok') {
-                              location.reload();
-                            } else {
-                              $(".spinner_lu").hide();
-                              window.alert(msg);
-                            }
-                        }
-                    });
-
-            @endif
-
-          });
-
-      
-
-		});
-	
-
-	</script>
-	
+@section('js')	
 @endsection
 
 @section('content')

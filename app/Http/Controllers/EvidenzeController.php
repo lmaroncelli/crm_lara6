@@ -136,14 +136,86 @@ class EvidenzeController extends MyController
 
       $evidenza = Evidenza::find($id_evidenza);
 
+      $tipoevidenza = $evidenza->tipo;
 
-      $ev_da_acquistare = $evidenza->mesi->where('pivot.acquistata',0)->where('pivot.prelazionata',0)->where('pivot.cliente_id','!=',0);
+      $ev_da_acquistare = $evidenza->mesi
+                                ->where('pivot.acquistata',0)
+                                ->where('pivot.prelazionata',0)
+                                ->where('pivot.cliente_id',$id_cliente)
+                                ->where('pivot.user_id',$id_agente)
+                                ;
 
       if ($ev_da_acquistare->count()) 
         {
+        // VERIFICA CHE LE EVIDENZE SIANO SEQUENZIALI
+        $mese_old = 0;
+        $sequenziali = true;
+
+        $mesi_count=1;
+        
+        $primo_mese = null;
+        $ultimo_mese = null;
+        $costo_tot = 0;
+        
+        foreach ($ev_da_acquistare as $evidenza_mese) 
+          {
+          // devo trovare il costo di qesto tipo di evidenza in questo mese
+          $costo_tot += $tipoevidenza->mesi->where('pivot.mese_id', $evidenza_mese->pivot->mese_id)->first()->pivot->costo;
+
+          if($mese_old !=0)
+            {
+            if( $evidenza_mese->pivot->mese_id != $mese_old + 1) 
+              {
+              $sequenziali = false;
+              break;
+              }
+            }
+          
+          if($mesi_count==1)
+            {
+            $primo_mese = $evidenza_mese->pivot->mese_id;
+            $ultimo_mese = $primo_mese;
+            }
+          else
+            {
+            $ultimo_mese = $evidenza_mese->pivot->mese_id;
+            }
+          $mese_old = $evidenza_mese->pivot->mese_id;
+          $mesi_count++;
+          }
+
+        if(!$sequenziali)
+          {
+          echo "ATTENZIONE: le evidenze da acquistare devono essere sequenziali!\n Dividere i periodi non sequenziali in acquisti separati.";
+          die();
+          }
+
+
+
+        // creo la riga da inserire nella tabella dei ServiziDigitali
+
+        
+
+
+        $data_servizi_web = array (
+            'nome' => 'EVIDENZA',
+            'localita' => $tipoevidenza->macroLocalita->nome,
+            'pagina' => $tipoevidenza->nome,
+            'dal' => $primo_mese,
+            'al' => $ultimo_mese,
+            'qta' => 1,
+            'importo' => $costo_tot,
+            'id_foglio_servizi' => $id_foglio_servizi
+          );
+
+        dd($data_servizi_web);
+
+        // Metto le evidddenze come Acquistate e le lego al contratto digitale 
         foreach ($ev_da_acquistare as $evidenza_mese) 
           {
           $evidenza_mese->pivot->acquistata = 1;
+          $evidenza_mese->pivot->servizioweb_id = $id_foglio_servizi;
+
           $evidenza_mese->push();
           }
 

@@ -1,3 +1,101 @@
+@section('js_griglia_evidenze')
+    <script type="text/javascript">
+      
+    jQuery(document).ready(function(){
+
+      // click su ogni cella della griglia
+
+      $(".clickable:not(.acquistata_1)").click(function(e){
+
+          e.preventDefault();
+
+          @if (!session()->has('id_cliente') || !session()->has('id_agente'))
+            
+            alert('seleziona un cliente!');
+
+          @else
+            
+            $(".spinner_lu").show();
+
+            var id_evidenza = $(this).attr("data-id-evidenza");
+            var id_mese = $(this).attr("data-id-mese");
+            
+            var data = {
+              'id_agente': "{{ session('id_agente') }}",
+              'id_cliente': "{{ session('id_cliente') }}",
+              'id_evidenza': id_evidenza,
+              'id_mese': id_mese
+            }  
+
+            $.ajax({
+                      url: "{{ route('assegna-mese-evidenza-ajax') }}",
+                      data: data,
+                      success: function(msg) {
+                          if (msg == 'ok') {
+                            location.reload();
+                          } else {
+                            $(".spinner_lu").hide();
+                            window.alert(msg);
+                          }
+                      }
+                  });
+
+          @endif
+
+        });// end clickable:not(.acquistata_1)
+
+        $(".compra_evidenza").click(function(e){
+
+            e.preventDefault();
+
+            @if (!session('id_cliente') || !session('id_agente'))
+              alert('selezionare il cliente'); return;
+            @else
+
+              $(".spinner_lu").show();
+              
+              var id_evidenza = $(this).attr("data-id-evidenza");
+              
+              @if (isset($contratto_digitale))
+                var id_foglio_servizi =  "{{$contratto->id}}";
+              @else
+                var id_foglio_servizi =  0;
+              @endif
+
+
+              var data = {
+                'id_agente': "{{ session('id_agente') }}",
+                'id_cliente': "{{ session('id_cliente') }}",
+                'id_foglio_servizi':id_foglio_servizi,
+                'id_evidenza': id_evidenza,
+              }
+              
+              $.ajax({
+                  url: "{{ route('acquista-evidenza-ajax') }}",
+                  data: data,
+                  success: function(msg) {
+                      if (msg == 'ok') {
+                        location.reload();
+                      } else {
+                        $(".spinner_lu").hide();
+                        window.alert(msg);
+                      }
+                  }
+              });        
+
+            @endif
+
+          }); // end compra_evidenza
+
+
+
+    }); // end jQuery(document).ready
+
+
+    </script>
+@endsection
+
+
 <div class="m-portlet__body">
   <div class="tab-content">
       <div class="m-section">

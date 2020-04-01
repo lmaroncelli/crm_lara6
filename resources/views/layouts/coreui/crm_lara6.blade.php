@@ -113,5 +113,6 @@
 
   </script>
   @yield('js')
+  @yield('js_griglia_evidenze');
 </body>
 </html>
