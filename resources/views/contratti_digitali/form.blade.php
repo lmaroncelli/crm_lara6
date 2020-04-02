@@ -1,7 +1,40 @@
 @extends('layouts.coreui.crm_lara6')
 
 
-@section('js')	
+@section('js')
+
+<script type="text/javascript">
+
+jQuery(document).ready(function($){
+
+      /* click bottone cancella riga servizio */
+      $( ".delRow" ).click(function(e) {
+        
+        if (confirm('Sei sicuro di eliminare il servizo ?')) {
+
+          e.preventDefault();
+          
+          var id = $(this).data('id');
+          
+          data = {
+            id:id,
+          };
+          
+          $.ajax({
+              url: "{{ route('del-riga-servizio-ajax'}}",
+              type: 'GET',
+              data: data,
+              success: function(msg) {
+                  window.location.reload(true);
+              }
+          });
+        
+        } /*endif*/
+
+      }); /*end delRow */
+          
+}); /* document.ready
+</script>
 @endsection
 
 @section('content')
