@@ -57,16 +57,16 @@
               var id_evidenza = $(this).attr("data-id-evidenza");
               
               @if (isset($contratto_digitale))
-                var id_foglio_servizi =  "{{$contratto->id}}";
+                var contratto_id =  "{{$contratto->id}}";
               @else
-                var id_foglio_servizi =  0;
+                var contratto_id =  0;
               @endif
 
 
               var data = {
                 'id_agente': "{{ session('id_agente') }}",
                 'id_cliente': "{{ session('id_cliente') }}",
-                'id_foglio_servizi':id_foglio_servizi,
+                'contratto_id':contratto_id,
                 'id_evidenza': id_evidenza,
               }
               

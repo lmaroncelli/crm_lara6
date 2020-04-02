@@ -10,6 +10,7 @@ use App\TipoEvidenza;
 use App\MacroLocalita;
 use Illuminate\Http\Request;
 use App\Http\Controllers\MyController;
+use App\ServizioDigitale;
 
 class EvidenzeController extends MyController
 {
@@ -132,9 +133,11 @@ class EvidenzeController extends MyController
       $id_agente = $request->get('id_agente');
       $id_cliente = $request->get('id_cliente');
       $id_evidenza = $request->get('id_evidenza');
-      $id_foglio_servizi = $request->get('id_foglio_servizi');
+      $contratto_id = $request->get('contratto_id');
 
       $evidenza = Evidenza::find($id_evidenza);
+
+      $anno = $evidenza->mesi()->first()->anno;
 
       $tipoevidenza = $evidenza->tipo;
 
@@ -173,12 +176,12 @@ class EvidenzeController extends MyController
           
           if($mesi_count==1)
             {
-            $primo_mese = $evidenza_mese->pivot->mese_id;
+            $primo_mese = $evidenza_mese->numero;
             $ultimo_mese = $primo_mese;
             }
           else
             {
-            $ultimo_mese = $evidenza_mese->pivot->mese_id;
+            $ultimo_mese = $evidenza_mese->numero;
             }
           $mese_old = $evidenza_mese->pivot->mese_id;
           $mesi_count++;
@@ -193,28 +196,28 @@ class EvidenzeController extends MyController
 
 
         // creo la riga da inserire nella tabella dei ServiziDigitali
+        $dal = '01/'.$primo_mese.'/'.$anno;
+        $al = Utility::getUltimoGiornoMese($anno.'/'.$ultimo_mese.'/01').'/'.$ultimo_mese . '/' .$anno;
 
-        
 
-
-        $data_servizi_web = array (
+        $data_servizi_digitali = array (
             'nome' => 'EVIDENZA',
             'localita' => $tipoevidenza->macroLocalita->nome,
             'pagina' => $tipoevidenza->nome,
-            'dal' => $primo_mese,
-            'al' => $ultimo_mese,
+            'dal' => $dal,
+            'al' => $al,
             'qta' => 1,
             'importo' => $costo_tot,
-            'id_foglio_servizi' => $id_foglio_servizi
+            'contratto_id' => $contratto_id
           );
 
-        dd($data_servizi_web);
+        $servizio_digitale = ServizioDigitale::create($data_servizi_digitali);
 
         // Metto le evidddenze come Acquistate e le lego al contratto digitale 
         foreach ($ev_da_acquistare as $evidenza_mese) 
           {
           $evidenza_mese->pivot->acquistata = 1;
-          $evidenza_mese->pivot->servizioweb_id = $id_foglio_servizi;
+          $evidenza_mese->pivot->servizioweb_id = $contratto_id;
 
           $evidenza_mese->push();
           }

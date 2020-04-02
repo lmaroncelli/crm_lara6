@@ -5343,7 +5343,13 @@ form#form_contratto_digitale {
   margin: 0 35px;
 }
 
-form#form_contratto_digitale label {
+
+
+.row.header {
+  margin-top: 40px;;
+}
+
+.row.header label {
   font-weight: bold;
 }
 

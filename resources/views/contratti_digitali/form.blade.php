@@ -112,6 +112,12 @@
     </div>
   </div>
 
+  <div class="row header">
+    <div class="form-group col-sm-12">
+      <label for="condizioni_pagamento">Fatturazione Elettronica</label>
+    </div>
+  </div>
+
   {{-- pec --}}
   <div class="form-group row">
     <label class="col-md-3 col-form-label" for="text-input">PEC</label>
@@ -130,7 +136,7 @@
 
   {{-- Condizioni di pagamento --}}
 
-  <div class="row">
+  <div class="row header">
     <div class="form-group col-sm-3">
       <label for="condizioni_pagamento">Condizioni di pagamento</label>
     </div>
@@ -199,6 +205,7 @@
   </div>
 </form>
 <hr>
+
 <div class="evidenze_contratto">
 {{-- griglia_evidenze --}}
 <h4 class="m-portlet__head-text" style="width: 100px;">
@@ -215,9 +222,43 @@
   </ul>
 </div>
 
+<hr>
 @include('evidenze.griglia_evidenze_inc', ['contratto_digitale' => 1])
-{{-- END griglia_evidenze --}}
+<hr>
+</div>
 
+{{-- ServiziDigitali associati al contratto --}}
+<div class="table-responsive">
+  <table class="table">
+    <caption>Servizi venduti</caption>
+    <thead>
+      <tr>
+        <th scope="col">Servizi digitali INFOALBERGHI.COM</th>
+        <th scope="col">Dal</th>
+        <th scope="col">Al</th>
+        <th scope="col">Q.tà</th>
+        <th scope="col">Importo (€)</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach ($servizi_assoc as $servizio)
+      <tr>
+        <td>{{$servizio->nome}} - {{$servizio->localita}} @if ($servizio->pagina != '') <br/> {{$servizio->pagina}}@endif</td>
+        <td>{{$servizio->dal}}</td>
+        <td>{{$servizio->al}}</td>
+        <td>{{$servizio->qta}}</td>
+        <td>{{$servizio->importo}}</td>
+        <td>
+            <button type="button" class="btn btn-primary btn-sm scontoRow" title="Crea uno sconto per il servizio" data-id="{{$contratto->id}}" data-idfservizio="{{$servizio->id}}">
+              <i class="fas fa-piggy-bank"></i>
+            </button>
+        </td>
+        <td><button type="button" class="btn btn-danger btn-sm delRow" title="Elimina il servizio" data-id="{{$servizio->id}}"><i class="fas fa-trash-alt"></i></button></td>
+      </tr>
+      @endforeach
+    </tbody>
+  </table>
 </div>
 
 @endsection

@@ -239,7 +239,10 @@ class ContrattiDigitaliController extends MyController
       //==================================================//
 
 
+
+      // ServiziDigitali associati al contratto
       
+      $servizi_assoc = $contratto->servizi;
 
       # metto in sessione 
       session([
@@ -251,7 +254,7 @@ class ContrattiDigitaliController extends MyController
         'id_macro' => $macro_id
         ]);
    
-      return view('contratti_digitali.form', compact('contratto','i1','i2','i3','i4', 'mostra_iban_importato', 'commerciale_contratto','servizi_assoc','condizioni_pagamento','tipi_evidenza','clienti_to_info','commerciali_nome','macro','macro_id', 'utenti_commerciali', 'commerciali'));
+      return view('contratti_digitali.form', compact('contratto','i1','i2','i3','i4', 'mostra_iban_importato', 'commerciale_contratto','servizi_assoc','condizioni_pagamento','tipi_evidenza','clienti_to_info','commerciali_nome','macro','macro_id', 'utenti_commerciali', 'commerciali','servizi_assoc'));
 
     }
 

@@ -361,4 +361,11 @@ class Utility extends Model
 		}
 
 
+	public static function getUltimoGiornoMese($data = '')
+		{
+		
+		return date('t', strtotime($data));
+		}
+
+
 }
