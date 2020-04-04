@@ -1,9 +1,18 @@
 <form id="formAddRowSconto">
-  <div class="row">
-    <div class="col-md-8 col-xs-12"><input type="text" name="nome" id="nome" value="SCONTO &nbsp; <?php echo $servizio->nome!= 'ALTRO' ? $servizio->nome : $servizio->altro_servizio ?>" class="form-control" readonly="readonly"></div>
-    <div class="col-md-2 col-xs-12" style="text-align: right;"><input type="text" name="importo" id="importo" value="" size="20" class="form-control"></div>
-    <div class="col-md-2 col-xs-12"><button type="button" class="btn btn-primary btn-sm" id="addRowSconto">add</button></div>
+  @csrf
+  <div class="form-group row">
+    <div class="col-md-7 offset-md-1">
+      <input class="form-control" id="nome" type="text" name="nome" value="SCONTO &nbsp; <?php echo $servizio->nome!= 'ALTRO' ? $servizio->nome : $servizio->altro_servizio ?>" readonly="readonly">
+    </div>
+    <div class="col-md-2">
+      <input class="form-control" id="importo" type="text" name="importo" value="" placeholder="importo">
+    </div>
+    <div class="col-md-2">
+      <button type="button" class="btn btn-primary btn-sm" id="addRowSconto">add</button>
+    </div>
+    <input type="hidden" name="idcontratto" value="<?php echo $idcontratto ?>">
+    <input type="hidden" name="idservizio" value="<?php echo $servizio->id ?>">
   </div>
-  <input type="hidden" name="idfoglioservizi" value="<?php echo $idfoglioservizi ?>">
-  <input type="hidden" name="idservizio" value="<?php echo $servizio->id ?>">
+  <div id="response"></div>
 </form>
+

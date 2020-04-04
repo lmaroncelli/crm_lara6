@@ -331,21 +331,31 @@ class ContrattiDigitaliController extends MyController
 
     public function LoadRigaScontoAjax(Request $request)
       {
-        $idfoglioservizi = $request->get('idfoglioservizi');  
+        $idcontratto = $request->get('idcontratto');  
         $idservizio = $request->get('idservizio');
           
         // trovo il servizio a cui viglio fare lo sconto 
         $servizio = ServizioDigitale::find($idservizio);
               
-       return view('contratti_digitali._riga_sconto', compact('idfoglioservizi','servizio'));
+       return view('contratti_digitali._riga_sconto', compact('idcontratto','servizio'));
 
       }
-      
 
-      public function DelRigaServizioAjax(Request $request)
-        {
-          
-        }
+
+    public function DelRigaServizioAjax(Request $request)
+      {
+        
+      }
+
+    
+    public function SaveRigaScontoAjax(Request $request)
+      {
+        $request->validate([
+          'importo' => 'required',
+        ]);
+
+
+      }
     
     
 

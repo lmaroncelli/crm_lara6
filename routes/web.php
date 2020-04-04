@@ -146,12 +146,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('del-riga-servizio-ajax', 'ContrattiDigitaliController@DelRigaServizioAjax')->name('del-riga-servizio-ajax');
     Route::get('load-riga-sconto-ajax', 'ContrattiDigitaliController@LoadRigaScontoAjax')->name('load-riga-sconto-ajax');
+    Route::post('save-riga-sconto-ajax', 'ContrattiDigitaliController@SaveRigaScontoAjax')->name('save-riga-sconto-ajax');
 
     
-    
-    
-
-    
-
     
 });

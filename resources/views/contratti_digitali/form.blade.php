@@ -39,12 +39,12 @@ jQuery(document).ready(function($){
       
       e.preventDefault();
 
-      var id = $(this).data('id');
-      var idfoglioservizi = $(this).data('idfoglioservizi');
+      var idservizio = $(this).data('idservizio');
+      var idcontratto = $(this).data('idcontratto');
 
       data = {
-        idservizio:id,
-        idfoglioservizi:idfoglioservizi
+        idservizio:idservizio,
+        idcontratto:idcontratto
       };
       $.ajax({
           url: "{{ route('load-riga-sconto-ajax') }}",
@@ -70,6 +70,62 @@ jQuery(document).ready(function($){
       });
 
     }); /*end scontoRow*/
+
+
+
+    /* click bottone salva riga sconto (AGGIUNTA VIA AJAX) */
+    /*
+    http://stackoverflow.com/questions/9344306/jquery-click-doesnt-work-on-ajax-generated-content
+    */
+    $('body').on('click', '#addRowSconto', function (e){
+      e.preventDefault();
+        var data = $("#formAddRowSconto").serialize();
+     
+        $.ajax({
+            async:false,
+            url: "{{ route('save-riga-sconto-ajax') }}",
+            type: 'POST',
+            data: data,
+            success: function(msg) {
+              if (msg == 'ok') {
+                window.location.reload(true);
+              }
+              else {
+              
+                $('#container_row_ajax').fadeOut('fast', function() {
+                    
+                    $('#container_row_ajax').html(msg);
+                    
+                });
+
+                $('#container_row_ajax').fadeIn('fast', function(){
+                    // do nothing				 				
+                });
+
+              }
+            },
+            error : function(data) {
+              if( data.status === 422 ) {
+                  
+                  var errors = $.parseJSON(data.responseText);
+                  $.each(errors, function (key, value) {
+                    // console.log(key+ " " +value);
+                  $('#response').addClass("alert alert-danger");
+
+                      if($.isPlainObject(value)) {
+                          $.each(value, function (key, value) {                       
+                              console.log(key+ " " +value);
+                          $('#response').show().append(value+"<br/>");
+
+                          });
+                      }else{
+                      $('#response').show().append(value+"<br/>"); //this is my div with messages
+                      }
+                  });
+              } /* end if status */
+            } /* end error */
+        });
+    }); /* end addRowSconto*/
           
 }); /* document.ready */
 </script>
@@ -321,7 +377,7 @@ jQuery(document).ready(function($){
         <td>{{$servizio->qta}}</td>
         <td>{{$servizio->importo}}</td>
         <td>
-            <button type="button" class="btn btn-primary btn-sm scontoRow" title="Crea uno sconto per il servizio" data-id="{{$contratto->id}}" data-idfservizio="{{$servizio->id}}">
+            <button type="button" class="btn btn-primary btn-sm scontoRow" title="Crea uno sconto per il servizio" data-idcontratto="{{$contratto->id}}" data-idservizio="{{$servizio->id}}">
               <i class="fas fa-piggy-bank"></i>
             </button>
         </td>
