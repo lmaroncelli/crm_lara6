@@ -263,6 +263,30 @@ div.evidenze_contratto {
 }
 
 
+/* TOP CORNER  */
+
+
+td.acquistata_nel_contratto {
+  position: relative;
+}
+td.acquistata_nel_contratto:after { /* Magic Happens Here!!! */
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0; 
+  height: 0; 
+  display: block;
+  border-left: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+
+  border-top: 20px solid #f00;
+} /* </magic> */
+
+/* END TOP CORNER  */
+
+
+
 /*  da 768 in avanti */
 @media (min-width: 768px) {
 

@@ -145,7 +145,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('load-referente-contratto-digitale-ajax', 'ContrattiDigitaliController@LoadReferenteContrattoDigitaleAjax')->name('load-referente-contratto-digitale-ajax');
 
     Route::get('del-riga-servizio-ajax', 'ContrattiDigitaliController@DelRigaServizioAjax')->name('del-riga-servizio-ajax');
+    Route::get('load-riga-sconto-ajax', 'ContrattiDigitaliController@LoadRigaScontoAjax')->name('load-riga-sconto-ajax');
 
+    
     
     
 

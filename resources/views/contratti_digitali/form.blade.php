@@ -10,18 +10,19 @@ jQuery(document).ready(function($){
       /* click bottone cancella riga servizio */
       $( ".delRow" ).click(function(e) {
         
+        e.preventDefault();
+        
         if (confirm('Sei sicuro di eliminare il servizo ?')) {
 
-          e.preventDefault();
           
           var id = $(this).data('id');
           
           data = {
-            id:id,
+            id:id
           };
           
           $.ajax({
-              url: "{{ route('del-riga-servizio-ajax'}}",
+              url: "{{ route('del-riga-servizio-ajax') }}",
               type: 'GET',
               data: data,
               success: function(msg) {
@@ -29,11 +30,48 @@ jQuery(document).ready(function($){
               }
           });
         
-        } /*endif*/
+        } /*endif confirm*/
 
       }); /*end delRow */
+
+
+    $(".scontoRow").click(function(e){
+      
+      e.preventDefault();
+
+      var id = $(this).data('id');
+      var idfoglioservizi = $(this).data('idfoglioservizi');
+
+      data = {
+        idservizio:id,
+        idfoglioservizi:idfoglioservizi
+      };
+      $.ajax({
+          url: "{{ route('load-riga-sconto-ajax') }}",
+          type: 'GET',
+          data: data,
+          success: function(msg) {
+              //alert(msg);
+              $('#container_row_ajax').fadeOut('fast', function() {
+                  
+                  $('#container_row_ajax').html(msg);
+                  
+              });
+
+              $('#container_row_ajax').fadeIn('fast', function(){
+                  
+                  $(".aggiorna").prop('disabled', true);
+        
+
+              });
+
+
+          }
+      });
+
+    }); /*end scontoRow*/
           
-}); /* document.ready
+}); /* document.ready */
 </script>
 @endsection
 
@@ -290,6 +328,13 @@ jQuery(document).ready(function($){
         <td><button type="button" class="btn btn-danger btn-sm delRow" title="Elimina il servizio" data-id="{{$servizio->id}}"><i class="fas fa-trash-alt"></i></button></td>
       </tr>
       @endforeach
+      <tr>
+        <td colspan="7">
+          <div id="container_row_ajax">
+  
+          </div>
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>

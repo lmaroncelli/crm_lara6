@@ -170,8 +170,19 @@
                             </td>
                           
                           @else
+                            @php
+                              // SE SONO IN UN CONTRATTO verifico se evidenza è associata a questo contratto per EVIDENZIARLA !!
+                              if ( isset($contratto_digitale) && $item_ev_mese->pivot->servizioweb_id == $contratto->id )
+                                {
+                                  $class = 'acquistata_nel_contratto';
+                                }
+                              else 
+                                {
+                                  $class = '';
+                                }
+                            @endphp  
                             {{-- ha lo sfondo del commerciale senza nome --}}
-                            <td class="clickable sfondo_{{$item_ev_mese->pivot->user_id}} acquistata_{{$item_ev_mese->pivot->acquistata}}" data-id-evidenza="{{$evidenza->id}}" data-id-mese="{{$item_ev_mese->pivot->mese_id}}" data-id-hotel="{{$item_ev_mese->pivot->cliente_id}}">
+                            <td class="{{$class}} clickable sfondo_{{$item_ev_mese->pivot->user_id}} acquistata_{{$item_ev_mese->pivot->acquistata}}" data-id-evidenza="{{$evidenza->id}}" data-id-mese="{{$item_ev_mese->pivot->mese_id}}" data-id-hotel="{{$item_ev_mese->pivot->cliente_id}}">
                               <div class="contenuto_cella">
                                 {{$clienti_to_info[$item_ev_mese->pivot->cliente_id]}}
                               </div>

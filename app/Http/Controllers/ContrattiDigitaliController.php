@@ -13,6 +13,7 @@ use App\RagioneSociale;
 use App\ContrattoDigitale;
 use Illuminate\Http\Request;
 use App\Http\Controllers\MyController;
+use App\ServizioDigitale;
 
 class ContrattiDigitaliController extends MyController
 {
@@ -327,6 +328,25 @@ class ContrattiDigitaliController extends MyController
       return view('contratti_digitali._referenti', compact('referenti'));
       
       }
+
+    public function LoadRigaScontoAjax(Request $request)
+      {
+        $idfoglioservizi = $request->get('idfoglioservizi');  
+        $idservizio = $request->get('idservizio');
+          
+        // trovo il servizio a cui viglio fare lo sconto 
+        $servizio = ServizioDigitale::find($idservizio);
+              
+       return view('contratti_digitali._riga_sconto', compact('idfoglioservizi','servizio'));
+
+      }
+      
+
+      public function DelRigaServizioAjax(Request $request)
+        {
+          
+        }
+    
     
 
     /**
