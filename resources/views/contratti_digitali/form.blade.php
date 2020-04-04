@@ -119,7 +119,7 @@ jQuery(document).ready(function($){
 
                           });
                       }else{
-                      $('#response').show().append(value+"<br/>"); //this is my div with messages
+                      //$('#response').show().append(value+"<br/>"); //this is my div with messages
                       }
                   });
               } /* end if status */

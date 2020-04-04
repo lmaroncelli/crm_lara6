@@ -351,8 +351,30 @@ class ContrattiDigitaliController extends MyController
     public function SaveRigaScontoAjax(Request $request)
       {
         $request->validate([
-          'importo' => 'required',
+          'importo' => 'required|integer|gt:0',
         ]);
+
+        $nome = $request->get('nome');
+        $importo = $request->get('importo');
+        $idcontratto = $request->get('idcontratto');
+        $idservizio = $request->get('idservizio');
+
+        // inserisco lo sconto
+        $data = array (
+            'nome' => $nome,
+            'importo' => $importo,
+            'contratto_id' => $idcontratto,
+            'servizio_scontato_id' => $idservizio,
+            'sconto' => true,
+          );
+        
+        ServizioDigitale::create($data);
+        
+
+        // marco scontato questo servizio
+        ServizioDigitale::where('id',$idservizio)->update(['scontato' => true]);
+
+        echo 'ok';
 
 
       }
