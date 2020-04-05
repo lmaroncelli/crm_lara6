@@ -287,6 +287,16 @@ td.acquistata_nel_contratto:after { /* Magic Happens Here!!! */
 
 
 
+tr.sconto td {
+  padding-bottom: 50px!important;
+  color: #f00!important;
+  border: 0px;
+  padding-top: 0;
+  margin-top: 0;
+
+}
+
+
 /*  da 768 in avanti */
 @media (min-width: 768px) {
 

@@ -26,6 +26,8 @@ use Mail;
 class Utility extends Model
 {
 
+	private static $iva = 22;
+
   #IP a cui sono visibili i dettagli di debug (query ed altre info)
 	private static $ip_debug = ['127.0.0.1', '2.224.168.43'];
 
@@ -36,6 +38,17 @@ class Utility extends Model
 									'CONTANTI' => 'CONTANTI',
 									'NESSUNO' => 'NESSUNO',
 									'GRATUITO' => 'GRATUITO']; 
+
+
+	private static $servizi_contratto = [
+																'' => 'seleziona un servizio',
+																'INSERIMENTO BASE' => 'INSERIMENTO BASE',
+																'VETRINA PRINCIPALE' => 'VETRINA PRINCIPALE',
+																'VETRINA LOC. LIMITROFE' => 'VETRINA LOC. LIMITROFE',
+																'GREEN BOOKING' => 'GREEN BOOKING',
+																'ALTRO' => 'ALTRO',
+																'SCONTO GENERICO' => 'SCONTO GENERICO'];
+	
 
 	/**
 	 * Prende l'id del visitatore
@@ -220,8 +233,11 @@ class Utility extends Model
 	  return ['0' => 'Tutte'] + Associazione::orderBy('nome')->pluck('nome', 'id')->toArray();
 	  }
 
-
-
+	
+	public static function getIva()
+		{
+		return self::$iva;
+		}
 
 	 public static function getHoursForView($total_minutes)
 	 	{
@@ -359,6 +375,13 @@ class Utility extends Model
 		{
 		return self::$condizioni_pagamento;
 		}
+
+
+	public static function getServiziContratto()
+		{
+		return self::$servizi_contratto;
+		}
+		
 
 
 	public static function getUltimoGiornoMese($data = '')

@@ -241,11 +241,65 @@ class ContrattiDigitaliController extends MyController
 
 
 
-      // ServiziDigitali associati al contratto
-      
-      $servizi_assoc = $contratto->servizi;
+    //================================================//
+    // Servizi associati al contratto
+    //================================================//
 
-      //dd($servizi_assoc);
+      $servizi_venduti = $contratto->servizi_venduti;
+      
+      $sconti = $contratto->sconti->keyBy('servizio_scontato_id');
+      
+      
+      $servizi_assoc = [];
+      $tot_importo = 0;
+      $tot_qta = 0;
+
+      $totali = [];
+      foreach ($servizi_venduti as $s) 
+        {
+        $tot_importo += $s->importo;
+        $tot_qta += $s->qta;
+        $servizi_assoc[] = $s;
+        
+        if ($s->scontato) 
+          {
+            $sconto = $sconti->get($s->id);
+            $tot_importo -= $sconto->importo;
+            $servizi_assoc[] = $sconto;
+          }
+        }
+
+      $tot_iva = $tot_importo*Utility::getIva()/100;
+
+      $tot_importo_con_iva = $tot_importo + $tot_iva;
+        
+      
+      
+      // ServiziDigitali associati al contratto
+      // in cui ogni sconto è DOPO il servizio a cui è associato
+      $servizi_assoc = collect($servizi_assoc);
+
+
+     $totali['tot_importo'] = $tot_importo;
+     $totali['tot_qta'] = $tot_qta;
+     $totali['tot_iva'] = $tot_iva;
+     $totali['tot_importo_con_iva'] = $tot_importo_con_iva;
+    
+    //================================================//
+    // /Servizi associati al contratto 
+    //================================================//
+    
+
+    
+    //================================================//
+    // Servizi da scegliere 
+    //================================================//
+     
+    $servizi_contratto = Utility::getServiziContratto();
+
+    //================================================//
+    // /Servizi da scegliere 
+    //================================================//
 
       # metto in sessione 
       session([
@@ -257,7 +311,7 @@ class ContrattiDigitaliController extends MyController
         'id_macro' => $macro_id
         ]);
    
-      return view('contratti_digitali.form', compact('contratto','i1','i2','i3','i4', 'mostra_iban_importato', 'commerciale_contratto','servizi_assoc','condizioni_pagamento','tipi_evidenza','clienti_to_info','commerciali_nome','macro','macro_id', 'utenti_commerciali', 'commerciali','servizi_assoc'));
+      return view('contratti_digitali.form', compact('contratto','i1','i2','i3','i4', 'mostra_iban_importato', 'commerciale_contratto','servizi_assoc','condizioni_pagamento','tipi_evidenza','clienti_to_info','commerciali_nome','macro','macro_id', 'utenti_commerciali', 'commerciali','servizi_assoc','totali','servizi_contratto'));
 
     }
 

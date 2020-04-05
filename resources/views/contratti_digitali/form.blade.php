@@ -374,8 +374,8 @@ jQuery(document).ready(function($){
         <th scope="col">Dal</th>
         <th scope="col">Al</th>
         <th scope="col">Q.tà</th>
-        <th scope="col">Importo (€)</th>
-        <th></th>
+        <th scope="col" class="text-right">Importo (€)</th>
+        <th colspan="2"></th>
       </tr>
     </thead>
     <tbody>
@@ -392,14 +392,15 @@ jQuery(document).ready(function($){
               $title_del='Elimina '.$nome;
               }
         @endphp
-        @if ($servizio->sconto)
-            <tr>
+          @if ($servizio->sconto)
+            <tr class="sconto">
               <td colspan="4">
-                {{$servizio->nome}}  
+                <i class="fas fa-tags"></i>&nbsp;&nbsp;{{$servizio->nome}}  
               </td>
-              <td colspan="2"> - {{$servizio->importo}}</td>
-              <td>
-              <button type="button" class="btn btn-danger btn-sm delRow" title="{{$title_del}}" data-nome ="{{$nome}}" data-idcontratto="{{$contratto->id}}" data-idservizio="{{$servizio->id}}"><i class="fas fa-trash-alt"></i></button>
+              <td class="text-right"> - {{Utility::formatta_cifra($servizio->importo, '€')}}</td>
+              <td></td>
+              <td class="text-right">
+                <button type="button" class="btn btn-danger btn-sm delRow" title="{{$title_del}}" data-nome ="{{$nome}}" data-idcontratto="{{$contratto->id}}" data-idservizio="{{$servizio->id}}"><i class="fas fa-trash-alt"></i></button>
               </td>
             </tr>
           @else
@@ -408,18 +409,20 @@ jQuery(document).ready(function($){
               <td>{{$servizio->dal}}</td>
               <td>{{$servizio->al}}</td>
               <td>{{$servizio->qta}}</td>
-              <td>{{$servizio->importo}}</td>
-              <td>
+              <td class="text-right">{{Utility::formatta_cifra($servizio->importo, '€')}}</td>
+              <td class="text-right">
                 <button type="button" class="btn btn-primary btn-sm scontoRow" title="Crea uno sconto per il servizio" data-idcontratto="{{$contratto->id}}" data-idservizio="{{$servizio->id}}">
                   <i class="fas fa-piggy-bank"></i>
                 </button>
               </td>
-              <td>
+              <td class="text-right">
                 <button type="button" class="btn btn-danger btn-sm delRow" title="{{$title_del}}" data-id="{{$servizio->id}}"><i class="fas fa-trash-alt"></i></button>
               </td>
             </tr>
           @endif
       @endforeach
+      
+      {{-- riga sconto evidenza --}}
       <tr>
         <td colspan="7">
           <div id="container_row_ajax">
@@ -427,6 +430,47 @@ jQuery(document).ready(function($){
           </div>
         </td>
       </tr>
+      {{-- /riga sconto evidenza --}}
+
+      {{-- Riga creazione servizio da vendere --}}
+      
+
+      <tr>
+        <td>
+          <div class="form-group">
+            <label for="id_servizio">Servizio da vendere</label>
+            <select required id="id_servizio" class="form-control" name="id_servizio">
+              @foreach ($servizi_contratto as $key => $value)
+              <option value="{{$key}}">{{$value}}</option>
+              @endforeach
+            </select>
+          </div>
+        </td>
+      </tr>
+
+      {{-- /Riga creazione servizio da vendere --}}
+
+      {{-- riga totali --}}
+      <tr>
+        <td colspan="3" class="text-right font-weight-bold">TOTALE</td>
+        <td>{{$totali['tot_qta']}}</td>
+        <td class="text-right">{{Utility::formatta_cifra($totali['tot_importo'],'€')}}</td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td colspan="3" class="text-right font-weight-bold">IVA</td>
+        <td>{{Utility::getIva()}}%</td>
+        <td class="text-right">{{Utility::formatta_cifra($totali['tot_iva'],'€')}}</td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td colspan="3" class="text-right font-weight-bold">TOTALE FATTURA</td>
+        <td></td>
+        <td class="font-weight-bold text-right">{{Utility::formatta_cifra($totali['tot_importo_con_iva'],'€')}}</td>
+        <td colspan="2"></td>
+      </tr>
+      {{-- / riga totali --}}
+
     </tbody>
   </table>
 </div>

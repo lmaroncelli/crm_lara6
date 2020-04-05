@@ -27,6 +27,18 @@ class ContrattoDigitale extends Model
        return $this->hasMany('App\ServizioDigitale', 'contratto_id', 'id');
    }
 
+
+   public function servizi_venduti()
+   {
+       return $this->hasMany('App\ServizioDigitale', 'contratto_id', 'id')->where('sconto',0);
+   }
+
+   public function sconti()
+   {
+       return $this->hasMany('App\ServizioDigitale', 'contratto_id', 'id')->where('sconto',1);
+   }
+
+
    public function commerciale()
    {
        return $this->belongsTo('App\User', 'user_id', 'id');
