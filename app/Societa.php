@@ -50,7 +50,7 @@ class Societa extends Model
     
       foreach (self::fatture as $fattura) 
         {
-        $fattura->destroyMe();;
+        $fattura->destroyMe();
         }
       
       foreach (self::prefatture as $prefattura) 

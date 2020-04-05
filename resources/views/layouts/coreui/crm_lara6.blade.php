@@ -81,6 +81,14 @@
 
   <script type="text/javascript">
 
+    // AJAX library automatically attach the CSRF token to every outgoing request.
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+
     $(".delete").click(function(e){
           e.preventDefault();
           var id = $(this).data("id");

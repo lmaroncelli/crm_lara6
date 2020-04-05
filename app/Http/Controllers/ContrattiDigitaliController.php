@@ -245,6 +245,8 @@ class ContrattiDigitaliController extends MyController
       
       $servizi_assoc = $contratto->servizi;
 
+      //dd($servizi_assoc);
+
       # metto in sessione 
       session([
         'id_cliente' => $contratto->cliente_id,
@@ -344,7 +346,32 @@ class ContrattiDigitaliController extends MyController
 
     public function DelRigaServizioAjax(Request $request)
       {
-        
+      $servizio_id = $request->get('idservizio');
+      $contratto_id = $request->get('idcontratto');
+      
+      if(is_null($servizio_id) || $servizio_id <= 0 || is_null($contratto_id) || $contratto_id <= 0)
+        {
+        return "ko";
+        }
+      
+      $servizio = ServizioDigitale::find($servizio_id);
+      
+      if(is_null($servizio) || $servizio->contratto_id != $contratto_id)
+        {
+        return "Si cerca di eliminare un servizo che non fa parte del contratto in essere";
+        }
+      
+      if($servizio->sconto) 
+        {
+        ServizioDigitale::find($servizio->servizio_scontato_id)->togliSconto();
+        }
+     
+      $servizio->delete();
+
+
+      return "ok";
+      
+
       }
 
     

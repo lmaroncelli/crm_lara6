@@ -12,21 +12,31 @@ jQuery(document).ready(function($){
         
         e.preventDefault();
         
-        if (confirm('Sei sicuro di eliminare il servizo ?')) {
+        var nome = $(this).data('nome');
+        
+        if (confirm('Sei sicuro di eliminare '+ nome + '?')) {
 
           
           var id = $(this).data('id');
           
+          var idservizio = $(this).data('idservizio');
+          var idcontratto = $(this).data('idcontratto');
+
           data = {
-            id:id
+            idservizio:idservizio,
+            idcontratto:idcontratto
           };
           
           $.ajax({
               url: "{{ route('del-riga-servizio-ajax') }}",
-              type: 'GET',
+              type: 'POST',
               data: data,
               success: function(msg) {
-                  window.location.reload(true);
+                  if (msg="ok") {
+                    window.location.reload(true);
+                  } else {
+                    alert(msg);
+                  }
               }
           });
         
@@ -48,7 +58,7 @@ jQuery(document).ready(function($){
       };
       $.ajax({
           url: "{{ route('load-riga-sconto-ajax') }}",
-          type: 'GET',
+          type: 'POST',
           data: data,
           success: function(msg) {
               //alert(msg);
@@ -334,25 +344,25 @@ jQuery(document).ready(function($){
 <hr>
 
 <div class="evidenze_contratto">
-{{-- griglia_evidenze --}}
-<h4 class="m-portlet__head-text" style="width: 100px;">
-  Località
-</h4>
-{{--  Elenco macrolocalita  --}}
-<div class="row">
-<ul class="nav nav-tabs nav-griglia">
-  @foreach ($macro as $id => $nome)
-    <li class="nav-item">
-      <a class="nav-link @if ($id == $macro_id) active @endif" href="{{ route('contratto-digitale.edit', ['contratto_id' => $contratto->id, 'macro_id' => $id]) }}">{{$nome}}</a>
-    </li>
-  @endforeach
-  </ul>
-</div>
+  {{-- griglia_evidenze --}}
+  <h4 class="m-portlet__head-text" style="width: 100px;">
+    Località
+  </h4>
+  {{--  Elenco macrolocalita  --}}
+  <div class="row">
+  <ul class="nav nav-tabs nav-griglia">
+    @foreach ($macro as $id => $nome)
+      <li class="nav-item">
+        <a class="nav-link @if ($id == $macro_id) active @endif" href="{{ route('contratto-digitale.edit', ['contratto_id' => $contratto->id, 'macro_id' => $id]) }}">{{$nome}}</a>
+      </li>
+    @endforeach
+    </ul>
+  </div> 
 
-<hr>
-@include('evidenze.griglia_evidenze_inc', ['contratto_digitale' => 1])
-<hr>
-</div>
+  <hr>
+  @include('evidenze.griglia_evidenze_inc', ['contratto_digitale' => 1])
+  <hr>
+</div> {{-- end evidenze_contratto --}}
 
 {{-- ServiziDigitali associati al contratto --}}
 <div class="table-responsive">
@@ -370,19 +380,45 @@ jQuery(document).ready(function($){
     </thead>
     <tbody>
       @foreach ($servizi_assoc as $servizio)
-      <tr>
-        <td>{{$servizio->nome}} - {{$servizio->localita}} @if ($servizio->pagina != '') <br/> {{$servizio->pagina}}@endif</td>
-        <td>{{$servizio->dal}}</td>
-        <td>{{$servizio->al}}</td>
-        <td>{{$servizio->qta}}</td>
-        <td>{{$servizio->importo}}</td>
-        <td>
-            <button type="button" class="btn btn-primary btn-sm scontoRow" title="Crea uno sconto per il servizio" data-idcontratto="{{$contratto->id}}" data-idservizio="{{$servizio->id}}">
-              <i class="fas fa-piggy-bank"></i>
-            </button>
-        </td>
-        <td><button type="button" class="btn btn-danger btn-sm delRow" title="Elimina il servizio" data-id="{{$servizio->id}}"><i class="fas fa-trash-alt"></i></button></td>
-      </tr>
+        @php
+            if ($servizio->sconto) 
+              {
+              $nome = 'lo sconto';
+              $title_del='Elimina '.$nome;
+              } 
+            else 
+              {
+              $nome = 'il servizio';
+              $title_del='Elimina '.$nome;
+              }
+        @endphp
+        @if ($servizio->sconto)
+            <tr>
+              <td colspan="4">
+                {{$servizio->nome}}  
+              </td>
+              <td colspan="2"> - {{$servizio->importo}}</td>
+              <td>
+              <button type="button" class="btn btn-danger btn-sm delRow" title="{{$title_del}}" data-nome ="{{$nome}}" data-idcontratto="{{$contratto->id}}" data-idservizio="{{$servizio->id}}"><i class="fas fa-trash-alt"></i></button>
+              </td>
+            </tr>
+          @else
+            <tr>
+              <td>{{$servizio->nome}} - {{$servizio->localita}} @if ($servizio->pagina != '') <br/> {{$servizio->pagina}}@endif</td>
+              <td>{{$servizio->dal}}</td>
+              <td>{{$servizio->al}}</td>
+              <td>{{$servizio->qta}}</td>
+              <td>{{$servizio->importo}}</td>
+              <td>
+                <button type="button" class="btn btn-primary btn-sm scontoRow" title="Crea uno sconto per il servizio" data-idcontratto="{{$contratto->id}}" data-idservizio="{{$servizio->id}}">
+                  <i class="fas fa-piggy-bank"></i>
+                </button>
+              </td>
+              <td>
+                <button type="button" class="btn btn-danger btn-sm delRow" title="{{$title_del}}" data-id="{{$servizio->id}}"><i class="fas fa-trash-alt"></i></button>
+              </td>
+            </tr>
+          @endif
       @endforeach
       <tr>
         <td colspan="7">

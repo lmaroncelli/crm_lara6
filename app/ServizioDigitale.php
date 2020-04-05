@@ -18,4 +18,11 @@ class ServizioDigitale extends Model
   }
 
 
+  public function togliSconto()
+    {
+    $this->scontato = 0;
+    $this->save();
+    }
+
+
 }
