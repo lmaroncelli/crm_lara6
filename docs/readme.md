@@ -475,3 +475,9 @@ array:8 [▼
   "referente" => null
 ]
 
+
+aggiungo il datepicker 
+
+lo installao scaricando lo zip dal download builder del sito jQuery UI in cui seleziono solo il datepicker con un tema
+aggiungo il css e il js copiando i file nella folder public e linkandoli nel master template
+

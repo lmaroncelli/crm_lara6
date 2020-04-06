@@ -295,7 +295,9 @@ class ContrattiDigitaliController extends MyController
     // Servizi da scegliere 
     //================================================//
      
-    $servizi_contratto = Utility::getServiziContratto();
+    $servizi_contratto = [' ' => 'SELEZIONA....'] + Utility::getServiziContratto();
+    
+    
 
     //================================================//
     // /Servizi da scegliere 
@@ -396,6 +398,25 @@ class ContrattiDigitaliController extends MyController
        return view('contratti_digitali._riga_sconto', compact('idcontratto','servizio'));
 
       }
+
+
+    
+      public function LoadRigaServizioAjax(Request $request)
+        {
+        $idcontratto = $request->get('idcontratto');  
+        
+        $servizio = $request->get('servizio');
+        
+        if ($servizio == "") 
+          {
+          echo "";
+          }
+         elseif ($servizio == "ALTRO")
+          {
+          return view('contratti_digitali._riga_servizio', compact('idcontratto','servizio'));
+          }
+
+        }
 
 
     public function DelRigaServizioAjax(Request $request)

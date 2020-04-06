@@ -137,6 +137,64 @@ jQuery(document).ready(function($){
         });
     }); /* end addRowSconto*/
           
+
+    
+    /* select servizi */
+    $('body').on('change', '#servizi_select', function (e){
+        var servizio = $(this).val();
+        var idcontratto = $("#servizio").data('idcontratto');
+
+        data = {
+          servizio:servizio,
+          idcontratto:idcontratto
+        };
+
+        $.ajax({
+            url: "{{ route('load-riga-servizio-ajax') }}",
+            type: 'POST',
+            data: data,
+            success: function(msg) {
+                //alert(msg);
+                $('#container_row_ajax').fadeOut('fast', function() {
+                    
+                    $('#container_row_ajax').html(msg);
+                    
+                });
+
+                $('#container_row_ajax').fadeIn('fast', function(){
+                    // viene disabilitato il bottone salva del form totale				 				
+                    if (servizio == "") {
+                      $(".aggiorna").prop('disabled', false);
+                    } 
+                    else {
+                      $(".aggiorna").prop('disabled', true);				 	        			
+                    }
+                });
+
+
+            }
+        }); /*end ajax call*/
+
+		}); /*end servizi_select*/
+
+    $('body').on('click', '#delRowSconto', function (e){
+      e.preventDefault();
+
+      $('#container_row_ajax').fadeOut('fast', function() {
+                    
+          $('#container_row_ajax').empty();
+          
+      });
+
+      $('#container_row_ajax').fadeIn('fast', function(){
+          // rimetto la select dei serivi da vendere 				 				
+          $("select#servizi_select").prop('selectedIndex', 0);
+      });
+
+    });
+
+    
+
 }); /* document.ready */
 </script>
 @endsection
@@ -422,7 +480,7 @@ jQuery(document).ready(function($){
           @endif
       @endforeach
       
-      {{-- riga sconto evidenza --}}
+      {{-- riga sconto/servizio evidenza --}}
       <tr>
         <td colspan="7">
           <div id="container_row_ajax">
@@ -430,7 +488,7 @@ jQuery(document).ready(function($){
           </div>
         </td>
       </tr>
-      {{-- /riga sconto evidenza --}}
+      {{-- /riga sconto/servizio evidenza --}}
 
       {{-- Riga creazione servizio da vendere --}}
       
@@ -438,10 +496,10 @@ jQuery(document).ready(function($){
       <tr>
         <td>
           <div class="form-group">
-            <label for="id_servizio">Servizio da vendere</label>
-            <select required id="id_servizio" class="form-control" name="id_servizio">
+            <label for="servizio">Servizio da vendere</label>
+            <select required id="servizi_select" class="form-control" name="servizio" data-idcontratto="{{$contratto->id}}">
               @foreach ($servizi_contratto as $key => $value)
-              <option value="{{$key}}">{{$value}}</option>
+                <option value="{{$key}}">{{$value}}</option>
               @endforeach
             </select>
           </div>

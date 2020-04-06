@@ -41,7 +41,6 @@ class Utility extends Model
 
 
 	private static $servizi_contratto = [
-																'' => 'seleziona un servizio',
 																'INSERIMENTO BASE' => 'INSERIMENTO BASE',
 																'VETRINA PRINCIPALE' => 'VETRINA PRINCIPALE',
 																'VETRINA LOC. LIMITROFE' => 'VETRINA LOC. LIMITROFE',

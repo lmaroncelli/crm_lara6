@@ -11,6 +11,11 @@
 
     <!-- Scripts -->
     <script src="{{ mix('js/app.js') }}"></script>
+
+    {{-- jQuery Datepicker --}}
+    <script src="{{ asset('js/jQueryDatepicker/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('js/jQueryDatepicker/datepicker-it.js') }}"></script>
+    
     
 
     <!-- Fonts -->
@@ -21,6 +26,12 @@
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/select2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/sweetalert2.min.css') }}" rel="stylesheet">
+
+    {{-- jQuery Datepicker --}}
+    <link href="{{ asset('css/jQueryDatepicker/jquery-ui.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/jQueryDatepicker/jquery-ui.structure.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/jQueryDatepicker/jquery-ui.theme.min.css') }}" rel="stylesheet">
+
 </head>
 <body class="app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show">
   @include('layouts.coreui.header')
