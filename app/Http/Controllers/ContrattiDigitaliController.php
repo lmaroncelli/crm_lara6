@@ -10,10 +10,11 @@ use App\Utility;
 use App\TipoEvidenza;
 use App\MacroLocalita;
 use App\RagioneSociale;
+use App\ServizioDigitale;
 use App\ContrattoDigitale;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\MyController;
-use App\ServizioDigitale;
 
 class ContrattiDigitaliController extends MyController
 {
@@ -313,7 +314,9 @@ class ContrattiDigitaliController extends MyController
         'id_macro' => $macro_id
         ]);
    
-      return view('contratti_digitali.form', compact('contratto','i1','i2','i3','i4', 'mostra_iban_importato', 'commerciale_contratto','servizi_assoc','condizioni_pagamento','tipi_evidenza','clienti_to_info','commerciali_nome','macro','macro_id', 'utenti_commerciali', 'commerciali','servizi_assoc','totali','servizi_contratto'));
+      $servizi_venduti_ids = $servizi_venduti->pluck('id')->toArray();
+
+      return view('contratti_digitali.form', compact('contratto','i1','i2','i3','i4', 'mostra_iban_importato', 'commerciale_contratto','servizi_assoc','condizioni_pagamento','tipi_evidenza','clienti_to_info','commerciali_nome','macro','macro_id', 'utenti_commerciali', 'commerciali','servizi_assoc','totali','servizi_contratto','servizi_venduti_ids'));
 
     }
 
@@ -440,6 +443,19 @@ class ContrattiDigitaliController extends MyController
         {
         ServizioDigitale::find($servizio->servizio_scontato_id)->togliSconto();
         }
+      else
+        {
+        // verifico se ha uno sconto associato e lo elimino
+        if($servizio->scontato)
+          {
+          ServizioDigitale::where('servizio_scontato_id',$servizio->id)->delete();
+          }
+
+        // cancello i servizi dalle evidenze
+        DB::table('tblEVEvidenzeMesi')
+              ->where('servizioweb_id', $servizio->id)
+              ->update(['cliente_id' => 0, 'user_id' => 0, 'acquistata' => 0, 'servizioweb_id' => 0]);
+        }
      
       $servizio->delete();
 
@@ -480,6 +496,60 @@ class ContrattiDigitaliController extends MyController
 
 
       }
+
+      public function SaveRigaServizioAjax(Request $request)
+        {
+        
+        $servizio = $request->get('servizio');
+        $contratto_id = $request->get('idcontratto');
+        
+        if(is_null($servizio) || is_null($contratto_id))
+          {
+          echo 'ko';
+          }
+        else 
+          {
+          
+          $validation_array = [
+            'dal' => 'required|date_format:d/m/Y',
+            'al' => 'required|date_format:d/m/Y',
+            'importo' => 'required|integer|gt:0',
+            'qta' => 'required|integer|gt:0'
+          ];
+          
+          $data['nome'] = $servizio; 
+          $data['contratto_id'] = $contratto_id; 
+          
+          if ($servizio == 'ALTRO') 
+            {
+            $validation_array['altro_servizio'] = 'required';
+            
+            $data['altro_servizio'] = $request->get('altro_servizio');
+            } 
+          else 
+            {
+          
+            }
+    
+          $request->validate($validation_array);
+    
+          $data['dal'] = $request->get('dal');
+          $data['al'] = $request->get('al');
+          $data['qta'] = $request->get('qta');
+          $data['importo'] = $request->get('importo');
+
+
+          ServizioDigitale::create($data);
+          
+
+          echo 'ok';
+
+          }
+        
+        
+
+        }
+      
     
     
 

@@ -171,8 +171,8 @@
                           
                           @else
                             @php
-                              // SE SONO IN UN CONTRATTO verifico se evidenza è associata a questo contratto per EVIDENZIARLA !!
-                              if ( isset($contratto_digitale) && $item_ev_mese->pivot->servizioweb_id == $contratto->id )
+                              // SE SONO IN UN CONTRATTO verifico se evidenza è associata a qualche servizio di questo contratto per EVIDENZIARLA !!
+                              if ( isset($contratto_digitale) && in_array($item_ev_mese->pivot->servizioweb_id, $servizi_venduti_ids) )
                                 {
                                   $class = 'acquistata_nel_contratto';
                                 }

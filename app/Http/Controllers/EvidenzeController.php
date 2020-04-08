@@ -217,7 +217,7 @@ class EvidenzeController extends MyController
         foreach ($ev_da_acquistare as $evidenza_mese) 
           {
           $evidenza_mese->pivot->acquistata = 1;
-          $evidenza_mese->pivot->servizioweb_id = $contratto_id;
+          $evidenza_mese->pivot->servizioweb_id = $servizio_digitale->id;
 
           $evidenza_mese->push();
           }

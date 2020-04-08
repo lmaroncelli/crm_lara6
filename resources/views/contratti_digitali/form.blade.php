@@ -15,9 +15,6 @@ jQuery(document).ready(function($){
         var nome = $(this).data('nome');
         
         if (confirm('Sei sicuro di eliminare '+ nome + '?')) {
-
-          
-          var id = $(this).data('id');
           
           var idservizio = $(this).data('idservizio');
           var idcontratto = $(this).data('idcontratto');
@@ -142,7 +139,7 @@ jQuery(document).ready(function($){
     /* select servizi */
     $('body').on('change', '#servizi_select', function (e){
         var servizio = $(this).val();
-        var idcontratto = $("#servizio").data('idcontratto');
+        var idcontratto = $(this).data('idcontratto');
 
         data = {
           servizio:servizio,
@@ -177,7 +174,7 @@ jQuery(document).ready(function($){
 
 		}); /*end servizi_select*/
 
-    $('body').on('click', '#delRowSconto', function (e){
+    $('body').on('click', '#delRowServizio', function (e){
       e.preventDefault();
 
       $('#container_row_ajax').fadeOut('fast', function() {
@@ -192,6 +189,57 @@ jQuery(document).ready(function($){
       });
 
     });
+
+
+    $('body').on('click', '#addRowServizio', function (e){
+      e.preventDefault();
+        var data = $("#formAddServizio").serialize();
+     
+        $.ajax({
+            async:false,
+            url: "{{ route('save-riga-servizio-ajax') }}",
+            type: 'POST',
+            data: data,
+            success: function(msg) {
+              if (msg == 'ok') {
+                window.location.reload(true);
+              }
+              else {
+              
+                $('#container_row_ajax').fadeOut('fast', function() {
+                    
+                    $('#container_row_ajax').html(msg);
+                    
+                });
+
+                $('#container_row_ajax').fadeIn('fast', function(){
+                    // do nothing				 				
+                });
+
+              }
+            },
+            error : function(data) {
+              if( data.status === 422 ) {
+                  
+                  var errors = $.parseJSON(data.responseText);
+                  $.each(errors, function (key, value) {
+                    // console.log(key+ " " +value);
+                  $('#response').addClass("alert alert-danger");
+
+                      if($.isPlainObject(value)) {
+                          $.each(value, function (key, value) {                       
+                              console.log(key+ " " +value);
+                          $('#response').show().append(value+"<br/>");
+
+                          });
+                      }else{
+                      //$('#response').show().append(value+"<br/>"); //this is my div with messages
+                      }
+                  });
+              } /* end if status */
+            } /* end error */
+        });
+    }); /* end addRowServizio*/
 
     
 
@@ -463,7 +511,11 @@ jQuery(document).ready(function($){
             </tr>
           @else
             <tr>
-              <td>{{$servizio->nome}} - {{$servizio->localita}} @if ($servizio->pagina != '') <br/> {{$servizio->pagina}}@endif</td>
+              @if ($servizio->nome == 'ALTRO')
+                <td>{!!$servizio->altro_servizio!!}</td>                  
+              @else
+                <td>{{$servizio->nome}} - {{$servizio->localita}} @if ($servizio->pagina != '') <br/> {{$servizio->pagina}}@endif</td>
+              @endif
               <td>{{$servizio->dal}}</td>
               <td>{{$servizio->al}}</td>
               <td>{{$servizio->qta}}</td>
@@ -474,7 +526,7 @@ jQuery(document).ready(function($){
                 </button>
               </td>
               <td class="text-right">
-                <button type="button" class="btn btn-danger btn-sm delRow" title="{{$title_del}}" data-id="{{$servizio->id}}"><i class="fas fa-trash-alt"></i></button>
+                <button type="button" class="btn btn-danger btn-sm delRow" title="{{$title_del}}" data-nome ="{{$nome}}" data-idcontratto="{{$contratto->id}}" data-idservizio="{{$servizio->id}}"><i class="fas fa-trash-alt"></i></button>
               </td>
             </tr>
           @endif

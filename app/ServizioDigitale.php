@@ -9,8 +9,6 @@ class ServizioDigitale extends Model
   protected $table = 'tblServiziDigitali';
 
   protected $guarded = ['id'];
-
-
   
   public function contratto()
   {

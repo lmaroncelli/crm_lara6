@@ -1,10 +1,15 @@
-<form id="formAddRow">
+<form id="formAddServizio">
   @csrf
   <div class="form-group row">
-    <div class="form-group col-lg-4">
-      <label for="altro_servizio">Servizio</label>
-      <textarea id="altro_servizio" class="form-control" name="altro_servizio" rows="5"></textarea>
-    </div>
+    @if ($servizio == 'ALTRO')
+      <div class="form-group col-lg-3">
+        <label for="altro_servizio">Altro servizio</label>
+        <textarea id="altro_servizio" class="form-control" name="altro_servizio" rows="5"></textarea>
+      </div>     
+    @else
+        
+    @endif
+
     <div class="form-group col-lg-2">
       <label for="dal">Dal</label>
       <input class="form-control" id="dal" type="text" name="dal" value="">
@@ -15,17 +20,26 @@
     </div>
 
     <div class="form-group col-lg-1">
+      <label for="qta">qta</label>
+      <input class="form-control" id="qta" type="text" name="qta" value="">
+    </div>
+    <div class="form-group col-lg-2">
+      <label for="importo">Importo</label>
+      <input class="form-control" id="importo" type="text" name="importo" value="">
+    </div>
+    
+    <div class="form-group col-lg-1">
       <label style="display: block;">&nbsp;</label>
-      <button type="button" class="btn btn-primary btn-sm" id="addRowSconto">add</button>
+      <button type="button" class="btn btn-primary btn-sm" id="addRowServizio">add</button>
     </div>
 
     <div class="form-group col-lg-1">
       <label style="display: block;">&nbsp;</label>
-      <button type="button" class="btn btn-danger btn-sm" id="delRowSconto">close</button>
+      <button type="button" class="btn btn-danger btn-sm" id="delRowServizio">close</button>
     </div>
 
-    <input type="hidden" name="idcontratto" value="<?php echo $idcontratto ?>">
-    <input type="hidden" name="idservizio" value="<?php echo $servizio ?>">
+    <input type="hidden" name="idcontratto" value="{{ $idcontratto }}">
+    <input type="hidden" name="servizio" value="{{ $servizio }}">
   </div>
   <div id="response"></div>
 </form>
