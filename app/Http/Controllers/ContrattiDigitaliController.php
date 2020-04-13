@@ -419,7 +419,7 @@ class ContrattiDigitaliController extends MyController
           {
           return view('contratti_digitali._riga_servizio', compact('idcontratto','servizio'));
           }
-        elseif ($servizio = "VETRINA LOC. LIMITROFE")
+        elseif ($servizio == "VETRINA LOC. LIMITROFE")
           {
           $localita = ['SELEZIONA' => 'SELEZIONA...'] + Utility::getLocalitaLimitrofeContratto();
           
