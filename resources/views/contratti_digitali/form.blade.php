@@ -201,6 +201,8 @@ jQuery(document).ready(function($){
 
     $('body').on('click', '#addRowServizio', function (e){
       e.preventDefault();
+      $(".spinner_lu.servizi").show();
+
         var data = $("#formAddServizio").serialize();
      
         $.ajax({
@@ -221,12 +223,13 @@ jQuery(document).ready(function($){
                 });
 
                 $('#container_row_ajax').fadeIn('fast', function(){
-                    // do nothing				 				
+                    $(".spinner_lu.servizi").show();	
                 });
 
               }
             },
             error : function(data) {
+              $(".spinner_lu.servizi").show();
               if( data.status === 422 ) {
                   
                   var errors = $.parseJSON(data.responseText);

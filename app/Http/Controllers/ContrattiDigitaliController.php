@@ -531,6 +531,7 @@ class ContrattiDigitaliController extends MyController
 
             $data['nome'] = $request->get('sconto'); 
             $data['importo'] = $request->get('importo');
+            $data['contratto_id'] = $contratto_id;
             $data['sconto'] = true;
 
             ServizioDigitale::create($data);
