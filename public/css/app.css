@@ -5280,6 +5280,7 @@ td.clickable:hover, td.clickable_prelazionata:hover {
    height:170px;
    width:170px;
    margin:0px auto;
+   z-index: 100;
    -webkit-animation: rotation .6s infinite linear;
    animation: rotation .6s infinite linear;
    border-left:6px solid rgba(0,174,239,.15);

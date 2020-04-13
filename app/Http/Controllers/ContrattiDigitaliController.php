@@ -406,6 +406,7 @@ class ContrattiDigitaliController extends MyController
     
       public function LoadRigaServizioAjax(Request $request)
         {
+        
         $idcontratto = $request->get('idcontratto');  
         
         $servizio = $request->get('servizio');
@@ -414,9 +415,21 @@ class ContrattiDigitaliController extends MyController
           {
           echo "";
           }
-         elseif ($servizio == "ALTRO")
+        elseif ($servizio == "ALTRO" || $servizio == "SCONTO GENERICO")
           {
           return view('contratti_digitali._riga_servizio', compact('idcontratto','servizio'));
+          }
+        elseif ($servizio = "VETRINA LOC. LIMITROFE")
+          {
+          $localita = ['SELEZIONA' => 'SELEZIONA...'] + Utility::getLocalitaLimitrofeContratto();
+          
+          return view('contratti_digitali._riga_servizio', compact('idcontratto','servizio','localita'));
+          }
+        else
+          {
+          $localita = ['SELEZIONA' => 'SELEZIONA...'] + Utility::getLocalitaContratto();
+
+          return view('contratti_digitali._riga_servizio', compact('idcontratto','servizio','localita'));
           }
 
         }
@@ -507,6 +520,25 @@ class ContrattiDigitaliController extends MyController
           {
           echo 'ko';
           }
+        elseif($servizio == 'SCONTO GENERICO')
+          {
+            $validation_array = [
+              'sconto' => 'required',
+              'importo' => 'required|integer|gt:0',
+            ];
+
+            $request->validate($validation_array);
+
+            $data['nome'] = $request->get('sconto'); 
+            $data['importo'] = $request->get('importo');
+            $data['sconto'] = true;
+
+            ServizioDigitale::create($data);
+          
+
+            echo 'ok';
+
+          }
         else 
           {
           
@@ -528,7 +560,9 @@ class ContrattiDigitaliController extends MyController
             } 
           else 
             {
-          
+            $validation_array['localita'] = 'required|not_in:SELEZIONA';
+
+            $data['localita'] = $request->get('localita');
             }
     
           $request->validate($validation_array);
@@ -548,7 +582,7 @@ class ContrattiDigitaliController extends MyController
         
         
 
-        }
+        } // end SaveRigaServizioAjax
       
     
     

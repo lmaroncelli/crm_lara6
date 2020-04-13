@@ -47,7 +47,36 @@ class Utility extends Model
 																'GREEN BOOKING' => 'GREEN BOOKING',
 																'ALTRO' => 'ALTRO',
 																'SCONTO GENERICO' => 'SCONTO GENERICO'];
+
+
+	private static $localita_contratto = [
+																'GABICCE' => 'GABICCE',
+												        'CATTOLICA' => 'CATTOLICA',
+												        'MISANO ADRIATICO' => 'MISANO ADRIATICO',
+												        'RICCIONE' => 'RICCIONE',
+												        'RIMINI' => 'RIMINI',
+												        'BELLARIA-IGEA MARINA' => 'BELLARIA-IGEA MARINA',
+												        'CESENATICO' => 'CESENATICO',
+												        'CERVIA' => 'CERVIA',
+												        'MILANO MARITTIMA' => 'MILANO MARITTIMA',
+												        'LIDI RAVENNATI' => 'LIDI RAVENNATI',
+												        'RAVENNA' => 'RAVENNA'];
 	
+
+	
+	private static $localita_limitrofe_contratto = [
+																'MIRAMARE DI RIMINI' => 'MIRAMARE DI RIMINI',
+																'RIVAZZURRA DI RIMINI' => 'RIVAZZURRA DI RIMINI',
+																'MAREBELLO DI RIMINI' => 'MAREBELLO DI RIMINI',
+																'BELLARIVA DI RIMINI' => 'BELLARIVA DI RIMINI',
+																'MARINA CENTRO' => 'MARINA CENTRO',
+																'SAN GIULIANO MARE' => 'SAN GIULIANO MARE',
+																'RIVABELLA DI RIMINI' => 'RIVABELLA DI RIMINI',
+																'VISERBA DI RIMINI' => 'VISERBA DI RIMINI',
+																'VISERBELLA DI RIMINI' => 'VISERBELLA DI RIMINI',
+																'TORRE PEDRERA' => 'TORRE PEDRERA'];
+											 
+
 
 	/**
 	 * Prende l'id del visitatore
@@ -379,6 +408,18 @@ class Utility extends Model
 	public static function getServiziContratto()
 		{
 		return self::$servizi_contratto;
+		}
+
+
+	public static function getLocalitaContratto()
+		{
+		return self::$localita_contratto;
+		}
+
+
+	public static function getLocalitaLimitrofeContratto()
+		{
+		return self::$localita_limitrofe_contratto;
 		}
 		
 

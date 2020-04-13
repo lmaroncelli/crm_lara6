@@ -138,6 +138,9 @@ jQuery(document).ready(function($){
     
     /* select servizi */
     $('body').on('change', '#servizi_select', function (e){
+
+        $(".spinner_lu.servizi").show();
+
         var servizio = $(this).val();
         var idcontratto = $(this).data('idcontratto');
 
@@ -168,13 +171,18 @@ jQuery(document).ready(function($){
                     }
                 });
 
+                $(".spinner_lu.servizi").hide();
 
+            },
+            error : function(data) {
+              $(".spinner_lu.servizi").hide();
             }
         }); /*end ajax call*/
+        
 
 		}); /*end servizi_select*/
 
-    $('body').on('click', '#delRowServizio', function (e){
+    $('body').on('click', '#closeRow', function (e){
       e.preventDefault();
 
       $('#container_row_ajax').fadeOut('fast', function() {
@@ -222,6 +230,7 @@ jQuery(document).ready(function($){
               if( data.status === 422 ) {
                   
                   var errors = $.parseJSON(data.responseText);
+                  $('#response').empty();
                   $.each(errors, function (key, value) {
                     // console.log(key+ " " +value);
                   $('#response').addClass("alert alert-danger");
@@ -533,10 +542,11 @@ jQuery(document).ready(function($){
       @endforeach
       
       {{-- riga sconto/servizio evidenza --}}
+      <div class="spinner_lu servizi" style="display:none;"></div>
       <tr>
         <td colspan="7">
           <div id="container_row_ajax">
-  
+            
           </div>
         </td>
       </tr>
