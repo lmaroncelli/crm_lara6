@@ -17,12 +17,12 @@ class CreareServiziDigitali extends Migration
             $table->bigIncrements('id');
             $table->integer('contratto_id')->unsigned();
             $table->integer('servizio_scontato_id')->unsigned()->nullable();
-            $table->string('nome')->nullable()->default('null');
-            $table->string('localita')->nullable()->default('null');
-            $table->string('pagina')->nullable()->default('null');
+            $table->string('nome')->nullable()->default(null);
+            $table->string('localita')->nullable()->default(null);
+            $table->string('pagina')->nullable()->default(null);
             $table->text('altro_servizio')->nullable();
-            $table->string('dal',50)->nullable()->default('null');
-            $table->string('al',50)->nullable()->default('null');
+            $table->string('dal',50)->nullable()->default(null);
+            $table->string('al',50)->nullable()->default(null);
             $table->integer('qta')->nullable()->default(1);
             $table->decimal('importo', 10, 2)->default(0.00);
             $table->boolean('sconto')->nullable()->default(false);

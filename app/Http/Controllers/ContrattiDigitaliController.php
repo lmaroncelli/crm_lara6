@@ -246,11 +246,22 @@ class ContrattiDigitaliController extends MyController
     // Servizi associati al contratto
     //================================================//
 
-      $servizi_venduti = $contratto->servizi_venduti;
+      //Tutti i sevizi NON SCONTO OPPURE gli sconti GENERICI
+      $servizi_venduti = 
+          $contratto->servizi()->where('sconto',0)
+          ->orWhere(function($query) use ($id) {
+            $query->where('contratto_id',$id);
+            $query->where('sconto',1);
+            $query->whereNull('servizio_scontato_id');
+          })
+          ->get();
       
-      $sconti = $contratto->sconti->keyBy('servizio_scontato_id');
       
       
+      // tutti gli sconti associati ad un servizio
+      $sconti = $contratto->sconti_associati->keyBy('servizio_scontato_id');
+      
+       
       $servizi_assoc = [];
       $tot_importo = 0;
       $tot_qta = 0;
@@ -258,7 +269,9 @@ class ContrattiDigitaliController extends MyController
       $totali = [];
       foreach ($servizi_venduti as $s) 
         {
-        $tot_importo += $s->importo;
+        
+        $s->sconto ? $tot_importo -= $s->importo : $tot_importo += $s->importo;
+
         $tot_qta += $s->qta;
         $servizi_assoc[] = $s;
         
@@ -329,7 +342,20 @@ class ContrattiDigitaliController extends MyController
      */
     public function update(Request $request, $id)
     {
-        //
+      $validation_array = [
+        'cliente' => 'required',
+        'fatturazione' => 'required',
+        'condizioni_pagamento' => 'required'      ];
+
+
+      if($request->has('iban') && $request->iban != '')
+        {
+        $validation_array['iban'] = 'alpha_num|size:27';
+
+        }
+
+
+      $request->validate($validation_array);
     }
 
     /**
@@ -452,7 +478,7 @@ class ContrattiDigitaliController extends MyController
         return "Si cerca di eliminare un servizo che non fa parte del contratto in essere";
         }
       
-      if($servizio->sconto) 
+      if($servizio->sconto && !is_null($servizio->servizio_scontato_id)) 
         {
         ServizioDigitale::find($servizio->servizio_scontato_id)->togliSconto();
         }

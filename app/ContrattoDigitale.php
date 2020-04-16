@@ -27,15 +27,22 @@ class ContrattoDigitale extends Model
        return $this->hasMany('App\ServizioDigitale', 'contratto_id', 'id');
    }
 
-
+   /**
+    * [servizi_venduti]
+    * @return [type] [description]
+    */
    public function servizi_venduti()
    {
        return $this->hasMany('App\ServizioDigitale', 'contratto_id', 'id')->where('sconto',0);
    }
 
-   public function sconti()
+   /**
+    * [sconti ASSOCIATI AD UN SERVIZIO NON GENERICI]
+    * @return [type] [description]
+    */
+   public function sconti_associati()
    {
-       return $this->hasMany('App\ServizioDigitale', 'contratto_id', 'id')->where('sconto',1);
+       return $this->hasMany('App\ServizioDigitale', 'contratto_id', 'id')->where('sconto',1)->whereNotNull('servizio_scontato_id');
    }
 
 

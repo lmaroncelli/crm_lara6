@@ -20,20 +20,20 @@ class CreareContrattiDigitali extends Migration
             $table->text('dati_cliente')->nullable();
             $table->datetime('data_creazione')->nullable()->default(null);
             $table->enum('tipo_contratto', ['nuovo','rinnovo','cambio_gestione'])->default('rinnovo');
-            $table->string('segnalatore')->nullable()->default('null');
+            $table->string('segnalatore')->nullable()->default(null);
             $table->text('dati_fatturazione')->nullable();
             $table->text('dati_referente')->nullable();
-            $table->string('iban')->nullable()->default('null');
+            $table->string('iban')->nullable()->default(null);
             $table->text('iban_importato')->nullable();
-            $table->string('pec')->nullable()->default('null');
+            $table->string('pec')->nullable()->default(null);
             $table->string('codice_destinatario', 7)->nullable()->default(null);
             $table->enum('condizioni_pagamento', ['RIBA','ASSEGNO BANCARIO','BONIFICO','CONTANTI','NESSUNO','GRATUITO'])->default('RIBA');
             $table->string('data_pagamento')->nullable()->default(null);
             $table->text('note')->nullable();
-            $table->string('sito_web')->nullable()->default('null');
-            $table->string('email')->nullable()->default('null');
-            $table->string('email_amministrativa')->nullable()->default('null');
-            $table->string('nome_file')->nullable()->default('null');
+            $table->string('sito_web')->nullable()->default(null);
+            $table->string('email')->nullable()->default(null);
+            $table->string('email_amministrativa')->nullable()->default(null);
+            $table->string('nome_file')->nullable()->default(null);
             $table->timestamps();
         });
 

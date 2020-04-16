@@ -7,6 +7,22 @@
 
 jQuery(document).ready(function($){
 
+
+      /* click sul bottone per aggiornare il form totale*/
+      $( "#form_contratto_digitale" ).submit(function(e) {
+        var i1 = $("#i1").val(); 
+        var i2 = $("#i2").val(); 
+        var i3 = $("#i3").val(); 
+        var i4 = $("#i4").val(); 
+        $("#iban").val(i1+i2+i3+i4);
+
+        // var nome_file_scelto = $("#nome_file_scelto").val();
+        // $("#nome_file").val(nome_file_scelto);
+        
+      });
+
+
+
       /* click bottone cancella riga servizio */
       $( ".delRow" ).click(function(e) {
         
@@ -15,6 +31,8 @@ jQuery(document).ready(function($){
         var nome = $(this).data('nome');
         
         if (confirm('Sei sicuro di eliminare '+ nome + '?')) {
+
+          $(".spinner_lu.servizi").show();
           
           var idservizio = $(this).data('idservizio');
           var idcontratto = $(this).data('idcontratto');
@@ -32,8 +50,12 @@ jQuery(document).ready(function($){
                   if (msg="ok") {
                     window.location.reload(true);
                   } else {
+                    $(".spinner_lu.servizi").hide();
                     alert(msg);
                   }
+              },
+              error: function() {
+                $(".spinner_lu.servizi").hide();
               }
           });
         
@@ -45,6 +67,8 @@ jQuery(document).ready(function($){
     $(".scontoRow").click(function(e){
       
       e.preventDefault();
+
+      $(".spinner_lu.servizi").show();
 
       var idservizio = $(this).data('idservizio');
       var idcontratto = $(this).data('idcontratto');
@@ -67,12 +91,16 @@ jQuery(document).ready(function($){
 
               $('#container_row_ajax').fadeIn('fast', function(){
                   
-                  $(".aggiorna").prop('disabled', true);
+                $(".spinner_lu.servizi").hide();
+                $(".aggiorna").prop('disabled', true);
         
 
               });
 
 
+          },
+          error:function(){
+            $(".spinner_lu.servizi").hide();
           }
       });
 
@@ -86,6 +114,8 @@ jQuery(document).ready(function($){
     */
     $('body').on('click', '#addRowSconto', function (e){
       e.preventDefault();
+      $(".spinner_lu.servizi").show();
+
         var data = $("#formAddRowSconto").serialize();
      
         $.ajax({
@@ -106,12 +136,13 @@ jQuery(document).ready(function($){
                 });
 
                 $('#container_row_ajax').fadeIn('fast', function(){
-                    // do nothing				 				
+                  $(".spinner_lu.servizi").hide();	 				
                 });
 
               }
             },
             error : function(data) {
+              $(".spinner_lu.servizi").hide();
               if( data.status === 422 ) {
                   
                   var errors = $.parseJSON(data.responseText);
@@ -223,13 +254,13 @@ jQuery(document).ready(function($){
                 });
 
                 $('#container_row_ajax').fadeIn('fast', function(){
-                    $(".spinner_lu.servizi").show();	
+                    $(".spinner_lu.servizi").hide();	
                 });
 
               }
             },
             error : function(data) {
-              $(".spinner_lu.servizi").show();
+              $(".spinner_lu.servizi").hide();
               if( data.status === 422 ) {
                   
                   var errors = $.parseJSON(data.responseText);
@@ -281,7 +312,7 @@ jQuery(document).ready(function($){
               </div>              
             </div>
             <div class="input-group">
-            <input class="form-control" type="text" name="segnalatore" value="{{ $contratto->segnalatore }}" placeholder="Segnalato da ...">
+            <input class="form-control" type="text" name="segnalatore" value="{{ old('segnalatore') != '' ?  old('segnalatore') :  $contratto->segnalatore }}" placeholder="Segnalato da ...">
             </div>
           </div>
         </div>    
@@ -343,7 +374,7 @@ jQuery(document).ready(function($){
   <div class="form-group row">
     <label class="col-md-3 col-form-label" for="text-input">IBAN IMPORTATO</label>
     <div class="col-md-9">
-      <input class="form-control" id="iban_importato" type="text" name="iban_importato" placeholder="iban importato dal crm" value="{{$contratto->iban_importato}}">
+      <input class="form-control" id="iban_importato" type="text" name="iban_importato" placeholder="iban importato dal crm" value="{{old('iban_importato') != '' ?  old('iban_importato') :  $contratto->iban_importato}}">
       <span class="help-block">Importato dal CRM (questo campo verrà automaticamente nascosto dopo aver compilato l'IBAN sottostante e salvato)</span>
     </div>
   </div>
@@ -354,17 +385,20 @@ jQuery(document).ready(function($){
 
     <label class="col-lg-3 col-form-label" for="i1">IBAN</label>
     <div class="col-lg-2">
-      <input class="form-control" id="i1" type="text" value="{{ $i1 }}">
+      <input class="form-control" name="i1" id="i1" type="text" value="{{ old('i1') != '' ?  old('i1') :  $i1 }}">
     </div>
     <div class="col-lg-2">
-      <input class="form-control" id="i2" type="text" value="{{ $i2 }}">
+      <input class="form-control" name="i2" id="i2" type="text" value="{{ old('i2') != '' ?  old('i2') :  $i2 }}">
     </div>
     <div class="col-lg-2">
-      <input class="form-control" id="i3" type="text" value="{{ $i3 }}">
+      <input class="form-control" name="i3" id="i3" type="text" value="{{ old('i3') != '' ?  old('i3') :  $i3 }}">
     </div>
     <div class="col-lg-2">
-      <input class="form-control" id="i4" type="text" value="{{ $i4 }}">
+      <input class="form-control" name="i4" id="i4" type="text" value="{{ old('i4') != '' ?  old('i4') :  $i4 }}">
     </div>
+
+    <input type="hidden" name="iban" id="iban">
+
   </div>
 
   <div class="row header">
@@ -377,7 +411,7 @@ jQuery(document).ready(function($){
   <div class="form-group row">
     <label class="col-md-3 col-form-label" for="text-input">PEC</label>
     <div class="col-md-9">
-      <input class="form-control" id="pec" type="text" name="pec" placeholder="PEC" value="{{$contratto->pec}}">
+      <input class="form-control" id="pec" type="text" name="pec" placeholder="PEC" value="{{old('pec') != '' ?  old('pec') :  $contratto->pec}}">
     </div>
   </div>
   
@@ -385,7 +419,7 @@ jQuery(document).ready(function($){
   <div class="form-group row">
     <label class="col-md-3 col-form-label" for="text-input">Codice Destinatario</label>
     <div class="col-md-9">
-      <input class="form-control" id="codice_destinatario" type="text" name="codice_destinatario" placeholder="Codice Destinatario" value="{{$contratto->codice_destinatario}}" maxlength="7">
+      <input class="form-control" id="codice_destinatario" type="text" name="codice_destinatario" placeholder="Codice Destinatario" value="{{old('codice_destinatario') != '' ?  old('codice_destinatario') :  $contratto->codice_destinatario}}" maxlength="7">
     </div>
   </div>
 
@@ -408,7 +442,7 @@ jQuery(document).ready(function($){
           </label>
         </div>
         <div class="form-group col-sm-7">
-          <input class="form-control" class="data_pagamento" type="text" placeholder="">
+          <input class="form-control" class="data_pagamento" type="text" placeholder="" value="">
         </div>
     </div>
   @endforeach
@@ -424,7 +458,7 @@ jQuery(document).ready(function($){
     <label class="col-md-3 col-form-label" for="text-input">NOTE</label>
     <div class="col-md-9">
       <textarea id="note" class="form-control" name="note" rows="5" placeholder="note">
-{{$contratto->note}}
+{{old('note') != '' ?  old('note') :  $contratto->note}}
       </textarea>
     </div>
   </div>
@@ -433,7 +467,7 @@ jQuery(document).ready(function($){
   <div class="form-group row">
     <label class="col-md-3 col-form-label" for="text-input">Sito web</label>
     <div class="col-md-9">
-      <input class="form-control" id="sito_web" type="text" name="sito_web" placeholder="Sito web" value="{{$contratto->sito_web}}">
+      <input class="form-control" id="sito_web" type="text" name="sito_web" placeholder="Sito web" value="{{old('sito_web') != '' ?  old('sito_web') :  $contratto->sito_web}}">
     </div>
   </div>
 
@@ -441,7 +475,7 @@ jQuery(document).ready(function($){
   <div class="form-group row">
     <label class="col-md-3 col-form-label" for="text-input">Email</label>
     <div class="col-md-9">
-      <input class="form-control" id="email" type="text" name="email" placeholder="Email" value="{{$contratto->email}}">
+      <input class="form-control" id="email" type="text" name="email" placeholder="Email" value="{{old('email') != '' ?  old('email') :  $contratto->email}}">
     </div>
   </div>
 
@@ -449,13 +483,13 @@ jQuery(document).ready(function($){
   <div class="form-group row">
     <label class="col-md-3 col-form-label" for="text-input">Email amministrativa</label>
     <div class="col-md-9">
-      <input class="form-control" id="email_amministrativa" type="text" name="email_amministrativa" placeholder="Email amministrativa" value="{{$contratto->email_amministrativa}}">
+      <input class="form-control" id="email_amministrativa" type="text" name="email_amministrativa" placeholder="Email amministrativa" value="{{old('email_amministrativa') != '' ?  old('email_amministrativa') :  $contratto->email_amministrativa}}">
     </div>
   </div>
 
   <div class="row">
     <div class="col mt-5">
-      <button type="submit" class="btn btn-primary btn-xs">Salva</button>
+      <button type="submit" class="aggiorna btn btn-primary btn-xs">Salva</button>
     </div>
   </div>
 </form>
@@ -526,17 +560,20 @@ jQuery(document).ready(function($){
               @if ($servizio->nome == 'ALTRO')
                 <td>{!!$servizio->altro_servizio!!}</td>                  
               @else
-                <td>{{$servizio->nome}} - {{$servizio->localita}} @if ($servizio->pagina != '') <br/> {{$servizio->pagina}}@endif</td>
+                <td>{{$servizio->nome}} - {{$servizio->localita}} @if ( !is_null($servizio->pagina) ) <br/> {{$servizio->pagina}} @endif</td>
               @endif
               <td>{{$servizio->dal}}</td>
               <td>{{$servizio->al}}</td>
               <td>{{$servizio->qta}}</td>
               <td class="text-right">{{Utility::formatta_cifra($servizio->importo, '€')}}</td>
+
               <td class="text-right">
-                <button type="button" class="btn btn-primary btn-sm scontoRow" title="Crea uno sconto per il servizio" data-idcontratto="{{$contratto->id}}" data-idservizio="{{$servizio->id}}">
+                
+                <button type="button" class="btn btn-primary btn-sm scontoRow" @if (!is_null($servizio->scontoAssociato)) disabled @endif title="Crea uno sconto per il servizio" data-idcontratto="{{$contratto->id}}" data-idservizio="{{$servizio->id}}">
                   <i class="fas fa-piggy-bank"></i>
                 </button>
               </td>
+              
               <td class="text-right">
                 <button type="button" class="btn btn-danger btn-sm delRow" title="{{$title_del}}" data-nome ="{{$nome}}" data-idcontratto="{{$contratto->id}}" data-idservizio="{{$servizio->id}}"><i class="fas fa-trash-alt"></i></button>
               </td>

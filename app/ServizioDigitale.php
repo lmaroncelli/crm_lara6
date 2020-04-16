@@ -16,11 +16,19 @@ class ServizioDigitale extends Model
   }
 
 
+  public function scontoAssociato()
+    {
+    return $this->hasOne(ServizioDigitale::class, 'servizio_scontato_id', 'id');
+    }
+   
+
+
   public function togliSconto()
     {
     $this->scontato = 0;
     $this->save();
     }
+
 
 
 }
