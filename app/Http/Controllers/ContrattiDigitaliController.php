@@ -343,19 +343,60 @@ class ContrattiDigitaliController extends MyController
     public function update(Request $request, $id)
     {
       $validation_array = [
-        'cliente' => 'required',
-        'fatturazione' => 'required',
-        'condizioni_pagamento' => 'required'      ];
+        'dati_cliente' => 'required',
+        'dati_fatturazione' => 'required',
+        'condizioni_pagamento' => 'required'
+      ];
 
 
       if($request->has('iban') && $request->iban != '')
         {
         $validation_array['iban'] = 'alpha_num|size:27';
-
         }
 
+      if($request->has('codice_destinatario') && $request->codice_destinatario != '')
+        {
+        $validation_array['codice_destinatario'] = 'alpha_num|size:7';
+        }
+
+      if($request->has('pec') && $request->pec != '')
+        {
+        $validation_array['pec'] = 'email:rfc,dns';
+        }
+
+      if($request->has('email') && $request->email != '')
+        {
+        $validation_array['email'] = 'email:rfc,dns';
+        }
+      
+      if($request->has('email_amministrativa') && $request->email_amministrativa != '')
+        {
+        $validation_array['email_amministrativa'] = 'email:rfc,dns';
+        }
 
       $request->validate($validation_array);
+
+      $request_to_except = ['i1','i2','i3','i4'];
+      
+      
+      $contratto = ContrattoDigitale::find($id);
+
+
+      foreach (Utility::getCondizioniPagamento() as $cp => $value) 
+        {
+        if($request->has('condizioni_pagamento') && $request->get('condizioni_pagamento') == $cp)
+          {
+          $data_pagamento = $request->get('data_pagamento_'.$value);
+          $contratto->data_pagamento = $data_pagamento;
+          }
+
+        $request_to_except[] = 'data_pagamento_'.$value;
+        }
+      
+      $contratto->update($request->except($request_to_except));
+
+      return redirect('contratto-digitale/'.$id.'/edit');
+
     }
 
     /**

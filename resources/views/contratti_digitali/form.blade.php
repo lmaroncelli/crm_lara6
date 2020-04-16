@@ -333,10 +333,10 @@ jQuery(document).ready(function($){
     {{-- Cliente --}}
     <div class="col-lg-5">
       <div class="form-group">
-        <label for="cliente">Cliente</label>
-        <textarea id="cliente" class="form-control" name="cliente" rows="5" placeholder="ID - Hotel XXXXX
+        <label for="dati_cliente">Cliente</label>
+        <textarea id="dati_cliente" class="form-control" name="dati_cliente" rows="5" placeholder="ID - Hotel XXXXX
   LOCALITA">
-{{$contratto->dati_cliente}}
+{{old('dati_cliente') != '' ?  old('dati_cliente') :  $contratto->dati_cliente}}
         </textarea>
         
       </div>
@@ -345,13 +345,13 @@ jQuery(document).ready(function($){
     {{-- Fatturazione --}}
     <div class="col-lg-5">
       <div class="form-group">
-        <label for="fatturazione">Dati Fatturazione</label>
-        <textarea id="fatturazione" class="form-control" name="fatturazione" rows="5" placeholder="Hotel XXXXX s.a.s. di YYYYYY
+        <label for="dati_fatturazione">Dati Fatturazione</label>
+        <textarea id="dati_fatturazione" class="form-control" name="dati_fatturazione" rows="5" placeholder="Hotel XXXXX s.a.s. di YYYYYY
   Viale ZZZZZZ
   CAP-LOCALITA(PROVINCIA) 
   P.IVA: PPPPPP
   Codice Fiscale:CCCCCCCCCCC">
-{{$contratto->dati_fatturazione}}
+{{old('dati_fatturazione') != '' ?  old('dati_fatturazione') :  $contratto->dati_fatturazione}}
         </textarea>
       </div>
     </div>
@@ -361,9 +361,9 @@ jQuery(document).ready(function($){
     {{-- Referente --}}
     <div class="col-lg-5">
       <div class="form-group">
-        <label for="referente">Dati Referente</label>
-        <textarea id="referente" class="form-control" name="referente" rows="5" placeholder="Proprietario: Napoleone Bonaparte - 338-111222333">
-{{$contratto->dati_referente}}
+        <label for="dati_referente">Dati Referente</label>
+        <textarea id="dati_referente" class="form-control" name="dati_referente" rows="5" placeholder="Proprietario: Napoleone Bonaparte - 338-111222333">
+{{old('dati_referente') != '' ?  old('dati_referente') :  $contratto->dati_referente}}
         </textarea>
       </div>
     </div>
@@ -433,16 +433,16 @@ jQuery(document).ready(function($){
       <label for="data_pagamento">Data pagamento</label>
     </div>
   </div>
-  @foreach ($condizioni_pagamento as $cp)
+  @foreach ($condizioni_pagamento as $cp => $value)
     <div class="row">
         <div class="form-check-inline form-group col-sm-3">
-          <input class="form-check-input condizioni_pagamento" id="{{$cp}}" type="radio" value="{{$cp}}" name="condizioni_pagamento">
+          <input class="form-check-input condizioni_pagamento" id="{{$cp}}" type="radio" value="{{$cp}}" name="condizioni_pagamento" @if (old('condizioni_pagamento') == $cp || $contratto->condizioni_pagamento == $cp ) checked @endif ">
           <label class="form-check-label" for="{{$cp}}">
             {{$cp}} @if ($cp == 'RIBA') (*) @endif
           </label>
         </div>
         <div class="form-group col-sm-7">
-          <input class="form-control" class="data_pagamento" type="text" placeholder="" value="">
+          <input class="form-control" class="data_pagamento" name="data_pagamento_{{$value}}" type="text" placeholder="" value="{{old('data_pagamento'.$value) != '' ?  old('data_pagamento'.$value) :  $contratto->condizioni_pagamento == $cp ? $contratto->data_pagamento : '' }}">
         </div>
     </div>
   @endforeach

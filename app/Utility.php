@@ -32,12 +32,12 @@ class Utility extends Model
 	private static $ip_debug = ['127.0.0.1', '2.224.168.43'];
 
 	private static $condizioni_pagamento = [
-									'RIBA' => 'RIBA',
-									'ASSEGNO BANCARIO' => 'ASSEGNO BANCARIO',
-									'BONIFICO' => 'BONIFICO',
-									'CONTANTI' => 'CONTANTI',
-									'NESSUNO' => 'NESSUNO',
-									'GRATUITO' => 'GRATUITO']; 
+									'RIBA' => '0',
+									'ASSEGNO BANCARIO' => '1',
+									'BONIFICO' => '2',
+									'CONTANTI' => '3',
+									'NESSUNO' => '4',
+									'GRATUITO' => '5']; 
 
 
 	private static $servizi_contratto = [
