@@ -18,7 +18,7 @@ return [
     'after' => 'The :attribute must be a date after :date.',
     'after_or_equal' => 'The :attribute must be a date after or equal to :date.',
     'alpha' => 'The :attribute may only contain letters.',
-    'alpha_dash' => 'The :attribute may only contain letters, numbers, dashes and underscores.',
+    'alpha_dash' => 'Il campo :attribute può contenere solo lettere, numeri, trattini e underscore.',
     'alpha_num' => 'Il campo :attribute può contenere solo lettere e numeri.',
     'array' => 'The :attribute must be an array.',
     'before' => 'The :attribute must be a date before :date.',

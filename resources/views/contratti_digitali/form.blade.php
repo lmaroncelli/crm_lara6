@@ -16,10 +16,20 @@ jQuery(document).ready(function($){
         var i4 = $("#i4").val(); 
         $("#iban").val(i1+i2+i3+i4);
 
-        // var nome_file_scelto = $("#nome_file_scelto").val();
-        // $("#nome_file").val(nome_file_scelto);
+        
         
       });
+
+
+      $(".salva_nome_pdf").click(function(e) {
+        e.preventDefault();
+
+        var nome_file_scelto = $("#nome_file_scelto").val();
+        $("#nome_file").val(nome_file_scelto);
+
+        $( "#form_contratto_digitale" ).submit();
+
+      })
 
 
 
@@ -486,7 +496,7 @@ jQuery(document).ready(function($){
       <input class="form-control" id="email_amministrativa" type="text" name="email_amministrativa" placeholder="Email amministrativa" value="{{old('email_amministrativa') != '' ?  old('email_amministrativa') :  $contratto->email_amministrativa}}">
     </div>
   </div>
-
+  <input type="hidden" name="nome_file" id="nome_file" value="{{old('nome_file') != '' ?  old('nome_file') :  $contratto->nome_file}}">
   <div class="row">
     <div class="col mt-5">
       <button type="submit" class="aggiorna btn btn-primary btn-xs">Salva</button>
@@ -634,6 +644,27 @@ jQuery(document).ready(function($){
     </tbody>
   </table>
 </div>
+{{-- end ServiziDigitali associati al contratto --}}
+
+{{--  Nome file pdf --}}
+<div class="form-group row">
+  <label class="col-lg-1 col-form-label" for="text-input">Nome file pdf</label>
+    
+  <div class="col-md-4">
+    <div class="input-group">
+      <input class="form-control" id="nome_file_scelto" type="text" name="nome_file_scelto" placeholder="Nome file pdf" value="{{old('nome_file') != '' ?  old('nome_file') :  $contratto->nome_file}}"> 
+      <div class="input-group-append">
+        <span class="input-group-text">.pdf</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-5">
+    <button type="button" class="salva_nome_pdf btn btn-primary btn-xs">Salva</button>
+  </div>
+  
+</div>
+{{--  end Nome file pdf --}}
 
 @endsection
 

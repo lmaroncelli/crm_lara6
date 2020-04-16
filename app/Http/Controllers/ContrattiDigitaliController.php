@@ -374,9 +374,16 @@ class ContrattiDigitaliController extends MyController
         $validation_array['email_amministrativa'] = 'email:rfc,dns';
         }
 
+        if($request->has('nome_file') && $request->nome_file != '')
+        {
+        $validation_array['nome_file'] = 'alpha_dash';
+        }
+
+
+
       $request->validate($validation_array);
 
-      $request_to_except = ['i1','i2','i3','i4'];
+      $request_to_except = ['i1','i2','i3','i4','nome_file_scelto'];
       
       
       $contratto = ContrattoDigitale::find($id);
