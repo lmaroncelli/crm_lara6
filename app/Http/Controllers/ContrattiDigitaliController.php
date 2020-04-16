@@ -15,6 +15,7 @@ use App\ContrattoDigitale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\MyController;
+use PDF;
 
 class ContrattiDigitaliController extends MyController
 {
@@ -261,43 +262,15 @@ class ContrattiDigitaliController extends MyController
       // tutti gli sconti associati ad un servizio
       $sconti = $contratto->sconti_associati->keyBy('servizio_scontato_id');
       
+
+
        
       $servizi_assoc = [];
-      $tot_importo = 0;
-      $tot_qta = 0;
-
       $totali = [];
-      foreach ($servizi_venduti as $s) 
-        {
-        
-        $s->sconto ? $tot_importo -= $s->importo : $tot_importo += $s->importo;
-
-        $tot_qta += $s->qta;
-        $servizi_assoc[] = $s;
-        
-        if ($s->scontato) 
-          {
-            $sconto = $sconti->get($s->id);
-            $tot_importo -= $sconto->importo;
-            $servizi_assoc[] = $sconto;
-          }
-        }
-
-      $tot_iva = $tot_importo*Utility::getIva()/100;
-
-      $tot_importo_con_iva = $tot_importo + $tot_iva;
-        
+      
+      $this->getServiziAssociatiAndTotali($servizi_venduti, $sconti, $servizi_assoc, $totali);
       
       
-      // ServiziDigitali associati al contratto
-      // in cui ogni sconto è DOPO il servizio a cui è associato
-      $servizi_assoc = collect($servizi_assoc);
-
-
-     $totali['tot_importo'] = $tot_importo;
-     $totali['tot_qta'] = $tot_qta;
-     $totali['tot_iva'] = $tot_iva;
-     $totali['tot_importo_con_iva'] = $tot_importo_con_iva;
     
     //================================================//
     // /Servizi associati al contratto 
@@ -660,6 +633,49 @@ class ContrattiDigitaliController extends MyController
         } // end SaveRigaServizioAjax
       
     
+
+      public function exportPdf($id)
+        {
+        $contratto = ContrattoDigitale::find($id);
+
+        $commerciale_contratto = User::find($contratto->user_id)->name;
+
+        //================================================//
+        // Servizi associati al contratto
+        //================================================//
+
+        //Tutti i sevizi NON SCONTO OPPURE gli sconti GENERICI
+        $servizi_venduti = 
+        $contratto->servizi()->where('sconto',0)
+        ->orWhere(function($query) use ($id) {
+          $query->where('contratto_id',$id);
+          $query->where('sconto',1);
+          $query->whereNull('servizio_scontato_id');
+        })
+        ->get();
+  
+        // tutti gli sconti associati ad un servizio
+        $sconti = $contratto->sconti_associati->keyBy('servizio_scontato_id');
+
+
+        $servizi_assoc = [];
+        $totali = [];
+        
+        $this->getServiziAssociatiAndTotali($servizi_venduti, $sconti, $servizi_assoc, $totali);
+
+        //================================================//
+        // /Servizi associati al contratto 
+        //================================================//
+
+
+        
+        //return view('contratti_digitali.contratto_pdf', compact('contratto'));
+        
+        $pdf = PDF::loadView('contratti_digitali.contratto_pdf', compact('contratto','commerciale_contratto','servizi_assoc','totali'));
+        
+        return $pdf->download($contratto->nome_file.'.pdf');
+        
+        }
     
 
     /**
@@ -681,4 +697,46 @@ class ContrattiDigitaliController extends MyController
         return false;
         }
       }
+
+    
+    private function getServiziAssociatiAndTotali($servizi_venduti, $sconti,&$servizi_assoc, &$totali)
+      {
+      $tot_importo = 0;
+      $tot_qta = 0;
+      $tot_iva = 0;
+      $tot_importo_con_iva = 0;
+
+      foreach ($servizi_venduti as $s) 
+        {
+        
+        $s->sconto ? $tot_importo -= $s->importo : $tot_importo += $s->importo;
+
+        $tot_qta += $s->qta;
+        $servizi_assoc[] = $s;
+        
+        if ($s->scontato) 
+          {
+            $sconto = $sconti->get($s->id);
+            $tot_importo -= $sconto->importo;
+            $servizi_assoc[] = $sconto;
+          }
+        }
+
+      $tot_iva = $tot_importo*Utility::getIva()/100;
+
+      $tot_importo_con_iva = $tot_importo + $tot_iva;
+        
+      
+      
+      // ServiziDigitali associati al contratto
+      // in cui ogni sconto è DOPO il servizio a cui è associato
+      $servizi_assoc = collect($servizi_assoc);
+
+
+      $totali['tot_importo'] = $tot_importo;
+      $totali['tot_qta'] = $tot_qta;
+      $totali['tot_iva'] = $tot_iva;
+      $totali['tot_importo_con_iva'] = $tot_importo_con_iva;
+      }
+
 }

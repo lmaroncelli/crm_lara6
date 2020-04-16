@@ -151,5 +151,9 @@ Route::middleware(['auth'])->group(function () {
 
     
     Route::post('save-riga-servizio-ajax', 'ContrattiDigitaliController@SaveRigaServizioAjax')->name('save-riga-servizio-ajax');
+
+
+    Route::get('contratto-digitale/export_pdf/{contratto_id}', 'ContrattiDigitaliController@exportPdf')->name('contratto-digitale.export-pdf');
+
         
 });

@@ -181,6 +181,10 @@ return [
          */
         App\Providers\ViewComposerProvider::class,
 
+        /*
+         * External packages service Providers...
+         */
+        Barryvdh\DomPDF\ServiceProvider::class,
     ],
 
     /*
@@ -232,6 +236,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Utility'	=> 'App\Utility',
+        'PDF' => Barryvdh\DomPDF\Facade::class,
 
     ],
 
