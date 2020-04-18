@@ -51,7 +51,8 @@
         <div class="row mt-4">
           <div class="col">
             
-            <div class="card"> 
+            <div class="card">
+              @yield('card-header')
               <div class="card-body">
                 @if ($errors->any())
                   <div class="row">

@@ -1,166 +1,117 @@
-@extends('layouts.lara_crm')
+@extends('layouts.coreui.crm_lara6')
+
+
+@section('card-header')
+    <div class="card-header">
+        {{ App\Utility::getNomeTipoFattura($fattura->tipo_id) }} N° <strong>{{$fattura->tipo_id == 'PF' ? $fattura->numero_prefattura : $fattura->numero_fattura}}</strong> - Data: <strong>{{ $fattura->data->format('d/m/Y') }}</strong> - Metodo di pagamento: <strong>{{App\Utility::getPagamentoFattura($fattura->pagamento_id)}}</strong>
+    </div>
+@endsection
 
 @section('content')
 
-<div class="m-content">
-<div class="row">
-    <div class="col-xl-12">
+<div class="row mt-1">
+    <div class="col-md-12 sezioni-fattura">
         
-        <div class="m-portlet">
-            <div class="m-portlet__body m-portlet__body--no-padding">
-                
-                <div class="m-invoice-2">
-                    <div class="m-invoice__wrapper">
-                        
-                        {{-- intestazione fattura --}}
-                        @include('fatture._header_fattura')
-                        
+            
+            {{-- intestazione fattura --}}
+            @include('fatture._header_fattura')
+            
 
-                        <div class="m-portlet m-portlet--creative m-portlet--first m-portlet--bordered-semi">
-                            <div class="m-portlet__head">
-                                <div class="m-portlet__head-caption">
-                                    <div class="m-portlet__head-title">
-                                        <span class="m-portlet__head-icon m--hide">
-                                            <i class="flaticon-statistics"></i>
-                                        </span>
-                                        <h3 class="m-portlet__head-text">
-                                            Associa/Dissocia le prefatture
-                                        </h3>
-                                        <h2 class="m-portlet__head-label m-portlet__head-label--info">
-                                            <span>Prefatture</span>
-                                        </h2>
-                                    </div>
-                                </div>
-                            </div>
-                            {{-- PREFATTURE DA ASSOCIARE --}}
-                            @include('fatture._prefatture_da_associare')
+            <div class="">
+                <h3>
+                    Associa/Dissocia le prefatture
+                </h3>
+                <h2>
+                    <span>Prefatture</span>
+                </h2>
+                  
+                {{-- PREFATTURE DA ASSOCIARE --}}
+                @include('fatture._prefatture_da_associare')
+            </div>
+            
+            <div class="">
+                <h3>
+                    Aggiungi/modifica riga fattura
+                </h3>
+                <h2>
+                    <span>Riga Fattura</span>
+                </h2>
+                      
+                {{-- form aggiunta servizio / riga di fatturazione --}}
+                @include('fatture._form_add_riga_fattura')
+            </div>  
+            
+            @if ($fattura->righe()->count())
+                <div class="">
+                    <h3>
+                        Elenco rghe di fatturazione
+                    </h3>
+                    <h2>
+                        <span>Righe</span>
+                    </h2>
+                    
+                    {{-- righe fatturazione --}}
+                    @include('fatture._righe_fatturazione')
+                </div>
+            @endif
+
+
+            @if ($fattura->righe()->count())
+                <div class="">
+                    <h3>
+                        Totale ed eventuali note
+                    </h3>
+                    <h2>
+                        <span>Totale</span>
+                    </h2>
+                    
+                    {{-- footer fattura --}}
+                    @include('fatture._footer_fattura_'.strtolower($fattura->tipo_id))
+                </div>
+            @endif
+
+
+            
+
+
+
+            @if ($fattura->righe()->count())
+
+                <div class="">
+                    
+                    @if ($fattura->scadenze->count())
+                    <h3>
+                        Elenco scadenze fattura
+                    </h3>
+                    @endif
+                    <h2>
+                        <span>Scadenze</span>
+                    </h2>
+                    
+                    @if (!$fattura->fatturaChiusa())
+                    {{-- Scadenze fattura --}}
+                    @include('fatture._form_add_scadenza_fattura')
+                    @endif
+                    
+                    {{-- elenco righe scadenze --}}
+                    @include('fatture._elenco_scadenze')
+                    
+                    @if($fattura->fatturaChiusa())
+                    {{-- Avviso Fattura chiusa --}}
+                    <div class="row">
+                        <div class="col-lg-6 offset-lg-3">
+                        <div class="alert alert-danger" role="alert">
+                            <strong>Perfetto!</strong> La fattura è chiusa.
                         </div>
-                        
-                        <div class="m-portlet m-portlet--creative m-portlet--first m-portlet--bordered-semi">
-                            <div class="m-portlet__head">
-                                <div class="m-portlet__head-caption">
-                                    <div class="m-portlet__head-title">
-                                        <span class="m-portlet__head-icon m--hide">
-                                            <i class="flaticon-statistics"></i>
-                                        </span>
-                                        <h3 class="m-portlet__head-text">
-                                            Aggiungi/modifica riga fattura
-                                        </h3>
-                                        <h2 class="m-portlet__head-label m-portlet__head-label--info">
-                                            <span>Riga Fattura</span>
-                                        </h2>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {{-- form aggiunta servizio / riga di fatturazione --}}
-                            @include('fatture._form_add_riga_fattura')
-                          </div>  
-                        
-                        @if ($fattura->righe()->count())
-                          <div class="m-portlet m-portlet--creative m-portlet--first m-portlet--bordered-semi">
-                              <div class="m-portlet__head">
-                                  <div class="m-portlet__head-caption">
-                                      <div class="m-portlet__head-title">
-                                          <span class="m-portlet__head-icon m--hide">
-                                              <i class="flaticon-statistics"></i>
-                                          </span>
-                                          <h3 class="m-portlet__head-text">
-                                              Elenco rghe di fatturazione
-                                          </h3>
-                                          <h2 class="m-portlet__head-label m-portlet__head-label--info">
-                                              <span>Righe</span>
-                                          </h2>
-                                      </div>
-                                  </div>
-                              </div>
-                              {{-- righe fatturazione --}}
-                              @include('fatture._righe_fatturazione')
-                          </div>
-                        @endif
-
-
-                        @if ($fattura->righe()->count())
-                          <div class="m-portlet m-portlet--creative m-portlet--first m-portlet--bordered-semi">
-                              <div class="m-portlet__head">
-                                  <div class="m-portlet__head-caption">
-                                      <div class="m-portlet__head-title">
-                                          <span class="m-portlet__head-icon m--hide">
-                                              <i class="flaticon-statistics"></i>
-                                          </span>
-                                          <h3 class="m-portlet__head-text">
-                                              Totale ed eventuali note
-                                          </h3>
-                                          <h2 class="m-portlet__head-label m-portlet__head-label--info">
-                                              <span>Totale</span>
-                                          </h2>
-                                      </div>
-                                  </div>
-                              </div>
-                              {{-- footer fattura --}}
-                              @include('fatture._footer_fattura_'.strtolower($fattura->tipo_id))
-                          </div>
-                        @endif
-
-
-                        
-
-
-
-                        @if ($fattura->righe()->count())
-
-                          <div class="m-portlet m-portlet--creative m-portlet--first m-portlet--bordered-semi">
-                              <div class="m-portlet__head">
-                                  <div class="m-portlet__head-caption">
-                                      <div class="m-portlet__head-title">
-                                          <span class="m-portlet__head-icon m--hide">
-                                              <i class="flaticon-statistics"></i>
-                                          </span>
-                                          @if ($fattura->scadenze->count())
-                                          <h3 class="m-portlet__head-text">
-                                              Elenco scadenze fattura
-                                          </h3>
-                                          @endif
-                                          <h2 class="m-portlet__head-label m-portlet__head-label--info">
-                                              <span>Scadenze</span>
-                                          </h2>
-                                      </div>
-                                  </div>
-                              </div>
-                              
-                              @if (!$fattura->fatturaChiusa())
-                                {{-- Scadenze fattura --}}
-                                @include('fatture._form_add_scadenza_fattura')
-                              @endif
-                              
-                              {{-- elenco righe scadenze --}}
-                              @include('fatture._elenco_scadenze')
-                              
-                              @if($fattura->fatturaChiusa())
-                                {{-- Avviso Fattura chiusa --}}
-                                <div class="row">
-                                  <div class="col-lg-6 offset-lg-3">
-                                    <div class="alert alert-danger" role="alert">
-                                      <strong>Perfetto!</strong> La fattura è chiusa.
-                                    </div>
-                                  </div>
-                                </div>
-                              @endif
-                          </div>  
-                        @endif
-                        
-                       
-                        
-                    </div> {{--  \wrapper --}}
-                </div> {{-- "m-invoice-2 --}} 
-
-          
-            </div> {{-- m-portlet__body --}}
-        </div>{{-- m-portlet --}}
-    
+                        </div>
+                    </div>
+                    @endif
+                </div>  
+            @endif
+            
     </div>{{-- col --}}       
 </div>{{-- row --}}
-</div>{{-- content --}}
+
 
 {{-- MODAL elenco societa --}}
 <div class="modal fade" id="m_modal_contatti" tabindex="-1" role="dialog" aria-labelledby="societa" aria-hidden="true">
