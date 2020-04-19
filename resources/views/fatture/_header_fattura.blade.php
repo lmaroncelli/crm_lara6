@@ -1,4 +1,4 @@
-<div class="row mb-4">
+<div class="row mb-5">
     <div class="col-sm-4">
         <div>
         <strong>Info Alberghi Srl</strong>

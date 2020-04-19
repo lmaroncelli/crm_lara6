@@ -34,7 +34,13 @@ class Fattura extends Model
 
    public function scadenze()
    {
-       return $this->hasMany(ScadenzaFattura::class, 'fattura_id', 'id');
+      return $this->hasMany(ScadenzaFattura::class, 'fattura_id', 'id');
+   }
+
+
+   public function scadenze_da_pagare()
+   {
+      return $this->hasMany(ScadenzaFattura::class, 'fattura_id', 'id')->where('pagata',0)->count();
    }
 
 

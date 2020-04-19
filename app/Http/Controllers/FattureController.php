@@ -301,17 +301,20 @@ class FattureController extends Controller
     {
     $prefatture_ids = $societa->prefatture->pluck('id')->toArray();
     
-    $prefatture_da_associare = Fattura::with('pagamento')
-                                ->whereHas(
-                                    'scadenze' , function($q) {
-                                      $q->where('pagata',0);
-                                    }
-                                )
-                                ->whereIn('id', $prefatture_ids)
-                                ->get();
+    // $prefatture_da_associare = Fattura::with('pagamento')
+    //                             ->whereHas(
+    //                                 'scadenze' , function($q) {
+    //                                   $q->where('pagata',0);
+    //                                 }
+    //                             )
+    //                             ->whereIn('id', $prefatture_ids)
+    //                             ->get();
 
-      $prefatture_associate = $fattura->prefatture->pluck('id')->toArray();
 
+    // considero tra le prefatture da associare anche quelle già pagate PERO' le evidenzio e non le faccio selezionare
+    $prefatture_da_associare = $societa->prefatture;
+
+    $prefatture_associate = $fattura->prefatture->pluck('id')->toArray();
 
     }
 
@@ -460,29 +463,60 @@ class FattureController extends Controller
 
 
     // chiamata AJAX in seguito ad un click sul checkbox della prefattura da associare o disassociare
-    public function fatturePrefattureAjax(Request $request)
-      {
-        $fattura_id = $request->get('fattura_id');
-        $prefattura_id = $request->get('prefattura_id');
-        $associa = $request->get('associa');
+    // public function fatturePrefattureAjax(Request $request)
+    //   {
+    //     $fattura_id = $request->get('fattura_id');
+    //     $prefattura_id = $request->get('prefattura_id');
+    //     $associa = $request->get('associa');
         
+    //     $fattura = Fattura::find($fattura_id);
+
+    //     $fattura->prefatture()->toggle([$prefattura_id]);
+
+    //     if($associa == 'true')
+    //       {
+    //       $ris['type'] = 'success';
+    //       $ris['title'] = 'Ok...';
+    //       $ris['text'] = 'prefattura associata correttamente';
+    //       }
+    //     else
+    //       {
+    //       $ris['type'] = 'error';
+    //       $ris['title'] = 'Ok...';
+    //       $ris['text'] = 'prefattura disassociata correttamente';
+    //       }
+    //       echo json_encode($ris);
+    //   }
+
+
+    public function associaFatturaPrefatturaAjax(Request $request)
+      {
+        $prefattura_id = $request->get('prefattura_id');
+        $fattura_id = $request->get('fattura_id');
+        $associa = $request->get('associa');
+
         $fattura = Fattura::find($fattura_id);
 
-        $fattura->prefatture()->toggle([$prefattura_id]);
+        if (!is_null($fattura)) 
+          {
+          if ($associa=='true') 
+            {
+            $fattura->prefatture()->attach($prefattura_id);
+            echo "attaccato $prefattura_id";
+            } 
+          else 
+            {
+            $fattura->prefatture()->detach($prefattura_id);
+            echo "stattaccato $prefattura_id";
+            }
 
-        if($associa == 'true')
+          echo "ok";
+          } 
+        else 
           {
-          $ris['type'] = 'success';
-          $ris['title'] = 'Ok...';
-          $ris['text'] = 'prefattura associata correttamente';
+          echo "ko";
           }
-        else
-          {
-          $ris['type'] = 'error';
-          $ris['title'] = 'Ok...';
-          $ris['text'] = 'prefattura disassociata correttamente';
-          }
-          echo json_encode($ris);
+
       }
 
 

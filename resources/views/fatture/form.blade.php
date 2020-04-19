@@ -16,58 +16,42 @@
             {{-- intestazione fattura --}}
             @include('fatture._header_fattura')
             
+            <hr>
 
             <div class="">
-                <h3>
-                    Associa/Dissocia le prefatture
-                </h3>
-                <h2>
-                    <span>Prefatture</span>
-                </h2>
+                <h3>Associa/Dissocia le prefatture</span></h3>
                   
                 {{-- PREFATTURE DA ASSOCIARE --}}
                 @include('fatture._prefatture_da_associare')
             </div>
+
+            <hr>
+
             
             <div class="">
-                <h3>
-                    Aggiungi/modifica riga fattura
-                </h3>
-                <h2>
-                    <span>Riga Fattura</span>
-                </h2>
-                      
+                <h3>Aggiungi/modifica riga fattura</h3>
+
                 {{-- form aggiunta servizio / riga di fatturazione --}}
                 @include('fatture._form_add_riga_fattura')
             </div>  
             
             @if ($fattura->righe()->count())
-                <div class="">
-                    <h3>
-                        Elenco rghe di fatturazione
-                    </h3>
-                    <h2>
-                        <span>Righe</span>
-                    </h2>
-                    
-                    {{-- righe fatturazione --}}
-                    @include('fatture._righe_fatturazione')
-                </div>
+            <div class="">
+                <h3>Elenco rghe di fatturazione</h3>
+                
+                {{-- righe fatturazione --}}
+                @include('fatture._righe_fatturazione')
+            </div>
             @endif
 
 
             @if ($fattura->righe()->count())
-                <div class="">
-                    <h3>
-                        Totale ed eventuali note
-                    </h3>
-                    <h2>
-                        <span>Totale</span>
-                    </h2>
-                    
-                    {{-- footer fattura --}}
-                    @include('fatture._footer_fattura_'.strtolower($fattura->tipo_id))
-                </div>
+            <div class="">
+                <h3>Totale ed eventuali note</h3>
+            
+                {{-- footer fattura --}}
+                @include('fatture._footer_fattura_'.strtolower($fattura->tipo_id))
+            </div>
             @endif
 
 
@@ -80,17 +64,12 @@
                 <div class="">
                     
                     @if ($fattura->scadenze->count())
-                    <h3>
-                        Elenco scadenze fattura
-                    </h3>
+                    <h3>Elenco scadenze fattura</h3>
                     @endif
-                    <h2>
-                        <span>Scadenze</span>
-                    </h2>
-                    
+                     
                     @if (!$fattura->fatturaChiusa())
-                    {{-- Scadenze fattura --}}
-                    @include('fatture._form_add_scadenza_fattura')
+                        {{-- Scadenze fattura --}}
+                        @include('fatture._form_add_scadenza_fattura')
                     @endif
                     
                     {{-- elenco righe scadenze --}}
@@ -161,6 +140,34 @@
         
     
         jQuery(document).ready(function(){
+
+
+            // checkbox associa/dissocia prefatture
+
+            $(".fatture_prefatture").change(function() {
+                $(".spinner_lu.prefatture").show();
+
+                var prefattura_id = $(this).val();
+                var associa = this.checked;
+                
+                jQuery.ajax({
+                        url: '<?=url("associa-fattura-prefattura-ajax") ?>',
+                        type: "post",
+                        data : { 
+                               'prefattura_id': prefattura_id,
+                               'fattura_id': '{{$fattura->id}}',
+                               'associa': associa
+                               },
+                        success: function(data) {
+                            $(".spinner_lu.prefatture").hide();
+                            if(data=='ko') {
+                                alert('Errore. La fattura non esiste!')
+                            }
+                       }
+                 });
+            });
+
+
 
             $('#m_datepicker_3').datepicker({
                 format: 'dd/mm/yyyy',
@@ -246,7 +253,7 @@
             });
 
 
-            $(".fatture_prefatture").click(function(){
+            $(".fatture_prefatture_OLD").click(function(){
               var prefattura_id = $(this).val();
               var associa = this.checked;
 
@@ -262,7 +269,6 @@
                              'prefattura_id': prefattura_id, 
                              'fattura_id':{{$fattura->id}},
                              'associa': associa,
-                             '_token': jQuery('input[name=_token]').val()
                              },
                       success: function(msg) {
                        //console.log(msg);
