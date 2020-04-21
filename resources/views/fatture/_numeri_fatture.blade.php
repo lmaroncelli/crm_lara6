@@ -1,5 +1,5 @@
-<div class="m-scrollable m-scrollable--track m-scroller ps ps--active-y" data-scrollable="true" style="height: 400px; overflow: hidden;">
-<table class="table table-striped m-table m-table--head-bg-success">
+
+<table class="table table-striped">
     <thead>
         <tr>
             <th>Data</th>
@@ -17,4 +17,3 @@
         @endforeach
     </tbody>
 </table>
-</div>

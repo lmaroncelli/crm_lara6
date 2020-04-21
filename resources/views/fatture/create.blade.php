@@ -35,8 +35,8 @@
             <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#m_modal_contatti">Società</button>
         </div>
 
-         {{-- numero-Data --}}
-         <div class="form-group row">
+        {{-- numero-Data --}}
+        <div class="form-group row">
 
             <label class="col-xl-1 col-form-label" for="numero">Numero:</label>
             
@@ -72,9 +72,9 @@
                 </select>
             </div>
 
-         </div>
+        </div>
 
-         <button type="submit" class="btn btn-success">
+        <button type="submit" class="btn btn-success">
             @if ($fattura->exists)
                 Modifica
             @else
@@ -90,47 +90,46 @@
 
 {{-- MODAL numeri fatture --}}
 <div class="modal fade" id="m_modal_numeri_fattura" tabindex="-1" role="dialog" aria-labelledby="numeri_fattura" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            
-            <div class="modal-header">
-                <h5 class="modal-title" id="numeri_fattura">Numerazione precedente</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            
-            <div class="modal-body" id="wrapper_last_numeri">
-                @include('fatture._numeri_fatture')
-            </div>
-
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+      <div class="modal-content">
+          
+        <div class="modal-header">
+            <h5 class="modal-title" id="numeri_fattura">Numerazione precedente</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
+        
+        <div class="modal-body" id="wrapper_last_numeri">
+            @include('fatture._numeri_fatture')
+        </div>
+
+      </div>
     </div>
 </div>
 {{-- \MODAL elenco contatti --}}
 
 
-{{-- MODAL elenco societa --}}
-<div class="modal fade" id="m_modal_contatti" tabindex="-1" role="dialog" aria-labelledby="societa" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="col-xl-3" style="margin-top: 10px">
-                    <h5 class="modal-title" id="societa">Elenco Società </h5>
-                </div>
-                <span style="margin-top: 10px" class="col-xl-1 m-badge m-badge--success m-badge--wide" id="n_societa">{{$ragioneSociale->count()}}</span>
-                <div class="col-xl-6">
-                    <input id="myInput" type="text" class="form-control m-input m-input--pill m-input--air" placeholder="scrivi per filtrare">
-                </div>
-                <div class="col-xl-1">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+{{-- MODAL elenco contatti --}}
+<div class="modal fade" id="m_modal_contatti" tabindex="-1" role="dialog" aria-labelledby="contatti" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+            <div class="col-xl-3" style="margin-top: 10px">
+                <h5 class="modal-title" id="societa">Elenco Società </h5>
             </div>
-            <div class="modal-body">
-                <div class="m-scrollable m-scrollable--track m-scroller ps ps--active-y" data-scrollable="true" style="height: 400px; overflow: hidden;">
-            <table class="table table-striped m-table m-table--head-bg-success" id="tabellaSocieta">
+            <span style="margin-top: 10px" class="col-xl-1" id="n_societa">{{$ragioneSociale->count()}}</span>
+            <div class="col-xl-6">
+                <input id="myInput" type="text" class="form-control" placeholder="scrivi per filtrare">
+            </div>
+            <div class="col-xl-1">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+        <div class="modal-body">
+          <table class="table table-striped" id="tabellaSocieta">
             <thead>
                 <tr>
                     <th>Nome</th>
@@ -142,19 +141,18 @@
             <tbody>
                 @foreach ($ragioneSociale as $r)
                     @foreach ($r->societa as $s)
-                      <tr class="societa">
-                          <td><a href="#" data-id="{{$s->id}}" data-nome="{{$r->nome}}"  class="societa_fattura" title="Fattura a questa società">{{$r->nome}}</a></td>
-                          <td>{{optional($s->cliente)->nome}}</td>
-                          <td>{{optional($s->cliente)->id_info}}</td>
-                          <td>{{$r->note}}</td>
-                      </tr>
+                    <tr class="societa">
+                        <td><a href="#" data-id="{{$s->id}}" data-nome="{{$r->nome}}"  class="societa_fattura" title="Fattura a questa società">{{$r->nome}}</a></td>
+                        <td>{{optional($s->cliente)->nome}}</td>
+                        <td>{{optional($s->cliente)->id_info}}</td>
+                        <td>{{$r->note}}</td>
+                    </tr>
                     @endforeach
                 @endforeach
             </tbody>
-        </table>
+          </table>
         </div>
-            </div>
-        </div>
+      </div>
     </div>
 </div>
 {{-- \MODAL elenco contatti --}}
