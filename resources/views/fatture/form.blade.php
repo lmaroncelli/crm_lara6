@@ -1,9 +1,17 @@
 @extends('layouts.coreui.crm_lara6')
 
 
+<div class="spinner_lu intestazione" style="display:none;"></div>
 @section('card-header')
     <div class="card-header">
-        {{ App\Utility::getNomeTipoFattura($fattura->tipo_id) }} N° <strong>{{$fattura->tipo_id == 'PF' ? $fattura->numero_prefattura : $fattura->numero_fattura}}</strong> - Data: <strong>{{ $fattura->data->format('d/m/Y') }}</strong> - Metodo di pagamento: <strong>{{App\Utility::getPagamentoFattura($fattura->pagamento_id)}}</strong>
+        {{ App\Utility::getNomeTipoFattura($fattura->tipo_id) }} N° <strong>{{$fattura->tipo_id == 'PF' ? $fattura->numero_prefattura : $fattura->numero_fattura}}</strong> - Data: <strong>{{ $fattura->data->format('d/m/Y') }}</strong> - 
+        Metodo di pagamento:
+        <select id="pagamento_id" name="pagamento_id" class="pagamento_card_header">
+          @foreach ($tipo_pagamento as $key => $value)
+              <option value="{{$key}}" @if ( $fattura->pagamento_id == $key ) selected="selected" @endif>{{$value}}</option>
+          @endforeach
+      </select> 
+        {{-- <strong>{{App\Utility::getPagamentoFattura($fattura->pagamento_id)}}</strong> --}}
     </div>
 @endsection
 
@@ -92,9 +100,11 @@
 </div>{{-- row --}}
 
 
+
+
 {{-- MODAL elenco societa --}}
-<div class="modal fade" id="m_modal_contatti" tabindex="-1" role="dialog" aria-labelledby="societa" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="m_modal_societa" tabindex="-1" role="dialog" aria-labelledby="societa" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="societa">Elenco Società</h5>
@@ -103,30 +113,28 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="m-scrollable m-scrollable--track m-scroller ps ps--active-y" data-scrollable="true" style="height: 400px; overflow: hidden;">
-                <table class="table table-striped m-table m-table--head-bg-success">
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Cliente</th>
-                    <th>ID</th>
-                    <th>Note</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($ragioneSociale as $r)
-                    @foreach ($r->societa as $s)
-                      <tr>
-                          <td><a href="#" data-id="{{$s->id}}" data-nome="{{$r->nome}}"  class="societa_fattura" title="Fattura a questa società">{{$r->nome}}</a></td>
-                          <td>{{optional($s->cliente)->nome}}</td>
-                          <td>{{optional($s->cliente)->id_info}}</td>
-                          <td>{{$r->note}}</td>
-                      </tr>
-                    @endforeach
-                @endforeach
-            </tbody>
-        </table>
-        </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Cliente</th>
+                            <th>ID</th>
+                            <th>Note</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($ragioneSociale as $r)
+                            @foreach ($r->societa as $s)
+                            <tr>
+                                <td><a href="#" data-id="{{$s->id}}" data-nome="{{$r->nome}}"  class="societa_fattura" title="Fattura a questa società">{{$r->nome}}</a></td>
+                                <td>{{optional($s->cliente)->nome}}</td>
+                                <td>{{optional($s->cliente)->id_info}}</td>
+                                <td>{{$r->note}}</td>
+                            </tr>
+                            @endforeach
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -137,13 +145,58 @@
 
 @section('js')
     <script type="text/javascript" charset="utf-8">
+
+
+        function cambiaIntestazione(societa_id)
+          {
+          var societa_id = societa_id;
+              
+          jQuery.ajax({
+                  url: '<?=url("cambia-intestazione-fattura-ajax") ?>',
+                  type: "post",
+                  async: false,
+                  data : { 
+                          'societa_id': societa_id,
+                          'fattura_id': '{{$fattura->id}}'
+                          },
+                  success: function(data) {
+                      if(data=='ko') {
+                        alert('Errore. La fattura non esiste!')
+                      } else {
+                        $("#intestazione_cambiata").val(1);
+                        alert("Società "+ data + " associata correttamente!\nPuoi chiudere il popup!");
+                      }                      
+                  }
+          });
+         
+          }
         
     
         jQuery(document).ready(function(){
 
 
-            // checkbox associa/dissocia prefatture
+            $("#pagamento_id").change(function(e){
+                var pagamento_id = $(this).val();
+                jQuery.ajax({
+                    url: '<?=url("cambia-pagamento-fattura-ajax") ?>',
+                    type: "post",
+                    data : { 
+                            'pagamento_id': pagamento_id,
+                            'fattura_id': '{{$fattura->id}}'
+                            },
+                    success: function(data) {
+                        if(data=='ko') {
+                          alert('Errore. La fattura non esiste!')
+                        } else {
+                          alert("Pagamento cambiato correttamente");
+                        }                      
+                    }
+                });
+            }); /*pagamento_id").change*/
 
+
+
+            // checkbox associa/dissocia prefatture
             $(".fatture_prefatture").change(function() {
                 $(".spinner_lu.prefatture").show();
 
@@ -165,7 +218,10 @@
                             }
                        }
                  });
-            });
+            }); /*.fatture_prefatture").change*/
+
+
+
 
 
 
@@ -177,9 +233,21 @@
          
             $(".societa_fattura").click(function(e){
                 e.preventDefault();
-                $("#societa_id").val($(this).data("id"));
-                $("#societa").val($(this).data("nome"));
-                alert('Società '+$(this).data("nome")+ ' associata correttamente!\nPuoi chiudere il popup!')
+                var societa_id = $(this).data("id");
+
+                cambiaIntestazione(societa_id);
+                 
+            });
+
+
+            $(".close").click(function(){
+              var intestazione_cambiata = $("#intestazione_cambiata").val();
+              console.log('intestazione_cambiata = '+intestazione_cambiata);
+              if( intestazione_cambiata == 1 ) {
+                window.alert('La pagina si riaggiorna per visualizzare le modifiche effettuate!');
+                $(".spinner_lu.intestazione").show();
+                location.reload();
+              }
             });
 
 

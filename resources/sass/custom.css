@@ -298,6 +298,15 @@ tr.sconto td {
 }
 
 
+/* FATTURA */
+
+.pagamento_card_header {
+  background-color: #f0f3f5;
+  border: 1px solid #ccc;
+  font-weight: bold;
+}
+
+
 /*  da 768 in avanti */
 @media (min-width: 768px) {
 

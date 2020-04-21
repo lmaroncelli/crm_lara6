@@ -1,3 +1,4 @@
+<input type="hidden" id="intestazione_cambiata" value=0>
 <div class="row mb-5">
     <div class="col-sm-4">
         <div>
@@ -30,7 +31,7 @@
     </div>
     
     <div class="col-sm-4">
-        CAMBIA INTESTAZIONE
+        <button type="button" class="btn btn-warning" data-toggle="modal" data-keyboard="false" data-backdrop="static" data-target="#m_modal_societa">CAMBIA INTESTAZIONE</button>
     </div>
     
 </div>

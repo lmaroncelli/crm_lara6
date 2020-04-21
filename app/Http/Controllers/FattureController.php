@@ -315,11 +315,19 @@ class FattureController extends Controller
     $prefatture_da_associare = $societa->prefatture;
 
     $prefatture_associate = $fattura->prefatture->pluck('id')->toArray();
-
+      
     }
 
+    if ($fattura->tipo_id != 'NC') 
+      {
+      $tipo_pagamento = Pagamento::where('cod_PA','!=',NULL)->where('cod','!=',-1)->orderBy('nome','asc')->pluck('nome','cod');
+      } 
+    else 
+      {
+      $tipo_pagamento = Pagamento::where('cod','=',-1)->orderBy('nome','asc')->pluck('nome','cod');
+      }
     
-    return view('fatture.form', compact('fattura','riga_fattura', 'scadenza_fattura', 'servizio_prefill_arr','prefatture_da_associare','prefatture_associate'));
+    return view('fatture.form', compact('fattura','riga_fattura', 'scadenza_fattura', 'servizio_prefill_arr','prefatture_da_associare','prefatture_associate','tipo_pagamento'));
     
     }
 
@@ -519,6 +527,48 @@ class FattureController extends Controller
 
       }
 
+    
+    public function cambiaIntestazioneFatturaAjax(Request $request)
+      {
+      $fattura_id = $request->get('fattura_id');
+      $societa_id = $request->get('societa_id');
+
+      $fattura = Fattura::find($fattura_id);
+
+      if (!is_null($fattura)) 
+        {
+        $fattura->societa_id = $societa_id;
+        $fattura->save();
+
+        echo $fattura->societa->nome;
+        } 
+      else 
+        {
+        echo "ko";
+        }
+      
+      }
+
+
+    public function cambiaPagamentoFatturaAjax(Request $request)
+      {
+      $fattura_id = $request->get('fattura_id');
+      $pagamento_id = $request->get('pagamento_id');
+
+      $fattura = Fattura::find($fattura_id);
+
+      if (!is_null($fattura)) 
+        {
+        $fattura->pagamento_id = $pagamento_id;
+        $fattura->save();
+
+        echo "ok";
+        } 
+      else 
+        {
+        echo "ko";
+        }
+      }
 
     public function addScadenza(Request $request)
       {
