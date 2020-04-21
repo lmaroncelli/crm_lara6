@@ -11,7 +11,6 @@
               <option value="{{$key}}" @if ( $fattura->pagamento_id == $key ) selected="selected" @endif>{{$value}}</option>
           @endforeach
       </select> 
-        {{-- <strong>{{App\Utility::getPagamentoFattura($fattura->pagamento_id)}}</strong> --}}
     </div>
 @endsection
 
