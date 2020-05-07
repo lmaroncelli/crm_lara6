@@ -481,3 +481,16 @@ aggiungo il datepicker
 lo installao scaricando lo zip dal download builder del sito jQuery UI in cui seleziono solo il datepicker con un tema
 aggiungo il css e il js copiando i file nella folder public e linkandoli nel master template
 
+
+
+
+# login page
+
+
+devo installare le icone 
+
+> npm install @coreui/icons --save
+
+nel file webpack.mix.js con mix lo copio nella public/js 
+
+> mix.copy('node_modules/@coreui/icons/js/svgxuse.min.js','public/js/svgxuse.min.js')

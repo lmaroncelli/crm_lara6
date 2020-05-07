@@ -209,5 +209,4 @@
     
 
     </script>
-    <script src="{{ asset('js/bootstrap-datepicker.js') }}" type="text/javascript"></script>
 @endsection

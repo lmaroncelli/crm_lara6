@@ -5112,6 +5112,19 @@ a.editable-click.editable-disabled:hover {
   margin-left: -5px;
   margin-right: -5px;
 }
+
+
+/** 
+ * LOGIN
+ */
+
+ul.navbar-nav a.nav-link {
+  color: #f0f3f5!important;
+}
+
+
+
+
 /* Utilizzo il component callout senza bordo nell'header dell'elenco clienti */
 
 .callout-noborder {
