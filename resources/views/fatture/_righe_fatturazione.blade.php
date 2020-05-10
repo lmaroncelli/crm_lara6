@@ -6,6 +6,8 @@
                 <th>Qta</th>
                 <th>Prezzo</th>
                 <th>T.Netto</th>
+                <th>% Sconto</th>
+                <th>T.Netto scontato</th>
                 <th>Al.IVA</th>
                 <th>IVA</th>
                 <th>Totale</th>
@@ -20,6 +22,8 @@
                 <td>{{$riga->qta}}</td>
                 <td>{{App\Utility::formatta_cifra($riga->prezzo, '€')}}</td>
                 <td>{{App\Utility::formatta_cifra($riga->totale_netto, '€')}}</td>
+                <td>{{$riga->perc_sconto}}%</td>
+                <td>{{App\Utility::formatta_cifra($riga->totale_netto_scontato, '€')}}</td>
                 <td>{{$riga->al_iva}}</td>
                 <td>{{App\Utility::formatta_cifra($riga->iva, '€')}}</td>
                 <td>{{App\Utility::formatta_cifra($riga->totale, '€')}}</td>

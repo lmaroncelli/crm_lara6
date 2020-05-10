@@ -271,15 +271,30 @@
             $(".trigger_row").blur(function(){
                 var qta = $("#qta").val();
                 var prezzo = $("#prezzo").val();
+                var perc_sconto = $("#perc_sconto").val();
                 var al_iva = $("#al_iva").val();
-                if(qta != '' && prezzo != '' && !isNaN(qta) && !isNaN(prezzo))
+
+                if(qta != '' && prezzo != '' && !isNaN(qta) && !isNaN(prezzo) && !isNaN(perc_sconto))
                   {
                   var totale_netto = qta*prezzo;
-                  var iva = totale_netto*al_iva/100;
-                  var totale = totale_netto + iva;
-                  if(!isNaN(totale_netto) && !isNaN(iva) && !isNaN(totale)) 
+
+                  if(perc_sconto > 0)
+                    {
+                    var sconto = totale_netto*perc_sconto/100;
+                    var totale_netto_scontato = totale_netto - sconto;
+                    }
+                  else
+                    {
+                      var sconto = 0;
+                      var totale_netto_scontato = totale_netto;
+                    }
+
+                  var iva = totale_netto_scontato*al_iva/100;
+                  var totale = totale_netto_scontato + iva;
+                  if(!isNaN(totale_netto) && !isNaN(iva) && !isNaN(totale) && !isNaN(totale_netto_scontato)) 
                     {
                     $("#totale_netto").val(totale_netto);
+                    $("#totale_netto_scontato").val(totale_netto_scontato);
                     $("#iva").val(iva);
                     $("#totale").val(totale);
                     }
@@ -302,7 +317,7 @@
                    }
                 });
 
-                $("#prefill").html(' <textarea name="servizio" class="form-control m-input m-input--air m-input--pill" id="servizio" rows="4">' + selText.join("\n") + '</textarea> <input type="hidden" name="servizi" value="'+ servizi_ids +'">');
+                $("#prefill").html(' <textarea name="servizio" class="form-control" id="servizio" rows="4">' + selText.join("\n") + '</textarea> <input type="hidden" name="servizi" value="'+ servizi_ids +'">');
                 $("#reset_servizi").show();
               }
 
@@ -311,12 +326,20 @@
                 e.preventDefault();
 
                 servizi_select_to_servizio_text();
+
+                $("#empty_text_area").val(1);
                
             });
 
 
             $("#riga_fattura_form").submit(function(){
-                servizi_select_to_servizio_text();
+                
+                var empty_text_area = $("#empty_text_area").val();
+                // se ho già trasformao la select in text area non rilancio la funzione servizi_select_to_servizio_text 
+                // perché sovrascrivo quello che ho scritto
+                if (empty_text_area == 0) {
+                  servizi_select_to_servizio_text();
+                } 
             });
 
 
@@ -376,8 +399,4 @@
     
 
     </script>
-    <script src="{{ asset('js/bootstrap-datepicker.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('js/select2.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('js/sweetalert2.js') }}" type="text/javascript"></script>
-
 @endsection

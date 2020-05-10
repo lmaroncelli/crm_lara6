@@ -25,7 +25,9 @@ class FattureController extends Controller
                'qta' => 'required|numeric',
                'prezzo' => 'required|numeric',
                'totale_netto' => 'required|numeric',
+               'totale_netto_scontato' => 'required|numeric',
                'al_iva' => 'required|numeric',
+               'perc_sconto' => 'required|numeric',
                'iva' => 'required|numeric',
                'totale' => 'required|numeric',
            ];
@@ -54,12 +56,15 @@ class FattureController extends Controller
     private function _ricalcola_dati_riga(&$dati_riga)
       {
       $totale_netto = $dati_riga['qta']*$dati_riga['prezzo'];
-      $iva = $totale_netto*$dati_riga['al_iva']/100;
-      $totale = $totale_netto + $iva;
+      $sconto = $totale_netto*$dati_riga['perc_sconto']/100;
+      $totale_netto_scontato = $totale_netto - $sconto;
+      $iva = $totale_netto_scontato*$dati_riga['al_iva']/100;
+      $totale = $totale_netto_scontato + $iva;
       
       $dati_riga['totale_netto'] = $totale_netto;
       $dati_riga['iva'] = $iva;
       $dati_riga['totale'] = $totale;
+      $dati_riga['totale_netto_scontato'] = $totale_netto_scontato;
 
       }
 
