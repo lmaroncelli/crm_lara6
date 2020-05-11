@@ -9,6 +9,31 @@ ul.navbar-nav a.nav-link {
 }
 
 
+/*
+nav bar dark
+ */
+
+div.sidebar,  header.app-header {
+  background-color:#2f353a!important; 
+}
+
+header.navbar {
+  justify-content: left!important;
+}
+
+header.navbar a.navbar-brand {
+  display: block!important;
+  width: initial!important;
+}
+
+.navbar-toggler:focus, .navbar-toggler:hover {
+  text-decoration: initial!important;
+}
+
+.app-header .navbar-toggler:hover .navbar-toggler-icon {
+    height: 23px;
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='%2373818f' stroke-width='2.25' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E")
+}
 
 
 /* Utilizzo il component callout senza bordo nell'header dell'elenco clienti */

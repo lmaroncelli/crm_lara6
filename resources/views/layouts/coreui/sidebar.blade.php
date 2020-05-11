@@ -3,96 +3,88 @@
     <ul class="nav">
 
       <li class="nav-item">
-        <a class="nav-link active" href="{{ route('clienti.index') }}">
-        Clienti
+        <a class="nav-link" href="{{ route('clienti.index') }}">
+        <i class="nav-icon icon-people"></i>Clienti
         </a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link active" href="{{ route('societa.index') }}">
-        Società
+        <a class="nav-link" href="{{ route('societa.index') }}">
+        <i class="nav-icon icon-globe"></i>Società
         </a>
       </li>
 
-
-      <li class="nav-item">
-        <a class="nav-link active" href="{{ route('fatture.index') }}">
-        Fatture
+      <li class="nav-item nav-dropdown">
+        <a class="nav-link nav-dropdown-toggle" href="#">
+          <i class="nav-icon icon-docs"></i>Fogli digitali
         </a>
-      </li>
-
-
-      <li class="nav-item">
-        <a class="nav-link active" href="{{ route('evidenze.view') }}">
-        Evidenze
-        </a>
-      </li>
-
-
-      <li class="nav-title">Components</li>
-        <li class="nav-item nav-dropdown">
-          <a class="nav-link nav-dropdown-toggle" href="#">
-          <i class="nav-icon icon-puzzle"></i> Base</a>
           <ul class="nav-dropdown-items">
-            <li class="nav-item">
-            <a class="nav-link" href="base/breadcrumb.html">
-            <i class="nav-icon icon-puzzle"></i> Breadcrumb</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="base/cards.html">
-            <i class="nav-icon icon-puzzle"></i> Cards</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="base/carousel.html">
-            <i class="nav-icon icon-puzzle"></i> Carousel</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="base/collapse.html">
-            <i class="nav-icon icon-puzzle"></i> Collapse</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="base/jumbotron.html">
-            <i class="nav-icon icon-puzzle"></i> Jumbotron</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="base/list-group.html">
-            <i class="nav-icon icon-puzzle"></i> List group</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="base/navs.html">
-            <i class="nav-icon icon-puzzle"></i> Navs</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="base/pagination.html">
-            <i class="nav-icon icon-puzzle"></i> Pagination</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="base/popovers.html">
-            <i class="nav-icon icon-puzzle"></i> Popovers</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="base/progress.html">
-            <i class="nav-icon icon-puzzle"></i> Progress</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="base/scrollspy.html">
-            <i class="nav-icon icon-puzzle"></i> Scrollspy</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="base/switches.html">
-            <i class="nav-icon icon-puzzle"></i> Switches</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="base/tabs.html">
-            <i class="nav-icon icon-puzzle"></i> Tabs</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="base/tooltips.html">
-            <i class="nav-icon icon-puzzle"></i> Tooltips</a>
-            </li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('contratto-digitale.index') }}"><i class="nav-icon icon-note"></i>Precontratti</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-tag"></i>Fogli Servizi(TD)</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-note"></i>Precontratti HM(TD)</a></li>
           </ul>
-        </li>
+      </li>
+
+
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('fatture.index') }}">
+        <i class="nav-icon icon-wallet"></i>Fatture
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="#">
+        <i class="nav-icon icon-wallet"></i>Prefatture(TD)
+        </a>
+      </li>
+
+      <li class="nav-item nav-dropdown">
+        <a class="nav-link nav-dropdown-toggle" href="#">
+          <i class="nav-icon icon-clock"></i>Scadenziario
+        </a>
+          <ul class="nav-dropdown-items">
+            <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-login"></i>Incassato(TD)</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-close"></i>Non incassato(TD)</a></li>
+          </ul>
+      </li>
+
+      <li class="nav-item nav-dropdown">
+        <a class="nav-link nav-dropdown-toggle" href="#">
+          <i class="nav-icon icon-layers"></i>Servizi
+        </a>
+          <ul class="nav-dropdown-items">
+            <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-hourglass"></i>Sacdenze servizi(TD)</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-magic-wand"></i>VOT (TD)</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-magic-wand"></i>VOT Archiviati(TD)</a></li>
+          </ul>
+      </li>
+
+      <li class="nav-item nav-dropdown">
+        <a class="nav-link nav-dropdown-toggle" href="#">
+          <i class="nav-icon icon-social-dropbox"></i>Utility
+        </a>
+          <ul class="nav-dropdown-items">
+            <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-screen-tablet"></i>Vetrine(TD)</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-book-open"></i>Memorex (TD)</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-calculator"></i>Conteggi(TD)</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-pie-chart"></i>Statistiche(TD)</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-graph"></i>Andamento attivazioni(TD)</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('evidenze.view') }}"><i class="nav-icon icon-present"></i>Evidenze</a></li>
+          </ul>
+      </li>
+
+      <li class="nav-item nav-dropdown">
+        <a class="nav-link nav-dropdown-toggle" href="#">
+          <i class="nav-icon icon-wrench"></i>Settings
+        </a>
+          <ul class="nav-dropdown-items">
+            <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-directions"></i>Localita(TD)</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-envelope"></i>Avvisi fatture(TD)</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-share"></i>Gruppi clienti(TD)</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-present"></i>Evidenze(TD)</a></li>
+          </ul>
+      </li>
+
     </ul>
   </nav>  
-  <button class="sidebar-minimizer brand-minimizer" type="button"></button>
 </div> {{-- end sidebar  --}}

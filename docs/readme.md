@@ -494,3 +494,16 @@ devo installare le icone
 nel file webpack.mix.js con mix lo copio nella public/js 
 
 > mix.copy('node_modules/@coreui/icons/js/svgxuse.min.js','public/js/svgxuse.min.js')
+
+
+
+#nav bar 
+
+devo installare le icone
+
+> npm install simple-line-icons --save
+
+
+importo il file css in resources/sass/app.scss
+
+@import '~simple-line-icons/css/simple-line-icons.css';
