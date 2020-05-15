@@ -45,6 +45,16 @@ class Servizio extends Model
       return $this->belongsTo(RigaDiFatturazione::class, 'rigafatturazione_id', 'id');
   }
 
+  public function scopeArchiviato($query)
+    {
+    return $query->where('archiviato', 1);
+    }
+
+  public function scopeNotArchiviato($query)
+    {
+    return $query->where('archiviato', 0);
+    }
+
   /**
    * [nella fatturazione la multiselect che include i servizi da fatturare]
    * @return [type] [description]

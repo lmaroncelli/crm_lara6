@@ -162,5 +162,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('contratto-digitale/export_pdf/{contratto_id}', 'ContrattiDigitaliController@exportPdf')->name('contratto-digitale.export-pdf');
 
+
+    /////////////
+    // Servizi //
+    /////////////
+    Route::get('servizi', 'ServiziController@index')->name('servizi.index');
+    Route::delete('/servizi/{id}', 'ServiziController@destroy')->name('servizi.destroy');
+
         
 });
