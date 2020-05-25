@@ -507,3 +507,10 @@ devo installare le icone
 importo il file css in resources/sass/app.scss
 
 @import '~simple-line-icons/css/simple-line-icons.css';
+
+
+
+# ORDER BY 
+
+https://blog.jgrossi.com/2018/querying-and-eager-loading-complex-relations-in-laravel/
+https://reinink.ca/articles/dynamic-relationships-in-laravel-using-subqueries

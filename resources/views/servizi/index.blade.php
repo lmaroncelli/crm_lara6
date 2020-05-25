@@ -62,10 +62,46 @@
                                       @endif
                                   @endif
                               </th>
-                              <th>ID</th>
-                              <th>Località</th>
-                              <th>Inizio</th>
-                              <th>Scadenza</th>
+                              <th class="order" data-orderby="id_info" @if (\Request::get('orderby') == 'id_info' && \Request::get('order') == 'asc') data-order='desc' @else data-order='asc' @endif>
+                                  ID 
+                                  @if (\Request::get('orderby') == 'id_info') 
+                                      @if (\Request::get('order') == 'asc')
+                                          <i class="fa fa-sort-numeric-down"></i>
+                                      @else 
+                                          <i class="fa fa-sort-numeric-up"></i> 
+                                      @endif
+                                  @endif
+                              </th>
+                              <th class="order" data-orderby="localita_id" @if (\Request::get('orderby') == 'localita_id' && \Request::get('order') == 'asc') data-order='desc' @else data-order='asc' @endif>
+                                  Località 
+                                  @if (\Request::get('orderby') == 'localita_id') 
+                                      @if (\Request::get('order') == 'asc')
+                                          <i class="fa fa-sort-alpha-down"></i>
+                                      @else 
+                                          <i class="fa fa-sort-alpha-up"></i> 
+                                      @endif
+                                  @endif
+                              </th>
+                              <th class="order" data-orderby="data_inizio" @if (\Request::get('orderby') == 'data_inizio' && \Request::get('order') == 'asc') data-order='desc' @else data-order='asc' @endif>
+                                  Inizio 
+                                  @if (\Request::get('orderby') == 'data_inizio') 
+                                      @if (\Request::get('order') == 'asc')
+                                          <i class="fa fa-sort-numeric-down"></i>
+                                      @else 
+                                          <i class="fa fa-sort-numeric-up"></i> 
+                                      @endif
+                                  @endif
+                              </th>
+                              <th class="order" data-orderby="data_fine" @if (\Request::get('orderby') == 'data_fine' && \Request::get('order') == 'asc') data-order='desc' @else data-order='asc' @endif>
+                                  Scadenza 
+                                  @if (\Request::get('orderby') == 'data_fine') 
+                                      @if (\Request::get('order') == 'asc')
+                                          <i class="fa fa-sort-numeric-down"></i>
+                                      @else 
+                                          <i class="fa fa-sort-numeric-up"></i> 
+                                      @endif
+                                  @endif
+                              </th>
                               <th>N. Fattura</th>
                               <th>Note</th>
                               <th></th>
@@ -82,8 +118,8 @@
                                 <td>{{optional($s->cliente)->nome}}</td>
                                 <td>{{optional($s->cliente)->id_info}}</td>
                                 <td>{{optional(optional($s->cliente)->localita)->nome}}</td>
-                                <td>{{$s->data_inizio}}</td>
-                                <td>{{$s->data_fine}}</td>
+                                <td>{{optional($s->data_inizio)->format('d/m/Y')}}</td>
+                                <td>{{optional($s->data_fine)->format('d/m/Y')}}</td>
                                 <td>{{optional($s->fattura)->numero_fattura}}</td>
                                 <td>{{$s->note}}</td>
                                 <td>

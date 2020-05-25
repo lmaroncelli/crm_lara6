@@ -44,15 +44,38 @@ class ServiziController extends Controller
       
       $to_append = ['order' => $order, 'orderby' => $orderby];
 
+      if($orderby == 'data_inizio' || $orderby == 'data_fine')
+        {
+        $servizi = $servizi
+                    ->orderBy($orderby, $order);
+        }      
 
-      if ($orderby == 'nome_cliente') 
+      if ($orderby == 'nome_cliente' || $orderby == 'id_info' || $orderby == 'localita_id') 
         {
         	$servizi = $servizi
                 ->select('tblServizi.*')
                 ->join('tblClienti', 'tblServizi.cliente_id', '=', 'tblClienti.id');
 
+         if ($orderby == 'nome_cliente') 
+          {
           $servizi = $servizi
                     ->orderBy('tblClienti.nome', $order);
+          } 
+        else 
+          {
+          $servizi = $servizi
+                    ->orderBy('tblClienti.'.$orderby, $order);
+          } 
+        }
+
+      if ($orderby == 'nome_prodotto') 
+        {
+          $servizi = $servizi
+                ->select('tblServizi.*')
+                ->join('tblProdotti', 'tblServizi.prodotto_id', '=', 'tblProdotti.id');
+
+          $servizi = $servizi
+                    ->orderBy('tblProdotti.nome', $order);
         }
 
 

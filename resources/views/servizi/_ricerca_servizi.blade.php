@@ -1,4 +1,4 @@
-<form action="{{ url('societa') }}" method="get" id="searchForm" accept-charset="utf-8">
+<form action="{{ url('servizi') }}" method="get" id="searchForm" accept-charset="utf-8">
     <input type="hidden" name="orderby" id="orderby" value="">
     <input type="hidden" name="order" id="order" value="">
     
