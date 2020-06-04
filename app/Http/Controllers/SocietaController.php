@@ -87,7 +87,7 @@ class SocietaController extends Controller
           $orderby='id';
         }
       
-      $to_append = ['order' => $order, 'orderby' => $orderby];
+      $to_append = ['order' => $order, 'orderby' => $orderby, 'qf' => $qf, 'field' => $field];
 
 
 

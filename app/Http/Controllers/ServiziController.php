@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Servizio;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ServiziController extends Controller
@@ -15,6 +16,15 @@ class ServiziController extends Controller
     public function index(Request $request)
       {
 
+      /**
+       * array:4 [▼
+          "orderby" => null
+          "order" => null
+          "qf" => "sabri"
+          "field" => "nome_cliente"
+          ]
+      */
+
       // campo libero
       $qf = $request->get('qf');
       $field = $request->get('field');
@@ -22,13 +32,86 @@ class ServiziController extends Controller
       $orderby = $request->get('orderby');
       $order = $request->get('order');
 
-       $servizi = Servizio::
+      $servizi = Servizio::
       						whereHas(
       							'cliente' , function($q) {
                      $q->where('attivo',1);
                    	})
       						->with(['cliente.localita','prodotto','fattura'])
       						->notArchiviato();
+
+      $join_clienti = 0;
+      $join_prodotti = 0;
+
+
+
+      // se ho inserito un valore da cercare ed ho selzionato un campo
+      if( !is_null($qf) && $field != '0' )
+        {
+
+        if($field == 'nome_cliente')
+          {
+            $servizi = $servizi
+                ->select('tblServizi.*')
+                ->join('tblClienti', 'tblServizi.cliente_id', '=', 'tblClienti.id')
+                ->where('tblClienti.nome','LIKE','%'.$qf.'%');
+
+            $join_clienti = 1;
+          }
+
+        if($field == 'cliente_id')
+          {
+            $servizi = $servizi
+                ->select('tblServizi.*')
+                ->join('tblClienti', 'tblServizi.cliente_id', '=', 'tblClienti.id')
+                ->where('tblClienti.id_info', $qf);
+
+            $join_clienti = 1;
+          }
+
+        if($field == 'data_inizio' || $field == 'data_fine')
+          {
+          // la data passata deve essere nel formato gg/mm/yyyy       
+          $field_input = Carbon::createFromFormat('d/m/Y', $qf)->toDateString();
+
+          $servizi = $servizi
+                    ->select('tblServizi.*')
+                    ->where('tblServizi.'.$field, $field_input);
+
+          }
+
+        if($field == 'note')
+          {
+          $servizi = $servizi
+                    ->select('tblServizi.*')
+                    ->where('tblServizi.'.$field,'LIKE','%'.$qf.'%');
+          }
+
+
+        if($field == 'numero_fattura')
+          {
+          $servizi = $servizi
+              ->select('tblServizi.*')
+              ->join('tblFatture', 'tblServizi.fattura_id', '=', 'tblFatture.id')
+              ->where('tblFatture.numero_fattura','LIKE','%'.$qf.'%');
+          }
+
+
+        if($field == 'nome_prodotto')
+          {
+          $servizi = $servizi
+                ->select('tblServizi.*')
+                ->join('tblProdotti', 'tblServizi.prodotto_id', '=', 'tblProdotti.id')
+                ->where('tblProdotti.nome','LIKE','%'.$qf.'%');
+
+          $join_prodotti = 1;
+
+          }
+
+
+
+        }
+
 
 
 
@@ -42,7 +125,7 @@ class ServiziController extends Controller
           $orderby='id';
         }
       
-      $to_append = ['order' => $order, 'orderby' => $orderby];
+      $to_append = ['order' => $order, 'orderby' => $orderby, 'qf' => $qf, 'field' => $field];
 
       if($orderby == 'data_inizio' || $orderby == 'data_fine')
         {
@@ -52,27 +135,35 @@ class ServiziController extends Controller
 
       if ($orderby == 'nome_cliente' || $orderby == 'id_info' || $orderby == 'localita_id') 
         {
+
+        if(!$join_clienti)
+          {
         	$servizi = $servizi
                 ->select('tblServizi.*')
                 ->join('tblClienti', 'tblServizi.cliente_id', '=', 'tblClienti.id');
+          }
 
-         if ($orderby == 'nome_cliente') 
+        if ($orderby == 'nome_cliente') 
           {
           $servizi = $servizi
-                    ->orderBy('tblClienti.nome', $order);
+                  ->orderBy('tblClienti.nome', $order);
           } 
         else 
           {
           $servizi = $servizi
-                    ->orderBy('tblClienti.'.$orderby, $order);
+                  ->orderBy('tblClienti.'.$orderby, $order);
           } 
+
         }
 
       if ($orderby == 'nome_prodotto') 
         {
-          $servizi = $servizi
-                ->select('tblServizi.*')
-                ->join('tblProdotti', 'tblServizi.prodotto_id', '=', 'tblProdotti.id');
+          if(!$join_prodotti)
+            {
+            $servizi = $servizi
+                  ->select('tblServizi.*')
+                  ->join('tblProdotti', 'tblServizi.prodotto_id', '=', 'tblProdotti.id');
+            }
 
           $servizi = $servizi
                     ->orderBy('tblProdotti.nome', $order);
