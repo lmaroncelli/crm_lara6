@@ -16,6 +16,9 @@ class ServiziController extends Controller
     public function index(Request $request)
       {
 
+
+      //dd($request->all());
+
       /**
        * array:4 [▼
           "orderby" => null
@@ -32,6 +35,11 @@ class ServiziController extends Controller
 
       // prodotti
       $prodotti = $request->get('prodotti');
+      $inizio = $request->get('inizio');
+      $scadenza = $request->get('scadenza');
+
+      $archiviato = $request->get('archiviato');
+
 
       $orderby = $request->get('orderby');
       $order = $request->get('order');
@@ -41,8 +49,13 @@ class ServiziController extends Controller
       							'cliente' , function($q) {
                      $q->where('attivo',1);
                    	})
-      						->with(['cliente.localita','prodotto','fattura'])
-      						->notArchiviato();
+      						->with(['cliente.localita','prodotto','fattura']);
+
+      if(is_null($archiviato))
+        {
+        $servizi = $servizi->notArchiviato();
+        }
+      						
 
       $join_clienti = 0;
       $join_prodotti = 0;
@@ -61,6 +74,17 @@ class ServiziController extends Controller
                     ->whereIn('tblServizi.prodotto_id', $prodotti);
         }
 
+      if(!is_null($inizio))
+        {
+        $inizio_input = Carbon::createFromFormat('d/m/Y', $inizio)->toDateString();
+        $servizi = $servizi->where('data_inizio','>=',$inizio_input);
+        }
+
+      if(!is_null($scadenza))
+        {
+        $scadenza_input = Carbon::createFromFormat('d/m/Y', $scadenza)->toDateString();
+        $servizi = $servizi->where('data_fine','<=',$scadenza_input);
+        }
 
 
       // se ho inserito un valore da cercare ed ho selzionato un campo

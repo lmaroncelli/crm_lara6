@@ -21,20 +21,12 @@
       </div>
     </div><!--/.col-->
   @endif
-    <div class="to-right">
-      <div class="callout callout-noborder">
-        <a href="" title="Nuovo servizio" class="btn btn-primary">
-          Nuovo servizio
-        </a>
-      </div>
-    </div><!--/.col-->
 </div>
 
 
 <div class="row">
     <div class="col">
 
-            @include('servizi._ricerca_prodotti_servizi')
             @include('servizi._ricerca_servizi')
             
             @if (isset($servizi))
@@ -156,11 +148,14 @@
                 $("#searchForm").submit();
             });
 
-          
+            $(".archiviato_check").click(function(){
+                $("#searchForm").submit();
+            });
+  
         });
     
 
     </script>
 
-    
+
 @endsection
