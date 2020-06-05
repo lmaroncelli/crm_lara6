@@ -166,7 +166,8 @@ Route::middleware(['auth'])->group(function () {
     /////////////
     // Servizi //
     /////////////
-    Route::get('servizi', 'ServiziController@index')->name('servizi.index');
+    Route::get('servizi/{tipo?}', 'ServiziController@index')->name('servizi.index');
+    
     Route::delete('/servizi/{id}', 'ServiziController@destroy')->name('servizi.destroy');
 
         

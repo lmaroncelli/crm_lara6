@@ -54,7 +54,7 @@
         </a>
           <ul class="nav-dropdown-items">
             <li class="nav-item"><a class="nav-link" href="{{ route('servizi.index') }}"><i class="nav-icon icon-hourglass"></i>Sadenze servizi</a></li>
-            <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-magic-wand"></i>VOT (TD)</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('servizi.index',['tipo' => 'evidenze']) }}"><i class="nav-icon icon-magic-wand"></i>Evidenze</a></li>
             <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-magic-wand"></i>VOT Archiviati(TD)</a></li>
           </ul>
       </li>

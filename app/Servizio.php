@@ -55,6 +55,11 @@ class Servizio extends Model
     return $query->where('archiviato', 0);
     }
 
+  public function scopeEvidenze($query)
+    {
+    return $query->where('prodotto_id', 59);
+    }
+
   /**
    * [nella fatturazione la multiselect che include i servizi da fatturare]
    * @return [type] [description]

@@ -13,7 +13,7 @@ class ServiziController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $tipo=null)
       {
 
 
@@ -50,6 +50,13 @@ class ServiziController extends Controller
                      $q->where('attivo',1);
                    	})
       						->with(['cliente.localita','prodotto','fattura']);
+
+
+      if(!is_null($tipo))
+        {
+        $servizi = $servizi->evidenze();
+        }
+
 
       if(is_null($archiviato))
         {
