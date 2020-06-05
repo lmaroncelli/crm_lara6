@@ -29,6 +29,10 @@ class ServiziController extends Controller
       $qf = $request->get('qf');
       $field = $request->get('field');
 
+
+      // prodotti
+      $prodotti = $request->get('prodotti');
+
       $orderby = $request->get('orderby');
       $order = $request->get('order');
 
@@ -42,6 +46,20 @@ class ServiziController extends Controller
 
       $join_clienti = 0;
       $join_prodotti = 0;
+
+
+
+      //////////////////////
+      // Ricerca Prodotti //
+      //////////////////////
+
+       
+      if(!is_null($prodotti))
+        {
+        $servizi = $servizi
+                    ->select('tblServizi.*')
+                    ->whereIn('tblServizi.prodotto_id', $prodotti);
+        }
 
 
 
@@ -125,7 +143,7 @@ class ServiziController extends Controller
           $orderby='id';
         }
       
-      $to_append = ['order' => $order, 'orderby' => $orderby, 'qf' => $qf, 'field' => $field];
+      $to_append = ['order' => $order, 'orderby' => $orderby, 'qf' => $qf, 'field' => $field, 'prodotti' => $prodotti];
 
       if($orderby == 'data_inizio' || $orderby == 'data_fine')
         {

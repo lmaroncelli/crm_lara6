@@ -26,12 +26,13 @@ class SocietaController extends Controller
       $societa = Societa::with(['ragioneSociale','cliente']); 
 
 
+
+     //////////////////////////////////////
+     // Ricerca campo libero del cliente //
+     //////////////////////////////////////
+
       $join_rag_soc = 0;
       $join_clienti = 0;
-
-       //////////////////////////////////////
-       // Ricerca campo libero del cliente //
-       //////////////////////////////////////
 
       // se ho inserito un valore da cercare ed ho selzionato un campo
       if( !is_null($qf) && $field != '0' )

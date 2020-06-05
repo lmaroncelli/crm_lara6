@@ -418,7 +418,5 @@
 	
 
 	</script>
-	<script src="{{ asset('js/select2.js') }}" type="text/javascript"></script>
-
 
 @endsection

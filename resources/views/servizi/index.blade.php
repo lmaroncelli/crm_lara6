@@ -34,6 +34,7 @@
 <div class="row">
     <div class="col">
 
+            @include('servizi._ricerca_prodotti_servizi')
             @include('servizi._ricerca_servizi')
             
             @if (isset($servizi))
@@ -149,6 +150,8 @@
 
         jQuery(document).ready(function(){
             
+            $("#prodotti").select2({placeholder:"Seleziona i prodotti da filtrare"});
+
             $(".searching").click(function(){
                 $("#searchForm").submit();
             });
@@ -158,4 +161,6 @@
     
 
     </script>
+
+    
 @endsection
