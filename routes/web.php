@@ -170,5 +170,13 @@ Route::middleware(['auth'])->group(function () {
     
     Route::delete('/servizi/{id}', 'ServiziController@destroy')->name('servizi.destroy');
 
+
+
+    //////////////
+    // Scadenze //
+    //////////////
+    Route::get('scadenze', 'ScadenzeController@index')->name('scadenze.index');
+
+
         
 });

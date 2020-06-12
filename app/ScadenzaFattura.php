@@ -26,10 +26,20 @@ class ScadenzaFattura extends Model
    }
 
 
-
    public function setDataScadenzaAttribute($value)
     {
         $this->attributes['data_scadenza'] = Utility::getCarbonDate($value);
+    }
+
+
+    public function scopePagata($query)
+    {
+        return $query->where('pagata',1);
+    }
+
+    public function scopeNotPagata($query)
+    {
+        return $query->where('pagata',0);
     }
    
 
