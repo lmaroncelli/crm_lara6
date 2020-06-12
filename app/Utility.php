@@ -28,6 +28,8 @@ class Utility extends Model
 
 	private static $iva = 22;
 
+	private static $idProdottoEvidenza = 59;
+
   #IP a cui sono visibili i dettagli di debug (query ed altre info)
 	private static $ip_debug = ['127.0.0.1', '2.224.168.43'];
 
@@ -265,6 +267,11 @@ class Utility extends Model
 	public static function getIva()
 		{
 		return self::$iva;
+		}
+
+	public static function getIdProdottoEvidenza()
+		{
+		return self::$idProdottoEvidenza;
 		}
 
 	 public static function getHoursForView($total_minutes)

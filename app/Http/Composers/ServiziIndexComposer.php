@@ -3,7 +3,6 @@
 
 namespace App\Http\Composers;
 
-use App\Prodotto;
 use Illuminate\Contracts\View\View;
 
 
@@ -31,10 +30,6 @@ class ServiziIndexComposer
                 array_unshift($campi_servizi_search, 'campo in cui cercare');
                 
 
-
-                $prodotti = Prodotto::pluck('nome','id');
-                
-
-                $view->with(compact('campi_servizi_search','prodotti'));
+                $view->with(compact('campi_servizi_search'));
     	}
 }

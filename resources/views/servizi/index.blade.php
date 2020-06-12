@@ -15,7 +15,7 @@
   @if (count(Request()->query()))
     <div class="col-sm-2">
       <div class="callout callout-noborder">
-        <a href="{{ url('servizi') }}" title="Tutti i servizi" class="btn btn-warning">
+        <a href="{{ url('servizi/'.$tipo) }}" title="Tutti i servizi" class="btn btn-warning">
           Tutti
         </a>
       </div>
@@ -27,7 +27,7 @@
 <div class="row">
     <div class="col">
 
-            @include('servizi._ricerca_servizi')
+            @include('servizi._ricerca_servizi', ['tipo' => $tipo])
             
             @if (isset($servizi))
             

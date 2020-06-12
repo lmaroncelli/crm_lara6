@@ -6,6 +6,7 @@ use App\Cliente;
 use App\Fattura;
 use App\Prodotto;
 use App\RigaDiFatturazione;
+use App\Utility;
 use Illuminate\Database\Eloquent\Model;
 
 class Servizio extends Model
@@ -57,7 +58,7 @@ class Servizio extends Model
 
   public function scopeEvidenze($query)
     {
-    return $query->where('prodotto_id', 59);
+    return $query->where('prodotto_id', Utility::getIdProdottoEvidenza());
     }
 
   /**

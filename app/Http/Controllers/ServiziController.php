@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Prodotto;
 use App\Servizio;
+use App\Utility;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -174,7 +176,16 @@ class ServiziController extends Controller
           $orderby='id';
         }
       
-      $to_append = ['order' => $order, 'orderby' => $orderby, 'qf' => $qf, 'field' => $field, 'prodotti' => $prodotti];
+      $to_append = [
+              'order' => $order, 
+              'orderby' => $orderby, 
+              'archiviato' => $archiviato,
+              'qf' => $qf, 
+              'field' => $field, 
+              'prodotti' => $prodotti, 
+              'tipo' => $tipo,
+              'inizio' => $inizio,
+              'scadenza' =>  $scadenza];
 
       if($orderby == 'data_inizio' || $orderby == 'data_fine')
         {
@@ -223,6 +234,16 @@ class ServiziController extends Controller
                   ->paginate(15)->setpath('')->appends($to_append);
 
 
-      return view('servizi.index', compact('servizi'));
+
+      if (is_null($tipo)) 
+        {
+        $prodotti = Prodotto::pluck('nome','id');
+        } 
+      else 
+        {
+        $prodotti = Prodotto::where('id',Utility::getIdProdottoEvidenza())->get()->pluck('nome','id');
+        }
+
+      return view('servizi.index', compact('servizi','tipo', 'prodotti'));
       }
 }
