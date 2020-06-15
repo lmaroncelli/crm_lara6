@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\AvvisiFattura;
 use App\Pagamento;
 use App\RigaDiFatturazione;
 use App\Societa;
@@ -41,6 +42,12 @@ class Fattura extends Model
    public function scadenze_da_pagare()
    {
       return $this->hasMany(ScadenzaFattura::class, 'fattura_id', 'id')->where('pagata',0)->count();
+   }
+
+
+   public function avvisi()
+   {
+      return $this->hasMany(AvvisiFattura::class, 'fattura_id', 'id');
    }
 
 

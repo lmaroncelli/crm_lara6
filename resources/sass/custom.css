@@ -345,6 +345,19 @@ tr.sconto td {
 }
 
 
+
+
+/* SCADENZE */
+
+table.wrapper {
+  border-collapse: collapse; 
+} 
+
+table.wrapper tr.main {
+  background-color: #ececec!important;
+}
+
+
 /*  da 768 in avanti */
 @media (min-width: 768px) {
 

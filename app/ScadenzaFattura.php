@@ -4,6 +4,7 @@ namespace App;
 
 use App\Fattura;
 use App\Utility;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class ScadenzaFattura extends Model
@@ -41,6 +42,12 @@ class ScadenzaFattura extends Model
     {
         return $query->where('pagata',0);
     }
+
+
+    public function getGiorniRimastiAttribute()
+      {
+        return Carbon::now()->diffInDays($this->data_scadenza, false);
+      }
    
 
 }

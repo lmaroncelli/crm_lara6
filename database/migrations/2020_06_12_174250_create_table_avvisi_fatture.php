@@ -15,7 +15,7 @@ class CreateTableAvvisiFatture extends Migration
     {
         Schema::create('tblAvvisiFatture', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->enaum('tipo_pagamento',['scaduto','in scadenza'])->default('in scadenza');
+            $table->enum('tipo_pagamento',['scaduto','in scadenza'])->default('in scadenza');
             $table->text('testo')->nullable();
             $table->string('email')->nullable()->default(null);
             $table->integer('giorni')->nullable()->default(0);
@@ -23,6 +23,12 @@ class CreateTableAvvisiFatture extends Migration
             $table->integer("fattura_id")->unsigned()->default(0);
             $table->timestamps();
         });
+
+
+        Artisan::call( 'db:seed', [
+             '--class' => 'AvvisiFattureTableSeeder',
+             '--force' => true
+         ]);
     }
 
     /**
