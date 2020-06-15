@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Pagamento;
 use App\ScadenzaFattura;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ScadenzeController extends Controller
@@ -61,9 +62,40 @@ class ScadenzeController extends Controller
 
 
       $pagamenti_fattura = Pagamento::whereNotNull('cod_PA')->where('cod','>',0)->get()->pluck('nome','id');
+        
 
 
-   		 return view('scadenze.index', compact('scadenze','pagamenti_fattura'));
+
+      $scadenze_for_dates = ScadenzaFattura::
+                    whereHas(
+                    'fattura' , function($q) {
+                     $q->where('tipo_id','!=','NC');
+                    })
+                    ->with(['fattura.pagamento','fattura.societa.cliente','fattura.societa.ragioneSociale','fattura.avvisi'])
+                    ->notPagata()
+                    ->orderBy('data_scadenza','desc');
+
+      // in questo modo ho preso le date distinte
+      // 2020-12-31 00:00:00
+      $collection = $scadenze_for_dates->get()->pluck('id','data_scadenza')->toArray();
+
+      //dd($collection);
+
+      $date = [];   
+
+      foreach ($collection as $data_s => $value) 
+        {        
+        $date[] =  Carbon::createFromFormat('Y-m-d H:i:s',$data_s)->format('d/m/Y');
+        }
+
+
+      dd($date);
+        
+
+
+
+   		 return view('scadenze.index', compact('scadenze','pagamenti_fattura','date_scadenza'));
 
       }
+
 }

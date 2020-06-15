@@ -6,14 +6,29 @@
     <div class="row p-3">
               
       <div class="col-md-3">
-        <select class="form-control m-select2" id="pagamento" name="pagamento">
-          <option></option>
+        <select class="form-control" id="pagamento" name="pagamento">
           <optgroup label="Seleziona un pagamento">
           @foreach ($pagamenti_fattura as $id => $nome)
             @if (\Request::has('pagamento'))
               <option value="{{$id}}" @if ( in_array($id, \Request::get('pagamento')) ) selected="selected" @endif>{{$nome}}</option>
             @else
               <option value="{{$id}}">{{$nome}}</option>
+            @endif
+          @endforeach
+          </optgroup>
+        </select>
+      </div>
+      <div class="col-md-1">
+        che scadono al
+      </div>
+      <div class="col-md-3 date">
+        <select class="form-control" id="data_scadenza" name="data_scadenza">
+          <optgroup label="Seleziona una scadenza">
+          @foreach ($date_scadenza as $id => $data)
+            @if (\Request::has('data_scadenza'))
+              <option value="{{$id}}" @if ( in_array($id, \Request::get('data_scadenza')) ) selected="selected" @endif>{{$data}}</option>
+            @else
+              <option value="{{$id}}">{{$data}}</option>
             @endif
           @endforeach
           </optgroup>
@@ -35,38 +50,6 @@
 <script>
   $( function() {
     
-    $.datepicker.setDefaults( $.datepicker.regional[ "it" ] );
 
-    var dateFormat = "dd/mm/yy",
-      inizio = $( "#inizio" )
-        .datepicker({
-          defaultDate: "-1y",
-          changeMonth: true,
-          changeYear: true,
-          numberOfMonths: 1
-        })
-        .on( "change", function() {
-          scadenza.datepicker( "option", "minDate", getDate( this ) );
-        }),
-      scadenza = $( "#scadenza" ).datepicker({
-        defaultDate: "+0d",
-        changeMonth: true,
-        changeYear: true,
-        numberOfMonths: 1
-      })
-      .on( "change", function() {
-        inizio.datepicker( "option", "maxDate", getDate( this ) );
-      });
- 
-    function getDate( element ) {
-      var date;
-      try {
-        date = $.datepicker.parseDate( dateFormat, element.value );
-      } catch( error ) {
-        date = null;
-      }
- 
-      return date;
-    }
-  } );
+  });
   </script>
