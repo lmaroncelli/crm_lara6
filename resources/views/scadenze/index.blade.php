@@ -83,9 +83,17 @@
                                 <th scope="row">{{optional($s->fattura)->numero_fattura}}</th>
                                 <td>{{optional($s->data_scadenza)->format('d/m/Y')}}</td>
                                 <td>{{Utility::formatta_cifra($s->importo,'€')}}</td>
-                                <td>{{$s->giorni_rimasti}}</td>
+                                <td>
+                                  @if ($s->giorni_rimasti <= 0)
+                                    <i class="bg-danger p-1 m-1">{{$s->giorni_rimasti}}</i>
+                                  @elseif ($s->giorni_rimasti > 0 && $s->giorni_rimasti < 15)
+                                    <i class="bg-warning p-1 m-1" style="color:#000;">{{$s->giorni_rimasti}}</i>
+                                  @else
+                                    {{$s->giorni_rimasti}}
+                                  @endif
+                                </td>
                                 <td>{{optional(optional($s->fattura)->pagamento)->nome}}</td>
-                                <td>{{$s->note}}</td>
+                                <td style="width: 35%;">{{$s->note}}</td>
                               </tr>
                               @php
                                 $fattura = $s->fattura;

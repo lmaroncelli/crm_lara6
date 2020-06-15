@@ -46,7 +46,7 @@ class ScadenzaFattura extends Model
 
     public function getGiorniRimastiAttribute()
       {
-        return Carbon::now()->diffInDays($this->data_scadenza, false);
+        return Carbon::today()->diffInDays($this->data_scadenza, false);
       }
    
 
