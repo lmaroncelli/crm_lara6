@@ -18,17 +18,17 @@
           </optgroup>
         </select>
       </div>
-      <div class="col-md-1">
-        che scadono al
+      <div class="col-md-1" style="margin-top: 8px;">
+        <label>che scadono al</label>
       </div>
       <div class="col-md-3 date">
         <select class="form-control" id="data_scadenza" name="data_scadenza">
           <optgroup label="Seleziona una scadenza">
-          @foreach ($date_scadenza as $id => $data)
+          @foreach ($date as $data)
             @if (\Request::has('data_scadenza'))
-              <option value="{{$id}}" @if ( in_array($id, \Request::get('data_scadenza')) ) selected="selected" @endif>{{$data}}</option>
+              <option value="{{$data}}" @if ( in_array($data, \Request::get('data_scadenza')) ) selected="selected" @endif>{{$data}}</option>
             @else
-              <option value="{{$id}}">{{$data}}</option>
+              <option value="{{$data}}">{{$data}}</option>
             @endif
           @endforeach
           </optgroup>

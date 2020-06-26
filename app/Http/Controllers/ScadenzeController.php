@@ -88,13 +88,7 @@ class ScadenzeController extends Controller
         $date[] =  Carbon::createFromFormat('Y-m-d H:i:s',$data_s)->format('d/m/Y');
         }
 
-
-      dd($date);
-        
-
-
-
-   		 return view('scadenze.index', compact('scadenze','pagamenti_fattura','date_scadenza'));
+   		 return view('scadenze.index', compact('scadenze','pagamenti_fattura','date'));
 
       }
 
