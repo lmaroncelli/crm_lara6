@@ -98,9 +98,9 @@
                           @endforeach
                       </tbody>
                   </table>
-              </div>
-              <div>              
-                {{ $societa->links() }}
+                  
+                  {{ $societa->links() }}
+              
               </div>
             @else
               <div>
