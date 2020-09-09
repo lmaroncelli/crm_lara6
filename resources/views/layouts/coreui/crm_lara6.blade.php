@@ -9,15 +9,6 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Scripts -->
-    <script src="{{ mix('js/app.js') }}"></script>
-
-    {{-- jQuery Datepicker --}}
-    <script src="{{ asset('js/jQueryDatepicker/jquery-ui.min.js') }}"></script>
-    <script src="{{ asset('js/jQueryDatepicker/datepicker-it.js') }}"></script>
-    
-    
-
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
@@ -34,6 +25,7 @@
 
 </head>
 <body class="app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show">
+  <div id="app">
   @include('layouts.coreui.header')
   
   
@@ -89,6 +81,15 @@
 
   @include('layouts.coreui.footer')
   
+
+ <!-- Scripts -->
+  <script src="{{ mix('js/app.js') }}"></script>
+
+  {{-- jQuery Datepicker --}}
+  <script src="{{ asset('js/jQueryDatepicker/jquery-ui.min.js') }}"></script>
+  <script src="{{ asset('js/jQueryDatepicker/datepicker-it.js') }}"></script>
+
+  
   <script src="{{ asset('js/sweetalert2.min.js') }}"></script>
 
   <script type="text/javascript">
@@ -134,5 +135,7 @@
   </script>
   @yield('js')
   @yield('js_griglia_evidenze');
+
+</div>
 </body>
 </html>

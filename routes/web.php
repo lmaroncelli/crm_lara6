@@ -178,6 +178,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('scadenze', 'ScadenzeController@index')->name('scadenze.index');
 
 
+
+
+    /////////////
+    // MEMOREX //
+    /////////////
+
+    Route::resource('memorex', 'MemorexController')/*->middleware('log')*/;
+
+
         
 });
 Auth::routes();

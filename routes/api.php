@@ -1,5 +1,7 @@
 <?php
 
+use App\Memorex;
+use App\Http\Resources\MemorexCollection;
 use Illuminate\Http\Request;
 
 /*
@@ -15,4 +17,9 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::get('/memorex', function(){
+	$memorex = Memorex::orderBy('id','desc')->limit(15)->get();
+	return new MemorexCollection($memorex);	
 });
