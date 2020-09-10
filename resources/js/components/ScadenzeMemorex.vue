@@ -73,11 +73,12 @@
             loadScadenza: function(id) {
                   axios.get('api/memorex/' + id).
                   then(response => {
-                    this.scadenza.id = response.id
-                    this.scadenza.titolo = response.titolo
-                    this.scadenza.categoria = response.categoria
-                    this.scadenza.riferimento = response.riferimento
-                    this.scadenza.descrizione = response.descrizione
+                    console.log(response);
+                    this.scadenza.id = response.data.id
+                    this.scadenza.titolo = response.data.titolo
+                    this.scadenza.categoria = response.data.categoria
+                    this.scadenza.riferimento = response.data.riferimento
+                    this.scadenza.descrizione = response.data.descrizione
                 });
                 this.edit = true
             },

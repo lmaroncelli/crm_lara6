@@ -2024,11 +2024,12 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       axios.get('api/memorex/' + id).then(function (response) {
-        _this2.scadenza.id = response.id;
-        _this2.scadenza.titolo = response.titolo;
-        _this2.scadenza.categoria = response.categoria;
-        _this2.scadenza.riferimento = response.riferimento;
-        _this2.scadenza.descrizione = response.descrizione;
+        console.log(response);
+        _this2.scadenza.id = response.data.id;
+        _this2.scadenza.titolo = response.data.titolo;
+        _this2.scadenza.categoria = response.data.categoria;
+        _this2.scadenza.riferimento = response.data.riferimento;
+        _this2.scadenza.descrizione = response.data.descrizione;
       });
       this.edit = true;
     }
