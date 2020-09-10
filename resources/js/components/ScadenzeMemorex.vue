@@ -12,15 +12,18 @@
 </template>
 
 <script>
+
+
     export default {
+        props: ['scadenze'],
         
-        data() {
+      /*  data() {
 
             return {
                 scadenze: []
             }
         },
-
+*/
         mounted() {
              this.getScadenze();
         },
