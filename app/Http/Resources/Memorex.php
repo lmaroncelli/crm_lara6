@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class Memorex extends JsonResource
@@ -40,6 +41,13 @@ class Memorex extends JsonResource
 
         
         $fields = parent::toArray($request);
+
+      
+        try {
+          $fields['data'] = Carbon::createFromFormat('Y-m-d', $fields['data'])->format('d/m/Y');
+        } catch (\Exception $e) {
+          // 
+        }
 
         $fields['riferimento'] = optional($this->commerciale)->name;
         

@@ -34,7 +34,7 @@
      @include('layouts.coreui.sidebar')
 
      
-     <main class="main">
+    <main class="main">
        @if (isset($bread))
         {!!Utility::breadcrumb($bread)!!}
       @endif
@@ -80,6 +80,8 @@
   </div> {{-- app-body  --}}
 
   @include('layouts.coreui.footer')
+  
+  </div> {{-- #app --}}
   
 
  <!-- Scripts -->
@@ -136,6 +138,5 @@
   @yield('js')
   @yield('js_griglia_evidenze');
 
-</div>
 </body>
 </html>

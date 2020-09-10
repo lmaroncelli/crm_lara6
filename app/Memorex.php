@@ -11,8 +11,6 @@ class Memorex extends Model
 
    protected $guarded = ['id'];
 
-
-
    public function commerciale()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');

@@ -23,3 +23,9 @@ Route::get('/memorex', function(){
 	$memorex = Memorex::orderBy('id','desc')->limit(15)->get();
 	return new MemorexCollection($memorex);	
 });
+
+Route::get('memorex/{id}', function ($id) {
+    $memorex = Memorex::find($id);
+
+    return $memorex;
+});

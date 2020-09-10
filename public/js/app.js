@@ -1972,15 +1972,40 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['scadenze'],
-
-  /*  data() {
-         return {
-            scadenze: []
-        }
-    },
-  */
+  data: function data() {
+    return {
+      scadenze: [],
+      edit: false,
+      scadenza: {
+        id: '',
+        data: '',
+        titolo: '',
+        categoria: '',
+        riferimento: '',
+        descrizione: ''
+      }
+    };
+  },
   mounted: function mounted() {
     this.getScadenze();
   },
@@ -1991,6 +2016,21 @@ __webpack_require__.r(__webpack_exports__);
       axios.get('/api/memorex').then(function (response) {
         _this.scadenze = response.data;
       });
+    },
+    createScadenza: function createScadenza() {
+      alert('submit');
+    },
+    loadScadenza: function loadScadenza(id) {
+      var _this2 = this;
+
+      axios.get('api/memorex/' + id).then(function (response) {
+        _this2.scadenza.id = response.id;
+        _this2.scadenza.titolo = response.titolo;
+        _this2.scadenza.categoria = response.categoria;
+        _this2.scadenza.riferimento = response.riferimento;
+        _this2.scadenza.descrizione = response.descrizione;
+      });
+      this.edit = true;
     }
   }
 });
@@ -53850,22 +53890,135 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "table",
-    { staticClass: "table" },
-    _vm._l(_vm.scadenze, function(scadenza) {
-      return _c("tr", { key: scadenza.id }, [
-        _c("td", [_vm._v(_vm._s(scadenza.data))]),
+  return _c("div", [
+    _c(
+      "form",
+      {
+        attrs: { action: "#", method: "post", "accept-charset": "utf-8" },
+        on: {
+          submit: function($event) {
+            $event.preventDefault()
+            return _vm.createScadenza()
+          }
+        }
+      },
+      [
+        _c("div", { staticClass: "form-group row" }, [
+          _c(
+            "label",
+            { staticClass: "col-md-2 text-change", attrs: { for: "cell" } },
+            [_vm._v("Titolo:")]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-md-3" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.scadenza.titolo,
+                  expression: "scadenza.titolo"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                type: "text",
+                name: "titolo",
+                id: "titolo",
+                value: "",
+                placeholder: "Titolo"
+              },
+              domProps: { value: _vm.scadenza.titolo },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.scadenza, "titolo", $event.target.value)
+                }
+              }
+            })
+          ])
+        ]),
         _vm._v(" "),
-        _c("td", [_vm._v(_vm._s(scadenza.titolo))]),
+        _c("div", { staticClass: "form-group row" }, [
+          _c(
+            "label",
+            { staticClass: "col-md-2 text-change", attrs: { for: "skype" } },
+            [_vm._v("Descrizione:")]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-md-3" }, [
+            _c(
+              "textarea",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.scadenza.descrizione,
+                    expression: "scadenza.descrizione"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { name: "descrizione", id: "descrizione" },
+                domProps: { value: _vm.scadenza.descrizione },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.scadenza, "descrizione", $event.target.value)
+                  }
+                }
+              },
+              [_vm._v("descrizione")]
+            )
+          ])
+        ]),
         _vm._v(" "),
-        _c("td", [_vm._v(_vm._s(scadenza.categoria))]),
-        _vm._v(" "),
-        _c("td", [_vm._v(_vm._s(scadenza.riferimento))])
-      ])
-    }),
-    0
-  )
+        _c(
+          "button",
+          { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+          [_vm._v("Crea")]
+        )
+      ]
+    ),
+    _vm._v(" "),
+    _c("hr"),
+    _vm._v(" "),
+    _c(
+      "table",
+      { staticClass: "table" },
+      _vm._l(_vm.scadenze.data, function(scadenza) {
+        return _c("tr", { key: scadenza.id }, [
+          _c("td", [_vm._v(_vm._s(scadenza.data))]),
+          _vm._v(" "),
+          _c("td", [_vm._v(_vm._s(scadenza.titolo))]),
+          _vm._v(" "),
+          _c("td", [_vm._v(_vm._s(scadenza.categoria))]),
+          _vm._v(" "),
+          _c("td", [_vm._v(_vm._s(scadenza.riferimento))]),
+          _vm._v(" "),
+          _c("td", [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary btn-xs",
+                on: {
+                  click: function($event) {
+                    return _vm.loadScadenza(scadenza.id)
+                  }
+                }
+              },
+              [_vm._v("Edit")]
+            )
+          ])
+        ])
+      }),
+      0
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -66301,8 +66454,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/vagrant/VirtualProjects/crm_lara6/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/vagrant/VirtualProjects/crm_lara6/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/luigi/VirtualProjects/crm_lara6/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/luigi/VirtualProjects/crm_lara6/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

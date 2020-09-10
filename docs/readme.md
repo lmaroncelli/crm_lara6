@@ -523,5 +523,7 @@ https://reinink.ca/articles/dynamic-relationships-in-laravel-using-subqueries
 
 
 
+# 10/09/2020 Memorex Vue component
 
+http://felicianoprochera.com/simple-task-app-with-laravel-5-3-and-vuejs/
 
