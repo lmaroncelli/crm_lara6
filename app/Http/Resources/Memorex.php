@@ -49,7 +49,7 @@ class Memorex extends JsonResource
           // do nothing
         }
 
-        $fields['riferimento'] = optional($this->commerciale)->name;
+        $fields['riferimento'] = optional($this->commerciale)->nome;
         
         return $fields;
     }

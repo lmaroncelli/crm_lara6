@@ -2098,7 +2098,7 @@ jQuery(document).ready(function () {
         titolo: '',
         categoria: 'Info Alberghi',
         priorita: 'Normale',
-        user_id: 0,
+        commerciale_id: 0,
         descrizione: ''
       }
     };
@@ -2114,7 +2114,7 @@ jQuery(document).ready(function () {
       this.scadenza.descrizione = '';
       this.scadenza.categoria = 'Info Alberghi';
       this.scadenza.priorita = 'Normale';
-      this.scadenza.user_id = 0;
+      this.scadenza.commerciale_id = 0;
       this.scadenza.data = '';
     },
     getScadenze: function getScadenze(url) {
@@ -2154,7 +2154,7 @@ jQuery(document).ready(function () {
         _this3.scadenza.id = response.data.id;
         _this3.scadenza.titolo = response.data.titolo;
         _this3.scadenza.categoria = response.data.categoria;
-        _this3.scadenza.user_id = response.data.user_id;
+        _this3.scadenza.commerciale_id = response.data.riferimento;
         _this3.scadenza.descrizione = response.data.descrizione;
         _this3.scadenza.data = response.data.data;
       });
@@ -54840,12 +54840,12 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.scadenza.user_id,
-                    expression: "scadenza.user_id"
+                    value: _vm.scadenza.commerciale_id,
+                    expression: "scadenza.commerciale_id"
                   }
                 ],
                 staticClass: "form-control",
-                attrs: { name: "user_id", id: "user_id" },
+                attrs: { name: "commerciale_id", id: "commerciale_id" },
                 on: {
                   change: function($event) {
                     var $$selectedVal = Array.prototype.filter
@@ -54858,7 +54858,7 @@ var render = function() {
                       })
                     _vm.$set(
                       _vm.scadenza,
-                      "user_id",
+                      "commerciale_id",
                       $event.target.multiple ? $$selectedVal : $$selectedVal[0]
                     )
                   }
@@ -54867,9 +54867,9 @@ var render = function() {
               [
                 _c("option", { attrs: { value: "0" } }, [_vm._v("Nessuno")]),
                 _vm._v(" "),
-                _vm._l(_vm.riferimenti, function(name, id) {
+                _vm._l(_vm.riferimenti, function(nome, id) {
                   return _c("option", { attrs: { id: id } }, [
-                    _vm._v(" " + _vm._s(name) + " ")
+                    _vm._v(" " + _vm._s(nome) + " ")
                   ])
                 })
               ],
@@ -55026,7 +55026,7 @@ var render = function() {
             _vm._v(" "),
             _c("td", [_vm._v(_vm._s(scadenza.categoria))]),
             _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(scadenza.user_id))]),
+            _c("td", [_vm._v(_vm._s(scadenza.riferimento))]),
             _vm._v(" "),
             _c("td", [
               _c(

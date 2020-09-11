@@ -26,7 +26,7 @@ class ScadenzeMemorexSeeder extends Seeder
 
       $tblMemorex  =  DB::connection('old')
                        ->table('scadenze_memorex')
-                       ->select(DB::raw('id, id_commerciale as user_id, id_categoria as categoria, titolo, descrizione, giorno, mese, anno, minuti, ore,  data, priorita, completato, data_disattivazione'))
+                       ->select(DB::raw('id, id_commerciale as commerciale_id, id_categoria as categoria, titolo, descrizione, giorno, mese, anno, minuti, ore,  data, priorita, completato, data_disattivazione'))
                        ->get();
 
        	$tblMemorex = collect($tblMemorex)->map(function($x){ return (array) $x; })->toArray(); 

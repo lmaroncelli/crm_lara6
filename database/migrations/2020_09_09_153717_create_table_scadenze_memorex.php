@@ -15,7 +15,7 @@ class CreateTableScadenzeMemorex extends Migration
     {
         Schema::create('tblScadenzeMemorex', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id')->unsigned();
+            $table->integer('commerciale_id')->unsigned();
             $table->enum('categoria', ['Info Alberghi','Milanomarittima.it','Hotel Manager'])->default('Info Alberghi');
             $table->string('titolo')->nullable()->default(null);
             $table->text('descrizione')->nullable();

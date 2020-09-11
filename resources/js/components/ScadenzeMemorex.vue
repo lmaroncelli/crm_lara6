@@ -26,9 +26,9 @@
   <div class="form-group row">
     <label class="col-md-3 text-change" for="cell">Riferimento:</label>
     <div class="col-md-5">
-      <select name="user_id" id="user_id" class="form-control" v-model="scadenza.user_id">
+      <select name="commerciale_id" id="commerciale_id" class="form-control" v-model="scadenza.commerciale_id">
         <option value="0">Nessuno</option>
-        <option v-for="(name, id) in riferimenti" :id="id"> {{name}} </option>
+        <option v-for="(nome, id) in riferimenti" :id="id"> {{nome}} </option>
       </select>
     </div>
   </div>
@@ -82,7 +82,7 @@
     <td>{{ scadenza.data }}</td>
     <td>{{ scadenza.titolo }}</td>
     <td>{{ scadenza.categoria }}</td>
-    <td>{{ scadenza.user_id }}</td>
+    <td>{{ scadenza.riferimento }}</td>
     <td><button @click="loadScadenza(scadenza.id)" class="btn btn-primary btn-xs">Edit</button></td>
   </tr>
   </tbody>
@@ -145,7 +145,7 @@
                     titolo: '',
                     categoria: 'Info Alberghi',
                     priorita: 'Normale',
-                    user_id: 0,
+                    commerciale_id: 0,
                     descrizione: ''
                 }
             }
@@ -166,7 +166,7 @@
               this.scadenza.descrizione = ''
               this.scadenza.categoria = 'Info Alberghi'
               this.scadenza.priorita = 'Normale'
-              this.scadenza.user_id = 0
+              this.scadenza.commerciale_id = 0
               this.scadenza.data = ''
             },
 
@@ -212,7 +212,7 @@
                     this.scadenza.id = response.data.id
                     this.scadenza.titolo = response.data.titolo
                     this.scadenza.categoria = response.data.categoria
-                    this.scadenza.user_id = response.data.user_id
+                    this.scadenza.commerciale_id = response.data.riferimento
                     this.scadenza.descrizione = response.data.descrizione
                     this.scadenza.data = response.data.data
                 });

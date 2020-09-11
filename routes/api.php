@@ -1,8 +1,9 @@
 <?php
 
+use App\CommercialeMemorex;
+use App\Http\Resources\Memorex as MemorexResource;
 use App\Http\Resources\MemorexCollection;
 use App\Memorex;
-use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -27,20 +28,24 @@ Route::get('/memorex', function(){
 });
 
 Route::get('/memorex/riferimenti', function(){
-	$riferimenti = User::commerciale()->pluck('name','id')->toArray();
+	$riferimenti = CommercialeMemorex::pluck('nome','id')->toArray();
 	return $riferimenti;	
 });
 
 Route::get('memorex/{id}', function ($id) {
     $memorex = Memorex::find($id);
+
+    return new MemorexResource($memorex);	
     
-    try {
+    /*try {
     	$memorex->data = Carbon::createFromFormat('Y-m-d', $memorex->data)->format('d/m/Y');
     } catch (\Exception $e) {
           // do nothing	
     }
+
+    $memorex->riferimento = $memorex->commerciale()->nome;
     
-    return $memorex;
+    return $memorex;*/
 });
 
 

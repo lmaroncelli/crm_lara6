@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\User;
+use App\CommercialeMemorex;
 use Illuminate\Database\Eloquent\Model;
 
 class Memorex extends Model
@@ -13,7 +13,7 @@ class Memorex extends Model
 
    public function commerciale()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(CommercialeMemorex::class, 'commerciale_id', 'id');
     }
 
     public function scopeNotHM($query)
