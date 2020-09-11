@@ -46,7 +46,7 @@ class Memorex extends JsonResource
         try {
           $fields['data'] = Carbon::createFromFormat('Y-m-d', $fields['data'])->format('d/m/Y');
         } catch (\Exception $e) {
-          // 
+          // do nothing
         }
 
         $fields['riferimento'] = optional($this->commerciale)->name;

@@ -16,5 +16,9 @@ class Memorex extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    public function scopeNotHM($query)
+      {
+        return $query->where('categoria', '!=', 'Hotel Manager');
+      }
 
 }
