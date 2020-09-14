@@ -2078,6 +2078,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 jQuery(document).ready(function () {
   $('#m_datepicker_3').datepicker({
     format: 'dd/mm/yyyy',
@@ -2092,6 +2115,8 @@ jQuery(document).ready(function () {
       scadenze: [],
       riferimenti: [],
       edit: false,
+      method: '',
+      endpoint: '',
       scadenza: {
         id: '',
         data: '',
@@ -2104,10 +2129,14 @@ jQuery(document).ready(function () {
     };
   },
   mounted: function mounted() {
-    this.getScadenze();
+    this.listScadute();
     this.getRiferimenti();
+    this.method = 'listScadute';
   },
   methods: {
+    choiseMethod: function choiseMethod(method, url) {
+      this[method](url);
+    },
     emptyScadenza: function emptyScadenza() {
       this.scadenza.id = '';
       this.scadenza.titolo = '';
@@ -2120,49 +2149,88 @@ jQuery(document).ready(function () {
     getScadenze: function getScadenze(url) {
       var _this = this;
 
+      this.method = 'getScadenze';
       url = url || '/api/memorex';
+      this.endpoint = '';
       axios.get(url).then(function (response) {
         _this.scadenze = response.data;
 
         _this.makePagination(response.data.links, response.data.meta);
       });
     },
+    listScadute: function listScadute(url) {
+      var _this2 = this;
+
+      this.method = 'listScadute';
+      url = url || '/api/memorex/scadute';
+      this.endpoint = 'scadute';
+      axios.get(url).then(function (response) {
+        _this2.scadenze = response.data;
+
+        _this2.makePagination(response.data.links, response.data.meta);
+      });
+    },
+    listNonScadute: function listNonScadute(url) {
+      var _this3 = this;
+
+      this.method = 'listNonScadute';
+      url = url || '/api/memorex/non-scadute';
+      this.endpoint = 'non-scadute';
+      axios.get(url).then(function (response) {
+        _this3.scadenze = response.data;
+
+        _this3.makePagination(response.data.links, response.data.meta);
+      });
+    },
+    listArchivio: function listArchivio(url) {
+      var _this4 = this;
+
+      this.method = 'listArchivio';
+      url = url || '/api/memorex/archivio';
+      this.endpoint = 'archivio';
+      axios.get(url).then(function (response) {
+        _this4.scadenze = response.data;
+
+        _this4.makePagination(response.data.links, response.data.meta);
+      });
+    },
     makePagination: function makePagination(links, meta) {
       console.log('links.next = ' + links.next);
       this.pagination.current_page = meta.current_page;
       this.pagination.last_page = meta.last_page;
+      this.pagination.total = meta.total;
       this.pagination.first = links.first;
       this.pagination.next = links.next;
       this.pagination.prev = links.prev;
       this.pagination.last = links.last;
     },
     getRiferimenti: function getRiferimenti() {
-      var _this2 = this;
+      var _this5 = this;
 
       axios.get('/api/memorex/riferimenti').then(function (response) {
-        _this2.riferimenti = response.data;
+        _this5.riferimenti = response.data;
       });
     },
     createScadenza: function createScadenza() {
       alert('submit');
     },
     loadScadenza: function loadScadenza(id) {
-      var _this3 = this;
+      var _this6 = this;
 
       axios.get('api/memorex/' + id).then(function (response) {
         //console.log(response);
-        _this3.scadenza.id = response.data.id;
-        _this3.scadenza.titolo = response.data.titolo;
-        _this3.scadenza.categoria = response.data.categoria;
-        _this3.scadenza.commerciale_id = response.data.riferimento;
-        _this3.scadenza.descrizione = response.data.descrizione;
-        _this3.scadenza.data = response.data.data;
+        _this6.scadenza.id = response.data.id;
+        _this6.scadenza.titolo = response.data.titolo;
+        _this6.scadenza.categoria = response.data.categoria;
+        _this6.scadenza.commerciale_id = response.data.riferimento;
+        _this6.scadenza.descrizione = response.data.descrizione;
+        _this6.scadenza.data = response.data.data;
       });
       this.$refs.taskinput.focus();
       this.edit = true;
     },
     updateScadenza: function updateScadenza() {
-      var _this4 = this;
+      var _this7 = this;
 
       axios.post('/api/memorex/' + this.scadenza.id, {
         // <== use axios.post
@@ -2170,11 +2238,11 @@ jQuery(document).ready(function () {
         _method: 'patch' // <== add this field
 
       }).then(function (response) {
-        _this4.emptyScadenza();
+        _this7.emptyScadenza();
 
-        _this4.edit = false;
+        _this7.edit = false;
 
-        _this4.getScadenze();
+        _this7.listScadute();
       });
     }
   }
@@ -55013,6 +55081,79 @@ var render = function() {
     _vm._v(" "),
     _c("hr"),
     _vm._v(" "),
+    _c("ul", { attrs: { id: "filtro_scadenze" } }, [
+      _c(
+        "li",
+        {
+          staticClass: "btn btn-success",
+          class: { "btn btn-danger": _vm.method == "listScadute" },
+          on: {
+            click: function($event) {
+              return _vm.listScadute()
+            }
+          }
+        },
+        [_vm._v("Scadute")]
+      ),
+      _vm._v(" "),
+      _c(
+        "li",
+        {
+          staticClass: "btn btn-success",
+          class: { "btn btn-danger": _vm.method == "listNonScadute" },
+          on: {
+            click: function($event) {
+              return _vm.listNonScadute()
+            }
+          }
+        },
+        [_vm._v("Non scadute")]
+      ),
+      _vm._v(" "),
+      _c(
+        "li",
+        {
+          staticClass: "btn btn-success",
+          class: { "btn btn-danger": _vm.method == "getScadenze" },
+          on: {
+            click: function($event) {
+              return _vm.getScadenze()
+            }
+          }
+        },
+        [_vm._v("Tutte")]
+      ),
+      _vm._v(" "),
+      _c(
+        "li",
+        {
+          staticClass: "btn btn-success",
+          class: { "btn btn-danger": _vm.method == "listArchivio" },
+          on: {
+            click: function($event) {
+              return _vm.listArchivio()
+            }
+          }
+        },
+        [_vm._v("Archivio")]
+      )
+    ]),
+    _vm._v(" "),
+    _c("hr"),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-sm-2" }, [
+        _c("div", { staticClass: "callout callout-info b-t-1 b-r-1 b-b-1" }, [
+          _vm._v("\n       Elenco scadenze\n      "),
+          _c("br"),
+          _vm._v(" "),
+          _c("strong", { staticClass: "h4" }, [
+            _vm._v(_vm._s(_vm.pagination.total))
+          ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
     _c("table", { staticClass: "table table-striped" }, [
       _vm._m(1),
       _vm._v(" "),
@@ -55066,7 +55207,10 @@ var render = function() {
               on: {
                 click: function($event) {
                   $event.preventDefault()
-                  return _vm.getScadenze("api/memorex?page=1")
+                  return _vm.choiseMethod(
+                    _vm.method,
+                    "api/memorex/" + _vm.endpoint + "?page=1"
+                  )
                 }
               }
             },
@@ -55087,7 +55231,7 @@ var render = function() {
               on: {
                 click: function($event) {
                   $event.preventDefault()
-                  return _vm.getScadenze(_vm.pagination.prev)
+                  return _vm.choiseMethod(_vm.method, _vm.pagination.prev)
                 }
               }
             },
@@ -55119,7 +55263,7 @@ var render = function() {
               on: {
                 click: function($event) {
                   $event.preventDefault()
-                  return _vm.getScadenze(_vm.pagination.next)
+                  return _vm.choiseMethod(_vm.method, _vm.pagination.next)
                 }
               }
             },
@@ -55145,8 +55289,12 @@ var render = function() {
               on: {
                 click: function($event) {
                   $event.preventDefault()
-                  return _vm.getScadenze(
-                    "api/memorex?page=" + _vm.pagination.last_page
+                  return _vm.choiseMethod(
+                    _vm.method,
+                    "api/memorex/" +
+                      _vm.endpoint +
+                      "?page=" +
+                      _vm.pagination.last_page
                   )
                 }
               }

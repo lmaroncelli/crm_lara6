@@ -6415,3 +6415,12 @@ table.wrapper tr.main {
 
 }
 
+
+/* MEMOREX */
+
+ul#filtro_scadenze {
+  list-style: none;
+  display: flex;
+  justify-content: space-around;
+}
+

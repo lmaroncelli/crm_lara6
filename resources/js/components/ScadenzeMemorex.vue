@@ -66,7 +66,30 @@
   <button v-show="!edit" type="submit" class="btn btn-primary offset-md-3">Crea</button>
   <button v-show="edit" type="submit" class="btn btn-primary offset-md-3">Aggiorna</button>
 </form>
+
+
 <hr>
+
+
+<ul id="filtro_scadenze">
+  <li @click="listScadute()" class="btn btn-success" :class="{'btn btn-danger': method == 'listScadute'}">Scadute</li>
+  <li @click="listNonScadute()" class="btn btn-success" :class="{'btn btn-danger': method == 'listNonScadute'}">Non scadute</li>
+  <li @click="getScadenze()" class="btn btn-success" :class="{'btn btn-danger': method == 'getScadenze'}">Tutte</li>
+  <li @click="listArchivio()"  class="btn btn-success" :class="{'btn btn-danger': method == 'listArchivio'}">Archivio</li>
+</ul>
+<hr>
+
+
+<div class="row">
+  <div class="col-sm-2">
+    <div class="callout callout-info b-t-1 b-r-1 b-b-1">
+       Elenco scadenze
+      <br> 
+      <strong class="h4">{{pagination.total}}</strong>
+    </div>
+  </div>
+</div>
+
 <table class="table table-striped">
   <thead>
     <tr>
@@ -93,11 +116,11 @@
 <ul class="pagination">
   
   <li class="page-item" :class="{disabled: pagination.current_page==1}">
-    <a href="#" class="page-link"  @click.prevent="getScadenze(`api/memorex?page=1`)"><<</a>
+    <a href="#" class="page-link"  @click.prevent="choiseMethod(method,`api/memorex/${endpoint}?page=1`)"><<</a>
   </li>
 
   <li class="page-item" :class="{disabled: !pagination.prev}">
-    <a href="#" class="page-link" @click.prevent="getScadenze(pagination.prev)">Previous</a>
+    <a href="#" class="page-link" @click.prevent="choiseMethod(method,pagination.prev)">Previous</a>
   </li>
 
   <li class="page-item">
@@ -105,11 +128,11 @@
   </li>
 
   <li class="page-item" :class="{disabled: !pagination.next}">
-    <a href="#" class="page-link"  @click.prevent="getScadenze(pagination.next)">Next</a>
+    <a href="#" class="page-link"  @click.prevent="choiseMethod(method,pagination.next)">Next</a>
   </li>
 
   <li class="page-item" :class="{disabled: pagination.current_page == pagination.last_page}">
-    <a href="#" class="page-link"  @click.prevent="getScadenze(`api/memorex?page=${pagination.last_page}`)">>></a>
+    <a href="#" class="page-link"  @click.prevent="choiseMethod(method,`api/memorex/${endpoint}?page=${pagination.last_page}`)">>></a>
   </li>
 
 </ul>
@@ -139,6 +162,8 @@
                 scadenze: [],
                 riferimenti:[],
                 edit: false,
+                method:'',
+                endpoint:'',
                 scadenza: {
                     id:'',
                     data: '',
@@ -152,12 +177,18 @@
         },
 
         mounted() {
-             this.getScadenze();
+             this.listScadute();
              this.getRiferimenti();
+             this.method = 'listScadute';
         },
 
 
         methods: {
+
+
+            choiseMethod(method,url) {
+              this[method](url)
+            },
 
 
             emptyScadenza() {
@@ -171,7 +202,10 @@
             },
 
             getScadenze(url) {
-                url = url || '/api/memorex'
+                this.method = 'getScadenze'; 
+                url = url || '/api/memorex';
+                this.endpoint = '';
+
                 axios.get(url)
                   .then(response => {
                     this.scadenze = response.data
@@ -181,12 +215,56 @@
 
             },
 
+
+            listScadute(url) {
+                this.method = 'listScadute';
+                url = url || '/api/memorex/scadute';
+                this.endpoint = 'scadute';
+                
+
+
+                axios.get(url)
+                  .then(response => {
+                    this.scadenze = response.data
+                    this.makePagination(response.data.links, response.data.meta)
+                  });
+            },
+
+            listNonScadute(url) {
+                this.method = 'listNonScadute';
+                url = url || '/api/memorex/non-scadute';
+                this.endpoint = 'non-scadute';
+
+
+                axios.get(url)
+                  .then(response => {
+                    this.scadenze = response.data
+                    this.makePagination(response.data.links, response.data.meta)
+                  });
+            },
+
+
+            listArchivio(url) {
+                this.method = 'listArchivio';
+                url = url || '/api/memorex/archivio';
+                this.endpoint = 'archivio';
+                
+
+                axios.get(url)
+                  .then(response => {
+                    this.scadenze = response.data
+                    this.makePagination(response.data.links, response.data.meta)
+                  });
+            },
+
+
             makePagination(links, meta) {
 
                 console.log('links.next = '+links.next);
 
                 this.pagination.current_page = meta.current_page
                 this.pagination.last_page = meta.last_page
+                this.pagination.total = meta.total
                 this.pagination.first = links.first
                 this.pagination.next = links.next
                 this.pagination.prev = links.prev
@@ -228,7 +306,7 @@
                   .then(response => {
                         this.emptyScadenza();
                         this.edit = false;
-                        this.getScadenze();
+                        this.listScadute();
                   });
             }
 
