@@ -80,6 +80,13 @@
 <hr>
 
 
+<pagination-memorex 
+  :method="method" 
+  :pagination="pagination" 
+  :endpoint="endpoint" 
+  v-on:choise="choiseMethod(method,url)">    
+</pagination-memorex>
+
 <div class="row">
   <div class="col-sm-2">
     <div class="callout callout-info b-t-1 b-r-1 b-b-1">
@@ -152,8 +159,13 @@
     });
 
 
+    import PaginationMemorex from "./PaginationMemorex";
+
     export default {
         
+        components: {
+            PaginationMemorex,
+        },
           
         data() {
 
@@ -162,6 +174,7 @@
                 scadenze: [],
                 riferimenti:[],
                 edit: false,
+                url:'',
                 method:'',
                 endpoint:'',
                 scadenza: {
@@ -203,7 +216,7 @@
 
             getScadenze(url) {
                 this.method = 'getScadenze'; 
-                url = url || '/api/memorex';
+                this.url = url || '/api/memorex';
                 this.endpoint = '';
 
                 axios.get(url)
@@ -218,12 +231,12 @@
 
             listScadute(url) {
                 this.method = 'listScadute';
-                url = url || '/api/memorex/scadute';
+                this.url = url || '/api/memorex/scadute';
                 this.endpoint = 'scadute';
                 
 
 
-                axios.get(url)
+                axios.get(this.url)
                   .then(response => {
                     this.scadenze = response.data
                     this.makePagination(response.data.links, response.data.meta)
@@ -232,11 +245,11 @@
 
             listNonScadute(url) {
                 this.method = 'listNonScadute';
-                url = url || '/api/memorex/non-scadute';
+                this.url = url || '/api/memorex/non-scadute';
                 this.endpoint = 'non-scadute';
 
 
-                axios.get(url)
+                axios.get(this.url)
                   .then(response => {
                     this.scadenze = response.data
                     this.makePagination(response.data.links, response.data.meta)
@@ -246,11 +259,11 @@
 
             listArchivio(url) {
                 this.method = 'listArchivio';
-                url = url || '/api/memorex/archivio';
+                this.url = url || '/api/memorex/archivio';
                 this.endpoint = 'archivio';
                 
 
-                axios.get(url)
+                axios.get(this.url)
                   .then(response => {
                     this.scadenze = response.data
                     this.makePagination(response.data.links, response.data.meta)

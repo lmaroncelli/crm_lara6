@@ -1950,6 +1950,64 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PaginationMemorex.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/PaginationMemorex.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['method', 'pagination', 'endpoint'],
+  data: function data() {
+    return {};
+  },
+  mounted: function mounted() {
+    this.show();
+  },
+  methods: {
+    show: function show(method, url) {
+      console.log(this.pagination);
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ScadenzeMemorex.vue?vue&type=script&lang=js&":
 /*!**************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ScadenzeMemorex.vue?vue&type=script&lang=js& ***!
@@ -1959,6 +2017,14 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _PaginationMemorex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PaginationMemorex */ "./resources/js/components/PaginationMemorex.vue");
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2108,13 +2174,18 @@ jQuery(document).ready(function () {
     todayBtn: 'linked'
   });
 });
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    PaginationMemorex: _PaginationMemorex__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
   data: function data() {
     return {
       pagination: {},
       scadenze: [],
       riferimenti: [],
       edit: false,
+      url: '',
       method: '',
       endpoint: '',
       scadenza: {
@@ -2150,7 +2221,7 @@ jQuery(document).ready(function () {
       var _this = this;
 
       this.method = 'getScadenze';
-      url = url || '/api/memorex';
+      this.url = url || '/api/memorex';
       this.endpoint = '';
       axios.get(url).then(function (response) {
         _this.scadenze = response.data;
@@ -2162,9 +2233,9 @@ jQuery(document).ready(function () {
       var _this2 = this;
 
       this.method = 'listScadute';
-      url = url || '/api/memorex/scadute';
+      this.url = url || '/api/memorex/scadute';
       this.endpoint = 'scadute';
-      axios.get(url).then(function (response) {
+      axios.get(this.url).then(function (response) {
         _this2.scadenze = response.data;
 
         _this2.makePagination(response.data.links, response.data.meta);
@@ -2174,9 +2245,9 @@ jQuery(document).ready(function () {
       var _this3 = this;
 
       this.method = 'listNonScadute';
-      url = url || '/api/memorex/non-scadute';
+      this.url = url || '/api/memorex/non-scadute';
       this.endpoint = 'non-scadute';
-      axios.get(url).then(function (response) {
+      axios.get(this.url).then(function (response) {
         _this3.scadenze = response.data;
 
         _this3.makePagination(response.data.links, response.data.meta);
@@ -2186,9 +2257,9 @@ jQuery(document).ready(function () {
       var _this4 = this;
 
       this.method = 'listArchivio';
-      url = url || '/api/memorex/archivio';
+      this.url = url || '/api/memorex/archivio';
       this.endpoint = 'archivio';
-      axios.get(url).then(function (response) {
+      axios.get(this.url).then(function (response) {
         _this4.scadenze = response.data;
 
         _this4.makePagination(response.data.links, response.data.meta);
@@ -14256,6 +14327,25 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 })));
 //# sourceMappingURL=bootstrap.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PaginationMemorex.vue?vue&type=style&index=0&lang=css&":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/PaginationMemorex.vue?vue&type=style&index=0&lang=css& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.pagination button {\n    margin:0 10px;\n}\nul#filtro_scadenze {\n\t  list-style: none;\n\t  display: flex;\n\t  justify-content: space-around;\n}\n\n", ""]);
+
+// exports
 
 
 /***/ }),
@@ -54072,6 +54162,36 @@ S2.define('jquery.select2',[
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PaginationMemorex.vue?vue&type=style&index=0&lang=css&":
+/*!***************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/PaginationMemorex.vue?vue&type=style&index=0&lang=css& ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./PaginationMemorex.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PaginationMemorex.vue?vue&type=style&index=0&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ScadenzeMemorex.vue?vue&type=style&index=0&lang=css&":
 /*!*************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ScadenzeMemorex.vue?vue&type=style&index=0&lang=css& ***!
@@ -54733,10 +54853,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ScadenzeMemorex.vue?vue&type=template&id=df5dd9ee&":
-/*!******************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ScadenzeMemorex.vue?vue&type=template&id=df5dd9ee& ***!
-  \******************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PaginationMemorex.vue?vue&type=template&id=571cacd6&":
+/*!********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/PaginationMemorex.vue?vue&type=template&id=571cacd6& ***!
+  \********************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -54749,448 +54869,6 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c(
-      "form",
-      {
-        attrs: { action: "#", method: "post", "accept-charset": "utf-8" },
-        on: {
-          submit: function($event) {
-            $event.preventDefault()
-            _vm.edit ? _vm.updateScadenza() : _vm.createScadenza()
-          }
-        }
-      },
-      [
-        _c("div", { staticClass: "form-group row" }, [
-          _c(
-            "label",
-            { staticClass: "col-md-3 text-change", attrs: { for: "cell" } },
-            [_vm._v("Titolo:")]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-md-5" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.scadenza.titolo,
-                  expression: "scadenza.titolo"
-                }
-              ],
-              ref: "taskinput",
-              staticClass: "form-control",
-              attrs: {
-                type: "text",
-                name: "titolo",
-                id: "titolo",
-                value: "",
-                placeholder: "Titolo"
-              },
-              domProps: { value: _vm.scadenza.titolo },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.scadenza, "titolo", $event.target.value)
-                }
-              }
-            })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group row" }, [
-          _c(
-            "label",
-            { staticClass: "col-md-3 text-change", attrs: { for: "skype" } },
-            [_vm._v("Descrizione:")]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-md-5" }, [
-            _c(
-              "textarea",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.scadenza.descrizione,
-                    expression: "scadenza.descrizione"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: {
-                  cols: "25",
-                  rows: "6",
-                  name: "descrizione",
-                  id: "descrizione"
-                },
-                domProps: { value: _vm.scadenza.descrizione },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.scadenza, "descrizione", $event.target.value)
-                  }
-                }
-              },
-              [_vm._v("descrizione")]
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group row" }, [
-          _c(
-            "label",
-            { staticClass: "col-md-3 text-change", attrs: { for: "cell" } },
-            [_vm._v("Categoria:")]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-md-5" }, [
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.scadenza.categoria,
-                    expression: "scadenza.categoria"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { name: "categoria", id: "categoria" },
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.$set(
-                      _vm.scadenza,
-                      "categoria",
-                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-                    )
-                  }
-                }
-              },
-              [
-                _c("option", { attrs: { value: "Info Alberghi" } }, [
-                  _vm._v("Info Alberghi")
-                ]),
-                _vm._v(" "),
-                _c("option", { attrs: { value: "Milanomarittima.it" } }, [
-                  _vm._v("Milanomarittima.it")
-                ])
-              ]
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group row" }, [
-          _c(
-            "label",
-            { staticClass: "col-md-3 text-change", attrs: { for: "cell" } },
-            [_vm._v("Riferimento:")]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-md-5" }, [
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.scadenza.commerciale_id,
-                    expression: "scadenza.commerciale_id"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { name: "commerciale_id", id: "commerciale_id" },
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.$set(
-                      _vm.scadenza,
-                      "commerciale_id",
-                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-                    )
-                  }
-                }
-              },
-              [
-                _c("option", { attrs: { value: "0" } }, [_vm._v("Nessuno")]),
-                _vm._v(" "),
-                _vm._l(_vm.riferimenti, function(nome, id) {
-                  return _c("option", { attrs: { id: id } }, [
-                    _vm._v(" " + _vm._s(nome) + " ")
-                  ])
-                })
-              ],
-              2
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group row" }, [
-          _c(
-            "label",
-            { staticClass: "col-md-3 text-change", attrs: { for: "data" } },
-            [_vm._v("Data:")]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-md-3 col-xl-2 col-lg-2" }, [
-            _c("div", { staticClass: "input-group date" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.scadenza.data,
-                    expression: "scadenza.data"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: {
-                  type: "text",
-                  name: "data",
-                  readonly: "",
-                  id: "m_datepicker_3"
-                },
-                domProps: { value: _vm.scadenza.data },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.scadenza, "data", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _vm._m(0)
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group row" }, [
-          _c(
-            "label",
-            { staticClass: "col-md-3 text-change", attrs: { for: "cell" } },
-            [_vm._v("Priorita:")]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-md-5" }, [
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.scadenza.priorita,
-                    expression: "scadenza.priorita"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { name: "priorita", id: "priorita" },
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.$set(
-                      _vm.scadenza,
-                      "priorita",
-                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-                    )
-                  }
-                }
-              },
-              [
-                _c("option", { attrs: { value: "Normale" } }, [
-                  _vm._v("Normale")
-                ]),
-                _vm._v(" "),
-                _c("option", { attrs: { value: "Media" } }, [_vm._v("Media")]),
-                _vm._v(" "),
-                _c("option", { attrs: { value: "Alta" } }, [_vm._v("Alta")]),
-                _vm._v(" "),
-                _c("option", { attrs: { value: "Amministrazione" } }, [
-                  _vm._v("Amministrazione")
-                ])
-              ]
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: !_vm.edit,
-                expression: "!edit"
-              }
-            ],
-            staticClass: "btn btn-primary offset-md-3",
-            attrs: { type: "submit" }
-          },
-          [_vm._v("Crea")]
-        ),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: _vm.edit,
-                expression: "edit"
-              }
-            ],
-            staticClass: "btn btn-primary offset-md-3",
-            attrs: { type: "submit" }
-          },
-          [_vm._v("Aggiorna")]
-        )
-      ]
-    ),
-    _vm._v(" "),
-    _c("hr"),
-    _vm._v(" "),
-    _c("ul", { attrs: { id: "filtro_scadenze" } }, [
-      _c(
-        "li",
-        {
-          staticClass: "btn btn-success",
-          class: { "btn btn-danger": _vm.method == "listScadute" },
-          on: {
-            click: function($event) {
-              return _vm.listScadute()
-            }
-          }
-        },
-        [_vm._v("Scadute")]
-      ),
-      _vm._v(" "),
-      _c(
-        "li",
-        {
-          staticClass: "btn btn-success",
-          class: { "btn btn-danger": _vm.method == "listNonScadute" },
-          on: {
-            click: function($event) {
-              return _vm.listNonScadute()
-            }
-          }
-        },
-        [_vm._v("Non scadute")]
-      ),
-      _vm._v(" "),
-      _c(
-        "li",
-        {
-          staticClass: "btn btn-success",
-          class: { "btn btn-danger": _vm.method == "getScadenze" },
-          on: {
-            click: function($event) {
-              return _vm.getScadenze()
-            }
-          }
-        },
-        [_vm._v("Tutte")]
-      ),
-      _vm._v(" "),
-      _c(
-        "li",
-        {
-          staticClass: "btn btn-success",
-          class: { "btn btn-danger": _vm.method == "listArchivio" },
-          on: {
-            click: function($event) {
-              return _vm.listArchivio()
-            }
-          }
-        },
-        [_vm._v("Archivio")]
-      )
-    ]),
-    _vm._v(" "),
-    _c("hr"),
-    _vm._v(" "),
-    _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-sm-2" }, [
-        _c("div", { staticClass: "callout callout-info b-t-1 b-r-1 b-b-1" }, [
-          _vm._v("\n       Elenco scadenze\n      "),
-          _c("br"),
-          _vm._v(" "),
-          _c("strong", { staticClass: "h4" }, [
-            _vm._v(_vm._s(_vm.pagination.total))
-          ])
-        ])
-      ])
-    ]),
-    _vm._v(" "),
-    _c("table", { staticClass: "table table-striped" }, [
-      _vm._m(1),
-      _vm._v(" "),
-      _c(
-        "tbody",
-        _vm._l(_vm.scadenze.data, function(scadenza) {
-          return _c("tr", { key: scadenza.id }, [
-            _c("td", [_vm._v(_vm._s(scadenza.data))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(scadenza.titolo))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(scadenza.categoria))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(scadenza.riferimento))]),
-            _vm._v(" "),
-            _c("td", [
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-primary btn-xs",
-                  on: {
-                    click: function($event) {
-                      return _vm.loadScadenza(scadenza.id)
-                    }
-                  }
-                },
-                [_vm._v("Edit")]
-              )
-            ])
-          ])
-        }),
-        0
-      )
-    ]),
-    _vm._v(" "),
-    _c("hr"),
-    _vm._v(" "),
     _c("ul", { staticClass: "pagination" }, [
       _c(
         "li",
@@ -55207,14 +54885,15 @@ var render = function() {
               on: {
                 click: function($event) {
                   $event.preventDefault()
-                  return _vm.choiseMethod(
+                  return _vm.$emit(
+                    "choise",
                     _vm.method,
                     "api/memorex/" + _vm.endpoint + "?page=1"
                   )
                 }
               }
             },
-            [_vm._v("<<")]
+            [_vm._v(" << ")]
           )
         ]
       ),
@@ -55231,7 +54910,7 @@ var render = function() {
               on: {
                 click: function($event) {
                   $event.preventDefault()
-                  return _vm.choiseMethod(_vm.method, _vm.pagination.prev)
+                  return _vm.$emit("choise", _vm.method, _vm.pagination.prev)
                 }
               }
             },
@@ -55263,7 +54942,7 @@ var render = function() {
               on: {
                 click: function($event) {
                   $event.preventDefault()
-                  return _vm.choiseMethod(_vm.method, _vm.pagination.next)
+                  return _vm.$emit("choise", _vm.method, _vm.pagination.next)
                 }
               }
             },
@@ -55289,7 +54968,8 @@ var render = function() {
               on: {
                 click: function($event) {
                   $event.preventDefault()
-                  return _vm.choiseMethod(
+                  return _vm.$emit(
+                    "choise",
                     _vm.method,
                     "api/memorex/" +
                       _vm.endpoint +
@@ -55305,6 +54985,617 @@ var render = function() {
       )
     ])
   ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ScadenzeMemorex.vue?vue&type=template&id=df5dd9ee&":
+/*!******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ScadenzeMemorex.vue?vue&type=template&id=df5dd9ee& ***!
+  \******************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c(
+        "form",
+        {
+          attrs: { action: "#", method: "post", "accept-charset": "utf-8" },
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              _vm.edit ? _vm.updateScadenza() : _vm.createScadenza()
+            }
+          }
+        },
+        [
+          _c("div", { staticClass: "form-group row" }, [
+            _c(
+              "label",
+              { staticClass: "col-md-3 text-change", attrs: { for: "cell" } },
+              [_vm._v("Titolo:")]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-5" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.scadenza.titolo,
+                    expression: "scadenza.titolo"
+                  }
+                ],
+                ref: "taskinput",
+                staticClass: "form-control",
+                attrs: {
+                  type: "text",
+                  name: "titolo",
+                  id: "titolo",
+                  value: "",
+                  placeholder: "Titolo"
+                },
+                domProps: { value: _vm.scadenza.titolo },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.scadenza, "titolo", $event.target.value)
+                  }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group row" }, [
+            _c(
+              "label",
+              { staticClass: "col-md-3 text-change", attrs: { for: "skype" } },
+              [_vm._v("Descrizione:")]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-5" }, [
+              _c(
+                "textarea",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.scadenza.descrizione,
+                      expression: "scadenza.descrizione"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    cols: "25",
+                    rows: "6",
+                    name: "descrizione",
+                    id: "descrizione"
+                  },
+                  domProps: { value: _vm.scadenza.descrizione },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.scadenza, "descrizione", $event.target.value)
+                    }
+                  }
+                },
+                [_vm._v("descrizione")]
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group row" }, [
+            _c(
+              "label",
+              { staticClass: "col-md-3 text-change", attrs: { for: "cell" } },
+              [_vm._v("Categoria:")]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-5" }, [
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.scadenza.categoria,
+                      expression: "scadenza.categoria"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { name: "categoria", id: "categoria" },
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.$set(
+                        _vm.scadenza,
+                        "categoria",
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      )
+                    }
+                  }
+                },
+                [
+                  _c("option", { attrs: { value: "Info Alberghi" } }, [
+                    _vm._v("Info Alberghi")
+                  ]),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "Milanomarittima.it" } }, [
+                    _vm._v("Milanomarittima.it")
+                  ])
+                ]
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group row" }, [
+            _c(
+              "label",
+              { staticClass: "col-md-3 text-change", attrs: { for: "cell" } },
+              [_vm._v("Riferimento:")]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-5" }, [
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.scadenza.commerciale_id,
+                      expression: "scadenza.commerciale_id"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { name: "commerciale_id", id: "commerciale_id" },
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.$set(
+                        _vm.scadenza,
+                        "commerciale_id",
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      )
+                    }
+                  }
+                },
+                [
+                  _c("option", { attrs: { value: "0" } }, [_vm._v("Nessuno")]),
+                  _vm._v(" "),
+                  _vm._l(_vm.riferimenti, function(nome, id) {
+                    return _c("option", { attrs: { id: id } }, [
+                      _vm._v(" " + _vm._s(nome) + " ")
+                    ])
+                  })
+                ],
+                2
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group row" }, [
+            _c(
+              "label",
+              { staticClass: "col-md-3 text-change", attrs: { for: "data" } },
+              [_vm._v("Data:")]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-3 col-xl-2 col-lg-2" }, [
+              _c("div", { staticClass: "input-group date" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.scadenza.data,
+                      expression: "scadenza.data"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    type: "text",
+                    name: "data",
+                    readonly: "",
+                    id: "m_datepicker_3"
+                  },
+                  domProps: { value: _vm.scadenza.data },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.scadenza, "data", $event.target.value)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _vm._m(0)
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group row" }, [
+            _c(
+              "label",
+              { staticClass: "col-md-3 text-change", attrs: { for: "cell" } },
+              [_vm._v("Priorita:")]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-5" }, [
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.scadenza.priorita,
+                      expression: "scadenza.priorita"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { name: "priorita", id: "priorita" },
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.$set(
+                        _vm.scadenza,
+                        "priorita",
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      )
+                    }
+                  }
+                },
+                [
+                  _c("option", { attrs: { value: "Normale" } }, [
+                    _vm._v("Normale")
+                  ]),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "Media" } }, [
+                    _vm._v("Media")
+                  ]),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "Alta" } }, [_vm._v("Alta")]),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "Amministrazione" } }, [
+                    _vm._v("Amministrazione")
+                  ])
+                ]
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: !_vm.edit,
+                  expression: "!edit"
+                }
+              ],
+              staticClass: "btn btn-primary offset-md-3",
+              attrs: { type: "submit" }
+            },
+            [_vm._v("Crea")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.edit,
+                  expression: "edit"
+                }
+              ],
+              staticClass: "btn btn-primary offset-md-3",
+              attrs: { type: "submit" }
+            },
+            [_vm._v("Aggiorna")]
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c("hr"),
+      _vm._v(" "),
+      _c("ul", { attrs: { id: "filtro_scadenze" } }, [
+        _c(
+          "li",
+          {
+            staticClass: "btn btn-success",
+            class: { "btn btn-danger": _vm.method == "listScadute" },
+            on: {
+              click: function($event) {
+                return _vm.listScadute()
+              }
+            }
+          },
+          [_vm._v("Scadute")]
+        ),
+        _vm._v(" "),
+        _c(
+          "li",
+          {
+            staticClass: "btn btn-success",
+            class: { "btn btn-danger": _vm.method == "listNonScadute" },
+            on: {
+              click: function($event) {
+                return _vm.listNonScadute()
+              }
+            }
+          },
+          [_vm._v("Non scadute")]
+        ),
+        _vm._v(" "),
+        _c(
+          "li",
+          {
+            staticClass: "btn btn-success",
+            class: { "btn btn-danger": _vm.method == "getScadenze" },
+            on: {
+              click: function($event) {
+                return _vm.getScadenze()
+              }
+            }
+          },
+          [_vm._v("Tutte")]
+        ),
+        _vm._v(" "),
+        _c(
+          "li",
+          {
+            staticClass: "btn btn-success",
+            class: { "btn btn-danger": _vm.method == "listArchivio" },
+            on: {
+              click: function($event) {
+                return _vm.listArchivio()
+              }
+            }
+          },
+          [_vm._v("Archivio")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("hr"),
+      _vm._v(" "),
+      _c("pagination-memorex", {
+        attrs: {
+          method: _vm.method,
+          pagination: _vm.pagination,
+          endpoint: _vm.endpoint
+        },
+        on: {
+          choise: function($event) {
+            return _vm.choiseMethod(_vm.method, _vm.url)
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-sm-2" }, [
+          _c("div", { staticClass: "callout callout-info b-t-1 b-r-1 b-b-1" }, [
+            _vm._v("\n       Elenco scadenze\n      "),
+            _c("br"),
+            _vm._v(" "),
+            _c("strong", { staticClass: "h4" }, [
+              _vm._v(_vm._s(_vm.pagination.total))
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("table", { staticClass: "table table-striped" }, [
+        _vm._m(1),
+        _vm._v(" "),
+        _c(
+          "tbody",
+          _vm._l(_vm.scadenze.data, function(scadenza) {
+            return _c("tr", { key: scadenza.id }, [
+              _c("td", [_vm._v(_vm._s(scadenza.data))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(scadenza.titolo))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(scadenza.categoria))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(scadenza.riferimento))]),
+              _vm._v(" "),
+              _c("td", [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary btn-xs",
+                    on: {
+                      click: function($event) {
+                        return _vm.loadScadenza(scadenza.id)
+                      }
+                    }
+                  },
+                  [_vm._v("Edit")]
+                )
+              ])
+            ])
+          }),
+          0
+        )
+      ]),
+      _vm._v(" "),
+      _c("hr"),
+      _vm._v(" "),
+      _c("ul", { staticClass: "pagination" }, [
+        _c(
+          "li",
+          {
+            staticClass: "page-item",
+            class: { disabled: _vm.pagination.current_page == 1 }
+          },
+          [
+            _c(
+              "a",
+              {
+                staticClass: "page-link",
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.choiseMethod(
+                      _vm.method,
+                      "api/memorex/" + _vm.endpoint + "?page=1"
+                    )
+                  }
+                }
+              },
+              [_vm._v("<<")]
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "li",
+          {
+            staticClass: "page-item",
+            class: { disabled: !_vm.pagination.prev }
+          },
+          [
+            _c(
+              "a",
+              {
+                staticClass: "page-link",
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.choiseMethod(_vm.method, _vm.pagination.prev)
+                  }
+                }
+              },
+              [_vm._v("Previous")]
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c("li", { staticClass: "page-item" }, [
+          _c("a", { staticClass: "page-link" }, [
+            _vm._v(
+              "Page " +
+                _vm._s(_vm.pagination.current_page) +
+                " of " +
+                _vm._s(_vm.pagination.last_page)
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "li",
+          {
+            staticClass: "page-item",
+            class: { disabled: !_vm.pagination.next }
+          },
+          [
+            _c(
+              "a",
+              {
+                staticClass: "page-link",
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.choiseMethod(_vm.method, _vm.pagination.next)
+                  }
+                }
+              },
+              [_vm._v("Next")]
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "li",
+          {
+            staticClass: "page-item",
+            class: {
+              disabled: _vm.pagination.current_page == _vm.pagination.last_page
+            }
+          },
+          [
+            _c(
+              "a",
+              {
+                staticClass: "page-link",
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.choiseMethod(
+                      _vm.method,
+                      "api/memorex/" +
+                        _vm.endpoint +
+                        "?page=" +
+                        _vm.pagination.last_page
+                    )
+                  }
+                }
+              },
+              [_vm._v(">>")]
+            )
+          ]
+        )
+      ])
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function() {
@@ -67530,6 +67821,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
+Vue.component('pagination-memorex', __webpack_require__(/*! ./components/PaginationMemorex.vue */ "./resources/js/components/PaginationMemorex.vue")["default"]);
 Vue.component('scadenze-memorex', __webpack_require__(/*! ./components/ScadenzeMemorex.vue */ "./resources/js/components/ScadenzeMemorex.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -67677,6 +67969,93 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/PaginationMemorex.vue":
+/*!*******************************************************!*\
+  !*** ./resources/js/components/PaginationMemorex.vue ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _PaginationMemorex_vue_vue_type_template_id_571cacd6___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PaginationMemorex.vue?vue&type=template&id=571cacd6& */ "./resources/js/components/PaginationMemorex.vue?vue&type=template&id=571cacd6&");
+/* harmony import */ var _PaginationMemorex_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PaginationMemorex.vue?vue&type=script&lang=js& */ "./resources/js/components/PaginationMemorex.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _PaginationMemorex_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PaginationMemorex.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/PaginationMemorex.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _PaginationMemorex_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _PaginationMemorex_vue_vue_type_template_id_571cacd6___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _PaginationMemorex_vue_vue_type_template_id_571cacd6___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/PaginationMemorex.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/PaginationMemorex.vue?vue&type=script&lang=js&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/components/PaginationMemorex.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PaginationMemorex_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./PaginationMemorex.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PaginationMemorex.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PaginationMemorex_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/PaginationMemorex.vue?vue&type=style&index=0&lang=css&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/components/PaginationMemorex.vue?vue&type=style&index=0&lang=css& ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PaginationMemorex_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./PaginationMemorex.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PaginationMemorex.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PaginationMemorex_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PaginationMemorex_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PaginationMemorex_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PaginationMemorex_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PaginationMemorex_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/PaginationMemorex.vue?vue&type=template&id=571cacd6&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/components/PaginationMemorex.vue?vue&type=template&id=571cacd6& ***!
+  \**************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PaginationMemorex_vue_vue_type_template_id_571cacd6___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./PaginationMemorex.vue?vue&type=template&id=571cacd6& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PaginationMemorex.vue?vue&type=template&id=571cacd6&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PaginationMemorex_vue_vue_type_template_id_571cacd6___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PaginationMemorex_vue_vue_type_template_id_571cacd6___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
