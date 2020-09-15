@@ -22,7 +22,6 @@ window.Vue = require('vue');
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
 
-Vue.component('pagination-memorex', require('./components/PaginationMemorex.vue').default);
 Vue.component('scadenze-memorex', require('./components/ScadenzeMemorex.vue').default);
 
 /**

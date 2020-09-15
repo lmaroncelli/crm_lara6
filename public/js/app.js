@@ -1992,16 +1992,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'PaginationMemorex',
   props: ['method', 'pagination', 'endpoint'],
-  data: function data() {
-    return {};
-  },
-  mounted: function mounted() {
-    this.show();
+  computed: {
+    l_method: function l_method() {
+      return this.method;
+    },
+    l_pagination: function l_pagination() {
+      return this.pagination;
+    },
+    l_endpoint: function l_endpoint() {
+      return this.endpoint;
+    }
   },
   methods: {
-    show: function show(method, url) {
-      console.log(this.pagination);
+    paginate: function paginate(m, u) {
+      console.log('m = ' + m);
+      console.log('u = ' + u);
+      this.$emit('choice', m, u);
     }
   }
 });
@@ -2153,20 +2161,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 jQuery(document).ready(function () {
   $('#m_datepicker_3').datepicker({
     format: 'dd/mm/yyyy',
@@ -2181,10 +2175,19 @@ jQuery(document).ready(function () {
   },
   data: function data() {
     return {
-      pagination: {},
+      pagination: {
+        current_page: '',
+        last_page: '',
+        total: '',
+        first: '',
+        next: '',
+        prev: '',
+        last: ''
+      },
       scadenze: [],
       riferimenti: [],
       edit: false,
+      pagination_ready: false,
       url: '',
       method: '',
       endpoint: '',
@@ -2205,7 +2208,19 @@ jQuery(document).ready(function () {
     this.method = 'listScadute';
   },
   methods: {
-    choiseMethod: function choiseMethod(method, url) {
+    /*choiceMethod(method,url) {
+      console.log('chiamato choiceMethodParent',method);
+      console.log('chiamato choiceMethodParent',url);
+      this[method](url)
+    },*/
+    choiceMethod: function choiceMethod() {
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      console.log('args = ', args);
+      var method = args[0],
+          url = args[1];
       this[method](url);
     },
     emptyScadenza: function emptyScadenza() {
@@ -2227,6 +2242,8 @@ jQuery(document).ready(function () {
         _this.scadenze = response.data;
 
         _this.makePagination(response.data.links, response.data.meta);
+
+        _this.pagination_ready = true;
       });
     },
     listScadute: function listScadute(url) {
@@ -2239,6 +2256,8 @@ jQuery(document).ready(function () {
         _this2.scadenze = response.data;
 
         _this2.makePagination(response.data.links, response.data.meta);
+
+        _this2.pagination_ready = true;
       });
     },
     listNonScadute: function listNonScadute(url) {
@@ -2251,6 +2270,8 @@ jQuery(document).ready(function () {
         _this3.scadenze = response.data;
 
         _this3.makePagination(response.data.links, response.data.meta);
+
+        _this3.pagination_ready = true;
       });
     },
     listArchivio: function listArchivio(url) {
@@ -2263,10 +2284,11 @@ jQuery(document).ready(function () {
         _this4.scadenze = response.data;
 
         _this4.makePagination(response.data.links, response.data.meta);
+
+        _this4.pagination_ready = true;
       });
     },
     makePagination: function makePagination(links, meta) {
-      console.log('links.next = ' + links.next);
       this.pagination.current_page = meta.current_page;
       this.pagination.last_page = meta.last_page;
       this.pagination.total = meta.total;
@@ -54874,7 +54896,7 @@ var render = function() {
         "li",
         {
           staticClass: "page-item",
-          class: { disabled: _vm.pagination.current_page == 1 }
+          class: { disabled: _vm.l_pagination.current_page == 1 }
         },
         [
           _c(
@@ -54885,10 +54907,9 @@ var render = function() {
               on: {
                 click: function($event) {
                   $event.preventDefault()
-                  return _vm.$emit(
-                    "choise",
-                    _vm.method,
-                    "api/memorex/" + _vm.endpoint + "?page=1"
+                  return _vm.paginate(
+                    _vm.l_method,
+                    "api/memorex/" + _vm.l_endpoint + "?page=1"
                   )
                 }
               }
@@ -54900,7 +54921,10 @@ var render = function() {
       _vm._v(" "),
       _c(
         "li",
-        { staticClass: "page-item", class: { disabled: !_vm.pagination.prev } },
+        {
+          staticClass: "page-item",
+          class: { disabled: !_vm.l_pagination.prev }
+        },
         [
           _c(
             "a",
@@ -54910,7 +54934,7 @@ var render = function() {
               on: {
                 click: function($event) {
                   $event.preventDefault()
-                  return _vm.$emit("choise", _vm.method, _vm.pagination.prev)
+                  return _vm.paginate(_vm.l_method, _vm.l_pagination.prev)
                 }
               }
             },
@@ -54923,16 +54947,19 @@ var render = function() {
         _c("a", { staticClass: "page-link" }, [
           _vm._v(
             "Page " +
-              _vm._s(_vm.pagination.current_page) +
+              _vm._s(_vm.l_pagination.current_page) +
               " of " +
-              _vm._s(_vm.pagination.last_page)
+              _vm._s(_vm.l_pagination.last_page)
           )
         ])
       ]),
       _vm._v(" "),
       _c(
         "li",
-        { staticClass: "page-item", class: { disabled: !_vm.pagination.next } },
+        {
+          staticClass: "page-item",
+          class: { disabled: !_vm.l_pagination.next }
+        },
         [
           _c(
             "a",
@@ -54942,7 +54969,7 @@ var render = function() {
               on: {
                 click: function($event) {
                   $event.preventDefault()
-                  return _vm.$emit("choise", _vm.method, _vm.pagination.next)
+                  return _vm.paginate(_vm.l_method, _vm.l_pagination.next)
                 }
               }
             },
@@ -54956,7 +54983,8 @@ var render = function() {
         {
           staticClass: "page-item",
           class: {
-            disabled: _vm.pagination.current_page == _vm.pagination.last_page
+            disabled:
+              _vm.l_pagination.current_page == _vm.l_pagination.last_page
           }
         },
         [
@@ -54968,13 +54996,12 @@ var render = function() {
               on: {
                 click: function($event) {
                   $event.preventDefault()
-                  return _vm.$emit(
-                    "choise",
-                    _vm.method,
+                  return _vm.paginate(
+                    _vm.l_method,
                     "api/memorex/" +
-                      _vm.endpoint +
+                      _vm.l_endpoint +
                       "?page=" +
-                      _vm.pagination.last_page
+                      _vm.l_pagination.last_page
                   )
                 }
               }
@@ -55412,16 +55439,20 @@ var render = function() {
       _c("hr"),
       _vm._v(" "),
       _c("pagination-memorex", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.pagination_ready,
+            expression: "pagination_ready"
+          }
+        ],
         attrs: {
           method: _vm.method,
           pagination: _vm.pagination,
           endpoint: _vm.endpoint
         },
-        on: {
-          choise: function($event) {
-            return _vm.choiseMethod(_vm.method, _vm.url)
-          }
-        }
+        on: { choice: _vm.choiceMethod }
       }),
       _vm._v(" "),
       _c("div", { staticClass: "row" }, [
@@ -55474,125 +55505,22 @@ var render = function() {
       _vm._v(" "),
       _c("hr"),
       _vm._v(" "),
-      _c("ul", { staticClass: "pagination" }, [
-        _c(
-          "li",
+      _c("pagination-memorex", {
+        directives: [
           {
-            staticClass: "page-item",
-            class: { disabled: _vm.pagination.current_page == 1 }
-          },
-          [
-            _c(
-              "a",
-              {
-                staticClass: "page-link",
-                attrs: { href: "#" },
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.choiseMethod(
-                      _vm.method,
-                      "api/memorex/" + _vm.endpoint + "?page=1"
-                    )
-                  }
-                }
-              },
-              [_vm._v("<<")]
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "li",
-          {
-            staticClass: "page-item",
-            class: { disabled: !_vm.pagination.prev }
-          },
-          [
-            _c(
-              "a",
-              {
-                staticClass: "page-link",
-                attrs: { href: "#" },
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.choiseMethod(_vm.method, _vm.pagination.prev)
-                  }
-                }
-              },
-              [_vm._v("Previous")]
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c("li", { staticClass: "page-item" }, [
-          _c("a", { staticClass: "page-link" }, [
-            _vm._v(
-              "Page " +
-                _vm._s(_vm.pagination.current_page) +
-                " of " +
-                _vm._s(_vm.pagination.last_page)
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c(
-          "li",
-          {
-            staticClass: "page-item",
-            class: { disabled: !_vm.pagination.next }
-          },
-          [
-            _c(
-              "a",
-              {
-                staticClass: "page-link",
-                attrs: { href: "#" },
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.choiseMethod(_vm.method, _vm.pagination.next)
-                  }
-                }
-              },
-              [_vm._v("Next")]
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "li",
-          {
-            staticClass: "page-item",
-            class: {
-              disabled: _vm.pagination.current_page == _vm.pagination.last_page
-            }
-          },
-          [
-            _c(
-              "a",
-              {
-                staticClass: "page-link",
-                attrs: { href: "#" },
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.choiseMethod(
-                      _vm.method,
-                      "api/memorex/" +
-                        _vm.endpoint +
-                        "?page=" +
-                        _vm.pagination.last_page
-                    )
-                  }
-                }
-              },
-              [_vm._v(">>")]
-            )
-          ]
-        )
-      ])
+            name: "show",
+            rawName: "v-show",
+            value: _vm.pagination_ready,
+            expression: "pagination_ready"
+          }
+        ],
+        attrs: {
+          method: _vm.method,
+          pagination: _vm.pagination,
+          endpoint: _vm.endpoint
+        },
+        on: { choice: _vm.choiceMethod }
+      })
     ],
     1
   )
@@ -67821,7 +67749,6 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
-Vue.component('pagination-memorex', __webpack_require__(/*! ./components/PaginationMemorex.vue */ "./resources/js/components/PaginationMemorex.vue")["default"]);
 Vue.component('scadenze-memorex', __webpack_require__(/*! ./components/ScadenzeMemorex.vue */ "./resources/js/components/ScadenzeMemorex.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to

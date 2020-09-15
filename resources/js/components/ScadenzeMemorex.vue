@@ -81,10 +81,11 @@
 
 
 <pagination-memorex 
+  v-show="pagination_ready"
   :method="method" 
   :pagination="pagination" 
   :endpoint="endpoint" 
-  v-on:choise="choiseMethod(method,url)">    
+  v-on:choice="choiceMethod">    
 </pagination-memorex>
 
 <div class="row">
@@ -120,29 +121,14 @@
 
 <hr>
 
-<ul class="pagination">
-  
-  <li class="page-item" :class="{disabled: pagination.current_page==1}">
-    <a href="#" class="page-link"  @click.prevent="choiseMethod(method,`api/memorex/${endpoint}?page=1`)"><<</a>
-  </li>
 
-  <li class="page-item" :class="{disabled: !pagination.prev}">
-    <a href="#" class="page-link" @click.prevent="choiseMethod(method,pagination.prev)">Previous</a>
-  </li>
-
-  <li class="page-item">
-    <a class="page-link">Page {{pagination.current_page}} of {{pagination.last_page}}</a>
-  </li>
-
-  <li class="page-item" :class="{disabled: !pagination.next}">
-    <a href="#" class="page-link"  @click.prevent="choiseMethod(method,pagination.next)">Next</a>
-  </li>
-
-  <li class="page-item" :class="{disabled: pagination.current_page == pagination.last_page}">
-    <a href="#" class="page-link"  @click.prevent="choiseMethod(method,`api/memorex/${endpoint}?page=${pagination.last_page}`)">>></a>
-  </li>
-
-</ul>
+<pagination-memorex 
+  v-show="pagination_ready"
+  :method="method" 
+  :pagination="pagination" 
+  :endpoint="endpoint" 
+  v-on:choice="choiceMethod">    
+</pagination-memorex>
 
 </div>
 </template>
@@ -164,16 +150,25 @@
     export default {
         
         components: {
-            PaginationMemorex,
+            PaginationMemorex
         },
           
         data() {
 
             return {
-                pagination: {},
+                pagination: {
+                  current_page: '',
+                  last_page: '',
+                  total: '',
+                  first: '',
+                  next: '',
+                  prev: '',
+                  last: ''
+                },
                 scadenze: [],
                 riferimenti:[],
                 edit: false,
+                pagination_ready:false,
                 url:'',
                 method:'',
                 endpoint:'',
@@ -198,9 +193,19 @@
 
         methods: {
 
-
-            choiseMethod(method,url) {
+            /*choiceMethod(method,url) {
+              console.log('chiamato choiceMethodParent',method);
+              console.log('chiamato choiceMethodParent',url);
               this[method](url)
+            },*/
+
+
+            choiceMethod(...args) {
+              console.log('args = ',args);
+              const [method,url] = args;
+              
+              this[method](url)
+
             },
 
 
@@ -223,6 +228,7 @@
                   .then(response => {
                     this.scadenze = response.data
                     this.makePagination(response.data.links, response.data.meta)
+                    this.pagination_ready = true
                   });
 
 
@@ -240,6 +246,8 @@
                   .then(response => {
                     this.scadenze = response.data
                     this.makePagination(response.data.links, response.data.meta)
+                    this.pagination_ready = true
+
                   });
             },
 
@@ -253,6 +261,8 @@
                   .then(response => {
                     this.scadenze = response.data
                     this.makePagination(response.data.links, response.data.meta)
+                    this.pagination_ready = true
+
                   });
             },
 
@@ -267,13 +277,13 @@
                   .then(response => {
                     this.scadenze = response.data
                     this.makePagination(response.data.links, response.data.meta)
+                    this.pagination_ready = true
+
                   });
             },
 
 
             makePagination(links, meta) {
-
-                console.log('links.next = '+links.next);
 
                 this.pagination.current_page = meta.current_page
                 this.pagination.last_page = meta.last_page

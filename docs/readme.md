@@ -527,3 +527,7 @@ https://reinink.ca/articles/dynamic-relationships-in-laravel-using-subqueries
 
 http://felicianoprochera.com/simple-task-app-with-laravel-5-3-and-vuejs/
 
+
+https://www.smashingmagazine.com/2020/01/data-components-vue-js/
+
+
