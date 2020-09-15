@@ -1994,17 +1994,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'PaginationMemorex',
   props: ['method', 'pagination', 'endpoint'],
-  computed: {
-    l_method: function l_method() {
-      return this.method;
+
+  /*computed: {
+     l_method: function() {
+      return this.method
     },
-    l_pagination: function l_pagination() {
-      return this.pagination;
+     l_pagination: function() {
+      return this.pagination
     },
-    l_endpoint: function l_endpoint() {
-      return this.endpoint;
+     l_endpoint: function() {
+      return this.endpoint
     }
-  },
+    },*/
   methods: {
     paginate: function paginate(m, u) {
       console.log('m = ' + m);
@@ -54896,7 +54897,7 @@ var render = function() {
         "li",
         {
           staticClass: "page-item",
-          class: { disabled: _vm.l_pagination.current_page == 1 }
+          class: { disabled: _vm.pagination.current_page == 1 }
         },
         [
           _c(
@@ -54908,8 +54909,8 @@ var render = function() {
                 click: function($event) {
                   $event.preventDefault()
                   return _vm.paginate(
-                    _vm.l_method,
-                    "api/memorex/" + _vm.l_endpoint + "?page=1"
+                    _vm.method,
+                    "api/memorex/" + _vm.endpoint + "?page=1"
                   )
                 }
               }
@@ -54921,10 +54922,7 @@ var render = function() {
       _vm._v(" "),
       _c(
         "li",
-        {
-          staticClass: "page-item",
-          class: { disabled: !_vm.l_pagination.prev }
-        },
+        { staticClass: "page-item", class: { disabled: !_vm.pagination.prev } },
         [
           _c(
             "a",
@@ -54934,7 +54932,7 @@ var render = function() {
               on: {
                 click: function($event) {
                   $event.preventDefault()
-                  return _vm.paginate(_vm.l_method, _vm.l_pagination.prev)
+                  return _vm.paginate(_vm.method, _vm.pagination.prev)
                 }
               }
             },
@@ -54947,19 +54945,16 @@ var render = function() {
         _c("a", { staticClass: "page-link" }, [
           _vm._v(
             "Page " +
-              _vm._s(_vm.l_pagination.current_page) +
+              _vm._s(_vm.pagination.current_page) +
               " of " +
-              _vm._s(_vm.l_pagination.last_page)
+              _vm._s(_vm.pagination.last_page)
           )
         ])
       ]),
       _vm._v(" "),
       _c(
         "li",
-        {
-          staticClass: "page-item",
-          class: { disabled: !_vm.l_pagination.next }
-        },
+        { staticClass: "page-item", class: { disabled: !_vm.pagination.next } },
         [
           _c(
             "a",
@@ -54969,7 +54964,7 @@ var render = function() {
               on: {
                 click: function($event) {
                   $event.preventDefault()
-                  return _vm.paginate(_vm.l_method, _vm.l_pagination.next)
+                  return _vm.paginate(_vm.method, _vm.pagination.next)
                 }
               }
             },
@@ -54983,8 +54978,7 @@ var render = function() {
         {
           staticClass: "page-item",
           class: {
-            disabled:
-              _vm.l_pagination.current_page == _vm.l_pagination.last_page
+            disabled: _vm.pagination.current_page == _vm.pagination.last_page
           }
         },
         [
@@ -54997,11 +54991,11 @@ var render = function() {
                 click: function($event) {
                   $event.preventDefault()
                   return _vm.paginate(
-                    _vm.l_method,
+                    _vm.method,
                     "api/memorex/" +
-                      _vm.l_endpoint +
+                      _vm.endpoint +
                       "?page=" +
-                      _vm.l_pagination.last_page
+                      _vm.pagination.last_page
                   )
                 }
               }
