@@ -2162,6 +2162,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 jQuery(document).ready(function () {
   $('#m_datepicker_3').datepicker({
     format: 'dd/mm/yyyy',
@@ -2176,6 +2182,7 @@ jQuery(document).ready(function () {
   },
   data: function data() {
     return {
+      search: '',
       pagination: {
         current_page: '',
         last_page: '',
@@ -2209,11 +2216,6 @@ jQuery(document).ready(function () {
     this.method = 'listScadute';
   },
   methods: {
-    /*choiceMethod(method,url) {
-      console.log('chiamato choiceMethodParent',method);
-      console.log('chiamato choiceMethodParent',url);
-      this[method](url)
-    },*/
     choiceMethod: function choiceMethod() {
       for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
@@ -2275,18 +2277,33 @@ jQuery(document).ready(function () {
         _this3.pagination_ready = true;
       });
     },
-    listArchivio: function listArchivio(url) {
+    filter: function filter(url) {
       var _this4 = this;
 
-      this.method = 'listArchivio';
-      this.url = url || '/api/memorex/archivio';
-      this.endpoint = 'archivio';
+      this.method = 'filter';
+      this.url = url || '/api/memorex/search/' + this.search;
+      this.endpoint = 'search';
       axios.get(this.url).then(function (response) {
+        console.log(response.data);
         _this4.scadenze = response.data;
 
         _this4.makePagination(response.data.links, response.data.meta);
 
         _this4.pagination_ready = true;
+      });
+    },
+    listArchivio: function listArchivio(url) {
+      var _this5 = this;
+
+      this.method = 'listArchivio';
+      this.url = url || '/api/memorex/archivio';
+      this.endpoint = 'archivio';
+      axios.get(this.url).then(function (response) {
+        _this5.scadenze = response.data;
+
+        _this5.makePagination(response.data.links, response.data.meta);
+
+        _this5.pagination_ready = true;
       });
     },
     makePagination: function makePagination(links, meta) {
@@ -2299,32 +2316,33 @@ jQuery(document).ready(function () {
       this.pagination.last = links.last;
     },
     getRiferimenti: function getRiferimenti() {
-      var _this5 = this;
+      var _this6 = this;
 
       axios.get('/api/memorex/riferimenti').then(function (response) {
-        _this5.riferimenti = response.data;
+        _this6.riferimenti = response.data;
       });
     },
     createScadenza: function createScadenza() {
       alert('submit');
     },
     loadScadenza: function loadScadenza(id) {
-      var _this6 = this;
+      var _this7 = this;
 
       axios.get('api/memorex/' + id).then(function (response) {
         //console.log(response);
-        _this6.scadenza.id = response.data.id;
-        _this6.scadenza.titolo = response.data.titolo;
-        _this6.scadenza.categoria = response.data.categoria;
-        _this6.scadenza.commerciale_id = response.data.riferimento;
-        _this6.scadenza.descrizione = response.data.descrizione;
-        _this6.scadenza.data = response.data.data;
+        _this7.scadenza.id = response.data.id;
+        _this7.scadenza.titolo = response.data.titolo;
+        _this7.scadenza.categoria = response.data.categoria;
+        _this7.scadenza.commerciale_id = response.data.commerciale_id;
+        _this7.scadenza.riferimento = response.data.riferimento;
+        _this7.scadenza.descrizione = response.data.descrizione;
+        _this7.scadenza.data = response.data.data;
       });
       this.$refs.taskinput.focus();
       this.edit = true;
     },
     updateScadenza: function updateScadenza() {
-      var _this7 = this;
+      var _this8 = this;
 
       axios.post('/api/memorex/' + this.scadenza.id, {
         // <== use axios.post
@@ -2332,11 +2350,11 @@ jQuery(document).ready(function () {
         _method: 'patch' // <== add this field
 
       }).then(function (response) {
-        _this7.emptyScadenza();
+        _this8.emptyScadenza();
 
-        _this7.edit = false;
+        _this8.edit = false;
 
-        _this7.listScadute();
+        _this8.listScadute();
       });
     }
   }
@@ -55193,8 +55211,8 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.scadenza.commerciale_id,
-                      expression: "scadenza.commerciale_id"
+                      value: _vm.scadenza.riferimento,
+                      expression: "scadenza.riferimento"
                     }
                   ],
                   staticClass: "form-control",
@@ -55211,7 +55229,7 @@ var render = function() {
                         })
                       _vm.$set(
                         _vm.scadenza,
-                        "commerciale_id",
+                        "riferimento",
                         $event.target.multiple
                           ? $$selectedVal
                           : $$selectedVal[0]
@@ -55459,6 +55477,52 @@ var render = function() {
               _vm._v(_vm._s(_vm.pagination.total))
             ])
           ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-sm-8" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.search,
+                expression: "search"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: {
+              type: "text",
+              name: "search",
+              id: "search",
+              placeholder: "Cerca nel titolo"
+            },
+            domProps: { value: _vm.search },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.search = $event.target.value
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-sm-2" }, [
+          _c(
+            "a",
+            {
+              staticClass: "btn btn-primary",
+              attrs: { href: "#", role: "button" },
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.filter()
+                }
+              }
+            },
+            [_vm._v("Cerca")]
+          )
         ])
       ]),
       _vm._v(" "),

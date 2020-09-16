@@ -26,7 +26,7 @@
   <div class="form-group row">
     <label class="col-md-3 text-change" for="cell">Riferimento:</label>
     <div class="col-md-5">
-      <select name="commerciale_id" id="commerciale_id" class="form-control" v-model="scadenza.commerciale_id">
+      <select name="commerciale_id" id="commerciale_id" class="form-control" v-model="scadenza.riferimento">
         <option value="0">Nessuno</option>
         <option v-for="(nome, id) in riferimenti" :id="id"> {{nome}} </option>
       </select>
@@ -96,6 +96,12 @@
       <strong class="h4">{{pagination.total}}</strong>
     </div>
   </div>
+  <div class="col-sm-8">
+    <input type="text" class="form-control" v-model="search" name="search" id="search" placeholder="Cerca nel titolo">
+  </div>
+  <div class="col-sm-2">
+    <a class="btn btn-primary" href="#" role="button" @click.prevent="filter()">Cerca</a>
+  </div>
 </div>
 
 <table class="table table-striped">
@@ -156,6 +162,7 @@
         data() {
 
             return {
+                search:'',
                 pagination: {
                   current_page: '',
                   last_page: '',
@@ -193,13 +200,7 @@
 
         methods: {
 
-            /*choiceMethod(method,url) {
-              console.log('chiamato choiceMethodParent',method);
-              console.log('chiamato choiceMethodParent',url);
-              this[method](url)
-            },*/
-
-
+    
             choiceMethod(...args) {
               console.log('args = ',args);
               const [method,url] = args;
@@ -267,6 +268,20 @@
             },
 
 
+            filter(url) {
+                  this.method = 'filter';
+                  this.url = url || '/api/memorex/search/'+ this.search;
+                  this.endpoint = 'search';
+                  axios.get(this.url)
+                  .then(response => {
+                    console.log(response.data)
+                    this.scadenze = response.data
+                    this.makePagination(response.data.links, response.data.meta)
+                    this.pagination_ready = true  
+                  });
+            },
+
+
             listArchivio(url) {
                 this.method = 'listArchivio';
                 this.url = url || '/api/memorex/archivio';
@@ -313,7 +328,8 @@
                     this.scadenza.id = response.data.id
                     this.scadenza.titolo = response.data.titolo
                     this.scadenza.categoria = response.data.categoria
-                    this.scadenza.commerciale_id = response.data.riferimento
+                    this.scadenza.commerciale_id = response.data.commerciale_id
+                    this.scadenza.riferimento = response.data.riferimento
                     this.scadenza.descrizione = response.data.descrizione
                     this.scadenza.data = response.data.data
                 });

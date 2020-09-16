@@ -1,11 +1,12 @@
 <?php
 
-use App\CommercialeMemorex;
-use App\Http\Resources\Memorex as MemorexResource;
-use App\Http\Resources\MemorexCollection;
 use App\Memorex;
 use Carbon\Carbon;
+use App\CommercialeMemorex;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Http\Resources\MemorexCollection;
+use App\Http\Resources\Memorex as MemorexResource;
 
 /*
 |--------------------------------------------------------------------------
@@ -84,10 +85,23 @@ Route::patch('memorex/{id}', function(Request $request, $id) {
     Memorex::findOrFail($id)
     			->update([
     				'titolo' => $data_arr['titolo'],
-    				'descrizione' => $data_arr['descrizione'],
+    				'descrizione' => str_replace("\n", "<br />", $data_arr['descrizione']),
     				'data' => Carbon::createFromFormat('d/m/Y', $data_arr['data'])->format('Y-m-d'),
     				'categoria' => $data_arr['categoria'],
-    				'riferimento' => $data_arr['riferimento']
+    				'commerciale_id' => $data_arr['commerciale_id']
     			]);
+});
+
+
+Route::get('memorex/search/{search}', function ($search) {
+    $memorex = Memorex::notHM()
+                        ->where('titolo','LIKE', '%'.$search.'%')
+                        ->orderBy('id','desc')
+                        ->paginate(15);
+
+    //dd(Str::replaceArray('?', $memorex->getBindings(), $memorex->toSql()));
+
+    return new MemorexCollection($memorex);	
+
 });
 
