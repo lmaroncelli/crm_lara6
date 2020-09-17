@@ -2168,6 +2168,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 jQuery(document).ready(function () {
   $('#m_datepicker_3').datepicker({
     format: 'dd/mm/yyyy',
@@ -2196,6 +2198,7 @@ jQuery(document).ready(function () {
       riferimenti: [],
       edit: false,
       pagination_ready: false,
+      editing_row: false,
       url: '',
       method: '',
       endpoint: '',
@@ -2248,6 +2251,7 @@ jQuery(document).ready(function () {
 
         _this.pagination_ready = true;
       });
+      this.search = '';
     },
     listScadute: function listScadute(url) {
       var _this2 = this;
@@ -2262,6 +2266,7 @@ jQuery(document).ready(function () {
 
         _this2.pagination_ready = true;
       });
+      this.search = '';
     },
     listNonScadute: function listNonScadute(url) {
       var _this3 = this;
@@ -2276,6 +2281,7 @@ jQuery(document).ready(function () {
 
         _this3.pagination_ready = true;
       });
+      this.search = '';
     },
     filter: function filter(url) {
       var _this4 = this;
@@ -2305,6 +2311,7 @@ jQuery(document).ready(function () {
 
         _this5.pagination_ready = true;
       });
+      this.search = '';
     },
     makePagination: function makePagination(links, meta) {
       this.pagination.current_page = meta.current_page;
@@ -2340,10 +2347,15 @@ jQuery(document).ready(function () {
       });
       this.$refs.taskinput.focus();
       this.edit = true;
+      $('tr#' + id).addClass('editing-row', {
+        duration: 500
+      });
+      $('#button_edit_row_' + id).hide('slow');
     },
     updateScadenza: function updateScadenza() {
       var _this8 = this;
 
+      this.scadenza.data = $("#m_datepicker_3").val();
       axios.post('/api/memorex/' + this.scadenza.id, {
         // <== use axios.post
         data: this.scadenza,
@@ -2353,9 +2365,23 @@ jQuery(document).ready(function () {
         _this8.emptyScadenza();
 
         _this8.edit = false;
+        _this8.editing_row = false;
 
         _this8.listScadute();
       });
+      $('tr#' + this.scadenza.id).removeClass('editing-row', {
+        duration: 500
+      });
+      $('#button_edit_row_' + this.scadenza.id).show('slow');
+    },
+    cancel: function cancel() {
+      this.emptyScadenza();
+      this.edit = false;
+      this.editing_row = false;
+      $('tr').removeClass('editing-row', {
+        duration: 500
+      });
+      $('.edit-btn').show('slow');
     }
   }
 });
@@ -14403,7 +14429,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.pagination button {\n  margin:0 10px;\n}\n", ""]);
+exports.push([module.i, "\n.pagination button {\n  margin:0 10px;\n}\ntr.editing-row {\n  position: fixed;\n  bottom: 0;\n  z-index: 1000;\n  width: 100%;\n  background-color: white!important;\n  border: 1px solid #bbb;\n}\n.filtra {\n  padding: 0 1rem;\n  margin: 1rem 0;\n}\n", ""]);
 
 // exports
 
@@ -55211,12 +55237,12 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.scadenza.riferimento,
-                      expression: "scadenza.riferimento"
+                      value: _vm.scadenza.commerciale_id,
+                      expression: "scadenza.commerciale_id"
                     }
                   ],
                   staticClass: "form-control",
-                  attrs: { name: "commerciale_id", id: "commerciale_id" },
+                  attrs: { name: "commerciale_id" },
                   on: {
                     change: function($event) {
                       var $$selectedVal = Array.prototype.filter
@@ -55229,7 +55255,7 @@ var render = function() {
                         })
                       _vm.$set(
                         _vm.scadenza,
-                        "riferimento",
+                        "commerciale_id",
                         $event.target.multiple
                           ? $$selectedVal
                           : $$selectedVal[0]
@@ -55241,7 +55267,7 @@ var render = function() {
                   _c("option", { attrs: { value: "0" } }, [_vm._v("Nessuno")]),
                   _vm._v(" "),
                   _vm._l(_vm.riferimenti, function(nome, id) {
-                    return _c("option", { attrs: { id: id } }, [
+                    return _c("option", { domProps: { value: id } }, [
                       _vm._v(" " + _vm._s(nome) + " ")
                     ])
                   })
@@ -55384,6 +55410,20 @@ var render = function() {
               attrs: { type: "submit" }
             },
             [_vm._v("Aggiorna")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-secondary",
+              attrs: { type: "button" },
+              on: {
+                click: function($event) {
+                  return _vm.cancel()
+                }
+              }
+            },
+            [_vm._v("Cancel")]
           )
         ]
       ),
@@ -55479,7 +55519,7 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col-sm-8" }, [
+        _c("div", { staticClass: "col-sm-8 filtra" }, [
           _c("input", {
             directives: [
               {
@@ -55498,6 +55538,15 @@ var render = function() {
             },
             domProps: { value: _vm.search },
             on: {
+              keyup: function($event) {
+                if (
+                  !$event.type.indexOf("key") &&
+                  _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                ) {
+                  return null
+                }
+                return _vm.filter()
+              },
               input: function($event) {
                 if ($event.target.composing) {
                   return
@@ -55508,7 +55557,7 @@ var render = function() {
           })
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col-sm-2" }, [
+        _c("div", { staticClass: "col-sm-2 filtra" }, [
           _c(
             "a",
             {
@@ -55532,7 +55581,7 @@ var render = function() {
         _c(
           "tbody",
           _vm._l(_vm.scadenze.data, function(scadenza) {
-            return _c("tr", { key: scadenza.id }, [
+            return _c("tr", { key: scadenza.id, attrs: { id: scadenza.id } }, [
               _c("td", [_vm._v(_vm._s(scadenza.data))]),
               _vm._v(" "),
               _c("td", [_vm._v(_vm._s(scadenza.titolo))]),
@@ -55545,7 +55594,8 @@ var render = function() {
                 _c(
                   "button",
                   {
-                    staticClass: "btn btn-primary btn-xs",
+                    staticClass: "btn btn-primary btn-xs edit-btn",
+                    attrs: { id: "button_edit_row_" + scadenza.id },
                     on: {
                       click: function($event) {
                         return _vm.loadScadenza(scadenza.id)

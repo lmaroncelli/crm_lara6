@@ -49,7 +49,7 @@ class Memorex extends JsonResource
           // do nothing
         }
 
-        $fields['descrizione'] = str_replace("<br />", "\n", $fields['descrizione']);
+        $fields['descrizione'] = str_replace(["<br />","<br/>","<br>"], "\n", $fields['descrizione']);
 
         $fields['riferimento'] = optional($this->commerciale)->nome;
         

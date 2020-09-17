@@ -26,9 +26,9 @@
   <div class="form-group row">
     <label class="col-md-3 text-change" for="cell">Riferimento:</label>
     <div class="col-md-5">
-      <select name="commerciale_id" id="commerciale_id" class="form-control" v-model="scadenza.riferimento">
+      <select name="commerciale_id" class="form-control" v-model="scadenza.commerciale_id">
         <option value="0">Nessuno</option>
-        <option v-for="(nome, id) in riferimenti" :id="id"> {{nome}} </option>
+        <option v-for="(nome, id) in riferimenti" :value="id"> {{nome}} </option>
       </select>
     </div>
   </div>
@@ -65,6 +65,8 @@
 
   <button v-show="!edit" type="submit" class="btn btn-primary offset-md-3">Crea</button>
   <button v-show="edit" type="submit" class="btn btn-primary offset-md-3">Aggiorna</button>
+  <button type="button" class="btn btn-secondary" @click="cancel()">Cancel</button>
+
 </form>
 
 
@@ -96,10 +98,10 @@
       <strong class="h4">{{pagination.total}}</strong>
     </div>
   </div>
-  <div class="col-sm-8">
-    <input type="text" class="form-control" v-model="search" name="search" id="search" placeholder="Cerca nel titolo">
+  <div class="col-sm-8 filtra">
+    <input type="text" class="form-control" v-model="search" name="search" id="search" placeholder="Cerca nel titolo" @keyup.enter="filter()">
   </div>
-  <div class="col-sm-2">
+  <div class="col-sm-2 filtra">
     <a class="btn btn-primary" href="#" role="button" @click.prevent="filter()">Cerca</a>
   </div>
 </div>
@@ -115,12 +117,12 @@
     </tr>
   </thead>
   <tbody>
-  <tr v-for='scadenza in scadenze.data' v-bind:key='scadenza.id'>
+  <tr v-for='scadenza in scadenze.data' v-bind:key='scadenza.id' :id="scadenza.id">
     <td>{{ scadenza.data }}</td>
     <td>{{ scadenza.titolo }}</td>
     <td>{{ scadenza.categoria }}</td>
     <td>{{ scadenza.riferimento }}</td>
-    <td><button @click="loadScadenza(scadenza.id)" class="btn btn-primary btn-xs">Edit</button></td>
+    <td><button @click="loadScadenza(scadenza.id)" :id="'button_edit_row_' + scadenza.id" class="btn btn-primary btn-xs edit-btn">Edit</button></td>
   </tr>
   </tbody>
 </table>
@@ -176,6 +178,7 @@
                 riferimenti:[],
                 edit: false,
                 pagination_ready:false,
+                editing_row:false,
                 url:'',
                 method:'',
                 endpoint:'',
@@ -232,6 +235,8 @@
                     this.pagination_ready = true
                   });
 
+                this.search = '';
+
 
             },
 
@@ -250,6 +255,9 @@
                     this.pagination_ready = true
 
                   });
+
+                this.search = '';
+
             },
 
             listNonScadute(url) {
@@ -265,6 +273,9 @@
                     this.pagination_ready = true
 
                   });
+
+                this.search = '';
+
             },
 
 
@@ -295,6 +306,9 @@
                     this.pagination_ready = true
 
                   });
+
+                this.search = '';
+                
             },
 
 
@@ -335,9 +349,12 @@
                 });
                 this.$refs.taskinput.focus();
                 this.edit = true;
+                $('tr#'+id).addClass('editing-row',{duration:500});
+                $('#button_edit_row_'+id).hide('slow');
             },
 
             updateScadenza: function() {
+                  this.scadenza.data = $("#m_datepicker_3").val();
                   axios.post('/api/memorex/' + this.scadenza.id, { // <== use axios.post
                           data: this.scadenza,
                           _method: 'patch'                   // <== add this field
@@ -345,8 +362,20 @@
                   .then(response => {
                         this.emptyScadenza();
                         this.edit = false;
+                        this.editing_row = false;
                         this.listScadute();
                   });
+                  $('tr#'+this.scadenza.id).removeClass('editing-row',{duration:500});
+                  $('#button_edit_row_'+this.scadenza.id).show('slow');
+
+            },
+
+            cancel: function() {
+              this.emptyScadenza();
+              this.edit = false;
+              this.editing_row = false;
+              $('tr').removeClass('editing-row',{duration:500});
+              $('.edit-btn').show('slow');
             }
 
         } 
@@ -359,5 +388,19 @@
 <style>
   .pagination button {
     margin:0 10px;
+  }
+
+  tr.editing-row {
+    position: fixed;
+    bottom: 0;
+    z-index: 1000;
+    width: 100%;
+    background-color: white!important;
+    border: 1px solid #bbb;
+  }
+
+  .filtra {
+    padding: 0 1rem;
+    margin: 1rem 0;
   }
 </style>
