@@ -2170,6 +2170,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 jQuery(document).ready(function () {
   $('#m_datepicker_3').datepicker({
     format: 'dd/mm/yyyy',
@@ -2344,6 +2346,7 @@ jQuery(document).ready(function () {
         _this7.scadenza.riferimento = response.data.riferimento;
         _this7.scadenza.descrizione = response.data.descrizione;
         _this7.scadenza.data = response.data.data;
+        _this7.scadenza.priorita = response.data.priorita;
       });
       this.$refs.taskinput.focus();
       this.edit = true;
@@ -2366,11 +2369,12 @@ jQuery(document).ready(function () {
 
         _this8.edit = false;
         _this8.editing_row = false;
-
-        _this8.listScadute();
+      })["finally"](function () {
+        // ricarico la pagina corrente
+        _this8.choiceMethod(_this8.method, _this8.url);
       });
       $('tr#' + this.scadenza.id).removeClass('editing-row', {
-        duration: 500
+        duration: 2500
       });
       $('#button_edit_row_' + this.scadenza.id).show('slow');
     },
@@ -14429,7 +14433,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.pagination button {\n  margin:0 10px;\n}\ntr.editing-row {\n  position: fixed;\n  bottom: 0;\n  z-index: 1000;\n  width: 100%;\n  background-color: white!important;\n  border: 1px solid #bbb;\n}\n.filtra {\n  padding: 0 1rem;\n  margin: 1rem 0;\n}\n", ""]);
+exports.push([module.i, "\n.pagination button {\n  margin:0 10px;\n}\ntr.editing-row {\n  position: fixed;\n  bottom: 0;\n  z-index: 1000;\n  width: 100%;\n  background-color: white!important;\n  border: 1px solid #bbb;\n}\n.filtra {\n  padding: 0 1rem;\n  margin: 1rem 0;\n}\n.Normale {\n  color:#1aaa1a;\n  font-size: 20px;\n}\n.Media {\n  color:#ffd700;\n  font-size: 20px;\n}\n.Alta {\n  color: #f9ac20;\n  font-size: 20px;\n}\n.Amministrazione {\n  color: #de0000;\n  font-size: 20px;\n}\n\n", ""]);
 
 // exports
 
@@ -55582,6 +55586,8 @@ var render = function() {
           "tbody",
           _vm._l(_vm.scadenze.data, function(scadenza) {
             return _c("tr", { key: scadenza.id, attrs: { id: scadenza.id } }, [
+              _c("td", [_c("i", { class: "fa fa-tag " + scadenza.priorita })]),
+              _vm._v(" "),
               _c("td", [_vm._v(_vm._s(scadenza.data))]),
               _vm._v(" "),
               _c("td", [_vm._v(_vm._s(scadenza.titolo))]),
@@ -55650,6 +55656,8 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Priorita")]),
+        _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Data")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Titolo")]),

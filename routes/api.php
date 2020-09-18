@@ -82,12 +82,14 @@ Route::get('memorex/{id}', function ($id) {
 
 Route::patch('memorex/{id}', function(Request $request, $id) {
     $data_arr = $request->get('data');
+    //dd($data_arr);
     Memorex::findOrFail($id)
     			->update([
     				'titolo' => $data_arr['titolo'],
     				'descrizione' => str_replace("\n", "<br/>", $data_arr['descrizione']),
     				'data' => Carbon::createFromFormat('d/m/Y', $data_arr['data'])->format('Y-m-d'),
     				'categoria' => $data_arr['categoria'],
+    				'priorita' => $data_arr['priorita'],
     				'commerciale_id' => $data_arr['commerciale_id']
     			]);
 });

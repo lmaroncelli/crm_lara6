@@ -109,6 +109,7 @@
 <table class="table table-striped">
   <thead>
     <tr>
+      <th scope="col">Priorita</th>
       <th scope="col">Data</th>
       <th scope="col">Titolo</th>
       <th scope="col">Categoria</th>
@@ -118,6 +119,7 @@
   </thead>
   <tbody>
   <tr v-for='scadenza in scadenze.data' v-bind:key='scadenza.id' :id="scadenza.id">
+    <td><i :class="'fa fa-tag '+scadenza.priorita"></i></td>
     <td>{{ scadenza.data }}</td>
     <td>{{ scadenza.titolo }}</td>
     <td>{{ scadenza.categoria }}</td>
@@ -346,6 +348,7 @@
                     this.scadenza.riferimento = response.data.riferimento
                     this.scadenza.descrizione = response.data.descrizione
                     this.scadenza.data = response.data.data
+                    this.scadenza.priorita = response.data.priorita
                 });
                 this.$refs.taskinput.focus();
                 this.edit = true;
@@ -362,11 +365,15 @@
                   .then(response => {
                         this.emptyScadenza();
                         this.edit = false;
-                        this.editing_row = false;
-                        this.listScadute();
+                        this.editing_row = false;                   
+                  }).finally(() => {
+                        // ricarico la pagina corrente
+                        this.choiceMethod(this.method, this.url);
                   });
-                  $('tr#'+this.scadenza.id).removeClass('editing-row',{duration:500});
+
+                  $('tr#'+this.scadenza.id).removeClass('editing-row',  {duration:2500});                    
                   $('#button_edit_row_'+this.scadenza.id).show('slow');
+                  
 
             },
 
@@ -403,4 +410,27 @@
     padding: 0 1rem;
     margin: 1rem 0;
   }
+
+
+
+  .Normale {
+    color:#1aaa1a;
+    font-size: 20px;
+  }
+
+  .Media {
+    color:#ffd700;
+    font-size: 20px;
+  }
+
+  .Alta {
+    color: #f9ac20;
+    font-size: 20px;
+  }
+
+  .Amministrazione {
+    color: #de0000;
+    font-size: 20px;
+  }
+  
 </style>
