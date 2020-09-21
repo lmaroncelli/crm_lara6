@@ -2010,7 +2010,8 @@ __webpack_require__.r(__webpack_exports__);
     paginate: function paginate(m, u) {
       console.log('m = ' + m);
       console.log('u = ' + u);
-      this.$emit('choice', m, u);
+      var from_pagination = 1;
+      this.$emit('choice', m, u, from_pagination);
     }
   }
 });
@@ -2202,8 +2203,13 @@ jQuery(document).ready(function () {
       pagination_ready: false,
       editing_row: false,
       url: '',
+      uri: '',
+      from_pagination: 0,
       method: '',
       endpoint: '',
+      order_by: 'id',
+      order: 'desc',
+      column: '',
       scadenza: {
         id: '',
         data: '',
@@ -2226,10 +2232,35 @@ jQuery(document).ready(function () {
         args[_key] = arguments[_key];
       }
 
-      console.log('args = ', args);
       var method = args[0],
-          url = args[1];
+          url = args[1],
+          from_pagination = args[2];
+
+      if (from_pagination !== undefined) {
+        this.from_pagination = 1;
+      }
+
       this[method](url);
+    },
+    choiceMethodOrder: function choiceMethodOrder() {
+      for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        args[_key2] = arguments[_key2];
+      }
+
+      var method = args[0],
+          url = args[1],
+          order_by = args[2],
+          order = args[3];
+
+      if (order_by === undefined) {
+        order_by = this.order_by;
+      }
+
+      if (order === undefined) {
+        order = this.order;
+      }
+
+      this[method](url, order_by, order);
     },
     emptyScadenza: function emptyScadenza() {
       this.scadenza.id = '';
@@ -2240,11 +2271,13 @@ jQuery(document).ready(function () {
       this.scadenza.commerciale_id = 0;
       this.scadenza.data = '';
     },
-    getScadenze: function getScadenze(url) {
+    getScadenze: function getScadenze(url, order_by, order) {
       var _this = this;
 
       this.method = 'getScadenze';
       this.url = url || '/api/memorex';
+      this.order_by = order_by || 'id';
+      this.order = order || 'asc';
       this.endpoint = '';
       axios.get(url).then(function (response) {
         _this.scadenze = response.data;
@@ -2255,13 +2288,30 @@ jQuery(document).ready(function () {
       });
       this.search = '';
     },
-    listScadute: function listScadute(url) {
+    listScadute: function listScadute(url, order_by, order) {
       var _this2 = this;
 
+      console.log(url, order_by, order);
       this.method = 'listScadute';
-      this.url = url || '/api/memorex/scadute';
+
+      if (order_by !== undefined) {
+        this.order_by = order_by;
+      }
+
+      if (order !== undefined) {
+        this.order = order;
+      }
+
       this.endpoint = 'scadute';
-      axios.get(this.url).then(function (response) {
+      this.uri = '/api/memorex/scadute/';
+      this.url = url || this.uri;
+      var url_to_call = this.url;
+
+      if (!this.from_pagination) {
+        url_to_call = url_to_call + this.order_by + '/' + this.order;
+      }
+
+      axios.get(url_to_call).then(function (response) {
         _this2.scadenze = response.data;
 
         _this2.makePagination(response.data.links, response.data.meta);
@@ -2270,11 +2320,14 @@ jQuery(document).ready(function () {
       });
       this.search = '';
     },
-    listNonScadute: function listNonScadute(url) {
+    listNonScadute: function listNonScadute(url, order_by, order) {
       var _this3 = this;
 
       this.method = 'listNonScadute';
-      this.url = url || '/api/memorex/non-scadute';
+      this.uri = '/api/memorex/non-scadute';
+      this.url = url || this.uri;
+      this.order_by = order_by || 'id';
+      this.order = order || 'asc';
       this.endpoint = 'non-scadute';
       axios.get(this.url).then(function (response) {
         _this3.scadenze = response.data;
@@ -2285,11 +2338,14 @@ jQuery(document).ready(function () {
       });
       this.search = '';
     },
-    filter: function filter(url) {
+    filter: function filter(url, order_by, order) {
       var _this4 = this;
 
       this.method = 'filter';
-      this.url = url || '/api/memorex/search/' + this.search;
+      this.uri = '/api/memorex/search/' + this.search;
+      this.url = url || this.uri;
+      this.order_by = order_by || 'id';
+      this.order = order || 'asc';
       this.endpoint = 'search';
       axios.get(this.url).then(function (response) {
         console.log(response.data);
@@ -2300,11 +2356,14 @@ jQuery(document).ready(function () {
         _this4.pagination_ready = true;
       });
     },
-    listArchivio: function listArchivio(url) {
+    listArchivio: function listArchivio(url, order_by, order) {
       var _this5 = this;
 
       this.method = 'listArchivio';
-      this.url = url || '/api/memorex/archivio';
+      this.uri = '/api/memorex/archivio';
+      this.url = url || this.uri;
+      this.order_by = order_by || 'id';
+      this.order = order || 'asc';
       this.endpoint = 'archivio';
       axios.get(this.url).then(function (response) {
         _this5.scadenze = response.data;
@@ -2386,6 +2445,54 @@ jQuery(document).ready(function () {
         duration: 500
       });
       $('.edit-btn').show('slow');
+    },
+    orderColumn: function orderColumn(column) {
+      // esco dalla paginazione
+      this.from_pagination = 0;
+
+      if (this.column == column) {
+        this.order == 'asc' ? this.order = 'desc' : this.order = 'asc';
+      }
+
+      this.column = column;
+      this.choiceMethodOrder(this.method, this.uri, this.column, this.order);
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TogglePassword.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TogglePassword.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      visibility: false,
+      p_type: 'password'
+    };
+  },
+  methods: {
+    togglePassword: function togglePassword() {
+      this.visibility == false ? this.visibility = true : this.visibility = false;
+      this.visibility == false ? this.p_type = 'password' : this.p_type = 'text';
     }
   }
 });
@@ -55580,7 +55687,35 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("table", { staticClass: "table table-striped" }, [
-        _vm._m(1),
+        _c("thead", [
+          _c("tr", [
+            _c("th", { attrs: { scope: "col" } }, [
+              _c(
+                "a",
+                {
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.orderColumn("priorita")
+                    }
+                  }
+                },
+                [_vm._v("Priorita")]
+              )
+            ]),
+            _vm._v(" "),
+            _c("th", { attrs: { scope: "col" } }, [_vm._v("Data")]),
+            _vm._v(" "),
+            _c("th", { attrs: { scope: "col" } }, [_vm._v("Titolo")]),
+            _vm._v(" "),
+            _c("th", { attrs: { scope: "col" } }, [_vm._v("Categoria")]),
+            _vm._v(" "),
+            _c("th", { attrs: { scope: "col" } }, [_vm._v("Riferimento")]),
+            _vm._v(" "),
+            _c("th")
+          ])
+        ]),
         _vm._v(" "),
         _c(
           "tbody",
@@ -55649,28 +55784,67 @@ var staticRenderFns = [
         _c("i", { staticClass: "fa fa-calendar" })
       ])
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Priorita")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Data")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Titolo")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Categoria")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Riferimento")]),
-        _vm._v(" "),
-        _c("th")
-      ])
-    ])
   }
 ]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TogglePassword.vue?vue&type=template&id=ab95dc8c&":
+/*!*****************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TogglePassword.vue?vue&type=template&id=ab95dc8c& ***!
+  \*****************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "input-group" }, [
+    _c("input", {
+      staticClass: "form-control",
+      attrs: {
+        id: "password",
+        type: _vm.p_type,
+        placeholder: "Password",
+        name: "password",
+        required: "",
+        autocomplete: "current-password"
+      }
+    }),
+    _vm._v(" "),
+    _c("span", { staticClass: "input-group-append" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-primary",
+          attrs: { type: "button" },
+          on: {
+            click: function($event) {
+              return _vm.togglePassword()
+            }
+          }
+        },
+        [
+          _c("i", {
+            class: {
+              "fa fa-eye": !_vm.visibility,
+              "fa fa-eye-slash": _vm.visibility
+            }
+          })
+        ]
+      )
+    ])
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -67866,6 +68040,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 
 Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
 Vue.component('scadenze-memorex', __webpack_require__(/*! ./components/ScadenzeMemorex.vue */ "./resources/js/components/ScadenzeMemorex.vue")["default"]);
+Vue.component('toggle-password', __webpack_require__(/*! ./components/TogglePassword.vue */ "./resources/js/components/TogglePassword.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -68186,6 +68361,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ScadenzeMemorex_vue_vue_type_template_id_df5dd9ee___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ScadenzeMemorex_vue_vue_type_template_id_df5dd9ee___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/TogglePassword.vue":
+/*!****************************************************!*\
+  !*** ./resources/js/components/TogglePassword.vue ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TogglePassword_vue_vue_type_template_id_ab95dc8c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TogglePassword.vue?vue&type=template&id=ab95dc8c& */ "./resources/js/components/TogglePassword.vue?vue&type=template&id=ab95dc8c&");
+/* harmony import */ var _TogglePassword_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TogglePassword.vue?vue&type=script&lang=js& */ "./resources/js/components/TogglePassword.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TogglePassword_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TogglePassword_vue_vue_type_template_id_ab95dc8c___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TogglePassword_vue_vue_type_template_id_ab95dc8c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/TogglePassword.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/TogglePassword.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/components/TogglePassword.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TogglePassword_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./TogglePassword.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TogglePassword.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TogglePassword_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/TogglePassword.vue?vue&type=template&id=ab95dc8c&":
+/*!***********************************************************************************!*\
+  !*** ./resources/js/components/TogglePassword.vue?vue&type=template&id=ab95dc8c& ***!
+  \***********************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TogglePassword_vue_vue_type_template_id_ab95dc8c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./TogglePassword.vue?vue&type=template&id=ab95dc8c& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TogglePassword.vue?vue&type=template&id=ab95dc8c&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TogglePassword_vue_vue_type_template_id_ab95dc8c___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TogglePassword_vue_vue_type_template_id_ab95dc8c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

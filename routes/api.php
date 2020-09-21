@@ -34,10 +34,10 @@ Route::get('/memorex', function(){
 	return new MemorexCollection($memorex);	
 });
 
-Route::get('/memorex/scadute', function(){
+Route::get('/memorex/scadute/{order_by?}/{order?}', function($order_by='id',$order='desc') {
     $memorex = Memorex::notHM()
                 ->scadute()
-                ->orderBy('id','desc')
+                ->orderBy($order_by,$order)
                 ->paginate(15);
 
     return new MemorexCollection($memorex); 

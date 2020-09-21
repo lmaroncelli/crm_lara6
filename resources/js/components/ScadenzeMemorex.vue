@@ -109,7 +109,7 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th scope="col">Priorita</th>
+      <th scope="col"><a href="#" @click.prevent="orderColumn('priorita')">Priorita</a></th>
       <th scope="col">Data</th>
       <th scope="col">Titolo</th>
       <th scope="col">Categoria</th>
@@ -182,8 +182,13 @@
                 pagination_ready:false,
                 editing_row:false,
                 url:'',
+                uri:'',
+                from_pagination: 0,
                 method:'',
                 endpoint:'',
+                order_by:'id',
+                order:'desc',
+                column:'',
                 scadenza: {
                     id:'',
                     data: '',
@@ -207,10 +212,34 @@
 
     
             choiceMethod(...args) {
-              console.log('args = ',args);
-              const [method,url] = args;
+              let [method,url, from_pagination] = args;
               
+              if(from_pagination !== undefined)
+                {
+                this.from_pagination = 1;
+                }
+              
+
               this[method](url)
+
+            },
+
+            choiceMethodOrder(...args) {
+
+              let [method,url,order_by, order] = args;
+
+              if(order_by === undefined)
+                {
+                order_by = this.order_by;
+                }
+
+              if(order === undefined)
+                {
+                order = this.order;
+                }
+              
+              
+              this[method](url, order_by, order)
 
             },
 
@@ -225,9 +254,11 @@
               this.scadenza.data = ''
             },
 
-            getScadenze(url) {
+            getScadenze(url, order_by, order) {
                 this.method = 'getScadenze'; 
                 this.url = url || '/api/memorex';
+                this.order_by = order_by || 'id';
+                this.order = order || 'asc';
                 this.endpoint = '';
 
                 axios.get(url)
@@ -243,14 +274,33 @@
             },
 
 
-            listScadute(url) {
+            listScadute(url,order_by, order) {
+                console.log(url,order_by, order);
                 this.method = 'listScadute';
-                this.url = url || '/api/memorex/scadute';
-                this.endpoint = 'scadute';
                 
+                if(order_by !== undefined)
+                  {
+                  this.order_by = order_by;
+                  }
+                
+                if(order !== undefined)
+                  {
+                  this.order = order;
+                  }
+                
+                this.endpoint = 'scadute';
 
+                this.uri = '/api/memorex/scadute/';
 
-                axios.get(this.url)
+                this.url = url || this.uri;
+                
+                let url_to_call = this.url;
+
+                if(!this.from_pagination) {
+                  url_to_call = url_to_call + this.order_by + '/' + this.order;
+                }
+                
+                axios.get(url_to_call)
                   .then(response => {
                     this.scadenze = response.data
                     this.makePagination(response.data.links, response.data.meta)
@@ -262,9 +312,13 @@
 
             },
 
-            listNonScadute(url) {
+            listNonScadute(url,order_by, order) {
                 this.method = 'listNonScadute';
-                this.url = url || '/api/memorex/non-scadute';
+                this.uri = '/api/memorex/non-scadute';
+                this.url = url || this.uri;
+
+                this.order_by = order_by || 'id';
+                this.order = order || 'asc';
                 this.endpoint = 'non-scadute';
 
 
@@ -281,9 +335,13 @@
             },
 
 
-            filter(url) {
+            filter(url,order_by, order) {
                   this.method = 'filter';
-                  this.url = url || '/api/memorex/search/'+ this.search;
+                  this.uri = '/api/memorex/search/'+ this.search;
+                  this.url = url || this.uri;
+
+                  this.order_by = order_by || 'id';
+                  this.order = order || 'asc';
                   this.endpoint = 'search';
                   axios.get(this.url)
                   .then(response => {
@@ -295,9 +353,14 @@
             },
 
 
-            listArchivio(url) {
+            listArchivio(url,order_by, order) {
                 this.method = 'listArchivio';
-                this.url = url || '/api/memorex/archivio';
+                
+                this.uri = '/api/memorex/archivio';
+                this.url = url || this.uri;
+
+                this.order_by = order_by || 'id';
+                this.order = order || 'asc';
                 this.endpoint = 'archivio';
                 
 
@@ -383,7 +446,22 @@
               this.editing_row = false;
               $('tr').removeClass('editing-row',{duration:500});
               $('.edit-btn').show('slow');
+            },
+
+            orderColumn: function(column) {
+              
+              // esco dalla paginazione
+              this.from_pagination = 0;
+
+              if(this.column == column) {
+                this.order == 'asc' ? this.order = 'desc' : this.order = 'asc';
+              }
+              this.column = column;
+
+              this.choiceMethodOrder(this.method, this.uri, this.column, this.order);
+
             }
+
 
         } 
 

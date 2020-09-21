@@ -531,3 +531,4 @@ http://felicianoprochera.com/simple-task-app-with-laravel-5-3-and-vuejs/
 https://www.smashingmagazine.com/2020/01/data-components-vue-js/
 
 
+https://developer.okta.com/blog/2019/01/15/crud-app-laravel-vue

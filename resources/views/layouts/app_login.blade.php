@@ -16,7 +16,7 @@
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
   </head>
   <body class="app flex-row align-items-center">
-    <div class="container">
+    <div class="container" id="app">
       @yield('content')
     </div>
     <script src="{{ mix('js/app.js') }}"></script>

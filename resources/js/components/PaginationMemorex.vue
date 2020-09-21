@@ -61,7 +61,8 @@
      		paginate(m, u) {
      			console.log('m = '+m);
      			console.log('u = '+u);
-     			this.$emit('choice',m,u)
+					let from_pagination = 1;
+     			this.$emit('choice',m,u,from_pagination)
      		}
      
      }
