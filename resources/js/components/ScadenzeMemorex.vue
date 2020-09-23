@@ -110,10 +110,10 @@
   <thead>
     <tr>
       <th scope="col"><a href="#" @click.prevent="orderColumn('priorita')">Priorita</a></th>
-      <th scope="col">Data</th>
-      <th scope="col">Titolo</th>
-      <th scope="col">Categoria</th>
-      <th scope="col">Riferimento</th>
+      <th scope="col"><a href="#" @click.prevent="orderColumn('data')">Data</a></th>
+      <th scope="col"><a href="#" @click.prevent="orderColumn('titolo')">Titolo</a></th>
+      <th scope="col"><a href="#" @click.prevent="orderColumn('categoria')">Categoria</a></th>
+      <th scope="col"><a href="#" @click.prevent="orderColumn('riferimento')">Riferimento</a></th>
       <th></th>
     </tr>
   </thead>
@@ -255,13 +255,32 @@
             },
 
             getScadenze(url, order_by, order) {
+                console.log(url,order_by, order);
                 this.method = 'getScadenze'; 
-                this.url = url || '/api/memorex';
-                this.order_by = order_by || 'id';
-                this.order = order || 'asc';
+
+                if(order_by !== undefined)
+                  {
+                  this.order_by = order_by;
+                  }
+                
+                if(order !== undefined)
+                  {
+                  this.order = order;
+                  }
+
                 this.endpoint = '';
 
-                axios.get(url)
+                this.uri ='/api/memorex/';
+
+                this.url = url || this.uri;
+                
+                let url_to_call = this.url;
+
+                if(!this.from_pagination) {
+                  url_to_call = url_to_call + this.order_by + '/' + this.order;
+                }
+
+                axios.get(url_to_call)
                   .then(response => {
                     this.scadenze = response.data
                     this.makePagination(response.data.links, response.data.meta)
@@ -313,16 +332,33 @@
             },
 
             listNonScadute(url,order_by, order) {
+                console.log(url,order_by, order);
                 this.method = 'listNonScadute';
-                this.uri = '/api/memorex/non-scadute';
+                
+                if(order_by !== undefined)
+                  {
+                  this.order_by = order_by;
+                  }
+                
+                if(order !== undefined)
+                  {
+                  this.order = order;
+                  }
+
+                this.endpoint = 'non-scadute';
+                
+                this.uri = '/api/memorex/non-scadute/';
+
                 this.url = url || this.uri;
 
-                this.order_by = order_by || 'id';
-                this.order = order || 'asc';
-                this.endpoint = 'non-scadute';
+                let url_to_call = this.url;
+
+                if(!this.from_pagination) {
+                    url_to_call = url_to_call + this.order_by + '/' + this.order;
+                }
 
 
-                axios.get(this.url)
+                axios.get(url_to_call)
                   .then(response => {
                     this.scadenze = response.data
                     this.makePagination(response.data.links, response.data.meta)
@@ -336,14 +372,32 @@
 
 
             filter(url,order_by, order) {
-                  this.method = 'filter';
-                  this.uri = '/api/memorex/search/'+ this.search;
-                  this.url = url || this.uri;
+                console.log(url,order_by, order);
+                this.method = 'filter';
 
-                  this.order_by = order_by || 'id';
-                  this.order = order || 'asc';
-                  this.endpoint = 'search';
-                  axios.get(this.url)
+                if(order_by !== undefined)
+                  {
+                  this.order_by = order_by;
+                  }
+                
+                if(order !== undefined)
+                  {
+                  this.order = order;
+                  }
+
+                this.endpoint = 'search';
+                
+                this.uri = '/api/memorex/search/'+ this.search;
+                  
+                this.url = url || this.uri;
+
+                let url_to_call = this.url;
+
+                if(!this.from_pagination) {
+                  url_to_call = url_to_call + this.order_by + '/' + this.order;
+                }
+                 
+                axios.get(url_to_call)
                   .then(response => {
                     console.log(response.data)
                     this.scadenze = response.data
@@ -354,17 +408,32 @@
 
 
             listArchivio(url,order_by, order) {
+                console.log(url,order_by, order);
                 this.method = 'listArchivio';
-                
-                this.uri = '/api/memorex/archivio';
-                this.url = url || this.uri;
 
-                this.order_by = order_by || 'id';
-                this.order = order || 'asc';
+                if(order_by !== undefined)
+                  {
+                  this.order_by = order_by;
+                  }
+                
+                if(order !== undefined)
+                  {
+                  this.order = order;
+                  }
+                
                 this.endpoint = 'archivio';
                 
+                this.uri = '/api/memorex/archivio/';
+                
+                this.url = url || this.uri;
 
-                axios.get(this.url)
+                let url_to_call = this.url;
+
+                if(!this.from_pagination) {
+                  url_to_call = url_to_call + this.order_by + '/' + this.order;
+                }
+
+                axios.get(url_to_call)
                   .then(response => {
                     this.scadenze = response.data
                     this.makePagination(response.data.links, response.data.meta)
@@ -455,8 +524,10 @@
 
               if(this.column == column) {
                 this.order == 'asc' ? this.order = 'desc' : this.order = 'asc';
+              } else {
+                this.order == 'asc';
+                this.column = column;
               }
-              this.column = column;
 
               this.choiceMethodOrder(this.method, this.uri, this.column, this.order);
 

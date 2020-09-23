@@ -2274,12 +2274,27 @@ jQuery(document).ready(function () {
     getScadenze: function getScadenze(url, order_by, order) {
       var _this = this;
 
+      console.log(url, order_by, order);
       this.method = 'getScadenze';
-      this.url = url || '/api/memorex';
-      this.order_by = order_by || 'id';
-      this.order = order || 'asc';
+
+      if (order_by !== undefined) {
+        this.order_by = order_by;
+      }
+
+      if (order !== undefined) {
+        this.order = order;
+      }
+
       this.endpoint = '';
-      axios.get(url).then(function (response) {
+      this.uri = '/api/memorex/';
+      this.url = url || this.uri;
+      var url_to_call = this.url;
+
+      if (!this.from_pagination) {
+        url_to_call = url_to_call + this.order_by + '/' + this.order;
+      }
+
+      axios.get(url_to_call).then(function (response) {
         _this.scadenze = response.data;
 
         _this.makePagination(response.data.links, response.data.meta);
@@ -2323,13 +2338,27 @@ jQuery(document).ready(function () {
     listNonScadute: function listNonScadute(url, order_by, order) {
       var _this3 = this;
 
+      console.log(url, order_by, order);
       this.method = 'listNonScadute';
-      this.uri = '/api/memorex/non-scadute';
-      this.url = url || this.uri;
-      this.order_by = order_by || 'id';
-      this.order = order || 'asc';
+
+      if (order_by !== undefined) {
+        this.order_by = order_by;
+      }
+
+      if (order !== undefined) {
+        this.order = order;
+      }
+
       this.endpoint = 'non-scadute';
-      axios.get(this.url).then(function (response) {
+      this.uri = '/api/memorex/non-scadute/';
+      this.url = url || this.uri;
+      var url_to_call = this.url;
+
+      if (!this.from_pagination) {
+        url_to_call = url_to_call + this.order_by + '/' + this.order;
+      }
+
+      axios.get(url_to_call).then(function (response) {
         _this3.scadenze = response.data;
 
         _this3.makePagination(response.data.links, response.data.meta);
@@ -2341,13 +2370,27 @@ jQuery(document).ready(function () {
     filter: function filter(url, order_by, order) {
       var _this4 = this;
 
+      console.log(url, order_by, order);
       this.method = 'filter';
+
+      if (order_by !== undefined) {
+        this.order_by = order_by;
+      }
+
+      if (order !== undefined) {
+        this.order = order;
+      }
+
+      this.endpoint = 'search';
       this.uri = '/api/memorex/search/' + this.search;
       this.url = url || this.uri;
-      this.order_by = order_by || 'id';
-      this.order = order || 'asc';
-      this.endpoint = 'search';
-      axios.get(this.url).then(function (response) {
+      var url_to_call = this.url;
+
+      if (!this.from_pagination) {
+        url_to_call = url_to_call + this.order_by + '/' + this.order;
+      }
+
+      axios.get(url_to_call).then(function (response) {
         console.log(response.data);
         _this4.scadenze = response.data;
 
@@ -2359,13 +2402,27 @@ jQuery(document).ready(function () {
     listArchivio: function listArchivio(url, order_by, order) {
       var _this5 = this;
 
+      console.log(url, order_by, order);
       this.method = 'listArchivio';
-      this.uri = '/api/memorex/archivio';
-      this.url = url || this.uri;
-      this.order_by = order_by || 'id';
-      this.order = order || 'asc';
+
+      if (order_by !== undefined) {
+        this.order_by = order_by;
+      }
+
+      if (order !== undefined) {
+        this.order = order;
+      }
+
       this.endpoint = 'archivio';
-      axios.get(this.url).then(function (response) {
+      this.uri = '/api/memorex/archivio/';
+      this.url = url || this.uri;
+      var url_to_call = this.url;
+
+      if (!this.from_pagination) {
+        url_to_call = url_to_call + this.order_by + '/' + this.order;
+      }
+
+      axios.get(url_to_call).then(function (response) {
         _this5.scadenze = response.data;
 
         _this5.makePagination(response.data.links, response.data.meta);
@@ -2452,9 +2509,11 @@ jQuery(document).ready(function () {
 
       if (this.column == column) {
         this.order == 'asc' ? this.order = 'desc' : this.order = 'asc';
+      } else {
+        this.order == 'asc';
+        this.column = column;
       }
 
-      this.column = column;
       this.choiceMethodOrder(this.method, this.uri, this.column, this.order);
     }
   }
@@ -55063,10 +55122,7 @@ var render = function() {
               on: {
                 click: function($event) {
                   $event.preventDefault()
-                  return _vm.paginate(
-                    _vm.method,
-                    "api/memorex/" + _vm.endpoint + "?page=1"
-                  )
+                  return _vm.paginate(_vm.method, _vm.pagination.first)
                 }
               }
             },
@@ -55145,13 +55201,7 @@ var render = function() {
               on: {
                 click: function($event) {
                   $event.preventDefault()
-                  return _vm.paginate(
-                    _vm.method,
-                    "api/memorex/" +
-                      _vm.endpoint +
-                      "?page=" +
-                      _vm.pagination.last_page
-                  )
+                  return _vm.paginate(_vm.method, _vm.pagination.last)
                 }
               }
             },
@@ -55705,13 +55755,69 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _c("th", { attrs: { scope: "col" } }, [_vm._v("Data")]),
+            _c("th", { attrs: { scope: "col" } }, [
+              _c(
+                "a",
+                {
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.orderColumn("data")
+                    }
+                  }
+                },
+                [_vm._v("Data")]
+              )
+            ]),
             _vm._v(" "),
-            _c("th", { attrs: { scope: "col" } }, [_vm._v("Titolo")]),
+            _c("th", { attrs: { scope: "col" } }, [
+              _c(
+                "a",
+                {
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.orderColumn("titolo")
+                    }
+                  }
+                },
+                [_vm._v("Titolo")]
+              )
+            ]),
             _vm._v(" "),
-            _c("th", { attrs: { scope: "col" } }, [_vm._v("Categoria")]),
+            _c("th", { attrs: { scope: "col" } }, [
+              _c(
+                "a",
+                {
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.orderColumn("categoria")
+                    }
+                  }
+                },
+                [_vm._v("Categoria")]
+              )
+            ]),
             _vm._v(" "),
-            _c("th", { attrs: { scope: "col" } }, [_vm._v("Riferimento")]),
+            _c("th", { attrs: { scope: "col" } }, [
+              _c(
+                "a",
+                {
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.orderColumn("riferimento")
+                    }
+                  }
+                },
+                [_vm._v("Riferimento")]
+              )
+            ]),
             _vm._v(" "),
             _c("th")
           ])

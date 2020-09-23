@@ -4,7 +4,7 @@
 <ul class="pagination">
 	  
 	  <li class="page-item" :class="{disabled: pagination.current_page==1}">
-	    <a href="#" class="page-link"  @click.prevent="paginate(method,`api/memorex/${endpoint}?page=1`)"> << </a>
+	    <a href="#" class="page-link"  @click.prevent="paginate(method,pagination.first)"> << </a>
 	  </li>
 
 	  <li class="page-item" :class="{disabled: !pagination.prev}">
@@ -20,7 +20,7 @@
 	  </li>
 
 	  <li class="page-item" :class="{disabled: pagination.current_page == pagination.last_page}">
-	    <a href="#" class="page-link"  @click.prevent="paginate(method, `api/memorex/${endpoint}?page=${pagination.last_page}`)">>></a>
+	    <a href="#" class="page-link"  @click.prevent="paginate(method, pagination.last)">>></a>
 	  </li>
 	
 </ul>
