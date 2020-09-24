@@ -21,7 +21,6 @@ window.Vue = require('vue');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
-
 Vue.component('scadenze-memorex', require('./components/ScadenzeMemorex.vue').default);
 
 Vue.component('toggle-password', require('./components/TogglePassword.vue').default);
@@ -34,6 +33,12 @@ Vue.component('toggle-password', require('./components/TogglePassword.vue').defa
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+
+import DatePicker from 'v-calendar/lib/components/date-picker.umd.js';
+
+Vue.component('date-picker', DatePicker);
+
 const app = new Vue({
     el: '#app',
+    components: {DatePicker}
 });

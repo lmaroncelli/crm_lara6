@@ -32,20 +32,26 @@
       </select>
     </div>
   </div>
-  
+
+
   <div class="form-group row">
     <label class="col-md-3 text-change" for="data">Data:</label>
     <div class="col-md-3 col-xl-2 col-lg-2">
-        <div class="input-group date">
-            <input type="text" name="data" class="form-control" readonly v-model="scadenza.data" id="m_datepicker_3" />
-            <div class="input-group-append">
-                <span class="input-group-text">
-                    <i class="fa fa-calendar"></i>
-                </span>
-            </div>
-        </div>
+      <div style="display:flex">
+      <date-picker 
+      v-model='scadenza.data'
+      color="blue"
+      locale="it"
+      :first-day-of-week="2"
+      :attributes='date_attrs'
+      />
+      <span class="input-group-text">
+          <i class="fa fa-calendar"></i>
+      </span>
+      </div>
     </div>
   </div>
+
 
   <div class="form-group row">
     <label class="col-md-3 text-change" for="cell">Priorita:</label>
@@ -109,11 +115,11 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th scope="col"><a href="#" @click.prevent="orderColumn('priorita')">Priorita</a></th>
-      <th scope="col"><a href="#" @click.prevent="orderColumn('data')">Data</a></th>
-      <th scope="col"><a href="#" @click.prevent="orderColumn('titolo')">Titolo</a></th>
-      <th scope="col"><a href="#" @click.prevent="orderColumn('categoria')">Categoria</a></th>
-      <th scope="col"><a href="#" @click.prevent="orderColumn('riferimento')">Riferimento</a></th>
+      <th scope="col"><a href="#" @click.prevent="orderColumn('priorita')">Priorita <i v-if="this.order_by == 'priorita'" :class="{'fas fa-sort-amount-up-alt' : this.order == 'desc'}"></i> <i v-if="this.order_by == 'priorita'" :class="{'fas fa-sort-amount-down-alt' : this.order == 'asc'}"></i></a></th>
+      <th scope="col"><a href="#" @click.prevent="orderColumn('data')">Data <i v-if="this.order_by == 'data'" :class="{'fas fa-sort-amount-up-alt' : this.order == 'desc'}"></i> <i v-if="this.order_by == 'data'" :class="{'fas fa-sort-amount-down-alt' : this.order == 'asc'}"></i></a></th>
+      <th scope="col"><a href="#" @click.prevent="orderColumn('titolo')">Titolo <i v-if="this.order_by == 'titolo'" :class="{'fas fa-sort-amount-up-alt' : this.order == 'desc'}"></i> <i v-if="this.order_by == 'titolo'" :class="{'fas fa-sort-amount-down-alt' : this.order == 'asc'}"></i></a></th>
+      <th scope="col"><a href="#" @click.prevent="orderColumn('categoria')">Categoria <i v-if="this.order_by == 'categoria'" :class="{'fas fa-sort-amount-up-alt' : this.order == 'desc'}"></i> <i v-if="this.order_by == 'categoria'" :class="{'fas fa-sort-amount-down-alt' : this.order == 'asc'}"></i></a></th>
+      <th scope="col"><a href="#" @click.prevent="orderColumn('riferimento')">Riferimento <i v-if="this.order_by == 'riferimento'" :class="{'fas fa-sort-amount-up-alt' : this.order == 'desc'}"></i> <i v-if="this.order_by == 'riferimento'" :class="{'fas fa-sort-amount-down-alt' : this.order == 'asc'}"></i></a></th>
       <th></th>
     </tr>
   </thead>
@@ -125,6 +131,7 @@
     <td>{{ scadenza.categoria }}</td>
     <td>{{ scadenza.riferimento }}</td>
     <td><button @click="loadScadenza(scadenza.id)" :id="'button_edit_row_' + scadenza.id" class="btn btn-primary btn-xs edit-btn">Edit</button></td>
+    <td><button @click="delScadenza(scadenza.id)" :id="'button_del_row_' + scadenza.id" class="btn btn-danger btn-xs edit-btn">Delete</button></td>
   </tr>
   </tbody>
 </table>
@@ -144,16 +151,7 @@
 </template>
 
 <script>
-
-    jQuery(document).ready(function(){
-
-        $('#m_datepicker_3').datepicker({
-            format: 'dd/mm/yyyy',
-            clearBtn:true,
-            todayBtn:'linked',
-        });
-    });
-
+    
 
     import PaginationMemorex from "./PaginationMemorex";
 
@@ -166,6 +164,13 @@
         data() {
 
             return {
+                date_attrs: [
+                  {
+                    key: 'today',
+                    highlight: 'red',
+                    dates: new Date(),
+                  },
+                ],
                 search:'',
                 pagination: {
                   current_page: '',
@@ -191,7 +196,7 @@
                 column:'',
                 scadenza: {
                     id:'',
-                    data: '',
+                    data: null,
                     titolo: '',
                     categoria: 'Info Alberghi',
                     priorita: 'Normale',
@@ -201,10 +206,29 @@
             }
         },
 
+
+        computed: {
+          
+          formattedData: {
+
+            // getter
+            get: function () {
+              if(this.scadenza.data !== null)
+                return this.scadenza.data.toLocaleDateString('it-IT',{day:"2-digit",month:"2-digit", year:"numeric"});
+              else
+                return this.scadenza.data;
+            }
+
+            
+          }
+        
+        },
+        
+
+
         mounted() {
-             this.listScadute();
-             this.getRiferimenti();
-             this.method = 'listScadute';
+            this.listScadute();
+            this.getRiferimenti();
         },
 
 
@@ -238,7 +262,8 @@
                 order = this.order;
                 }
               
-              
+              console.log(method,url,order_by, order);
+
               this[method](url, order_by, order)
 
             },
@@ -371,19 +396,11 @@
             },
 
 
-            filter(url,order_by, order) {
-                console.log(url,order_by, order);
-                this.method = 'filter';
+            filter(url) {
 
-                if(order_by !== undefined)
-                  {
-                  this.order_by = order_by;
-                  }
                 
-                if(order !== undefined)
-                  {
-                  this.order = order;
-                  }
+
+                this.method = 'filter';
 
                 this.endpoint = 'search';
                 
@@ -394,7 +411,7 @@
                 let url_to_call = this.url;
 
                 if(!this.from_pagination) {
-                  url_to_call = url_to_call + this.order_by + '/' + this.order;
+                  url_to_call = url_to_call + '/' + this.order_by + '/' + this.order;
                 }
                  
                 axios.get(url_to_call)
@@ -466,30 +483,43 @@
             },
 
             createScadenza() {
-              alert('submit');
+              this.scadenza.data = this.formattedData;
+
+              axios.post('/api/memorex/store', { // <== use axios.post
+                          data: this.scadenza,
+                  })
+                  .then(response => {
+                        this.emptyScadenza();                   
+                  }).finally(() => {
+                        // ricarico la pagina corrente
+                        this.choiceMethod(this.method, this.url);
+                  });
+
             },
 
             loadScadenza: function(id) {
                   axios.get('api/memorex/' + id).
                   then(response => {
-                    //console.log(response);
+                    console.log(response);
                     this.scadenza.id = response.data.id
                     this.scadenza.titolo = response.data.titolo
                     this.scadenza.categoria = response.data.categoria
                     this.scadenza.commerciale_id = response.data.commerciale_id
                     this.scadenza.riferimento = response.data.riferimento
                     this.scadenza.descrizione = response.data.descrizione
-                    this.scadenza.data = response.data.data
+                    this.scadenza.data = new Date(response.data.data_forjs)
                     this.scadenza.priorita = response.data.priorita
                 });
                 this.$refs.taskinput.focus();
                 this.edit = true;
                 $('tr#'+id).addClass('editing-row',{duration:500});
                 $('#button_edit_row_'+id).hide('slow');
+                $('#button_del_row_'+id).hide('slow');
             },
 
             updateScadenza: function() {
-                  this.scadenza.data = $("#m_datepicker_3").val();
+                  this.scadenza.data = this.formattedData;
+
                   axios.post('/api/memorex/' + this.scadenza.id, { // <== use axios.post
                           data: this.scadenza,
                           _method: 'patch'                   // <== add this field
@@ -505,8 +535,19 @@
 
                   $('tr#'+this.scadenza.id).removeClass('editing-row',  {duration:2500});                    
                   $('#button_edit_row_'+this.scadenza.id).show('slow');
+                  $('#button_del_row_'+this.scadenza.id).show('slow');
                   
 
+            },
+
+
+            delScadenza: function(id) {
+               axios.post('api/memorex/' + id, {
+                 _method: 'delete'                   // <== add this field
+               }).finally(() => {
+                   // ricarico la pagina corrente
+                  this.choiceMethod(this.method, this.url);
+                });
             },
 
             cancel: function() {
@@ -525,10 +566,10 @@
               if(this.column == column) {
                 this.order == 'asc' ? this.order = 'desc' : this.order = 'asc';
               } else {
-                this.order == 'asc';
+                this.order = 'asc';
                 this.column = column;
               }
-
+              
               this.choiceMethodOrder(this.method, this.uri, this.column, this.order);
 
             }

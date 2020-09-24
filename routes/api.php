@@ -24,6 +24,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
+
+
+
 Route::get('/memorex/riferimenti', function(){
 	$riferimenti = CommercialeMemorex::pluck('nome','id')
                     ->toArray();
@@ -31,30 +34,6 @@ Route::get('/memorex/riferimenti', function(){
     return $riferimenti;	
 });
 
-
-Route::get('/memorex/{order_by?}/{order?}', function($order_by='id',$order='desc') {
-
-  if ($order_by == 'riferimento') 
-    {
-    $memorex = Memorex::select('tblScadenzeMemorex.*')
-                      ->where('completato', 0)
-                      ->notHM()
-                      ->with('commerciale')
-                      ->leftJoin('tblCommercialiMemorex', 'tblCommercialiMemorex.id', '=', 'tblScadenzeMemorex.commerciale_id')
-                      ->orderBy('tblCommercialiMemorex.nome',$order)
-                      ->paginate(15);
-    } 
-  else 
-    {
-	  $memorex = Memorex::notHM()
-                ->where('completato', 0)
-                ->orderBy($order_by,$order)
-                ->paginate(15);
-    }
-
-	return new MemorexCollection($memorex);	
-
-});
 
 Route::get('/memorex/scadute/{order_by?}/{order?}', function($order_by='id',$order='desc') {
     
@@ -142,7 +121,7 @@ Route::get('memorex/{id}', function ($id) {
 
 Route::patch('memorex/{id}', function(Request $request, $id) {
     $data_arr = $request->get('data');
-    //dd($data_arr);
+
     Memorex::findOrFail($id)
     			->update([
     				'titolo' => $data_arr['titolo'],
@@ -155,15 +134,82 @@ Route::patch('memorex/{id}', function(Request $request, $id) {
 });
 
 
-Route::get('memorex/search/{search}', function ($search) {
+
+Route::post('memorex/store', function(Request $request) {
+  $data_arr = $request->get('data');
+
+  return Memorex::create([
+            'titolo' => $data_arr['titolo'],
+            'descrizione' => str_replace("\n", "<br/>", $data_arr['descrizione']),
+            'data' => Carbon::createFromFormat('d/m/Y', $data_arr['data'])->format('Y-m-d'),
+            'categoria' => $data_arr['categoria'],
+            'priorita' => $data_arr['priorita'],
+            'commerciale_id' => $data_arr['commerciale_id']
+        ]);
+});
+
+
+
+
+
+Route::get('memorex/search/{search}/{order_by?}/{order?}', function ($search,$order_by='id',$order='desc') {
+
+  if ($order_by == 'riferimento') 
+    {
+    $memorex = Memorex::select('tblScadenzeMemorex.*')
+                    ->notHM()
+                    ->where('titolo','LIKE', '%'.$search.'%')
+                    ->with('commerciale')
+                    ->leftJoin('tblCommercialiMemorex', 'tblCommercialiMemorex.id', '=', 'tblScadenzeMemorex.commerciale_id')
+                    ->orderBy('tblCommercialiMemorex.nome',$order)
+                    ->paginate(15);
+    } 
+  else 
+    {
     $memorex = Memorex::notHM()
                 ->where('titolo','LIKE', '%'.$search.'%')
-                ->orderBy('id','desc')
+                ->orderBy($order_by,$order)
                 ->paginate(15);
-
-    //dd(Str::replaceArray('?', $memorex->getBindings(), $memorex->toSql()));
+    }
 
     return new MemorexCollection($memorex);	
 
 });
 
+
+Route::get('/memorex/{order_by?}/{order?}', function($order_by='id',$order='desc') {
+
+  if ($order_by == 'riferimento') 
+    {
+    $memorex = Memorex::select('tblScadenzeMemorex.*')
+                      ->where('completato', 0)
+                      ->notHM()
+                      ->with('commerciale')
+                      ->leftJoin('tblCommercialiMemorex', 'tblCommercialiMemorex.id', '=', 'tblScadenzeMemorex.commerciale_id')
+                      ->orderBy('tblCommercialiMemorex.nome',$order)
+                      ->paginate(15);
+    } 
+  else 
+    {
+	  $memorex = Memorex::notHM()
+                ->where('completato', 0)
+                ->orderBy($order_by,$order)
+                ->paginate(15);
+    }
+
+	return new MemorexCollection($memorex);	
+
+});
+
+
+
+
+
+
+Route::delete('memorex/{id}', function ($id) {
+  $memorex = Memorex::find($id);
+
+  return $memorex->delete();
+
+
+});

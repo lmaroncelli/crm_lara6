@@ -532,3 +532,21 @@ https://www.smashingmagazine.com/2020/01/data-components-vue-js/
 
 
 https://developer.okta.com/blog/2019/01/15/crud-app-laravel-vue
+
+
+
+# installo il componnete vue per selezionare la data
+
+
+https://vcalendar.io/installation.html
+https://medium.com/plint-sites/javascript-in-laravel-vue-single-file-components-69be12033d98
+
+
+
+
+# API Resource
+https://www.youtube.com/watch?v=x_WMkIKztRQ
+
+
+
+

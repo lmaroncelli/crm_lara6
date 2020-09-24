@@ -6058,6 +6058,11 @@ a.editable-click.editable-disabled:hover {
 }
 
 
+html {
+  scroll-behavior: smooth;
+}
+
+
 /** 
  * LOGIN
  */

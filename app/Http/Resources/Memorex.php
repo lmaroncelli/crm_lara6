@@ -42,6 +42,11 @@ class Memorex extends JsonResource
         
         $fields = parent::toArray($request);
 
+        try {
+          $fields['data_forjs'] = Carbon::createFromFormat('Y-m-d', $fields['data'])->format('m/d/Y');
+        } catch (\Exception $e) {
+          // do nothing
+        }
       
         try {
           $fields['data'] = Carbon::createFromFormat('Y-m-d', $fields['data'])->format('d/m/Y');
