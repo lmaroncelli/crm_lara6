@@ -8,9 +8,10 @@
       <div class="col-md-3">
         <select class="form-control" id="pagamento" name="pagamento">
           <optgroup label="Seleziona un pagamento">
+          <option value="0">Seleziona</option>
           @foreach ($pagamenti_fattura as $id => $nome)
             @if (\Request::has('pagamento'))
-              <option value="{{$id}}" @if ( in_array($id, \Request::get('pagamento')) ) selected="selected" @endif>{{$nome}}</option>
+              <option value="{{$id}}" @if ( $id == Request::get('pagamento') )  selected="selected" @endif>{{$nome}}</option>
             @else
               <option value="{{$id}}">{{$nome}}</option>
             @endif
@@ -24,9 +25,10 @@
       <div class="col-md-3 date">
         <select class="form-control" id="data_scadenza" name="data_scadenza">
           <optgroup label="Seleziona una scadenza">
+          <option value="0">Seleziona</option>
           @foreach ($date as $data)
             @if (\Request::has('data_scadenza'))
-              <option value="{{$data}}" @if ( in_array($data, \Request::get('data_scadenza')) ) selected="selected" @endif>{{$data}}</option>
+              <option value="{{$data}}" @if ( $data == \Request::get('data_scadenza') )  selected="selected" @endif>{{$data}}</option>
             @else
               <option value="{{$data}}">{{$data}}</option>
             @endif
@@ -46,10 +48,3 @@
 
     
 </form>
-
-<script>
-  $( function() {
-    
-
-  });
-  </script>

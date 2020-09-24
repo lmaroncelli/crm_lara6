@@ -11,22 +11,12 @@ class ScadenzeController extends Controller
 {
     public function index(Request $request)
      	{
-
+		
      	$to_append = [];
 
 
       $orderby = $request->get('orderby');
       $order = $request->get('order');
-
-
-   		$scadenze = ScadenzaFattura::
-   									whereHas(
-      							'fattura' , function($q) {
-                     $q->where('tipo_id','!=','NC');
-                   	})
-   									->with(['fattura.pagamento','fattura.societa.cliente','fattura.societa.ragioneSociale','fattura.avvisi'])
-   									->notPagata();
-
 
 
       if(is_null($order))
@@ -46,6 +36,63 @@ class ScadenzeController extends Controller
             ];
 
 
+			$join_pagamento = 0;
+
+      if( $request->has('pagamento') && $request->get('pagamento') !=0 )
+      	{
+				$scadenze = ScadenzaFattura::
+					whereHas(
+					'fattura' , function($q) {
+					$q->where('tipo_id','!=','NC');
+					})
+					->with(['fattura.pagamento','fattura.societa.cliente','fattura.societa.ragioneSociale','fattura.avvisi'])
+					->where('tblScadenzeFattura.pagata',0);  
+	
+				$scadenze = $scadenze
+					->join('tblFatture','tblScadenzeFattura.fattura_id', '=', 'tblFatture.id')
+					->join('tblPagamenti', 'tblFatture.pagamento_id', '=', 'tblPagamenti.cod')
+					->where('tblPagamenti.id',$request->get('pagamento'));
+
+				$join_pagamento = 1;
+				}
+
+      
+      if ($orderby == 'tipo_pagamento') 
+        {
+
+					if(!$join_pagamento)
+						{
+						$scadenze = ScadenzaFattura::
+									whereHas(
+									'fattura' , function($q) {
+									$q->where('tipo_id','!=','NC');
+									})
+									->with(['fattura.pagamento','fattura.societa.cliente','fattura.societa.ragioneSociale','fattura.avvisi'])
+									->where('tblScadenzeFattura.pagata',0);  
+					
+						$scadenze = $scadenze
+									->join('tblFatture','tblScadenzeFattura.fattura_id', '=', 'tblFatture.id')
+									->join('tblPagamenti', 'tblFatture.pagamento_id', '=', 'tblPagamenti.cod');
+
+						}
+								
+				
+          $scadenze = $scadenze->orderBy('tblPagamenti.nome',$order);
+        }  
+      else 
+        {
+        $scadenze = ScadenzaFattura::
+                whereHas(
+                'fattura' , function($q) {
+                $q->where('tipo_id','!=','NC');
+                })
+                ->with(['fattura.pagamento','fattura.societa.cliente','fattura.societa.ragioneSociale','fattura.avvisi'])
+                ->notPagata();  
+        }
+
+
+
+
       if($orderby == 'data_scadenza' || $orderby == 'importo')
         {
         $scadenze = $scadenze->orderBy($orderby,$order);
@@ -55,7 +102,6 @@ class ScadenzeController extends Controller
         {
         $scadenze = $scadenze->orderByRaw("to_days(date_format(`tblScadenzeFattura`.`data_scadenza`,'%Y-%m-%d')) - to_days(now()) $order");
         }
-
 
    		$scadenze = $scadenze
                   ->paginate(50)->setpath('')->appends($to_append);

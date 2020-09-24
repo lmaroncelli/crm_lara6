@@ -2517,13 +2517,15 @@ __webpack_require__.r(__webpack_exports__);
     delScadenza: function delScadenza(id) {
       var _this10 = this;
 
-      axios.post('api/memorex/' + id, {
-        _method: 'delete' // <== add this field
+      if (window.confirm('Sei sicuro?')) {
+        axios.post('api/memorex/' + id, {
+          _method: 'delete' // <== add this field
 
-      })["finally"](function () {
-        // ricarico la pagina corrente
-        _this10.choiceMethod(_this10.method, _this10.url);
-      });
+        })["finally"](function () {
+          // ricarico la pagina corrente
+          _this10.choiceMethod(_this10.method, _this10.url);
+        });
+      }
     },
     cancel: function cancel() {
       this.emptyScadenza();

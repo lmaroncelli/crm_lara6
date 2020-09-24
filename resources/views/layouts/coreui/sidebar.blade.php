@@ -64,7 +64,7 @@
         </a>
           <ul class="nav-dropdown-items">
             <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-screen-tablet"></i>Vetrine(TD)</a></li>
-            <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-book-open"></i>Memorex (TD)</a></li>
+            <li class="nav-item"><a class="nav-link" href=" {{ url('memorex') }} "><i class="nav-icon icon-book-open"></i>Memorex</a></li>
             <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-calculator"></i>Conteggi(TD)</a></li>
             <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-pie-chart"></i>Statistiche(TD)</a></li>
             <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-graph"></i>Andamento attivazioni(TD)</a></li>

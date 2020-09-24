@@ -98,7 +98,11 @@
                               @php
                                 $fattura = $s->fattura;
                               @endphp
-                              <tr>
+                              <tr class="dettaglio_fattura">
+                                <td colspan="1" style="text-align: right"><i class="fas fa-angle-right"></i></td>
+                                <td colspan="5">Dettaglio Fattura</td>
+                              </tr>
+                              <tr class="riga_fattura">
                                 <td colspan="1">&nbsp;</td>
                                 <td colspan="5">
                                   <table class="table table-responsive-sm m-table m-table--head-bg-success">
@@ -120,7 +124,11 @@
                                 </td>
                               </tr>
                               @if ($fattura->avvisi->count())
-                                <tr>
+                                <tr class="avvisi_scadenze">
+                                  <td colspan="1" style="text-align: right"><i class="fas fa-angle-right"></i></td>
+                                  <td colspan="5">Avvisi Scadenze</td>
+                                </tr>
+                                <tr class="riga_scadenze">
                                   <td colspan="1">&nbsp;</td>
                                   <td colspan="5">
                                      <table class="table table-responsive-sm m-table m-table--head-bg-success">
@@ -167,11 +175,22 @@
 
         jQuery(document).ready(function(){
             
+
+          jQuery("tr.dettaglio_fattura").click(function(){
+            jQuery(this).next().toggleClass('riga_fattura');
+            $(this).find("i").toggleClass('fa-angle-right fa-angle-down');
+          })
+
+          jQuery("tr.avvisi_scadenze").click(function(){
+            jQuery(this).next().toggleClass('riga_scadenze');
+          })
+
+          $(".searching").click(function(){
+              $("#searchForm").submit();
+          });
+
           /*  $("#prodotti").select2({placeholder:"Seleziona i prodotti da filtrare"});
 
-            $(".searching").click(function(){
-                $("#searchForm").submit();
-            });
 
             $(".archiviato_check").click(function(){
                 $("#searchForm").submit();

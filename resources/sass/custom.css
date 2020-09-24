@@ -350,6 +350,14 @@ tr.sconto td {
 }
 
 
+tr.riga_fattura, tr.riga_scadenze {
+  display: none;
+}
+
+
+tr.dettaglio_fattura:hover, tr.avvisi_scadenze:hover {
+  cursor: pointer;
+}
 
 
 /* SCADENZE */

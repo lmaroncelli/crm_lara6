@@ -542,12 +542,18 @@
 
 
             delScadenza: function(id) {
-               axios.post('api/memorex/' + id, {
-                 _method: 'delete'                   // <== add this field
-               }).finally(() => {
-                   // ricarico la pagina corrente
-                  this.choiceMethod(this.method, this.url);
-                });
+              
+              if(window.confirm('Sei sicuro?')) {
+               
+                axios.post('api/memorex/' + id, {
+                  _method: 'delete'                   // <== add this field
+                }).finally(() => {
+                    // ricarico la pagina corrente
+                    this.choiceMethod(this.method, this.url);
+                  });
+
+              }
+
             },
 
             cancel: function() {
