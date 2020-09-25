@@ -32,7 +32,7 @@
             @if (isset($scadenze))
             
               <div>
-                  <table class="table table-responsive-sm m-table m-table--head-bg-success wrapper">
+                  <table class="table table-responsive m-table m-table--head-bg-success wrapper">
                       <tbody>
                           @foreach ($scadenze as $s)
                               <tr>
@@ -77,6 +77,7 @@
                                           @endif
                                       @endif
                                   </th>
+                                  <th>Commerciale</th>
                                   <th>Note</th>
                               </tr>
                               <tr class="main">
@@ -93,6 +94,7 @@
                                   @endif
                                 </td>
                                 <td>{{optional(optional($s->fattura)->pagamento)->nome}}</td>
+                                <td>{{optional(optional(optional($s->fattura)->societa)->cliente)->commerciali()}}</td>
                                 <td style="width: 35%;">{{$s->note}}</td>
                               </tr>
                               @php
@@ -100,11 +102,11 @@
                               @endphp
                               <tr class="dettaglio_fattura">
                                 <td colspan="1" style="text-align: right"><i class="fas fa-angle-right"></i></td>
-                                <td colspan="5">Dettaglio Fattura</td>
+                                <td colspan="6">Dettaglio Fattura</td>
                               </tr>
                               <tr class="riga_fattura">
                                 <td colspan="1">&nbsp;</td>
-                                <td colspan="5">
+                                <td colspan="6">
                                   <table class="table table-responsive-sm m-table m-table--head-bg-success">
                                       <tr>
                                         <th>N. Doc</th>
@@ -126,11 +128,11 @@
                               @if ($fattura->avvisi->count())
                                 <tr class="avvisi_scadenze">
                                   <td colspan="1" style="text-align: right"><i class="fas fa-angle-right"></i></td>
-                                  <td colspan="5">Avvisi Scadenze</td>
+                                  <td colspan="6">Avvisi Scadenze</td>
                                 </tr>
                                 <tr class="riga_scadenze">
                                   <td colspan="1">&nbsp;</td>
-                                  <td colspan="5">
+                                  <td colspan="6">
                                      <table class="table table-responsive-sm m-table m-table--head-bg-success">
                                         <tr>
                                           <th>Data</th>

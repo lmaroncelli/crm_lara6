@@ -48,6 +48,19 @@ class ScadenzaFattura extends Model
       {
         return Carbon::today()->diffInDays($this->data_scadenza, false);
       }
+    
+
+    public static function getScadenzeEagerLoaded()
+      {
+        $scadenze = self::with([
+            'fattura.pagamento',
+            'fattura.societa.cliente',
+            'fattura.societa.cliente.associato_a_commerciali',
+            'fattura.societa.ragioneSociale',
+            'fattura.avvisi']);
+        
+        return $scadenze;
+      }
    
 
 }
