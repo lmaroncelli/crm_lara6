@@ -193,6 +193,7 @@ Route::middleware(['auth'])->group(function () {
     // CONTEGGI // 
     //////////////
     Route::get('conteggi', 'ConteggiController@index')->name('conteggi.index');
+    Route::post('conteggi', 'ConteggiController@store')->name('conteggi.store');
 
         
 });

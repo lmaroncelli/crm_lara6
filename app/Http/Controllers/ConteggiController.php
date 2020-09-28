@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Conteggio;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ConteggiController extends Controller
 {
@@ -13,7 +15,9 @@ class ConteggiController extends Controller
      */
     public function index()
     {
-    
+    $conteggi = Auth::user()->conteggi()->orderBy('id', 'desc')->paginate(50);
+
+    return view('conteggi.index', compact('conteggi'));
     }
 
     /**
@@ -23,7 +27,6 @@ class ConteggiController extends Controller
      */
     public function create()
     {
-        //
     }
 
     /**
@@ -34,7 +37,10 @@ class ConteggiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        Conteggio::create($request->get('titolo'));
+
+        return redirect('conteggi');
     }
 
     /**

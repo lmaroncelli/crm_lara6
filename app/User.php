@@ -2,9 +2,10 @@
 
 namespace App;
 
+use App\Conteggio;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -58,6 +59,11 @@ class User extends Authenticatable
     public function contrattiDigitali()
     {
         return $this->hasMany('App\ContrattoDigitale', 'user_id', 'id');
+    }
+
+    public function conteggi()
+    {
+        return $this->hasMany('App\Conteggio', 'user_id', 'id');
     }
 
     public function scopeCommerciale($query)
