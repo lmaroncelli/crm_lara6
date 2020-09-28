@@ -21,6 +21,15 @@
       </div>
     </div><!--/.col-->
   @endif
+  @if (session()->has('scadenze_csv')) 
+    <div class="col-sm-2">
+      <div class="callout callout-noborder">
+        <a href="{{ route('scadenze.csv') }}" title="Esporta in CSV" class="btn btn-success">
+          <i class="fas fa-file-csv"></i> Export CSV
+        </a>
+      </div>
+    </div>
+  @endif
 </div>
 
 

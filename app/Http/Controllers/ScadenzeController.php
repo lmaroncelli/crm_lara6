@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Utility;
 use App\Pagamento;
 use Carbon\Carbon;
 use App\ScadenzaFattura;
@@ -192,7 +193,12 @@ class ScadenzeController extends Controller
 					}
 
 
-					
+				$scadenze_csv = $scadenze;
+
+				$scadenze_csv = $scadenze_csv->get();
+
+				// metto la query in sessione per utilizzarla nella creazione del CSV
+				$request->session()->put('scadenze_csv', $scadenze_csv); 
 
 				$scadenze = $scadenze
 										->paginate(50)->setpath('')->appends($to_append);
@@ -229,6 +235,62 @@ class ScadenzeController extends Controller
 
 				return view('scadenze.index', compact('scadenze','pagamenti_fattura','date','commerciali'));
 
-      }
+			}
+			
+
+		public function  export_csv(Request $request) 
+			{
+			if($request->session()->has('scadenze_csv'))
+				{
+					$scadenze_csv = $request->session()->get('scadenze_csv');
+
+					$fileName = 'scadenze.csv';
+
+					$headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+				);
+				
+				$columns = array('N. Fattura', 'Scadenza', 'ID', 'Cliente', 'Importo', 'GG. Rimanenti', 'Pagamento', 'Commerciale', 'Note');
+
+				$callback = function() use($scadenze_csv, $columns) {
+					$file = fopen('php://output', 'w');
+					fputcsv($file, $columns);
+
+					foreach ($scadenze_csv as $s) 
+						{
+						$row[$columns[0]]  = optional( $s->fattura )->numero_fattura;
+						
+						$row[$columns[1]]  = optional( $s->data_scadenza )->format('d/m/Y');
+						
+						$row[$columns[2]]  = optional(optional(optional($s->fattura)->societa)->cliente)->id_info;
+					
+						$row[$columns[3]]  = optional(optional(optional($s->fattura)->societa)->cliente)->nome;
+
+
+						$row[$columns[4]]  = Utility::formatta_cifra($s->importo);
+					
+						$row[$columns[5]]  = $s->giorni_rimasti;
+
+						$row[$columns[6]]  = optional(optional($s->fattura)->pagamento)->nome;
+
+						$row[$columns[7]]  = optional(optional(optional($s->fattura)->societa)->cliente)->commerciali();
+
+						$row[$columns[8]]  = $s->note;
+
+
+						fputcsv( $file, [ $row[$columns[0]], $row[$columns[1]], $row[$columns[2]], $row[$columns[3]], $row[$columns[4]], $row[$columns[5]], $row[$columns[6]], $row[$columns[7]], $row[$columns[8]] ] );
+						}
+
+					fclose($file);
+				};
+
+				return response()->stream($callback, 200, $headers);
+
+				}
+			}
 
 }

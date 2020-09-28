@@ -177,6 +177,8 @@ Route::middleware(['auth'])->group(function () {
     //////////////
     Route::get('scadenze', 'ScadenzeController@index')->name('scadenze.index');
 
+    Route::get('scadenze_csv', 'ScadenzeController@export_csv')->name('scadenze.csv');
+
 
 
 
@@ -186,6 +188,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('memorex', 'MemorexController')/*->middleware('log')*/;
 
+
+    //////////////
+    // CONTEGGI // 
+    //////////////
+    Route::get('conteggi', 'ConteggiController@index')->name('conteggi.index');
 
         
 });

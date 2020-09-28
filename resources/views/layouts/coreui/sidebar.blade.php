@@ -44,7 +44,7 @@
         </a>
           <ul class="nav-dropdown-items">
             <li class="nav-item"><a class="nav-link" href="{{ route('scadenze.index') }}"><i class="nav-icon icon-close"></i>Non incassato</a></li>
-            <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-login"></i>Incassato(TD)</a></li>
+            {{-- <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-login"></i>Incassato(TD)</a></li> --}}
           </ul>
       </li>
 
