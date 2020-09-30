@@ -14,7 +14,7 @@
 							<div class="form-group row">
 								<label class="col-md-3 text-change" for="cell">Servizi venduti:</label>
 								<div class="col-md-5">
-									<select name="servizi[]" class="form-control" multiple v-model="servizi">
+									<select name="servizi" class="form-control" v-model="servizi">
 										<option v-for="(nome, id) in servizi" :value="id"> {{nome}} </option>
 									</select>
 								</div>
@@ -57,13 +57,7 @@
 
 						axios.get('/api/conteggi/serviziCliente/'+this.cliente_id)
                   .then(response => {
-										const objectArray = Object.entries(response.data);
-										let servizi = [];
-										objectArray.forEach(([key, value]) => {
-											servizi[key] = value;
-										});
-										console.log('servizi = ' + servizi);
-                    this.servizi = servizi;
+                    this.servizi = response.data;
                   });
 
 					}
