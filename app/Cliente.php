@@ -106,6 +106,13 @@ class Cliente extends Model
     }
 
 
+    public function servizi_attivi()
+    {
+        return $this->hasMany(Servizio::class, 'cliente_id', 'id')->where('attivo',1)->where('archiviato',0);
+    }
+
+
+
     public function scopeAttivo($query)
      {
          return $query->where('attivo',1);

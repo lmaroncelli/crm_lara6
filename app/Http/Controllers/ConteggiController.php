@@ -51,7 +51,7 @@ class ConteggiController extends Controller
      */
     public function show($id)
     {
-        //
+    
     }
 
     /**
@@ -62,7 +62,13 @@ class ConteggiController extends Controller
      */
     public function edit($id)
     {
-        //
+        $conteggio = Conteggio::with('righe.cliente')->find($id);
+
+        $righe = $conteggio->righe()->paginate(50);
+
+        return view('conteggi.index_righe', compact('conteggio','righe'));
+
+        
     }
 
     /**

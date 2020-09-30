@@ -46,7 +46,7 @@
                 </tr>
                 @foreach ($conteggi as $c)
                     <tr>
-                      <td>{{$c->titolo}}</td>
+                      <td><a href="{{ route('conteggi.edit', $c->id) }}">{{$c->titolo}}</a></td>
                       <td>X</td>
                     </tr>
                 @endforeach

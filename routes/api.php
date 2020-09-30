@@ -1,5 +1,7 @@
 <?php
 
+use App\Cliente;
+use App\User;
 use App\Memorex;
 use Carbon\Carbon;
 use App\CommercialeMemorex;
@@ -25,6 +27,92 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 
+// CONTEGGI //
+
+Route::get('/conteggi/clientiCommerciale/{commerciale_id}', function($commerciale_id){
+  $clienti = [];
+
+  $clienti_associati = User::with([
+    'clienti_associati.servizi_attivi.righeConteggi',
+    'clienti_associati.localita'])
+                ->find($commerciale_id)
+                ->clienti_associati;
+
+
+
+  // voglio prendere solo i clienti che hanno dei servizi da conteggiare
+//   $clienti_filtered = $clienti_associati->reject(function ($cliente, $key) {
+
+//     $all_servizi = $cliente->servizi_attivi;
+//     $all_servizi->loadCount('righeConteggi');
+//     $trovato = false;
+//     foreach ($all_servizi as $servizio) {
+//       if( $servizio->righeConteggi_count == 0) {
+//       // CE NE E' ALMENO 1 CHE NON E' IN NESSUN CONTEGGIO 
+//       $trovato = true;
+//       break;
+//       }
+//     }
+
+//     // il cliente lo prendo (NON LO RIGETTO)
+//     return !$trovato;
+  
+// });
+
+$clienti_filtered = $clienti_associati;
+
+foreach ($clienti_filtered as $cliente) {
+  $clienti[$cliente->id] = $cliente->nome . ' (' . $cliente->id_info . ') - '. $cliente->localita->nome;
+}
+
+return $clienti;
+
+});
+
+
+// servizi del cliente non in tblRigaConteggioServizio
+Route::get('/conteggi/serviziCliente/{cliente_id}', function($cliente_id){
+  $servizi = [];
+  
+  $cliente = Cliente::find($cliente_id);
+
+  $all_servizi = $cliente->servizi_attivi;
+
+  // $servizi_filtered = $all_servizi->reject(function ($servizio, $key) {
+  //   return $servizio->righeConteggi()->count() > 0;
+  // });
+
+  $servizi_filtered = $all_servizi;
+
+  foreach ($servizi_filtered as $servizio) 
+    {
+    $servizi[$servizio->id] = optional($servizio->prodotto)->nome . ' scade il ' . optional($servizio->data_fine)->format('d/m/Y');
+    }
+
+  return $servizi;	
+});
+
+
+
+
+// FINE CONTEGGI //
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//MEMOREX//
 
 
 Route::get('/memorex/riferimenti', function(){
@@ -213,3 +301,7 @@ Route::delete('memorex/{id}', function ($id) {
 
 
 });
+
+
+
+//FINE MEMOREX//

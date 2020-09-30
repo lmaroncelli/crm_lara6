@@ -47,7 +47,7 @@ class User extends Authenticatable
 
     public function clienti_associati()
     {
-        return $this->belongsToMany('App\Cliente', 'tblClienteAssociatoCommerciale', 'user_id', 'cliente_id');
+        return $this->belongsToMany('App\Cliente', 'tblClienteAssociatoCommerciale', 'user_id', 'cliente_id')->orderBy('nome','asc');
     }
 
 

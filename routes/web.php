@@ -1,5 +1,7 @@
 <?php
 
+use App\User;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -193,10 +195,19 @@ Route::middleware(['auth'])->group(function () {
     // CONTEGGI // 
     //////////////
     Route::get('conteggi', 'ConteggiController@index')->name('conteggi.index');
+    
     Route::post('conteggi', 'ConteggiController@store')->name('conteggi.store');
+
+    Route::get('conteggi/{id}/edit','ConteggiController@edit')->name('conteggi.edit');
 
         
 });
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+
+Route::get('/prova', 'HomeController@prova');
+
+

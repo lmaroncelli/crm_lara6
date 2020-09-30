@@ -46,6 +46,12 @@ class Servizio extends Model
       return $this->belongsTo(RigaDiFatturazione::class, 'rigafatturazione_id', 'id');
   }
 
+  public function righeConteggi()
+  {
+      return $this->belongsToMany('App\RigaConteggio', 'tblRigaConteggioServizio', 'servizio_id', 'riga_conteggio_id');
+  }
+
+  
   public function scopeArchiviato($query)
     {
     return $query->where('archiviato', 1);
