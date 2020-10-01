@@ -2053,13 +2053,52 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['commerciale_id'],
   data: function data() {
     return {
-      cliente_id: 0,
+      cliente: {},
       clienti: [],
-      servizi: []
+      servizi: [],
+      servizi_selected: [],
+      servizi_nomi_selected: [],
+      calcola: 0,
+      modalita_vendita: [],
+      modalita: {}
     };
   },
   mounted: function mounted() {
@@ -2077,9 +2116,34 @@ __webpack_require__.r(__webpack_exports__);
     loadServiziCliente: function loadServiziCliente() {
       var _this2 = this;
 
-      axios.get('/api/conteggi/serviziCliente/' + this.cliente_id).then(function (response) {
+      axios.get('/api/conteggi/serviziCliente/' + this.cliente.id).then(function (response) {
         _this2.servizi = response.data;
       });
+    },
+    stepCalcola: function stepCalcola() {
+      var _this3 = this;
+
+      axios.get('/api/conteggi/modalitaVendita/' + this.commerciale_id).then(function (response) {
+        _this3.modalita_vendita = response.data;
+      });
+      this.calcola = 1;
+    }
+  },
+  computed: {
+    nomiServizi: {
+      // getter
+      get: function get() {
+        var _this4 = this;
+
+        if (this.servizi_selected.length) {
+          this.servizi_selected.forEach(function (servizio) {
+            _this4.servizi_nomi_selected.push(servizio.nome);
+          });
+          return this.servizi_nomi_selected.join('<br/>');
+        } else {
+          return 'nessun servizio selezionato';
+        }
+      }
     }
   }
 });
@@ -76656,116 +76720,254 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
-    _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col" }, [
-        _c("div", { staticClass: "form-group row" }, [
-          _c(
-            "label",
-            { staticClass: "col-md-3 text-change", attrs: { for: "cell" } },
-            [_vm._v("Seleziona un cliente:")]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-md-5" }, [
-            _c(
-              "select",
-              {
-                directives: [
+  return _c("div", { staticClass: "wrapper" }, [
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: !_vm.calcola,
+            expression: "!calcola"
+          }
+        ],
+        staticClass: "step"
+      },
+      [
+        _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "col" }, [
+            _c("div", { staticClass: "form-group row" }, [
+              _c(
+                "label",
+                { staticClass: "col-md-1 text-change", attrs: { for: "cell" } },
+                [_vm._v("Cliente:")]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-4" }, [
+                _c(
+                  "select",
                   {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.cliente_id,
-                    expression: "cliente_id"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { name: "cliente_id" },
-                on: {
-                  change: [
-                    function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.cliente_id = $event.target.multiple
-                        ? $$selectedVal
-                        : $$selectedVal[0]
-                    },
-                    function($event) {
-                      return _vm.loadServiziCliente()
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.cliente,
+                        expression: "cliente"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { name: "cliente" },
+                    on: {
+                      change: [
+                        function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.cliente = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        },
+                        function($event) {
+                          return _vm.loadServiziCliente()
+                        }
+                      ]
                     }
-                  ]
-                }
-              },
-              [
-                _c("option", { attrs: { value: "0" } }, [_vm._v("Nessuno")]),
-                _vm._v(" "),
-                _vm._l(_vm.clienti, function(nome, id) {
-                  return _c("option", { domProps: { value: id } }, [
-                    _vm._v(" " + _vm._s(nome) + " ")
-                  ])
-                })
-              ],
-              2
-            )
+                  },
+                  [
+                    _c("option", { attrs: { value: "0" } }, [
+                      _vm._v("Nessuno")
+                    ]),
+                    _vm._v(" "),
+                    _vm._l(_vm.clienti, function(cliente) {
+                      return _c("option", { domProps: { value: cliente } }, [
+                        _vm._v(" " + _vm._s(cliente.nome) + " ")
+                      ])
+                    })
+                  ],
+                  2
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "label",
+                { staticClass: "col-md-1 text-change", attrs: { for: "cell" } },
+                [_vm._v("Servizi:")]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-4" }, [
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.servizi_selected,
+                        expression: "servizi_selected"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { name: "servizi_selected", multiple: "" },
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.servizi_selected = $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      }
+                    }
+                  },
+                  _vm._l(_vm.servizi, function(servizio) {
+                    return _c("option", { domProps: { value: servizio } }, [
+                      _vm._v(" " + _vm._s(servizio.nome) + " ")
+                    ])
+                  }),
+                  0
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-2" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "btn btn-info",
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.stepCalcola()
+                      }
+                    }
+                  },
+                  [_vm._v("Prosegui")]
+                )
+              ])
+            ])
+          ])
+        ])
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.calcola,
+            expression: "calcola"
+          }
+        ],
+        staticClass: "step"
+      },
+      [
+        _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "col" }, [
+            _vm._v("\n\t\t\t\t" + _vm._s(_vm.cliente.nome) + "\n\t\t\t\t")
           ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "form-group row" }, [
-          _c(
-            "label",
-            { staticClass: "col-md-3 text-change", attrs: { for: "cell" } },
-            [_vm._v("Servizi venduti:")]
-          ),
+        _c("div", { staticClass: "row" }, [
+          _c("div", {
+            staticClass: "col",
+            domProps: { innerHTML: _vm._s(_vm.nomiServizi) }
+          }),
           _vm._v(" "),
-          _c("div", { staticClass: "col-md-5" }, [
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.servizi,
-                    expression: "servizi"
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "col" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "" } }, [_vm._v("Modalità")]),
+              _vm._v(" "),
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.modalita,
+                      expression: "modalita"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { name: "cliente" },
+                  on: {
+                    change: [
+                      function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.modalita = $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      },
+                      function($event) {}
+                    ]
                   }
+                },
+                [
+                  _c("option", { attrs: { value: "0" } }, [
+                    _vm._v("Seleziona")
+                  ]),
+                  _vm._v(" "),
+                  _vm._l(_vm.modalita_vendita, function(modalita) {
+                    return _c("option", { domProps: { value: modalita } }, [
+                      _vm._v(" " + _vm._s(modalita.nome) + " ")
+                    ])
+                  })
                 ],
-                staticClass: "form-control",
-                attrs: { name: "servizi" },
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.servizi = $event.target.multiple
-                      ? $$selectedVal
-                      : $$selectedVal[0]
-                  }
-                }
-              },
-              _vm._l(_vm.servizi, function(nome, id) {
-                return _c("option", { domProps: { value: id } }, [
-                  _vm._v(" " + _vm._s(nome) + " ")
-                ])
-              }),
-              0
-            )
+                2
+              )
+            ])
           ])
         ])
-      ])
-    ])
+      ]
+    )
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col" }, [
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "" } }, [_vm._v("Valore")]),
+        _vm._v(" "),
+        _c("input", {
+          staticClass: "form-control",
+          attrs: {
+            type: "text",
+            name: "valore",
+            id: "valore",
+            "aria-describedby": "helpId",
+            placeholder: ""
+          }
+        })
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 

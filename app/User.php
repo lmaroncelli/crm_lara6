@@ -66,6 +66,17 @@ class User extends Authenticatable
         return $this->hasMany('App\Conteggio', 'user_id', 'id');
     }
 
+
+    public function roles()
+    {
+        return $this->belongsToMany('App\Role', 'role_user_table', 'user_id', 'role_id');
+    }
+
+    public function modalita_vendita()
+    {
+        return $this->belongsToMany('App\ModalitaVendita', 'tblCommercialeModalitaVendita', 'user_id', 'modalita_id')->withPivot('percentuale');
+    }
+
     public function scopeCommerciale($query)
      {
          return $query->where('type_id','C');

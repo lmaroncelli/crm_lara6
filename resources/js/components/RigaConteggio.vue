@@ -1,27 +1,61 @@
 <template>
-    <div class="container">
-        <div class="row">
-          <div class="col">
-              <div class="form-group row">
-								<label class="col-md-3 text-change" for="cell">Seleziona un cliente:</label>
-								<div class="col-md-5">
-									<select name="cliente_id" class="form-control" v-model="cliente_id" @change="loadServiziCliente()">
-										<option value="0">Nessuno</option>
-										<option v-for="(nome, id) in clienti" :value="id"> {{nome}} </option>
-									</select>
+		<div class="wrapper">
+			<div class="step" v-show="!calcola">
+					<div class="row">
+						<div class="col">
+								<div class="form-group row">
+									
+									<label class="col-md-1 text-change" for="cell">Cliente:</label>
+									<div class="col-md-4">
+										<select name="cliente" class="form-control" v-model="cliente" @change="loadServiziCliente()">
+											<option value="0">Nessuno</option>
+											<option v-for="cliente in clienti" :value="cliente"> {{cliente.nome}} </option>
+										</select>
+									</div>
+								
+									<label class="col-md-1 text-change" for="cell">Servizi:</label>
+									<div class="col-md-4">
+										<select name="servizi_selected" class="form-control" multiple v-model="servizi_selected">
+											<option v-for="servizio in servizi" :value="servizio"> {{servizio.nome}} </option>
+										</select>
+									</div>
+									<div class="col-md-2">
+										<a href="#" @click.prevent="stepCalcola()" class="btn btn-info">Prosegui</a>
+									</div>
+
 								</div>
+						</div>
+					</div>
+			</div> <!-- step -->
+			<div class="step" v-show="calcola">
+					<div class="row">
+						<div class="col">
+						{{cliente.nome}}
+						</div>
+					</div>
+					<div class="row">
+						<div class="col" v-html="nomiServizi">
+						</div>
+						
+						<div class="col">
+							<div class="form-group">
+								<label for="">Valore</label>
+								<input type="text" class="form-control" name="valore" id="valore" aria-describedby="helpId" placeholder="">
 							</div>
-							<div class="form-group row">
-								<label class="col-md-3 text-change" for="cell">Servizi venduti:</label>
-								<div class="col-md-5">
-									<select name="servizi" class="form-control" v-model="servizi">
-										<option v-for="(nome, id) in servizi" :value="id"> {{nome}} </option>
-									</select>
-								</div>
+						</div>
+
+						<div class="col">
+							<div class="form-group">
+								<label for="">Modalità</label>
+								<select name="cliente" class="form-control" v-model="modalita" @change="">
+									<option value="0">Seleziona</option>
+									<option v-for="modalita in modalita_vendita" :value="modalita"> {{modalita.nome}} </option>
+								</select>
 							</div>
-          </div>
-        </div>
-    </div>
+						</div>
+					</div>
+			</div> <!-- step -->
+		</div>	<!-- wrapper -->
 </template>
 
 <script>
@@ -31,9 +65,14 @@
         
 				data() {
 					return {
-						cliente_id: 0,
+						cliente: {},
 						clienti:[],
-						servizi: []
+						servizi:[],
+						servizi_selected: [],
+						servizi_nomi_selected:[],
+						calcola:0,
+						modalita_vendita:[],
+						modalita:{}
 					}
 				},
 
@@ -55,13 +94,48 @@
 
 					loadServiziCliente() {
 
-						axios.get('/api/conteggi/serviziCliente/'+this.cliente_id)
+						axios.get('/api/conteggi/serviziCliente/'+this.cliente.id)
                   .then(response => {
                     this.servizi = response.data;
                   });
 
+					},
+
+
+					stepCalcola() {
+
+						axios.get('/api/conteggi/modalitaVendita/'+this.commerciale_id)
+								.then(response => {
+									this.modalita_vendita = response.data;
+								});
+
+						this.calcola = 1;
 					}
 
 				},
+
+				computed: {
+          
+          nomiServizi: {
+
+            // getter
+            get: function () {
+              if(this.servizi_selected.length) {
+								this.servizi_selected.forEach(
+									(servizio) => {
+										this.servizi_nomi_selected.push(servizio.nome)
+									}
+								)
+								return this.servizi_nomi_selected.join('<br/>');
+							}
+              else {
+                return 'nessun servizio selezionato';
+							}
+            }
+
+            
+          }
+        
+        },
     }
 </script>

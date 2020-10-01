@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Resources\MemorexCollection;
 use App\Http\Resources\Memorex as MemorexResource;
+use App\ModalitaVendita;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,7 +63,9 @@ Route::get('/conteggi/clientiCommerciale/{commerciale_id}', function($commercial
 $clienti_filtered = $clienti_associati;
 
 foreach ($clienti_filtered as $cliente) {
-  $clienti[$cliente->id] = $cliente->nome . ' (' . $cliente->id_info . ') - '. $cliente->localita->nome;
+  $c['id'] = $cliente->id;
+  $c['nome'] = $cliente->nome . ' (' . $cliente->id_info . ') - '. $cliente->localita->nome;
+  $clienti[] = $c;
 }
 
 return $clienti;
@@ -86,10 +89,17 @@ Route::get('/conteggi/serviziCliente/{cliente_id}', function($cliente_id){
 
   foreach ($servizi_filtered as $servizio) 
     {
-    $servizi[$servizio->id] = optional($servizio->prodotto)->nome . ' scade il ' . optional($servizio->data_fine)->format('d/m/Y');
+    $s['id'] = $servizio->id;
+    $s['nome'] = optional($servizio->prodotto)->nome . ' scade il ' . optional($servizio->data_fine)->format('d/m/Y');
+    $servizi[] = $s;
     }
 
   return $servizi;	
+});
+
+
+Route::get('/conteggi/modalitaVendita/{commerciale_id}', function($commerciale_id){
+  return User::find($commerciale_id)->modalita_vendita->toArray();  
 });
 
 

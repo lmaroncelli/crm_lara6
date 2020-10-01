@@ -18,5 +18,10 @@ class ModalitaVendita extends Model
         return $this->hasMany('App\RigaConteggio', 'modalita_id', 'id');
     }
 
+    public function commerciali()
+    {
+        return $this->belongsToMany('App\User', 'tblCommercialeModalitaVendita', 'modalita_id', 'user_id')->withPivot('percentuale');
+    }
+
      
 }
