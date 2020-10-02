@@ -40,19 +40,42 @@
 						<div class="col">
 							<div class="form-group">
 								<label for="">Valore</label>
-								<input type="text" class="form-control" name="valore" id="valore" aria-describedby="helpId" placeholder="">
+								<input type="text" class="form-control" name="valore" id="valore" v-model="valore" placeholder="">
 							</div>
 						</div>
 
 						<div class="col">
 							<div class="form-group">
-								<label for="">Modalità</label>
-								<select name="cliente" class="form-control" v-model="modalita" @change="">
-									<option value="0">Seleziona</option>
+								<label for="">Modalità 
+									<span v-if="Object.keys(modalita_selected).length !== 0">
+									{{modalita_selected.nome}} ({{modalita_selected.percentuale}})% 
+									</span>
+								</label>
+								<select name="cliente" class="form-control" v-model="modalita_selected">
 									<option v-for="modalita in modalita_vendita" :value="modalita"> {{modalita.nome}} </option>
 								</select>
 							</div>
 						</div>
+
+						<div class="col">
+							<div class="form-group">
+								<label for="">Valore %</label>
+								<input type="text" class="form-control" name="valore_percentuale" v-model="valore_percentuale" id="valore_percentuale" readonly>
+							</div>
+						</div>
+
+						<div class="col">
+							<div class="form-group">
+									<a href="#" @click.prevent="stepBack()" class="btn btn-info">Indietro</a>
+							</div>
+						</div>
+
+							<div class="col">
+							<div class="form-group">
+									<a href="#" @click.prevent="" class="btn btn-info">Inserisci</a>
+							</div>
+						</div>
+
 					</div>
 			</div> <!-- step -->
 		</div>	<!-- wrapper -->
@@ -72,7 +95,9 @@
 						servizi_nomi_selected:[],
 						calcola:0,
 						modalita_vendita:[],
-						modalita:{}
+						modalita_selected:{},
+						valore:null,
+						valore_percentuale:null
 					}
 				},
 
@@ -80,6 +105,19 @@
         mounted() {
             this.getClientiCommerciale(this.commerciale_id);
         },
+
+
+				watch: {
+					// whenever question changes, this function will run
+					modalita_selected: function (newModalita, oldModalita) {
+						this.calcolaValorePercentuale();
+					},
+
+					valore: function (newModalita, oldModalita) {
+						this.calcolaValorePercentuale();
+					}
+
+				},
 
 
 				methods: {
@@ -110,6 +148,25 @@
 								});
 
 						this.calcola = 1;
+					},
+
+
+					stepBack() {
+
+						this.servizi_selected= [];
+						this.servizi_nomi_selected=[];
+						this.modalita_selected={};
+						this.valore=null;
+						this.valore_percentuale=null;
+						this.calcola = 0;
+					},
+
+
+					calcolaValorePercentuale() {
+						if(this.valore !== null && Object.keys(this.modalita_selected).length !== 0) {
+							let perc = this.valore*this.modalita_selected.percentuale/100;
+							this.valore_percentuale = +perc + +this.valore;
+						}
 					}
 
 				},
@@ -120,6 +177,7 @@
 
             // getter
             get: function () {
+							this.servizi_nomi_selected = [];
               if(this.servizi_selected.length) {
 								this.servizi_selected.forEach(
 									(servizio) => {

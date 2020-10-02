@@ -99,7 +99,17 @@ Route::get('/conteggi/serviziCliente/{cliente_id}', function($cliente_id){
 
 
 Route::get('/conteggi/modalitaVendita/{commerciale_id}', function($commerciale_id){
-  return User::find($commerciale_id)->modalita_vendita->toArray();  
+  $modalita = User::find($commerciale_id)->modalita_vendita;
+  $modalita_vendita = [];
+  foreach ($modalita as $mod) 
+    {
+    $m['id'] = $mod->id;
+    $m['nome'] = $mod->nome;
+    $m['percentuale'] = $mod->pivot->percentuale;
+    $modalita_vendita[] = $m;
+    }
+  
+    return $modalita_vendita;
 });
 
 

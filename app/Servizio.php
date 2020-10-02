@@ -23,6 +23,9 @@ class Servizio extends Model
    ];
 
 
+   protected $with = ['prodotto'];
+
+
    public function prodotto()
    {
        return $this->belongsTo(Prodotto::class, 'prodotto_id', 'id');

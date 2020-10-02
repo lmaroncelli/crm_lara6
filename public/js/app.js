@@ -2087,6 +2087,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['commerciale_id'],
   data: function data() {
@@ -2098,11 +2121,22 @@ __webpack_require__.r(__webpack_exports__);
       servizi_nomi_selected: [],
       calcola: 0,
       modalita_vendita: [],
-      modalita: {}
+      modalita_selected: {},
+      valore: null,
+      valore_percentuale: null
     };
   },
   mounted: function mounted() {
     this.getClientiCommerciale(this.commerciale_id);
+  },
+  watch: {
+    // whenever question changes, this function will run
+    modalita_selected: function modalita_selected(newModalita, oldModalita) {
+      this.calcolaValorePercentuale();
+    },
+    valore: function valore(newModalita, oldModalita) {
+      this.calcolaValorePercentuale();
+    }
   },
   methods: {
     getClientiCommerciale: function getClientiCommerciale(commerciale_id) {
@@ -2127,6 +2161,20 @@ __webpack_require__.r(__webpack_exports__);
         _this3.modalita_vendita = response.data;
       });
       this.calcola = 1;
+    },
+    stepBack: function stepBack() {
+      this.servizi_selected = [];
+      this.servizi_nomi_selected = [];
+      this.modalita_selected = {};
+      this.valore = null;
+      this.valore_percentuale = null;
+      this.calcola = 0;
+    },
+    calcolaValorePercentuale: function calcolaValorePercentuale() {
+      if (this.valore !== null && Object.keys(this.modalita_selected).length !== 0) {
+        var perc = this.valore * this.modalita_selected.percentuale / 100;
+        this.valore_percentuale = +perc + +this.valore;
+      }
     }
   },
   computed: {
@@ -2134,6 +2182,8 @@ __webpack_require__.r(__webpack_exports__);
       // getter
       get: function get() {
         var _this4 = this;
+
+        this.servizi_nomi_selected = [];
 
         if (this.servizi_selected.length) {
           this.servizi_selected.forEach(function (servizio) {
@@ -76887,11 +76937,55 @@ var render = function() {
             domProps: { innerHTML: _vm._s(_vm.nomiServizi) }
           }),
           _vm._v(" "),
-          _vm._m(0),
+          _c("div", { staticClass: "col" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "" } }, [_vm._v("Valore")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.valore,
+                    expression: "valore"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: {
+                  type: "text",
+                  name: "valore",
+                  id: "valore",
+                  placeholder: ""
+                },
+                domProps: { value: _vm.valore },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.valore = $event.target.value
+                  }
+                }
+              })
+            ])
+          ]),
           _vm._v(" "),
           _c("div", { staticClass: "col" }, [
             _c("div", { staticClass: "form-group" }, [
-              _c("label", { attrs: { for: "" } }, [_vm._v("Modalità")]),
+              _c("label", { attrs: { for: "" } }, [
+                _vm._v("Modalità \n\t\t\t\t\t\t\t"),
+                Object.keys(_vm.modalita_selected).length !== 0
+                  ? _c("span", [
+                      _vm._v(
+                        "\n\t\t\t\t\t\t\t" +
+                          _vm._s(_vm.modalita_selected.nome) +
+                          " (" +
+                          _vm._s(_vm.modalita_selected.percentuale) +
+                          ")% \n\t\t\t\t\t\t\t"
+                      )
+                    ])
+                  : _vm._e()
+              ]),
               _vm._v(" "),
               _c(
                 "select",
@@ -76900,43 +76994,104 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.modalita,
-                      expression: "modalita"
+                      value: _vm.modalita_selected,
+                      expression: "modalita_selected"
                     }
                   ],
                   staticClass: "form-control",
                   attrs: { name: "cliente" },
                   on: {
-                    change: [
-                      function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.modalita = $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
-                      },
-                      function($event) {}
-                    ]
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.modalita_selected = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    }
                   }
                 },
-                [
-                  _c("option", { attrs: { value: "0" } }, [
-                    _vm._v("Seleziona")
-                  ]),
-                  _vm._v(" "),
-                  _vm._l(_vm.modalita_vendita, function(modalita) {
-                    return _c("option", { domProps: { value: modalita } }, [
-                      _vm._v(" " + _vm._s(modalita.nome) + " ")
-                    ])
-                  })
+                _vm._l(_vm.modalita_vendita, function(modalita) {
+                  return _c("option", { domProps: { value: modalita } }, [
+                    _vm._v(" " + _vm._s(modalita.nome) + " ")
+                  ])
+                }),
+                0
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "" } }, [_vm._v("Valore %")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.valore_percentuale,
+                    expression: "valore_percentuale"
+                  }
                 ],
-                2
+                staticClass: "form-control",
+                attrs: {
+                  type: "text",
+                  name: "valore_percentuale",
+                  id: "valore_percentuale",
+                  readonly: ""
+                },
+                domProps: { value: _vm.valore_percentuale },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.valore_percentuale = $event.target.value
+                  }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "btn btn-info",
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.stepBack()
+                    }
+                  }
+                },
+                [_vm._v("Indietro")]
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "btn btn-info",
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                    }
+                  }
+                },
+                [_vm._v("Inserisci")]
               )
             ])
           ])
@@ -76945,29 +77100,7 @@ var render = function() {
     )
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col" }, [
-      _c("div", { staticClass: "form-group" }, [
-        _c("label", { attrs: { for: "" } }, [_vm._v("Valore")]),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "form-control",
-          attrs: {
-            type: "text",
-            name: "valore",
-            id: "valore",
-            "aria-describedby": "helpId",
-            placeholder: ""
-          }
-        })
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

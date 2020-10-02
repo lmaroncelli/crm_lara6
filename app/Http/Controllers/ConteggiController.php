@@ -64,7 +64,7 @@ class ConteggiController extends Controller
     {
         $conteggio = Conteggio::with('righe.cliente')->find($id);
 
-        $righe = $conteggio->righe()->paginate(50);
+        $righe = $conteggio->righe()->with(['conteggio', 'cliente','modalita','servizi.prodotto'])->paginate(50);
 
         return view('conteggi.index_righe', compact('conteggio','righe'));
 

@@ -35,10 +35,17 @@
                 </tr>
                 @foreach ($righe as $r)
                   @if (!is_null($r->cliente))
+                    @php
+                        $servizi_arr = [];
+                        foreach ($r->servizi as $servizio) 
+                          {
+                          $servizi_arr[] = $servizio->prodotto->nome;
+                          }
+                    @endphp  
                     <tr>
                       <td>{{optional($r->cliente)->nome}}</td>
                       <td>{{optional($r->cliente)->id_info}}</td>
-                      <td>{{$r->getServizi()}}</td>
+                      <td>{{implode(',', $servizi_arr)}}</td>
                       <td>{{$r->reale}}</td>
                       <td>{{optional($r->modalita)->nome}}</td>
                       <td>{{$r->percentuale}} %</td>
