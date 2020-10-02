@@ -5,6 +5,19 @@ html {
 }
 
 
+
+/**
+* Overflow b-4 
+*/ 
+
+.btn-info {
+  color: #fff;
+}
+
+.btn-info:hover {
+  color: #fff;
+}
+
 /** 
  * LOGIN
  */
