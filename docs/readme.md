@@ -552,3 +552,9 @@ https://www.youtube.com/watch?v=x_WMkIKztRQ
 
 https://codingdriver.com/export-csv-file-in-laravel-example.html
 
+
+
+# validation laravel vue component
+
+
+https://medium.com/@sdkcodes/how-to-display-laravel-validation-errors-in-vue-js-491f7f4afc8f
