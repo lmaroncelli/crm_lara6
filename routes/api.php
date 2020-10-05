@@ -62,12 +62,12 @@ Route::get('/conteggi/clientiCommerciale/{commerciale_id}', function($commercial
         
   });
 
-    //$clienti_filtered = $clienti_associati;
+  //$clienti_filtered = $clienti_associati;
 
-    foreach ($clienti_filtered as $cliente) {
-    $c['id'] = $cliente->id;
-    $c['nome'] = $cliente->nome . ' (' . $cliente->id_info . ') - '. $cliente->localita->nome;
-    $clienti[] = $c;
+  foreach ($clienti_filtered as $cliente) {
+  $c['id'] = $cliente->id;
+  $c['nome'] = $cliente->nome . ' (' . $cliente->id_info . ') - '. $cliente->localita->nome;
+  $clienti[] = $c;
   }
 
   return $clienti;
@@ -114,14 +114,21 @@ Route::get('/conteggi/modalitaVendita/{commerciale_id}', function($commerciale_i
 
 
 Route::post('conteggi/insertRiga', function(Request $request) {
-  $data_arr = $request->get('data');
-  $servizi_ids_selected = $request->get('servizi_ids_selected');
 
+  $validatedData = $request->validate([
+    'perc' => 'required'
+  ]);
+
+  $data_arr = $request->get('data');
   // inserisco la riga conteggio
   $riga_conteggio = RigaConteggio::create($data_arr);
-
-  // associo la riga ad ogni servizio_id (tblRigaConteggioServizio)
-  $riga_conteggio->servizi()->sync($servizi_ids_selected);
+  
+  if($request->has('servizi_ids_selected')) 
+    {
+    $servizi_ids_selected = $request->get('servizi_ids_selected');
+    // associo la riga ad ogni servizio_id (tblRigaConteggioServizio)
+    $riga_conteggio->servizi()->sync($servizi_ids_selected);
+    }
 
   return;
 

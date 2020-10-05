@@ -2113,6 +2113,52 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['commerciale_id', 'conteggio_id'],
   data: function data() {
@@ -2126,6 +2172,7 @@ __webpack_require__.r(__webpack_exports__);
       calcola: 0,
       modalita_vendita: [],
       modalita_selected: {},
+      descrizione: '',
       valore: null,
       valore_percentuale: null,
       perc: null,
@@ -2187,13 +2234,16 @@ __webpack_require__.r(__webpack_exports__);
 
       this.calcola = 1;
     },
+    stepLibera: function stepLibera() {
+      this.calcola = 2;
+    },
     stepBack: function stepBack() {
       this.servizi_selected = [];
       this.servizi_nomi_selected = [];
       this.servizi_ids_selected = [];
       this.modalita_selected = {};
       this.valore = null;
-      this.valore_percentuale = null;
+      this.perc = null, this.valore_percentuale = null;
       this.calcola = 0;
     },
     calcolaValorePercentuale: function calcolaValorePercentuale() {
@@ -2213,6 +2263,23 @@ __webpack_require__.r(__webpack_exports__);
         // <== use axios.post
         data: this.row,
         servizi_ids_selected: this.servizi_ids_selected
+      }).then(function (response) {
+        // reload page??
+        alert('Inserimemto corretto');
+        location.reload();
+      })["finally"](function () {// ricarico la pagina corrente
+      });
+    },
+    insertRigaLibera: function insertRigaLibera() {
+      this.row.conteggio_id = this.conteggio_id;
+      this.row.cliente_id = 0;
+      this.row.modalita_id = 0;
+      this.row.reale = 0.00;
+      this.row.percentuale = this.perc;
+      this.row.descrizione = this.descrizione;
+      axios.post('/api/conteggi/insertRiga', {
+        // <== use axios.post
+        data: this.row
       }).then(function (response) {
         // reload page??
         alert('Inserimemto corretto');
@@ -76834,11 +76901,11 @@ var render = function() {
             _c("div", { staticClass: "form-group row" }, [
               _c(
                 "label",
-                { staticClass: "col-md-1 text-change", attrs: { for: "cell" } },
+                { staticClass: "col-lg-1 text-change", attrs: { for: "cell" } },
                 [_vm._v("Cliente:")]
               ),
               _vm._v(" "),
-              _c("div", { staticClass: "col-md-4" }, [
+              _c("div", { staticClass: "col-lg-4" }, [
                 _c(
                   "select",
                   {
@@ -76886,15 +76953,17 @@ var render = function() {
                   ],
                   2
                 )
-              ]),
-              _vm._v(" "),
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group row" }, [
               _c(
                 "label",
-                { staticClass: "col-md-1 text-change", attrs: { for: "cell" } },
+                { staticClass: "col-lg-1 text-change", attrs: { for: "cell" } },
                 [_vm._v("Servizi:")]
               ),
               _vm._v(" "),
-              _c("div", { staticClass: "col-md-4" }, [
+              _c("div", { staticClass: "col-lg-4" }, [
                 !_vm.carica_servizi || _vm.servizi.length > 0
                   ? _c(
                       "select",
@@ -76943,7 +77012,7 @@ var render = function() {
                   : _vm._e()
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "col-md-2" }, [
+              _c("div", { staticClass: "col-lg-1" }, [
                 _c(
                   "a",
                   {
@@ -76957,6 +77026,29 @@ var render = function() {
                     }
                   },
                   [_vm._v("Prosegui")]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-lg-1" }, [
+                _vm._v(
+                  "\n\t\t\t\t\t\t\t\toppure inserisci una riga\n\t\t\t\t\t\t\t"
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-lg-1" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "btn btn-success",
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.stepLibera()
+                      }
+                    }
+                  },
+                  [_vm._v("Libera")]
                 )
               ])
             ])
@@ -76972,8 +77064,8 @@ var render = function() {
           {
             name: "show",
             rawName: "v-show",
-            value: _vm.calcola,
-            expression: "calcola"
+            value: _vm.calcola == 1,
+            expression: "calcola==1"
           }
         ],
         staticClass: "step"
@@ -77143,6 +77235,140 @@ var render = function() {
                     click: function($event) {
                       $event.preventDefault()
                       return _vm.insertRigaConteggio()
+                    }
+                  }
+                },
+                [_vm._v("Inserisci")]
+              )
+            ])
+          ])
+        ])
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.calcola == 2,
+            expression: "calcola==2"
+          }
+        ],
+        staticClass: "step"
+      },
+      [
+        _c("div", { staticClass: "form-group row" }, [
+          _c(
+            "label",
+            {
+              staticClass: "col-lg-1 text-change",
+              attrs: { for: "descrizione" }
+            },
+            [_vm._v("Descrizione:")]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-lg-4" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.descrizione,
+                  expression: "descrizione"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                type: "text",
+                name: "descrizione",
+                id: "descrizione",
+                placeholder: ""
+              },
+              domProps: { value: _vm.descrizione },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.descrizione = $event.target.value
+                }
+              }
+            })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "form-group row" }, [
+          _c(
+            "label",
+            {
+              staticClass: "col-lg-1 text-change",
+              attrs: { for: "descrizione" }
+            },
+            [_vm._v("Valore:")]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-lg-4" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.perc,
+                  expression: "perc"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                type: "text",
+                name: "valore",
+                id: "valore",
+                placeholder: ""
+              },
+              domProps: { value: _vm.perc },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.perc = $event.target.value
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "btn btn-info",
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.stepBack()
+                    }
+                  }
+                },
+                [_vm._v("Indietro")]
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "btn btn-info",
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.insertRigaLibera()
                     }
                   }
                 },

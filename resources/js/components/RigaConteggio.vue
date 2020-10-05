@@ -5,16 +5,19 @@
 						<div class="col">
 								<div class="form-group row">
 									
-									<label class="col-md-1 text-change" for="cell">Cliente:</label>
-									<div class="col-md-4">
+									<label class="col-lg-1 text-change" for="cell">Cliente:</label>
+									<div class="col-lg-4">
 										<select name="cliente" class="form-control" v-model="cliente" @change="loadServiziCliente()">
 											<option value="0">Nessuno</option>
 											<option v-for="cliente in clienti" :value="cliente"> {{cliente.nome}} </option>
 										</select>
 									</div>
+
+								</div>
+								<div class="form-group row">
 								
-									<label class="col-md-1 text-change" for="cell">Servizi:</label>
-									<div class="col-md-4">
+									<label class="col-lg-1 text-change" for="cell">Servizi:</label>
+									<div class="col-lg-4">
 										
 										<select v-if="!carica_servizi || servizi.length > 0" name="servizi_selected" class="form-control" multiple v-model="servizi_selected">
 											<option v-for="servizio in servizi" :value="servizio"> {{servizio.nome}} </option>
@@ -22,15 +25,22 @@
 
 										<span v-if="carica_servizi && servizi.length == 0">Nessun servizio da conteggiare per questo cliente</span>
 									</div>
-									<div class="col-md-2">
+									
+									<div class="col-lg-1">
 										<a href="#" @click.prevent="stepCalcola()" class="btn btn-info">Prosegui</a>
+									</div>
+									<div class="col-lg-1">
+										oppure inserisci una riga
+									</div>
+									<div class="col-lg-1">
+										<a href="#" @click.prevent="stepLibera()" class="btn btn-success">Libera</a>
 									</div>
 
 								</div>
 						</div>
 					</div>
 			</div> <!-- step -->
-			<div class="step" v-show="calcola">
+			<div class="step" v-show="calcola==1">
 					<div class="row">
 						<div class="col">
 						{{cliente.nome}}
@@ -81,6 +91,42 @@
 
 					</div>
 			</div> <!-- step -->
+
+			<div class="step" v-show="calcola==2">
+					
+					<div class="form-group row">
+						
+						<label class="col-lg-1 text-change" for="descrizione">Descrizione:</label>
+						<div class="col-lg-4">
+							<input type="text" class="form-control" name="descrizione" id="descrizione" v-model="descrizione" placeholder="">
+						</div>
+
+					</div>
+
+
+					<div class="form-group row">
+						
+						<label class="col-lg-1 text-change" for="descrizione">Valore:</label>
+						<div class="col-lg-4">
+							<input type="text" class="form-control" name="valore" id="valore" v-model="perc" placeholder="">
+						</div>
+
+						<div class="col">
+							<div class="form-group">
+									<a href="#" @click.prevent="stepBack()" class="btn btn-info">Indietro</a>
+							</div>
+						</div>
+
+						<div class="col">
+							<div class="form-group">
+									<a href="#" @click.prevent="insertRigaLibera()" class="btn btn-info">Inserisci</a>
+							</div>
+						</div>
+
+					</div>
+
+			</div> <!-- step -->
+
 		</div>	<!-- wrapper -->
 </template>
 
@@ -100,6 +146,7 @@
 						calcola:0,
 						modalita_vendita:[],
 						modalita_selected:{},
+						descrizione:'',
 						valore:null,
 						valore_percentuale:null,
 						perc:null,
@@ -178,6 +225,11 @@
 					},
 
 
+					stepLibera() {
+							this.calcola = 2;
+					},
+
+
 					stepBack() {
 
 						this.servizi_selected= [];
@@ -185,6 +237,7 @@
 						this.servizi_ids_selected = [];
 						this.modalita_selected={};
 						this.valore=null;
+						this.perc=null,
 						this.valore_percentuale=null;
 						this.calcola = 0;
 					},
@@ -220,6 +273,31 @@
                        
                   });
 					},
+
+
+					insertRigaLibera() {
+						this.row.conteggio_id = this.conteggio_id;
+						this.row.cliente_id = 0;
+						this.row.modalita_id = 0;
+						this.row.reale = 0.00;
+						this.row.percentuale = this.perc;
+						this.row.descrizione = this.descrizione;
+
+						axios.post('/api/conteggi/insertRiga', { // <== use axios.post
+                          data: this.row
+                  })
+                  .then(response => {
+                    	// reload page??
+											alert('Inserimemto corretto');
+											location.reload(); 
+                  })
+									.finally(() => {
+                        // ricarico la pagina corrente
+                       
+                  });
+					},
+
+
 
 				},
 
