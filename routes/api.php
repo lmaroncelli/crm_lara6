@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\MemorexCollection;
 use App\Http\Resources\Memorex as MemorexResource;
 use App\ModalitaVendita;
+use App\RigaConteggio;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,42 +34,43 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('/conteggi/clientiCommerciale/{commerciale_id}', function($commerciale_id){
   $clienti = [];
 
-  $clienti_associati = User::with([
-    'clienti_associati.servizi_attivi.righeConteggi',
-    'clienti_associati.localita'])
-                ->find($commerciale_id)
-                ->clienti_associati;
-
-
+  $clienti_associati = User::with(
+        [
+        'clienti_associati.servizi_attivi.righeConteggi',
+        'clienti_associati.localita'
+        ])
+        ->find($commerciale_id)
+        ->clienti_associati;
 
   // voglio prendere solo i clienti che hanno dei servizi da conteggiare
-//   $clienti_filtered = $clienti_associati->reject(function ($cliente, $key) {
+  $clienti_filtered = $clienti_associati->reject(function ($cliente, $key) {
 
-//     $all_servizi = $cliente->servizi_attivi;
-//     $all_servizi->loadCount('righeConteggi');
-//     $trovato = false;
-//     foreach ($all_servizi as $servizio) {
-//       if( $servizio->righeConteggi_count == 0) {
-//       // CE NE E' ALMENO 1 CHE NON E' IN NESSUN CONTEGGIO 
-//       $trovato = true;
-//       break;
-//       }
-//     }
+        $all_servizi = $cliente->servizi_attivi;
+      
+        $trovato = false;
+        foreach ($all_servizi as $servizio) {
+            if( $servizio->righeConteggi->count() == 0) {
+            // CE NE E' ALMENO 1 CHE NON E' IN NESSUN CONTEGGIO 
+            $trovato = true;
+            //echo 'servizio id '.$servizio->id;
+            break;
+            }
+        }
 
-//     // il cliente lo prendo (NON LO RIGETTO)
-//     return !$trovato;
-  
-// });
+        // il cliente lo prendo (NON LO RIGETTO)
+        return !$trovato;
+        
+  });
 
-$clienti_filtered = $clienti_associati;
+    //$clienti_filtered = $clienti_associati;
 
-foreach ($clienti_filtered as $cliente) {
-  $c['id'] = $cliente->id;
-  $c['nome'] = $cliente->nome . ' (' . $cliente->id_info . ') - '. $cliente->localita->nome;
-  $clienti[] = $c;
-}
+    foreach ($clienti_filtered as $cliente) {
+    $c['id'] = $cliente->id;
+    $c['nome'] = $cliente->nome . ' (' . $cliente->id_info . ') - '. $cliente->localita->nome;
+    $clienti[] = $c;
+  }
 
-return $clienti;
+  return $clienti;
 
 });
 
@@ -81,11 +83,9 @@ Route::get('/conteggi/serviziCliente/{cliente_id}', function($cliente_id){
 
   $all_servizi = $cliente->servizi_attivi;
 
-  // $servizi_filtered = $all_servizi->reject(function ($servizio, $key) {
-  //   return $servizio->righeConteggi()->count() > 0;
-  // });
-
-  $servizi_filtered = $all_servizi;
+  $servizi_filtered = $all_servizi->reject(function ($servizio, $key) {
+    return $servizio->righeConteggi()->count() > 0;
+  });
 
   foreach ($servizi_filtered as $servizio) 
     {
@@ -112,6 +112,20 @@ Route::get('/conteggi/modalitaVendita/{commerciale_id}', function($commerciale_i
     return $modalita_vendita;
 });
 
+
+Route::post('conteggi/insertRiga', function(Request $request) {
+  $data_arr = $request->get('data');
+  $servizi_ids_selected = $request->get('servizi_ids_selected');
+
+  // inserisco la riga conteggio
+  $riga_conteggio = RigaConteggio::create($data_arr);
+
+  // associo la riga ad ogni servizio_id (tblRigaConteggioServizio)
+  $riga_conteggio->servizi()->sync($servizi_ids_selected);
+
+  return;
+
+});
 
 
 

@@ -15,9 +15,12 @@
 								
 									<label class="col-md-1 text-change" for="cell">Servizi:</label>
 									<div class="col-md-4">
-										<select name="servizi_selected" class="form-control" multiple v-model="servizi_selected">
+										
+										<select v-if="!carica_servizi || servizi.length > 0" name="servizi_selected" class="form-control" multiple v-model="servizi_selected">
 											<option v-for="servizio in servizi" :value="servizio"> {{servizio.nome}} </option>
 										</select>
+
+										<span v-if="carica_servizi && servizi.length == 0">Nessun servizio da conteggiare per questo cliente</span>
 									</div>
 									<div class="col-md-2">
 										<a href="#" @click.prevent="stepCalcola()" class="btn btn-info">Prosegui</a>
@@ -72,7 +75,7 @@
 
 							<div class="col">
 							<div class="form-group">
-									<a href="#" @click.prevent="" class="btn btn-info">Inserisci</a>
+									<a href="#" @click.prevent="insertRigaConteggio()" class="btn btn-info">Inserisci</a>
 							</div>
 						</div>
 
@@ -84,7 +87,7 @@
 <script>
     export default {
 
-				props: ['commerciale_id'],
+				props: ['commerciale_id','conteggio_id'],
         
 				data() {
 					return {
@@ -93,11 +96,23 @@
 						servizi:[],
 						servizi_selected: [],
 						servizi_nomi_selected:[],
+						servizi_ids_selected:[],
 						calcola:0,
 						modalita_vendita:[],
 						modalita_selected:{},
 						valore:null,
-						valore_percentuale:null
+						valore_percentuale:null,
+						perc:null,
+						carica_servizi:0,
+						row : {
+							conteggio_id:null,
+							cliente_id:null,
+							modalita_id:null,
+							totale:0.00,
+							reale:null,
+							percentuale:null,
+							descrizione:'',
+						}
 					}
 				},
 
@@ -132,10 +147,13 @@
 
 					loadServiziCliente() {
 
+						this.carica_servizi = 0;
 						axios.get('/api/conteggi/serviziCliente/'+this.cliente.id)
                   .then(response => {
                     this.servizi = response.data;
                   });
+
+						this.carica_servizi = 1;
 
 					},
 
@@ -147,6 +165,15 @@
 									this.modalita_vendita = response.data;
 								});
 
+						this.servizi_ids_selected = [];
+						if(this.servizi_selected.length) {
+							this.servizi_selected.forEach(
+								(servizio) => {
+									this.servizi_ids_selected.push(servizio.id)
+								}
+							)
+						}
+
 						this.calcola = 1;
 					},
 
@@ -155,6 +182,7 @@
 
 						this.servizi_selected= [];
 						this.servizi_nomi_selected=[];
+						this.servizi_ids_selected = [];
 						this.modalita_selected={};
 						this.valore=null;
 						this.valore_percentuale=null;
@@ -164,10 +192,34 @@
 
 					calcolaValorePercentuale() {
 						if(this.valore !== null && Object.keys(this.modalita_selected).length !== 0) {
-							let perc = this.valore*this.modalita_selected.percentuale/100;
-							this.valore_percentuale = +perc + +this.valore;
+							this.perc = this.valore*this.modalita_selected.percentuale/100;
+							this.valore_percentuale = +this.perc + +this.valore;
 						}
-					}
+					},
+
+
+					insertRigaConteggio() {
+						this.row.conteggio_id = this.conteggio_id;
+						this.row.cliente_id = this.cliente.id;
+						this.row.modalita_id = this.modalita_selected.id;
+						this.row.reale = this.valore;
+						this.row.percentuale = this.perc;
+						this.row.descrizione = this.descrizione;
+					
+						axios.post('/api/conteggi/insertRiga', { // <== use axios.post
+                          data: this.row,
+													servizi_ids_selected: this.servizi_ids_selected
+                  })
+                  .then(response => {
+                    	// reload page??
+											alert('Inserimemto corretto');
+											location.reload(); 
+                  })
+									.finally(() => {
+                        // ricarico la pagina corrente
+                       
+                  });
+					},
 
 				},
 

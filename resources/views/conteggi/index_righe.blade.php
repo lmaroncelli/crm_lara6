@@ -15,7 +15,7 @@
 </div>
 
 
-<riga-conteggio commerciale_id="{{Auth::id()}}"></riga-conteggio>
+<riga-conteggio conteggio_id="{{$conteggio->id}}" commerciale_id="{{Auth::id()}}"></riga-conteggio>
 
 
 <div class="row">

@@ -2110,8 +2110,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['commerciale_id'],
+  props: ['commerciale_id', 'conteggio_id'],
   data: function data() {
     return {
       cliente: {},
@@ -2119,11 +2122,23 @@ __webpack_require__.r(__webpack_exports__);
       servizi: [],
       servizi_selected: [],
       servizi_nomi_selected: [],
+      servizi_ids_selected: [],
       calcola: 0,
       modalita_vendita: [],
       modalita_selected: {},
       valore: null,
-      valore_percentuale: null
+      valore_percentuale: null,
+      perc: null,
+      carica_servizi: 0,
+      row: {
+        conteggio_id: null,
+        cliente_id: null,
+        modalita_id: null,
+        totale: 0.00,
+        reale: null,
+        percentuale: null,
+        descrizione: ''
+      }
     };
   },
   mounted: function mounted() {
@@ -2150,9 +2165,11 @@ __webpack_require__.r(__webpack_exports__);
     loadServiziCliente: function loadServiziCliente() {
       var _this2 = this;
 
+      this.carica_servizi = 0;
       axios.get('/api/conteggi/serviziCliente/' + this.cliente.id).then(function (response) {
         _this2.servizi = response.data;
       });
+      this.carica_servizi = 1;
     },
     stepCalcola: function stepCalcola() {
       var _this3 = this;
@@ -2160,11 +2177,20 @@ __webpack_require__.r(__webpack_exports__);
       axios.get('/api/conteggi/modalitaVendita/' + this.commerciale_id).then(function (response) {
         _this3.modalita_vendita = response.data;
       });
+      this.servizi_ids_selected = [];
+
+      if (this.servizi_selected.length) {
+        this.servizi_selected.forEach(function (servizio) {
+          _this3.servizi_ids_selected.push(servizio.id);
+        });
+      }
+
       this.calcola = 1;
     },
     stepBack: function stepBack() {
       this.servizi_selected = [];
       this.servizi_nomi_selected = [];
+      this.servizi_ids_selected = [];
       this.modalita_selected = {};
       this.valore = null;
       this.valore_percentuale = null;
@@ -2172,9 +2198,27 @@ __webpack_require__.r(__webpack_exports__);
     },
     calcolaValorePercentuale: function calcolaValorePercentuale() {
       if (this.valore !== null && Object.keys(this.modalita_selected).length !== 0) {
-        var perc = this.valore * this.modalita_selected.percentuale / 100;
-        this.valore_percentuale = +perc + +this.valore;
+        this.perc = this.valore * this.modalita_selected.percentuale / 100;
+        this.valore_percentuale = +this.perc + +this.valore;
       }
+    },
+    insertRigaConteggio: function insertRigaConteggio() {
+      this.row.conteggio_id = this.conteggio_id;
+      this.row.cliente_id = this.cliente.id;
+      this.row.modalita_id = this.modalita_selected.id;
+      this.row.reale = this.valore;
+      this.row.percentuale = this.perc;
+      this.row.descrizione = this.descrizione;
+      axios.post('/api/conteggi/insertRiga', {
+        // <== use axios.post
+        data: this.row,
+        servizi_ids_selected: this.servizi_ids_selected
+      }).then(function (response) {
+        // reload page??
+        alert('Inserimemto corretto');
+        location.reload();
+      })["finally"](function () {// ricarico la pagina corrente
+      });
     }
   },
   computed: {
@@ -76851,42 +76895,52 @@ var render = function() {
               ),
               _vm._v(" "),
               _c("div", { staticClass: "col-md-4" }, [
-                _c(
-                  "select",
-                  {
-                    directives: [
+                !_vm.carica_servizi || _vm.servizi.length > 0
+                  ? _c(
+                      "select",
                       {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.servizi_selected,
-                        expression: "servizi_selected"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: { name: "servizi_selected", multiple: "" },
-                    on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.servizi_selected = $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
-                      }
-                    }
-                  },
-                  _vm._l(_vm.servizi, function(servizio) {
-                    return _c("option", { domProps: { value: servizio } }, [
-                      _vm._v(" " + _vm._s(servizio.nome) + " ")
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.servizi_selected,
+                            expression: "servizi_selected"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { name: "servizi_selected", multiple: "" },
+                        on: {
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.servizi_selected = $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          }
+                        }
+                      },
+                      _vm._l(_vm.servizi, function(servizio) {
+                        return _c("option", { domProps: { value: servizio } }, [
+                          _vm._v(" " + _vm._s(servizio.nome) + " ")
+                        ])
+                      }),
+                      0
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.carica_servizi && _vm.servizi.length == 0
+                  ? _c("span", [
+                      _vm._v(
+                        "Nessun servizio da conteggiare per questo cliente"
+                      )
                     ])
-                  }),
-                  0
-                )
+                  : _vm._e()
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "col-md-2" }, [
@@ -77088,6 +77142,7 @@ var render = function() {
                   on: {
                     click: function($event) {
                       $event.preventDefault()
+                      return _vm.insertRigaConteggio()
                     }
                   }
                 },
