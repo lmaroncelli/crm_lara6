@@ -35,10 +35,21 @@ class RigaConteggio extends Model
 			$servizi_arr = [];
 			
 			foreach ($this->servizi as $servizio) 
-				{
-				$servizi_arr[] = $servizio->prodotto->nome;
-				}
+					{
+					$servizi_arr[] = $servizio->prodotto->nome;
+					}
 
 			return implode(',', $servizi_arr);
 			}
+		
+		
+			public function destroyMe()
+			{
+			
+				// Detach all servizi from the RigaConteggio...
+				self::servizi()->detach();
+				
+				self::delete();
+			}
+    
 }

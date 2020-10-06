@@ -115,11 +115,26 @@ Route::get('/conteggi/modalitaVendita/{commerciale_id}', function($commerciale_i
 
 Route::post('conteggi/insertRiga', function(Request $request) {
 
-  $validatedData = $request->validate([
-    'perc' => 'required'
-  ]);
+  dd($request->all());
+  
+  if($request->has('descrizione')) 
+    {
+    $validatedData = $request->validate([
+      'perc' => 'required',
+      'descrizione' => 'required'
+      ]);
+    }
+  else 
+    {
+    $validatedData = $request->validate([
+      'perc' => 'required',
+      'valore' => 'required|regex:/^\d+(\,\d{1,2})?$/'
+      ]);
+    }
+
 
   $data_arr = $request->get('data');
+
   // inserisco la riga conteggio
   $riga_conteggio = RigaConteggio::create($data_arr);
   

@@ -21,10 +21,12 @@ window.Vue = require('vue');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
+
+
+
 Vue.component('scadenze-memorex', require('./components/ScadenzeMemorex.vue').default);
 
 Vue.component('toggle-password', require('./components/TogglePassword.vue').default);
-
 
 
 

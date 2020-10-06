@@ -1,5 +1,6 @@
 <template>
 		<div class="wrapper">
+			<validation-errors :errors="validationErrors" v-if="validationErrors"></validation-errors>
 			<div class="step" v-show="!calcola">
 					<div class="row">
 						<div class="col">
@@ -64,7 +65,7 @@
 									{{modalita_selected.nome}} ({{modalita_selected.percentuale}})% 
 									</span>
 								</label>
-								<select name="cliente" class="form-control" v-model="modalita_selected">
+								<select name="modalita_selected" class="form-control" v-model="modalita_selected">
 									<option v-for="modalita in modalita_vendita" :value="modalita"> {{modalita.nome}} </option>
 								</select>
 							</div>
@@ -91,7 +92,6 @@
 
 					</div>
 			</div> <!-- step -->
-
 			<div class="step" v-show="calcola==2">
 					
 					<div class="form-group row">
@@ -126,17 +126,24 @@
 					</div>
 
 			</div> <!-- step -->
-
 		</div>	<!-- wrapper -->
 </template>
 
 <script>
+
+		import ValidationErrors from "./ValidationErrors";
+
     export default {
+
+				components: {
+            ValidationErrors
+        },
 
 				props: ['commerciale_id','conteggio_id'],
         
 				data() {
 					return {
+						validationErrors:'',
 						cliente: {},
 						clienti:[],
 						servizi:[],
@@ -291,6 +298,10 @@
 											alert('Inserimemto corretto');
 											location.reload(); 
                   })
+									.catch(error => {
+										console.log(error.response.data.errors);
+										this.validationErrors = error.response.data.errors;
+									})
 									.finally(() => {
                         // ricarico la pagina corrente
                        

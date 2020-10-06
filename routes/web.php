@@ -200,6 +200,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('conteggi/{id}/edit','ConteggiController@edit')->name('conteggi.edit');
 
+    Route::delete('/conteggio-riga/{riga_conteggio_id}', 'ConteggiController@destroyRiga')->name('conteggi.destroy.riga');
+
         
 });
 
