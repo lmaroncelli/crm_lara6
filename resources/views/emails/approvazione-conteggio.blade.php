@@ -1,12 +1,9 @@
 @component('mail::message')
-# Introduction
+# Avviso di approvazione conteggio
 
-The body of your message.
+Il conteggio {{$conteggio->titolo}} è stato approvato
 
-@component('mail::button', ['url' => ''])
-Button Text
-@endcomponent
 
-Thanks,<br>
+<br>
 {{ config('app.name') }}
 @endcomponent

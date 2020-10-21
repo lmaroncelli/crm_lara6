@@ -1,12 +1,8 @@
 @component('mail::message')
-# Introduction
+# Avviso di riapertura conteggio
 
-The body of your message.
+{{$conteggio->commerciale->name}} il conteggio {{$conteggio->titolo}} è stato riaperto
 
-@component('mail::button', ['url' => ''])
-Button Text
-@endcomponent
-
-Thanks,<br>
+<br>
 {{ config('app.name') }}
 @endcomponent

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Mail\AperturaConteggio;
 use App\Mail\ChiusuraConteggio;
 use Illuminate\Support\Facades\DB;
+use App\Mail\ApprovazioneConteggio;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Database\Eloquent\Builder;
@@ -117,7 +118,7 @@ class ConteggiController extends Controller
         
         $conteggio->save();
 
-        Mail::to($conteggio->commerciale->email)->send(new AperturaConteggio($conteggio));
+        Mail::to($conteggio->commerciale->email)->send(new ApprovazioneConteggio($conteggio));
 
         return redirect()->route('conteggi.index', $conteggio->commerciale->id)->with('status', 'Il conteggio è stato approvato e una notifica via mail è stata inviata al commerciale');
 
