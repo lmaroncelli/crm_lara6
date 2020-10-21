@@ -47,7 +47,17 @@
                 @foreach ($conteggi as $c)
                     <tr>
                       <td><a href="{{ route('conteggi.edit', $c->id) }}">{{$c->titolo}}</a></td>
-                      <td>X</td>
+                      @type('A')
+                        <td>
+                          @if ($c->approvato)
+                            <i class="icon-badge icons font"></i>
+                          @else
+                            <i class="icon-pencil icons font"></i>
+                          @endif
+                        </td>
+                      @elsetype('C')
+                        <td>X</td>
+                      @endtype
                     </tr>
                 @endforeach
               </tbody>

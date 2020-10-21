@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\Conteggio;
 use App\RigaConteggio;
 use Illuminate\Http\Request;
+use App\Mail\AperturaConteggio;
+use App\Mail\ChiusuraConteggio;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Database\Eloquent\Builder;
 
 class ConteggiController extends Controller
@@ -16,12 +20,29 @@ class ConteggiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($commerciale_id = null)
     {
-    $conteggi = Auth::user()->conteggi()->orderBy('id', 'desc')->paginate(50);
+    if (is_null($commerciale_id)) 
+      {
+      $conteggi = Auth::user()->conteggi_terminati()->orderBy('id', 'desc')->paginate(50);
+      } 
+    else 
+      {
+      $commerciale = User::findOrFail($commerciale_id);
+      $conteggi = $commerciale->conteggi()->orderBy('id', 'desc')->paginate(50);
+      }
 
     return view('conteggi.index', compact('conteggi'));
     }
+
+
+    public function indexCommerciali()
+      {
+      $commerciali = User::commerciale()->has('conteggi')->withCount('conteggi')->get();
+
+      return view('conteggi.index_commerciali', compact('commerciali'));
+
+      }
 
     /**
      * Show the form for creating a new resource.
@@ -56,6 +77,51 @@ class ConteggiController extends Controller
     {
     
     }
+
+
+
+    public function termina(Request $request, $id)
+      {
+      $conteggio = Conteggio::with('commerciale')->find($id);
+
+      $conteggio->terminato = 1;
+      
+      $conteggio->save();
+
+      Mail::to(env('CONTEGGIO_MAIL_TO'))->send(new ChiusuraConteggio($conteggio));
+
+      return redirect()->route('conteggi.edit', ['id' => $id])->with('status', 'Il conteggio è stato chiuso e una notifica via mail è stata inviata allo staff');
+
+      }
+
+      public function apri(Request $request, $id)
+        {
+        $conteggio = Conteggio::with('commerciale')->find($id);
+
+        $conteggio->terminato = 0;
+        
+        $conteggio->save();
+
+        Mail::to($conteggio->commerciale->email)->send(new AperturaConteggio($conteggio));
+
+        return redirect()->route('conteggi.index', $conteggio->commerciale->id)->with('status', 'Il conteggio è stato riaperto e una notifica via mail è stata inviata al commerciale');
+
+        }
+
+      
+      public function approva(Request $request, $id)
+        {
+        $conteggio = Conteggio::with('commerciale')->find($id);
+
+        $conteggio->approvato = 0;
+        
+        $conteggio->save();
+
+        Mail::to($conteggio->commerciale->email)->send(new AperturaConteggio($conteggio));
+
+        return redirect()->route('conteggi.index', $conteggio->commerciale->id)->with('status', 'Il conteggio è stato approvato e una notifica via mail è stata inviata al commerciale');
+
+        }
 
     /**
      * Show the form for editing the specified resource.

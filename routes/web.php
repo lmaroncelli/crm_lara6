@@ -194,13 +194,22 @@ Route::middleware(['auth'])->group(function () {
     //////////////
     // CONTEGGI // 
     //////////////
-    Route::get('conteggi', 'ConteggiController@index')->name('conteggi.index');
+    Route::get('conteggi/index_commerciali', 'ConteggiController@indexCommerciali')->name('conteggi.index_commerciali');
+    
+    Route::get('conteggi/{commerciale_id?}', 'ConteggiController@index')->name('conteggi.index');
+
+
+    
     
     Route::post('conteggi', 'ConteggiController@store')->name('conteggi.store');
 
     Route::get('conteggi/{id}/edit','ConteggiController@edit')->name('conteggi.edit');
 
     Route::delete('/conteggio-riga/{riga_conteggio_id}', 'ConteggiController@destroyRiga')->name('conteggi.destroy.riga');
+
+    Route::get('conteggi/{id}/termina','ConteggiController@termina')->name('conteggi.termina');
+    Route::get('conteggi/{id}/apri','ConteggiController@apri')->name('conteggi.apri');
+    Route::get('conteggi/{id}/approva','ConteggiController@approva')->name('conteggi.approva');
 
         
 });

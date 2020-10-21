@@ -66,6 +66,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Conteggio', 'user_id', 'id');
     }
 
+    public function conteggi_terminati()
+    {
+        return $this->hasMany('App\Conteggio', 'user_id', 'id')->where('terminato',1);
+    }
+
 
     public function roles()
     {
@@ -82,5 +87,9 @@ class User extends Authenticatable
          return $query->where('type_id','C');
      }
 
+    public function hasType($type)
+     {
+     return strtolower($type) === strtolower($this->type_id);
+     }
 
 }

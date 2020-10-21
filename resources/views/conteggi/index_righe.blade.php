@@ -5,17 +5,56 @@
 <div class="row">
   <div class="col-sm-2">
     <div class="callout callout-info b-t-1 b-r-1 b-b-1">
-       Elenco righe conteggio {{$conteggio->titolo}}
+       Elenco righe conteggio <br/>
+       <b>{{$conteggio->titolo}}</b>
       @if (isset($righe))
       <br>
       <strong class="h4">{{$righe->total()}}</strong>
       @endif
     </div>
   </div><!--/.col-->
+  <div class="col-sm-4">
+    <div class="mt-3">
+      
+      @if (!$conteggio->terminato)
+
+        @type('C')
+          <a href="{{ route('conteggi.termina', ['id' => $conteggio->id]) }}" class="btn btn-info"><i class="icon-lock-open icons font-2xl mr-1"></i>Clicca per terminare il conteggio e renderlo visibile allo staff</a>
+        @endtype
+        
+      @else
+        @type('C')
+          <a class="btn btn-warning"><i class="icon-hourglass icons font-2xl mr-1"></i>Il tuo conteggio è stato preso in carico dallo staff.....</a>
+        @elsetype('A')
+          <a href="{{ route('conteggi.apri', ['id' => $conteggio->id]) }}" class="btn btn-info"><i class="icon-lock icons font-2xl mr-1"></i>Clicca per aprire il conteggio e renderlo editabile al commerciale</a>
+        @endtype
+      @endif
+
+    </div>
+  </div>
+
 </div>
 
+@type('A')
+<div class="col-sm-4">
+  <div class="mt-3">
+    @if (!$conteggio->approvato)
+    <a href="{{ route('conteggi.approva', ['id' => $conteggio->id]) }}" class="btn btn-info"><i class="icon-badge icons font-2xl mr-1"></i>Clicca per approvare il conteggio</a>
+    @endif
+  </div>
+</div>
+@endtype
 
-<riga-conteggio conteggio_id="{{$conteggio->id}}" commerciale_id="{{Auth::id()}}"></riga-conteggio>
+
+@type('C')
+  @if (!$conteggio->terminato)
+    <riga-conteggio conteggio_id="{{$conteggio->id}}" commerciale_id="{{$conteggio->commerciale->id}}"></riga-conteggio>
+  @endif
+@elsetype('A')
+  <riga-conteggio conteggio_id="{{$conteggio->id}}" commerciale_id="{{$conteggio->commerciale->id}}"></riga-conteggio>
+@endtype
+
+
 
 <form action="{{ route('conteggi.edit',$conteggio->id) }}" method="get" id="searchForm" accept-charset="utf-8">
   <input type="hidden" name="orderby" id="orderby" value="">
@@ -97,7 +136,9 @@
                         @endif
                     @endif
                   </th>
-                  <th></th>
+                  @if (!$conteggio->terminato)
+                    <th></th>
+                  @endif
                 </tr>
                 @foreach ($righe as $r) 
                   @if (!is_null($r->cliente))
@@ -115,9 +156,11 @@
                       <td>{{$r->reale}}</td>
                       <td>{{optional($r->modalita)->nome}}</td>
                       <td>{{$r->percentuale}} %</td>
-                      <td>
-                        <a data-id="{{$r->id}}" href="#" class="delete btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
-                      </td>
+                      @if (!$conteggio->terminato)
+                        <td>
+                          <a data-id="{{$r->id}}" href="#" class="delete btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
+                        </td>
+                      @endif
                     </tr>
                   @endif
                 @endforeach

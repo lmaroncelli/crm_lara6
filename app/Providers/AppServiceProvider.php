@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,8 +25,11 @@ class AppServiceProvider extends ServiceProvider
      * @return void
      */
     public function boot()
-    {      
-      //View::share('key', 'value');
+    { 
+
+      Blade::if('type', function ($type) {
+        return Auth::check() && Auth::user()->type_id === $type;
+      });
       
     }
 }
