@@ -25,15 +25,16 @@ class ConteggiController extends Controller
     {
     if (is_null($commerciale_id)) 
       {
-      $conteggi = Auth::user()->conteggi_terminati()->orderBy('id', 'desc')->paginate(50);
+      $commerciale = null;
+      $conteggi = Auth::user()->conteggi()->orderBy('id', 'desc')->paginate(50);
       } 
     else 
       {
       $commerciale = User::findOrFail($commerciale_id);
-      $conteggi = $commerciale->conteggi()->orderBy('id', 'desc')->paginate(50);
+      $conteggi = $commerciale->conteggi_terminati()->orderBy('id', 'desc')->paginate(50);
       }
 
-    return view('conteggi.index', compact('conteggi'));
+    return view('conteggi.index', compact('conteggi','commerciale'));
     }
 
 
@@ -114,7 +115,7 @@ class ConteggiController extends Controller
         {
         $conteggio = Conteggio::with('commerciale')->find($id);
 
-        $conteggio->approvato = 0;
+        $conteggio->approvato = 1;
         
         $conteggio->save();
 

@@ -15,8 +15,11 @@
   </div><!--/.col-->
   <div class="col-sm-4">
     <div class="mt-3">
-      
-      @if (!$conteggio->terminato)
+      @if ($conteggio->approvato)
+        
+        <a class="btn btn-danger" style="color: #fff;"><i class="icon-badge icons font-2xl mr-1"></i>CONTEGGIO APPROVATO</a>
+
+      @elseif (!$conteggio->terminato)
 
         @type('C')
           <a href="{{ route('conteggi.termina', ['id' => $conteggio->id]) }}" class="btn btn-info"><i class="icon-lock-open icons font-2xl mr-1"></i>Clicca per terminare il conteggio e renderlo visibile allo staff</a>
@@ -32,27 +35,29 @@
 
     </div>
   </div>
-
-</div>
-
-@type('A')
-<div class="col-sm-4">
-  <div class="mt-3">
-    @if (!$conteggio->approvato)
-    <a href="{{ route('conteggi.approva', ['id' => $conteggio->id]) }}" class="btn btn-info"><i class="icon-badge icons font-2xl mr-1"></i>Clicca per approvare il conteggio</a>
-    @endif
+  
+  @type('A')
+  <div class="col-sm-4">
+    <div class="mt-3">
+      @if (!$conteggio->approvato)
+      <a href="{{ route('conteggi.approva', ['id' => $conteggio->id]) }}" class="btn btn-warning"><i class="icon-badge icons font-2xl mr-1"></i>Clicca per approvare il conteggio</a>
+      @endif
+    </div>
   </div>
+  @endtype
+
 </div>
-@endtype
 
 
-@type('C')
-  @if (!$conteggio->terminato)
+@if (!$conteggio->approvato)
+  @type('C')
+    @if (!$conteggio->terminato)
+      <riga-conteggio conteggio_id="{{$conteggio->id}}" commerciale_id="{{$conteggio->commerciale->id}}"></riga-conteggio>
+    @endif
+  @elsetype('A')
     <riga-conteggio conteggio_id="{{$conteggio->id}}" commerciale_id="{{$conteggio->commerciale->id}}"></riga-conteggio>
-  @endif
-@elsetype('A')
-  <riga-conteggio conteggio_id="{{$conteggio->id}}" commerciale_id="{{$conteggio->commerciale->id}}"></riga-conteggio>
-@endtype
+  @endtype
+@endif
 
 
 
@@ -61,13 +66,26 @@
   <input type="hidden" name="order" id="order" value="">
 </form>
 
+@if (!$conteggio->approvato)
+  @type('C')
+    @if (!$conteggio->terminato)
+      @foreach ($righe as $r)
+      <form action="{{ route('conteggi.destroy.riga',$r->id) }}" method="POST" id="delete_item_{{$r->id}}">
+        @csrf
+        @method('DELETE')
+      </form>
+      @endforeach
+    @endif
+  @elsetype('A')
+    @foreach ($righe as $r)
+    <form action="{{ route('conteggi.destroy.riga',$r->id) }}" method="POST" id="delete_item_{{$r->id}}">
+      @csrf
+      @method('DELETE')
+    </form>
+    @endforeach
+  @endtype
+@endif
 
-@foreach ($righe as $r)
-  <form action="{{ route('conteggi.destroy.riga',$r->id) }}" method="POST" id="delete_item_{{$r->id}}">
-    @csrf
-    @method('DELETE')
-  </form>
-@endforeach
 
 <div class="row">
   <div class="col">
@@ -136,7 +154,7 @@
                         @endif
                     @endif
                   </th>
-                  @if (!$conteggio->terminato)
+                  @if (!$conteggio->terminato && !$conteggio->approvato)
                     <th></th>
                   @endif
                 </tr>
@@ -156,10 +174,18 @@
                       <td>{{$r->reale}}</td>
                       <td>{{optional($r->modalita)->nome}}</td>
                       <td>{{$r->percentuale}} %</td>
-                      @if (!$conteggio->terminato)
-                        <td>
-                          <a data-id="{{$r->id}}" href="#" class="delete btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
-                        </td>
+                      @if (!$conteggio->approvato)
+                        @type('C')
+                          @if (!$conteggio->terminato)
+                            <td>
+                              <a data-id="{{$r->id}}" href="#" class="delete btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
+                            </td>
+                          @endif
+                        @elsetype('A')
+                          <td>
+                            <a data-id="{{$r->id}}" href="#" class="delete btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
+                          </td>
+                        @endtype
                       @endif
                     </tr>
                   @endif

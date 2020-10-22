@@ -96,6 +96,12 @@
 
   <script type="text/javascript">
 
+
+// initialize all tooltips on a page
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+
     // AJAX library automatically attach the CSRF token to every outgoing request.
     $.ajaxSetup({
         headers: {

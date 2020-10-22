@@ -5,7 +5,7 @@
 <div class="row">
   <div class="col-sm-2">
     <div class="callout callout-info b-t-1 b-r-1 b-b-1">
-       Elenco conteggi
+    Elenco conteggi @if (!is_null($commerciale)) <b>{{ $commerciale->name }}</b> @endif
       @if (isset($conteggi))
       <br>
       <strong class="h4">{{$conteggi->total()}}</strong>
@@ -50,9 +50,9 @@
                       @type('A')
                         <td>
                           @if ($c->approvato)
-                            <i class="icon-badge icons font"></i>
+                            <i class="icon-badge icons font" data-toggle="tooltip" data-placement="right" title="" data-original-title="Conteggio aprrovato"></i>
                           @else
-                            <i class="icon-pencil icons font"></i>
+                            <i class="icon-pencil icons font" style="color: darkred;" data-toggle="tooltip" data-placement="right" title="" data-original-title="Conteggio da aprrovare"></i>
                           @endif
                         </td>
                       @elsetype('C')
