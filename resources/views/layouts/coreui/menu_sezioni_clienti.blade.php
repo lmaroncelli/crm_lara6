@@ -17,7 +17,7 @@
           <a class="nav-link @if($controller=='ClientiFatturazioniController')  active @endif"  href="{{ route('clienti-fatturazioni',['cliente_id' => $cliente->id]) }}">Fatturazione</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Servizi Venduti</a>
+          <a class="nav-link @if($controller=='ClientiServiziController')  active @endif" href="{{ route('clienti-servizi',['cliente_id' => $cliente->id]) }}">Servizi Venduti</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Storico servizi Venduti</a>
