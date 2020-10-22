@@ -3,6 +3,12 @@
       
     jQuery(document).ready(function(){
 
+
+      $("#refresh").click(function(e){
+        e.preventDefault();
+          location.reload();
+      });
+
       // click su ogni cella della griglia
 
       $(".clickable:not(.acquistata_1)").click(function(e){
@@ -17,9 +23,10 @@
             
             $(".spinner_lu").show();
 
-            var id_evidenza = $(this).attr("data-id-evidenza");
-            var id_mese = $(this).attr("data-id-mese");
-            
+            var elem = $(this);
+
+            var id_evidenza = elem.attr("data-id-evidenza");
+            var id_mese = elem.attr("data-id-mese");
             var data = {
               'id_agente': "{{ session('id_agente') }}",
               'id_cliente': "{{ session('id_cliente') }}",
@@ -32,7 +39,25 @@
                       data: data,
                       success: function(msg) {
                           if (msg == 'ok') {
-                            location.reload();
+                            //location.reload();
+                            elem.data('id-hotel',"{{ session('id_cliente') }}");
+                            
+                            var newclass = 'sfondo_'+ "{{ session('id_agente') }}";
+                            elem.toggleClass("sfondo_0 "+newclass);
+
+                            var elem_content = elem.find("div.contenuto_cella").html().trim();
+
+                            if (elem_content == '') 
+                              {
+                              elem.find("div.contenuto_cella").html("{{ session('id_info') }}");
+                              } 
+                            else 
+                              {
+                              elem.find("div.contenuto_cella").html('');
+                              }
+                            $("#refresh").show();
+                            $(".spinner_lu").hide();
+
                           } else {
                             $(".spinner_lu").hide();
                             window.alert(msg);
@@ -54,7 +79,8 @@
 
               $(".spinner_lu").show();
               
-              var id_evidenza = $(this).attr("data-id-evidenza");
+              var elem = $(this);
+              var id_evidenza = elem.attr("data-id-evidenza");
               
               @if (isset($contratto_digitale))
                 var contratto_id =  "{{$contratto->id}}";
@@ -75,7 +101,12 @@
                   data: data,
                   success: function(msg) {
                       if (msg == 'ok') {
-                        location.reload();
+                        //location.reload();
+                        elem.toggleClass('btn-primary btn-warning');
+                        elem.toggleClass('compra_evidenza evidenza_comprata');
+                        elem.prop('value', 'COMPRATA');
+                        $("#refresh").show();
+                        $(".spinner_lu").hide();
                       } else {
                         $(".spinner_lu").hide();
                         window.alert(msg);
@@ -88,6 +119,101 @@
           }); // end compra_evidenza
 
 
+          $(".clickable_prelazionata").click(function(e){
+
+              e.preventDefault();
+
+              @if (!session('id_cliente') || !session('id_agente'))
+                alert('selezionare il cliente'); return;
+              @else
+                var elem = $(this);
+
+                var id_hotel = elem.attr("data-id-hotel");
+                var id_cliente_session = {{ session('id_cliente') }};
+
+                if (id_cliente_session != id_hotel) {
+                      
+                  alert('selezionare il cliente corretto!!'); 
+
+                  return;
+                }
+
+                $(".spinner_lu").show();
+                
+                var id_evidenza = elem.attr("data-id-evidenza");
+                var id_mese = elem.attr("data-id-mese");
+                
+                var data = {
+                'id_evidenza': id_evidenza,
+                'id_mese': id_mese
+                }  
+                
+                $.ajax({
+                    url: "{{ route('disassocia-mese-evidenza-prelazione-ajax') }}",
+                    data: data,
+                    success: function(msg) {
+                        if (msg == 'ok') {
+                          //location.reload();
+                          elem.removeClass("sfondo_prelazione");
+                          elem.addClass("sfondo_0");
+                          elem.removeClass("clickable_prelazionata");
+                          elem.data('id-hotel','0');
+                          elem.find("div.contenuto_cella").html('');
+                          $("#refresh").show();
+                          $(".spinner_lu").hide();
+                        } else {
+                          $(".spinner_lu").hide();
+                          window.alert(msg);
+                        }
+                    }
+                });        
+
+              @endif
+
+          }); // end clickable_prelazionata
+
+          $(".prelaziona_evidenza").click(function(e){
+
+              e.preventDefault();
+
+              @if (!session('id_cliente') || !session('id_agente'))
+                alert('selezionare il cliente'); return;
+              @else
+
+                $(".spinner_lu").show();
+                
+                var elem = $(this);
+
+                var id_evidenza = elem.attr("data-id-evidenza");
+                
+                var data = {
+                  'id_agente': "{{ session('id_agente') }}",
+                  'id_cliente': "{{ session('id_cliente') }}",
+                  'id_foglio_servizi': 0,
+                  'id_evidenza': id_evidenza,
+                }
+                
+                $.ajax({
+                    url: "{{ route('prelaziona-evidenza-ajax') }}",
+                    data: data,
+                    success: function(msg) {
+                        if (msg == 'ok') {
+                          //location.reload();
+                          elem.toggleClass('btn-primary btn-warning');
+                          elem.toggleClass('prelaziona_evidenza evidenza_prelazionata');
+                          elem.prop('value', 'PRELAZIONATA');
+                          $("#refresh").show();
+                          $(".spinner_lu").hide();
+                        } else {
+                          $(".spinner_lu").hide();
+                          window.alert(msg);
+                        }
+                    }
+                });        
+
+              @endif
+
+          }); // end prelaziona_evidenza
 
     }); // end jQuery(document).ready
 
@@ -101,7 +227,8 @@
       <div class="m-section">
           <div class="m-section__content">
             <div class="spinner_lu" style="display:none;"></div>
-            <div class="Content">
+            <div class="Content" style="position: static;">
+              <input type="button" class="btn btn-danger btn-xs" name="refresh" value="Rendi effettive le modifiche" id="refresh" style="position: fixed; right: 110px; top: 200px; z-index: 100; display: none;">
               <table class="table table-responsive-sm m-table m-table--head-bg-success table-bordered">
                 @php
                     $macrotipologia_old = '';
@@ -195,16 +322,20 @@
                           <td>
                             <input type="button" class="btn btn-primary btn-sm compra_evidenza" data-id-evidenza="{{$evidenza->id}}" name="compra_evidenza" value="Compra">
                           </td>
-                          <td>
-                            <input type="button" class="btn btn-success btn-sm prelaziona_evidenza" data-id-evidenza="{{$evidenza->id}}" name="prelaziona_evidenza" value="Prelaziona">
-                          </td>
+                          @type('A')
+                            <td>
+                              <input type="button" class="btn btn-success btn-sm prelaziona_evidenza" data-id-evidenza="{{$evidenza->id}}" name="prelaziona_evidenza" value="Prelaziona">
+                            </td>
+                          @endtype
                         @else
                           <td>
                             <input type="button" class="btn btn-info btn-sm disabled" name="compra_evidenza" value="Compra">
                           </td>
-                          <td>
-                             <input type="button" class="btn btn-success btn-sm disabled" name="prelaziona_evidenza" value="Prelaziona">
-                          </td>
+                          @type('A')
+                            <td>
+                              <input type="button" class="btn btn-success btn-sm disabled" name="prelaziona_evidenza" value="Prelaziona">
+                            </td>
+                          @endtype
                         @endif
                       </tr>
                     @endforeach

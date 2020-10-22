@@ -446,7 +446,7 @@ jQuery(document).ready(function($){
   @foreach ($condizioni_pagamento as $cp => $value)
     <div class="row">
         <div class="form-check-inline form-group col-sm-3">
-          <input class="form-check-input condizioni_pagamento" id="{{$cp}}" type="radio" value="{{$cp}}" name="condizioni_pagamento" @if (old('condizioni_pagamento') == $cp || $contratto->condizioni_pagamento == $cp ) checked @endif ">
+          <input class="form-check-input condizioni_pagamento" id="{{$cp}}" type="radio" value="{{$cp}}" name="condizioni_pagamento" @if (old('condizioni_pagamento') == $cp || $contratto->condizioni_pagamento == $cp ) checked @endif>
           <label class="form-check-label" for="{{$cp}}">
             {{$cp}} @if ($cp == 'RIBA') (*) @endif
           </label>

@@ -175,7 +175,7 @@ class ContrattiDigitaliController extends MyController
      */
     public function edit($id, $macro_id = 0)
     {
-      $contratto = ContrattoDigitale::find($id);
+      $contratto = ContrattoDigitale::with('cliente')->find($id);
 
       // gestione IBAN
       $this->_gestione_iban($i1, $i2, $i3, $i4, $mostra_iban_importato, $contratto);
@@ -293,7 +293,7 @@ class ContrattiDigitaliController extends MyController
       # metto in sessione 
       session([
         'id_cliente' => $contratto->cliente_id,
-        'id_info' => '',
+        'id_info' => $contratto->cliente->id_info,
         'id_agente' => $contratto->user_id,
         'nome_cliente' => '',
         'nome_agente' => '',
