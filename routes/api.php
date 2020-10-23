@@ -1,16 +1,17 @@
 <?php
 
-use App\Cliente;
 use App\User;
+use App\Cliente;
 use App\Memorex;
+use App\Prodotto;
 use Carbon\Carbon;
+use App\RigaConteggio;
+use App\ModalitaVendita;
 use App\CommercialeMemorex;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Resources\MemorexCollection;
 use App\Http\Resources\Memorex as MemorexResource;
-use App\ModalitaVendita;
-use App\RigaConteggio;
 
 /*
 |--------------------------------------------------------------------------
@@ -157,13 +158,22 @@ Route::post('conteggi/insertRiga', function(Request $request) {
 
 
 
+//////////////////////////
+// CLIENTI_SERVIZI_FORM //
+//////////////////////////
 
 
+Route::get('/clienti-servizi/prodotti', function(){
+  $prodotti = Prodotto::pluck('nome','id')
+                    ->toArray();
+  
+    return $prodotti;  
+});
 
 
-
-
-
+//////////////////////////////
+//END  CLIENTI_SERVIZI_FORM //
+//////////////////////////////
 
 
 

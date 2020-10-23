@@ -17,7 +17,7 @@
 </div>
 
 
-@include('clienti-servizi._form_servizi_cliente')
+<form-servizio-cliente></form-servizio-cliente>
 
 
 @include('clienti-servizi._lista_servizi_cliente')

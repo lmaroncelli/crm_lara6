@@ -33,6 +33,9 @@ Vue.component('toggle-password', require('./components/TogglePassword.vue').defa
 Vue.component('riga-conteggio', require('./components/RigaConteggio.vue').default);
 
 
+Vue.component('form-servizio-cliente', require('./components/FormServizioCliente.vue').default);
+
+
 
 
 /**
