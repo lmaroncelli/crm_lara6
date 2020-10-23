@@ -4,6 +4,7 @@ use App\User;
 use App\Cliente;
 use App\Memorex;
 use App\Prodotto;
+use App\Servizio;
 use Carbon\Carbon;
 use App\RigaConteggio;
 use App\ModalitaVendita;
@@ -116,7 +117,6 @@ Route::get('/conteggi/modalitaVendita/{commerciale_id}', function($commerciale_i
 
 Route::post('conteggi/insertRiga', function(Request $request) {
 
-  dd($request->all());
   
   if($request->has('descrizione')) 
     {
@@ -163,12 +163,35 @@ Route::post('conteggi/insertRiga', function(Request $request) {
 //////////////////////////
 
 
-Route::get('/clienti-servizi/prodotti', function(){
+Route::get('clienti-servizi/prodotti', function(){
   $prodotti = Prodotto::pluck('nome','id')
                     ->toArray();
   
     return $prodotti;  
 });
+
+
+Route::post('clienti-servizi/store', function(Request $request) {
+  
+  $validatedData = $request->validate([
+    'prodotto_id' => 'required',
+    'cliente_id' => 'required',
+    'data_inizio' => 'required|date_format:d/m/Y',
+    'data_fine' => 'required|date_format:d/m/Y'
+    ]);
+
+  $data_arr = $request->get('data');
+
+  return Servizio::create([
+            'prodotto_id' => $data_arr['prodotto_id'],
+            'cliente_id' => $data_arr['cliente_id'],
+            'data_inizio' => Carbon::createFromFormat('d/m/Y', $data_arr['data_inizio'])->format('Y-m-d'),
+            'data_fine' => Carbon::createFromFormat('d/m/Y', $data_arr['data_fine'])->format('Y-m-d'),
+            'archiviato' => $data_arr['archiviato'],
+            'note' => $data_arr['note']
+        ]);
+});
+
 
 
 //////////////////////////////

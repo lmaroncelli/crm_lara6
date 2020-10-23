@@ -85,6 +85,8 @@ export default {
         ValidationErrors
     },
 
+  props: ['cliente_id'],
+
   data() {
     return {
       validationErrors:'',
@@ -106,10 +108,11 @@ export default {
       edit:false,
       prodotti:[],
       servizio: {
+        cliente_id: this.cliente_id,
         prodotto_id:null,
         data_inizio:null,
         data_fine:null,
-        archiviato:0,
+        archiviato:false,
         note:'',
       }
     }
@@ -121,6 +124,16 @@ export default {
 
 
   methods: {
+
+
+      formatData(data) {
+        if(data !== null)
+          return data.toLocaleDateString('it-IT',{day:"2-digit",month:"2-digit", year:"numeric"});
+        else
+          return data;
+      },
+
+
       getProdotti() {
           axios.get('/api/clienti-servizi/prodotti')
             .then(response => {
@@ -133,8 +146,30 @@ export default {
       },
 
       createServizio() {
+          
+          axios.post('/api/clienti-servizi/store', { // <== use axios.post
+                        cliente_id: this.servizio.cliente_id,
+                        prodotto_id:this.servizio.prodotto_id,
+                        data_inizio:this.formatData(this.servizio.data_inizio),
+                        data_fine:this.formatData(this.servizio.data_fine),
+                        archiviato:this.servizio.archiviato,
+                        note:this.servizio.note,
+                })
+                .then(response => {
+                    // reload page??
+                    alert('Inserimemto corretto');
+                    //location.reload(); 
+                })
+                .catch(error => {
+                  console.log(error.response.data.errors);
+                  this.validationErrors = error.response.data.errors;
+                })
+                .finally(() => {
+                      // ricarico la pagina corrente
+                      
+                });
 
-      }
+      } // end createServizio()
   },
 
 }

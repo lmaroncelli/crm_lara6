@@ -2061,6 +2061,7 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     ValidationErrors: _ValidationErrors__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
+  props: ['cliente_id'],
   data: function data() {
     return {
       validationErrors: '',
@@ -2077,10 +2078,11 @@ __webpack_require__.r(__webpack_exports__);
       edit: false,
       prodotti: [],
       servizio: {
+        cliente_id: this.cliente_id,
         prodotto_id: null,
         data_inizio: null,
         data_fine: null,
-        archiviato: 0,
+        archiviato: false,
         note: ''
       }
     };
@@ -2089,6 +2091,13 @@ __webpack_require__.r(__webpack_exports__);
     this.getProdotti();
   },
   methods: {
+    formatData: function formatData(data) {
+      if (data !== null) return data.toLocaleDateString('it-IT', {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+      });else return data;
+    },
     getProdotti: function getProdotti() {
       var _this = this;
 
@@ -2097,7 +2106,27 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     updateServizio: function updateServizio() {},
-    createServizio: function createServizio() {}
+    createServizio: function createServizio() {
+      var _this2 = this;
+
+      axios.post('/api/clienti-servizi/store', {
+        // <== use axios.post
+        cliente_id: this.servizio.cliente_id,
+        prodotto_id: this.servizio.prodotto_id,
+        data_inizio: this.formatData(this.servizio.data_inizio),
+        data_fine: this.formatData(this.servizio.data_fine),
+        archiviato: this.servizio.archiviato,
+        note: this.servizio.note
+      }).then(function (response) {
+        // reload page??
+        alert('Inserimemto corretto'); //location.reload(); 
+      })["catch"](function (error) {
+        console.log(error.response.data.errors);
+        _this2.validationErrors = error.response.data.errors;
+      })["finally"](function () {// ricarico la pagina corrente
+      });
+    } // end createServizio()
+
   }
 });
 
