@@ -34,6 +34,7 @@ Vue.component('riga-conteggio', require('./components/RigaConteggio.vue').defaul
 
 
 Vue.component('form-servizio-cliente', require('./components/FormServizioCliente.vue').default);
+Vue.component('nome-servizio-cliente', require('./components/NomeServizioCliente.vue').default);
 
 
 

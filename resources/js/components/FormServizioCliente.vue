@@ -145,6 +145,18 @@ export default {
 
       },
 
+      loadServizio(servizio_id) {
+        alert(servizio_id);
+         axios.get('/api/clienti-servizi/'+servizio_id)
+                  .then(response => {
+										console.log(response);
+                    this.servizio = response.data;
+                    this.servizio.data_inizio = new Date(this.servizio.data_inizio_forjs);
+                    this.servizio.data_fine = new Date(this.servizio.data_fine_forjs);
+                    this.edit = true;
+                  });
+      },
+
       createServizio() {
           
           axios.post('/api/clienti-servizi/store', { // <== use axios.post
@@ -158,7 +170,7 @@ export default {
                 .then(response => {
                     // reload page??
                     alert('Inserimemto corretto');
-                    //location.reload(); 
+                    location.reload(); 
                 })
                 .catch(error => {
                   console.log(error.response.data.errors);

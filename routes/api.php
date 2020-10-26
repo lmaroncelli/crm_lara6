@@ -11,6 +11,7 @@ use App\ModalitaVendita;
 use App\CommercialeMemorex;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Http\Resources\ServizioResource;
 use App\Http\Resources\MemorexCollection;
 use App\Http\Resources\Memorex as MemorexResource;
 
@@ -180,18 +181,27 @@ Route::post('clienti-servizi/store', function(Request $request) {
     'data_fine' => 'required|date_format:d/m/Y'
     ]);
 
-  $data_arr = $request->get('data');
 
   return Servizio::create([
-            'prodotto_id' => $data_arr['prodotto_id'],
-            'cliente_id' => $data_arr['cliente_id'],
-            'data_inizio' => Carbon::createFromFormat('d/m/Y', $data_arr['data_inizio'])->format('Y-m-d'),
-            'data_fine' => Carbon::createFromFormat('d/m/Y', $data_arr['data_fine'])->format('Y-m-d'),
-            'archiviato' => $data_arr['archiviato'],
-            'note' => $data_arr['note']
+            'prodotto_id' => $request->get('prodotto_id'),
+            'cliente_id' => $request->get('cliente_id'),
+            'data_inizio' => Carbon::createFromFormat('d/m/Y', $request->get('data_inizio'))->format('Y-m-d'),
+            'data_fine' => Carbon::createFromFormat('d/m/Y', $request->get('data_fine'))->format('Y-m-d'),
+            'archiviato' => $request->get('archiviato'),
+            'note' => $request->get('note')
         ]);
 });
 
+
+Route::get('clienti-servizi/{id}', function ($id) {
+
+  $servizio = Servizio::find($id);
+  $servizio->data_inizio_forjs = $servizio->data_inizio->format('m/d/Y');
+  $servizio->data_fine_forjs = $servizio->data_fine->format('m/d/Y');
+  
+  return $servizio;	
+
+});
 
 
 //////////////////////////////

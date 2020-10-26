@@ -17,7 +17,7 @@
 </div>
 
 
-<form-servizio-cliente cliente_id="{{$cliente->id}}"></form-servizio-cliente>
+<form-servizio-cliente ref='formServizioClienteComponent' cliente_id="{{$cliente->id}}"></form-servizio-cliente>
 
 
 @include('clienti-servizi._lista_servizi_cliente')

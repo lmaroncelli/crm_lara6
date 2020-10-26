@@ -19,7 +19,7 @@
                     @csrf
                   </form>
                   <tr>
-                      <td>{{$s->prodotto->nome}}</td>
+                      <td><nome-servizio-cliente servizio_id="{{$s->id}}" nome_prodotto="{{$s->prodotto->nome}}"></nome-servizio-cliente></td>
                       <td>{{optional($s->data_inizio)->format('d/m/Y')}}</td>
                       <td>{{optional($s->data_fine)->format('d/m/Y')}}</td>
                       <td>{{$s->note}}</td>
@@ -35,5 +35,3 @@
         
     </div>{{-- col --}}
 </div>{{-- row --}}
-
-
