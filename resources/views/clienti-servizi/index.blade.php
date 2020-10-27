@@ -36,7 +36,16 @@
         e.preventDefault();
         
         let servizio_id = $(this).data('id');
+        let archivia = $(this).data('archivia');
 
+        $.ajax({
+            type: 'POST',
+            url: "{{ route('clienti-servizi-archivia') }}",
+            data: {'servizio_id':servizio_id, 'archiviato':archivia},
+            success: function(msg) {
+                $('tr#'+servizio_id).fadeOut('fast');
+            }
+        });
         
     });
 

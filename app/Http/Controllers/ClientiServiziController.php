@@ -15,7 +15,12 @@ class ClientiServiziController extends Controller
 			{
 			
 			$servizio_id = $request->get('servizio_id');
-
+			$archiviato = $request->get('archiviato');
+			$servizio = Servizio::findOrFail($servizio_id);
+			$servizio->archiviato = $archiviato;
+			$servizio->save();
+			
+			echo 'ok';
 			}
 
     /**
@@ -133,6 +138,11 @@ class ClientiServiziController extends Controller
      */
     public function destroy($id)
     {
-        //
-    }
+			$servizio = Servizio::find($id);
+			dd($servizio);
+			$venduti = $servizio->archiviato;
+			$servizio->delete();
+			
+			return redirect()->route('clienti-servizi',['cliente_id' => $id, 'venduti' => $venduti])->with('status', 'Servizio elimnato correttamente!');
+ 	   }
 }

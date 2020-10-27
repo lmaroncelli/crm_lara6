@@ -55,8 +55,13 @@
                   <form action="{{ route('clienti-servizi.destroy', $s->id) }}" method="post" id="delete_item_{{$s->id}}">
                     @csrf
                   </form>
-                  <tr>
-									<td><a href="#" class="archivia" data-id="{{$s->id}}"><i class="icon-action-redo icons font-2xl" data-toggle="tooltip" data-placement="left" title="" data-original-title="Archivia il servizio"></i></a></td>
+                  <tr id="{{$s->id}}">
+											@if (!$venduti)
+												<td><a href="#" class="archivia" data-id="{{$s->id}}" data-archivia="1"><i class="icon-action-redo icons font-2xl" data-toggle="tooltip" data-placement="left" title="" data-original-title="Archivia il servizio"></i></a></td>
+											@else
+												<td><a href="#" class="archivia" data-id="{{$s->id}}" data-archivia="0"><i class="icon-action-undo icons font-2xl" data-toggle="tooltip" data-placement="left" title="" data-original-title="Ripristina il servizio"></i></a></td>
+											@endif
+
                       <td><nome-servizio-cliente servizio_id="{{$s->id}}" nome_prodotto="{{$s->prodotto->nome}}"></nome-servizio-cliente></td>
                       <td>{{optional($s->data_inizio)->format('d/m/Y')}}</td>
                       <td>{{optional($s->data_fine)->format('d/m/Y')}}</td>
