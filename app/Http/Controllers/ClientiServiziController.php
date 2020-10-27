@@ -5,24 +5,70 @@ namespace App\Http\Controllers;
 use App\Cliente;
 use App\Servizio;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ClientiServiziController extends Controller
 {
+
+	
+		public function archiviaAjax(Request $request)
+			{
+			
+			$servizio_id = $request->get('servizio_id');
+
+			}
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($cliente_id)
-    {
-    
-    $cliente = Cliente::with(['societa.ragioneSociale.localita'])->find($cliente_id);
-    $bread = [route('clienti.index') => 'Cienti', $cliente->nome];
+    public function index(Request $request, $cliente_id, $venduti = false)
+			{
+			
+			$cliente = Cliente::with(['societa.ragioneSociale.localita'])->find($cliente_id);
+			$bread = [route('clienti.index') => 'Cienti', $cliente->nome];
 
-    $servizi = Servizio::with('prodotto')->notArchiviato()->where('cliente_id', $cliente_id)->get();
-    
-    return view('clienti-servizi.index', compact('cliente', 'bread','servizi'));
-    }
+			$orderby = $request->get('orderby','id');
+			$order = $request->get('order','desc');
+
+			if (!$venduti) 
+				{
+				$servizi = Servizio::with(['prodotto','fattura'])->notArchiviato()->where('cliente_id', $cliente_id);
+				} 
+			else 
+				{
+				$servizi = Servizio::with(['prodotto','fattura'])->archiviato()->where('cliente_id', $cliente_id);
+				}
+			
+			if ($orderby == 'nome_prodotto') 
+				{
+				
+				$servizi = $servizi
+									->select(DB::raw('tblServizi.*, tblProdotti.nome as nome_prodotto'))
+									->join('tblProdotti', 'tblProdotti.id', '=', 'tblServizi.prodotto_id')
+									->with([
+										'prodotto',
+										'fattura'
+										])
+									->orderBy($orderby,$order);
+				
+				}
+			elseif($orderby == 'data_inizio' || $orderby == 'data_fine')
+				{
+				$servizi = $servizi->orderBy($orderby,$order);
+				}
+					
+			$servizi = $servizi->get();
+			
+			return view('clienti-servizi.index', compact('cliente', 'bread','servizi','venduti'));
+			
+		}
+		
+		public function archiviati(Request $request, $cliente_id)
+    {
+			return $this->index($request, $cliente_id, $venduti = true);
+		}
 
     /**
      * Show the form for creating a new resource.

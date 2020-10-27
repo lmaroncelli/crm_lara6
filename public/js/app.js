@@ -2098,6 +2098,13 @@ __webpack_require__.r(__webpack_exports__);
         year: "numeric"
       });else return data;
     },
+    emptyServizio: function emptyServizio() {
+      this.servizio.prodotto_id = null;
+      this.servizio.data_inizio = null;
+      this.servizio.data_fine = null;
+      this.servizio.archiviato = false;
+      this.servizio.note = '';
+    },
     getProdotti: function getProdotti() {
       var _this = this;
 
@@ -2105,26 +2112,50 @@ __webpack_require__.r(__webpack_exports__);
         _this.prodotti = response.data;
       });
     },
-    updateServizio: function updateServizio() {},
-    loadServizio: function loadServizio(servizio_id) {
+    updateServizio: function updateServizio() {
       var _this2 = this;
+
+      axios.post('/api/clienti-servizi/' + this.servizio.id, {
+        // <== use axios.post
+        cliente_id: this.servizio.cliente_id,
+        prodotto_id: this.servizio.prodotto_id,
+        data_inizio: this.formatData(this.servizio.data_inizio),
+        data_fine: this.formatData(this.servizio.data_fine),
+        archiviato: this.servizio.archiviato,
+        note: this.servizio.note,
+        _method: 'patch' // <== add this field
+
+      }).then(function (response) {
+        alert('Aggiornamento corretto');
+        location.reload();
+      })["catch"](function (error) {
+        console.log(error.response.data.errors);
+        _this2.validationErrors = error.response.data.errors;
+      });
+    },
+    loadServizio: function loadServizio(servizio_id) {
+      var _this3 = this;
 
       alert(servizio_id);
       axios.get('/api/clienti-servizi/' + servizio_id).then(function (response) {
         console.log(response);
-        _this2.servizio = response.data;
-        _this2.servizio.data_inizio = new Date(_this2.servizio.data_inizio_forjs);
-        _this2.servizio.data_fine = new Date(_this2.servizio.data_fine_forjs);
-        _this2.edit = true;
+        _this3.servizio = response.data;
+        _this3.servizio.data_inizio_forjs === null ? _this3.servizio.data_inizio = null : _this3.servizio.data_inizio = new Date(_this3.servizio.data_inizio_forjs);
+        _this3.servizio.data_fine_forjs === null ? _this3.servizio.data_fine = null : _this3.servizio.data_fine = new Date(_this3.servizio.data_fine_forjs);
+        _this3.edit = true;
       });
     },
+    cancel: function cancel() {
+      this.emptyServizio();
+      this.edit = false;
+    },
     createServizio: function createServizio() {
-      var _this3 = this;
+      var _this4 = this;
 
       axios.post('/api/clienti-servizi/store', {
         // <== use axios.post
-        cliente_id: this.servizio.cliente_id,
         prodotto_id: this.servizio.prodotto_id,
+        cliente_id: this.servizio.cliente_id,
         data_inizio: this.formatData(this.servizio.data_inizio),
         data_fine: this.formatData(this.servizio.data_fine),
         archiviato: this.servizio.archiviato,
@@ -2135,7 +2166,7 @@ __webpack_require__.r(__webpack_exports__);
         location.reload();
       })["catch"](function (error) {
         console.log(error.response.data.errors);
-        _this3.validationErrors = error.response.data.errors;
+        _this4.validationErrors = error.response.data.errors;
       })["finally"](function () {// ricarico la pagina corrente
       });
     } // end createServizio()
@@ -77444,7 +77475,7 @@ var render = function() {
   return _c(
     "a",
     {
-      attrs: { haref: "#" },
+      attrs: { href: "#" },
       on: {
         click: function($event) {
           $event.preventDefault()
@@ -91355,15 +91386,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!*********************************************************!*\
   !*** ./resources/js/components/FormServizioCliente.vue ***!
   \*********************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _FormServizioCliente_vue_vue_type_template_id_ceb6b3e4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FormServizioCliente.vue?vue&type=template&id=ceb6b3e4& */ "./resources/js/components/FormServizioCliente.vue?vue&type=template&id=ceb6b3e4&");
 /* harmony import */ var _FormServizioCliente_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FormServizioCliente.vue?vue&type=script&lang=js& */ "./resources/js/components/FormServizioCliente.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _FormServizioCliente_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _FormServizioCliente_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _FormServizioCliente_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./FormServizioCliente.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/FormServizioCliente.vue?vue&type=style&index=0&lang=css&");
+/* empty/unused harmony star reexport *//* harmony import */ var _FormServizioCliente_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./FormServizioCliente.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/FormServizioCliente.vue?vue&type=style&index=0&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -91395,7 +91425,7 @@ component.options.__file = "resources/js/components/FormServizioCliente.vue"
 /*!**********************************************************************************!*\
   !*** ./resources/js/components/FormServizioCliente.vue?vue&type=script&lang=js& ***!
   \**********************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

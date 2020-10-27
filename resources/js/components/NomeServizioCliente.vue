@@ -1,5 +1,5 @@
 <template>
-    <a haref="#" @click.prevent="load()">{{nome_prodotto}}</a>
+    <a href="#" @click.prevent="load()">{{nome_prodotto}}</a>
 </template>
 
 <script>

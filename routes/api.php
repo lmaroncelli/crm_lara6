@@ -174,19 +174,26 @@ Route::get('clienti-servizi/prodotti', function(){
 
 Route::post('clienti-servizi/store', function(Request $request) {
   
-  $validatedData = $request->validate([
+  $validatedData = [
     'prodotto_id' => 'required',
     'cliente_id' => 'required',
     'data_inizio' => 'required|date_format:d/m/Y',
-    'data_fine' => 'required|date_format:d/m/Y'
-    ]);
+    ];
+  
+  $data_fine = null;
+  if($request->has('data_fine') && !is_null($request->get('data_fine')))
+    {
+      $validatedData[ 'data_fine'] = 'date_format:d/m/Y';
+      $data_fine = Carbon::createFromFormat('d/m/Y', $request->get('data_fine'))->format('Y-m-d');
+    }
 
+  $request->validate($validatedData);
 
   return Servizio::create([
             'prodotto_id' => $request->get('prodotto_id'),
             'cliente_id' => $request->get('cliente_id'),
             'data_inizio' => Carbon::createFromFormat('d/m/Y', $request->get('data_inizio'))->format('Y-m-d'),
-            'data_fine' => Carbon::createFromFormat('d/m/Y', $request->get('data_fine'))->format('Y-m-d'),
+            'data_fine' => $data_fine,
             'archiviato' => $request->get('archiviato'),
             'note' => $request->get('note')
         ]);
@@ -196,12 +203,54 @@ Route::post('clienti-servizi/store', function(Request $request) {
 Route::get('clienti-servizi/{id}', function ($id) {
 
   $servizio = Servizio::find($id);
-  $servizio->data_inizio_forjs = $servizio->data_inizio->format('m/d/Y');
-  $servizio->data_fine_forjs = $servizio->data_fine->format('m/d/Y');
+  
+  $servizio->data_inizio_forjs = null;
+  $servizio->data_fine_forjs = null;
+
+  if (!is_null($servizio->data_inizio) && $servizio->data_inizio!= '' ) 
+    {
+    $servizio->data_inizio_forjs = $servizio->data_inizio->format('m/d/Y');
+    }
+  
+  if (!is_null($servizio->data_fine) && $servizio->data_fine!= '' ) 
+    {
+    $servizio->data_fine_forjs = $servizio->data_fine->format('m/d/Y');
+    }
+
   
   return $servizio;	
 
 });
+
+Route::patch('clienti-servizi/{id}', function(Request $request, $id) {
+
+  $validatedData = [
+    'prodotto_id' => 'required',
+    'cliente_id' => 'required',
+    'data_inizio' => 'required|date_format:d/m/Y',
+    ];
+  
+  $data_fine = null;
+  if($request->has('data_fine') && !is_null($request->get('data_fine')))
+    {
+      $validatedData[ 'data_fine'] = 'date_format:d/m/Y';
+      $data_fine = Carbon::createFromFormat('d/m/Y', $request->get('data_fine'))->format('Y-m-d');
+    }
+
+
+  $request->validate($validatedData);
+
+  Servizio::findOrFail($id)
+        ->update([
+          'prodotto_id' => $request->get('prodotto_id'),
+          'cliente_id' => $request->get('cliente_id'),
+          'data_inizio' => Carbon::createFromFormat('d/m/Y', $request->get('data_inizio'))->format('Y-m-d'),
+          'data_fine' => $data_fine,
+          'archiviato' => $request->get('archiviato'),
+          'note' => $request->get('note')
+        ]);
+});
+
 
 
 //////////////////////////////

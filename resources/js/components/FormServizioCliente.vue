@@ -134,6 +134,15 @@ export default {
       },
 
 
+      emptyServizio() {
+        this.servizio.prodotto_id=null;
+        this.servizio.data_inizio=null;
+        this.servizio.data_fine=null;
+        this.servizio.archiviato=false;
+        this.servizio.note='';
+      },
+
+
       getProdotti() {
           axios.get('/api/clienti-servizi/prodotti')
             .then(response => {
@@ -142,7 +151,23 @@ export default {
       },
 
       updateServizio() {
-
+          axios.post('/api/clienti-servizi/' + this.servizio.id, { // <== use axios.post
+                  cliente_id : this.servizio.cliente_id,
+                  prodotto_id : this.servizio.prodotto_id,
+                  data_inizio : this.formatData(this.servizio.data_inizio),
+                  data_fine : this.formatData(this.servizio.data_fine),
+                  archiviato : this.servizio.archiviato,
+                  note : this.servizio.note,
+                  _method: 'patch'                   // <== add this field
+          })
+          .then(response => {
+            alert('Aggiornamento corretto');
+            location.reload();
+          })
+          .catch(error => {
+                  console.log(error.response.data.errors);
+                  this.validationErrors = error.response.data.errors;
+                });
       },
 
       loadServizio(servizio_id) {
@@ -151,21 +176,29 @@ export default {
                   .then(response => {
 										console.log(response);
                     this.servizio = response.data;
-                    this.servizio.data_inizio = new Date(this.servizio.data_inizio_forjs);
-                    this.servizio.data_fine = new Date(this.servizio.data_fine_forjs);
+
+                    this.servizio.data_inizio_forjs === null ? this.servizio.data_inizio = null : this.servizio.data_inizio = new Date(this.servizio.data_inizio_forjs);
+
+                    this.servizio.data_fine_forjs === null ? this.servizio.data_fine = null : this.servizio.data_fine = new Date(this.servizio.data_fine_forjs);
+                    
                     this.edit = true;
                   });
+      },
+
+      cancel: function() {
+        this.emptyServizio();
+        this.edit = false;
       },
 
       createServizio() {
           
           axios.post('/api/clienti-servizi/store', { // <== use axios.post
+                        prodotto_id: this.servizio.prodotto_id,
                         cliente_id: this.servizio.cliente_id,
-                        prodotto_id:this.servizio.prodotto_id,
-                        data_inizio:this.formatData(this.servizio.data_inizio),
-                        data_fine:this.formatData(this.servizio.data_fine),
-                        archiviato:this.servizio.archiviato,
-                        note:this.servizio.note,
+                        data_inizio: this.formatData(this.servizio.data_inizio),
+                        data_fine: this.formatData(this.servizio.data_fine),
+                        archiviato: this.servizio.archiviato,
+                        note: this.servizio.note
                 })
                 .then(response => {
                     // reload page??

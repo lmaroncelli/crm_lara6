@@ -21,7 +21,7 @@ class MasterViewComposer
       $action = Route::getCurrentRoute()->getAction();
 
       $controller_action = class_basename($action["controller"]);
-
+      
       list($controller, $action) = explode("@", $controller_action);
       
     	$view->with(compact('controller', 'action'));

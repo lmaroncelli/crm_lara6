@@ -22,14 +22,27 @@
 
 @include('clienti-servizi._lista_servizi_cliente')
 
-
-
-
-
 @endsection
 
 
 @section('js')
-  
-    
+<script type="text/javascript" charset="utf-8">
+
+  jQuery(document).ready(function(){
+      
+
+    $(".archivia").click(function(e){
+        
+        e.preventDefault();
+        
+        let servizio_id = $(this).data('id');
+
+        
+    });
+
+  });
+
+
+</script>
+   
 @endsection

@@ -58,8 +58,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('clienti/fatturazioni-update/{societa_id}', 'ClientiFatturazioniController@update')->name('clienti-fatturazioni.update');
     Route::post('clienti/fatturazioni-destroy/{societa_id}', 'ClientiFatturazioniController@destroy')->name('clienti-fatturazioni.destroy');
 
-    Route::get('clienti/servizi/{cliente_id}', 'ClientiServiziController@index')->name('clienti-servizi');
+    Route::get('clienti/servizi/{cliente_id}/{venduti?}', 'ClientiServiziController@index')->name('clienti-servizi');
+    Route::get('clienti/servizi/archiviati/{cliente_id}', 'ClientiServiziController@archiviati')->name('clienti-servizi-archiviati');
+    
     Route::post('clienti/servizi-destroy/{servizio_id}', 'ClientiServiziController@destroy')->name('clienti-servizi.destroy');
+    Route::post('clienti/servizi/archivia', 'ClientiServiziController@archiviaAjax')->name('clienti-servizi-archivia');
 
 
 
