@@ -671,9 +671,9 @@ class ContrattiDigitaliController extends MyController
 
       public function exportPdf($id)
         {
-        $contratto = ContrattoDigitale::find($id);
+        $contratto = ContrattoDigitale::with(['commerciale','servizi','sconti_associati'])->find($id);
 
-        $commerciale_contratto = User::find($contratto->user_id)->name;
+        $commerciale_contratto = optional($contratto->commerciale)->name;
 
         //================================================//
         // Servizi associati al contratto
@@ -704,11 +704,13 @@ class ContrattiDigitaliController extends MyController
 
 
         
-        //return view('contratti_digitali.contratto_pdf', compact('contratto'));
+        //return view('contratti_digitali.contratto_pdf', compact('contratto','commerciale_contratto','servizi_assoc','totali'));
         
         $pdf = PDF::loadView('contratti_digitali.contratto_pdf', compact('contratto','commerciale_contratto','servizi_assoc','totali'));
         
-        return $pdf->download($contratto->nome_file.'.pdf');
+        return $pdf->stream();
+
+        //return $pdf->download($contratto->nome_file.'.pdf');
         
         }
     

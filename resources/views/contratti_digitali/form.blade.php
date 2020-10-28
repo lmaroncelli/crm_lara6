@@ -661,6 +661,7 @@ jQuery(document).ready(function($){
 
   <div class="col-md-5">
     <button type="button" class="salva_nome_pdf btn btn-primary btn-xs">Salva</button>
+  <a href="{{ route('contratto-digitale.export-pdf', $contratto->id) }}" target="_blank" class="btn btn-danger btn-xs">Pdf</a>
   </div>
   
 </div>
