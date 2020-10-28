@@ -139,10 +139,18 @@ class ClientiServiziController extends Controller
     public function destroy($id)
     {
 			$servizio = Servizio::find($id);
-			dd($servizio);
 			$venduti = $servizio->archiviato;
+			$cliente_id = $servizio->cliente_id;
 			$servizio->delete();
 			
-			return redirect()->route('clienti-servizi',['cliente_id' => $id, 'venduti' => $venduti])->with('status', 'Servizio elimnato correttamente!');
+			if(!$venduti)
+				{
+				return redirect()->route('clienti-servizi',['cliente_id' => $cliente_id])->with('status', 'Servizio elimnato correttamente!');
+				}
+			else
+				{
+				return redirect()->route('clienti-servizi-archiviati',['cliente_id' => $cliente_id])->with('status', 'Servizio elimnato correttamente!');
+				}
+			
  	   }
 }

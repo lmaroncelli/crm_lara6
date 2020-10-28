@@ -53,9 +53,44 @@ class ContrattiDigitaliController extends MyController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+
+      $orderby = $request->get('orderby','id');
+      $order = $request->get('order','desc');
+
+      $precontratti = ContrattoDigitale::with(['commerciale','cliente']);
+
+      if ($orderby == 'nome_commerciale') 
+        {
+          $precontratti = $precontratti
+          ->select(DB::raw('tblContrattiDigitali.*, users.name as nome_commerciale'))
+          ->join('users', 'users.id', '=', 'tblContrattiDigitali.user_id')
+          ->with([
+            'commerciale',
+            'cliente'
+            ]);
+        } 
+      elseif($orderby == 'nome_cliente')
+        {
+          $precontratti = $precontratti
+          ->select(DB::raw('tblContrattiDigitali.*, tblClienti.nome as nome_cliente'))
+          ->join('tblClienti', 'tblClienti.id', '=', 'tblContrattiDigitali.cliente_id')
+          ->with([
+            'commerciale',
+            'cliente'
+            ]);
+        }
+
+      $precontratti = $precontratti->orderBy($orderby, $order);
+      
+      $to_append = ['order' => $order, 'orderby' => $orderby];
+
+      $precontratti = $precontratti->paginate(15)->setpath('')->appends($to_append);
+
+
+      return view('contratti_digitali.index', compact('precontratti'));
+      
     }
 
     /**
