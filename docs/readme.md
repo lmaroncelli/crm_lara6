@@ -558,3 +558,63 @@ https://codingdriver.com/export-csv-file-in-laravel-example.html
 
 
 https://medium.com/@sdkcodes/how-to-display-laravel-validation-errors-in-vue-js-491f7f4afc8f
+
+
+
+
+# Firma PDF
+
+nel composer.json ho aggiunto
+
+ "require": {
+        ............... 
+        "setasign/setapdf-core": "2.26.0.1122"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://www.setasign.com/downloads/"
+        }
+    ],
+
+
+autenticazione richiesta: vedi .env
+
+
+
+i file sono in vendor/setasign/setapdf-core
+
+
+SetaPDF Installation
+++++++++++++++++++++++++++++
+The main files of all SetaPDF components are located in the folder "library/SetaPDF/".
+
+The SetaPDF components come with an own autoload function which will register itself in the spl provided __autoload
+stack by simply requiring the Autoload.php file:
+
+    require_once('path/to/library/SetaPDF/Autoload.php');
+
+After that you can use all classes without requiring any file manually.
+
+The documentation and demos folders are not needed for productive usage.
+
+
+
+https://laraveldaily.com/how-to-use-external-classes-and-php-files-in-laravel-controller/
+
+
+
+in composer.json aggiungo la entry files in modo da non dover più fare nessun include
+
+"autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        },
+        "classmap": [
+            "database/seeds",
+            "database/factories"
+        ],
+        "files": [
+            "vendor/setasign/setapdf-core/library/SetaPDF/Autoload.php"
+        ]
+    },

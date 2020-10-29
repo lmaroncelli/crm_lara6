@@ -12,8 +12,15 @@
         "barryvdh/laravel-dompdf": "^0.8.6",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "^7.0",
-        "laravel/tinker": "^2.0"
+        "laravel/tinker": "^2.0",
+        "setasign/setapdf-core": "2.26.0.1122"
     },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://www.setasign.com/downloads/"
+        }
+    ],
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",
         "facade/ignition": "^2.0",
@@ -39,7 +46,12 @@
         },
         "classmap": [
             "database/seeds",
-            "database/factories"
+            "database/factories",
+            "vendor/setasign/setapdf-core"
+        ],
+        "files": [
+            "vendor/setasign/setapdf-core/library/SetaPDF/Autoload.php",
+            "vendor/setasign/setapdf-core/SignatureField.php"
         ]
     },
     "autoload-dev": {

@@ -3,22 +3,29 @@
 namespace App\Http\Controllers;
 
 
+use PDF;
 use App\User;
 use App\Cliente;
 use App\Societa;
 use App\Utility;
+use SignatureField;
 use App\TipoEvidenza;
 use App\MacroLocalita;
 use App\RagioneSociale;
 use App\ServizioDigitale;
 use App\ContrattoDigitale;
+use SetaPDF_Core_Document;
 use Illuminate\Http\Request;
+use SetaPDF_Core_Reader_File;
+use SetaPDF_Core_Writer_File;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\MyController;
-use PDF;
 
 class ContrattiDigitaliController extends MyController
 {
+
+  //require_once('path/to/library/SetaPDF/Autoload.php');
+
 
     private function _gestione_iban(&$i1="", &$i2="", &$i3="", &$i4="", &$mostra_iban_importato=0, $contratto)
       {
@@ -679,6 +686,13 @@ class ContrattiDigitaliController extends MyController
 
       public function exportPdf($id)
         {
+
+
+          // include(base_path('vendor/setasign/setapdf-core/library/SetaPDF/Autoload.php'));
+          // include(base_path('vendor/setasign/setapdf-core/library/SetaPDF/Core/Reader/File.php'));
+          // include(base_path('vendor/setasign/setapdf-core/library/SetaPDF/Core/Writer/File.php'));
+          // include(base_path('vendor/setasign/setapdf-core/library/SetaPDF/Core/Document.php'));
+
         $contratto = ContrattoDigitale::with(['commerciale','servizi','sconti_associati'])->find($id);
 
         $commerciale_contratto = optional($contratto->commerciale)->name;
@@ -709,14 +723,112 @@ class ContrattiDigitaliController extends MyController
         //================================================//
         // /Servizi associati al contratto 
         //================================================//
-
-
         
         //return view('contratti_digitali.contratto_pdf', compact('contratto','commerciale_contratto','servizi_assoc','totali'));
         
         $pdf = PDF::loadView('contratti_digitali.contratto_pdf', compact('contratto','commerciale_contratto','servizi_assoc','totali'));
         
-        return $pdf->stream();
+        $filepdf_path = public_path().'/file.pdf';
+        $filepdf_firmato_path = public_path().'/file_firmato.pdf';
+
+        $pdf->save($filepdf_path);
+
+        $reader = new SetaPDF_Core_Reader_File($filepdf_path);
+        $writer = new SetaPDF_Core_Writer_File($filepdf_firmato_path);
+        $document = SetaPDF_Core_Document::load($reader, $writer);
+    
+    
+        $pages = $document->getCatalog()->getPages();
+        $pageCount = $pages->count();
+        $penultima = $pageCount - 1;
+
+        $n_sottotab = count(array_chunk($servizi_assoc->toArray(), 10));
+
+
+        for ($i=1; $i <= $n_sottotab; $i++) 
+          {
+
+          // add a field left top with an offset of 10 points
+          SignatureField::add(
+              $document,
+              'CLIENTE',
+              $i,
+              SignatureField::POSITION_RIGHT_BOTTOM,
+              array('x' => -40, 'y' => 1),
+              200,
+              50
+          );
+          
+          }
+
+
+        if(false) {
+            ///////////////////////////////////////////
+            // aggiungo le firme in penultima pagina //
+            ///////////////////////////////////////////
+            SignatureField::add(
+                $document,
+                'AgenteIA 1',
+                $penultima,
+                SignatureField::POSITION_LEFT_BOTTOM,
+                array('x' => 70, 'y' => 190),
+                200,
+                50
+            );
+
+            SignatureField::add(
+                $document,
+                'CLIENTE 1',
+                $penultima,
+                SignatureField::POSITION_RIGHT_BOTTOM,
+                array('x' => -70, 'y' => 190),
+                200,
+                50
+            );    
+
+
+            SignatureField::add(
+                $document,
+                'AgenteIA 2',
+                $penultima,
+                SignatureField::POSITION_LEFT_BOTTOM,
+                array('x' => 70, 'y' => 30),
+                200,
+                50
+            );
+
+            SignatureField::add(
+                $document,
+                'CLIENTE 2',
+                $penultima,
+                SignatureField::POSITION_RIGHT_BOTTOM,
+                array('x' => -70, 'y' => 30),
+                200,
+                50
+            );
+        }
+
+
+        ////////////////////////////////////////
+        // aggiungo le firme in ultima pagina //
+        ////////////////////////////////////////
+        SignatureField::add(
+            $document,
+            'TITOLARE TRATTAMENTO',
+            $pageCount,
+            SignatureField::POSITION_RIGHT_BOTTOM,
+            array('x' => -70, 'y' => 190),
+            200,
+            50
+        );
+
+
+
+        // save and finish
+        $document->save()->finish();
+
+        
+        //return $pdf->stream();
 
         //return $pdf->download($contratto->nome_file.'.pdf');
         
