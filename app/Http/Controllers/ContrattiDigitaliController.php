@@ -59,7 +59,7 @@ class ContrattiDigitaliController extends MyController
       $orderby = $request->get('orderby','id');
       $order = $request->get('order','desc');
 
-      $precontratti = ContrattoDigitale::with(['commerciale','cliente']);
+      $precontratti = ContrattoDigitale::with(['commerciale','cliente'])->withCount('servizi');
 
       if ($orderby == 'nome_commerciale') 
         {
@@ -69,7 +69,8 @@ class ContrattiDigitaliController extends MyController
           ->with([
             'commerciale',
             'cliente'
-            ]);
+            ])
+          ->withCount('servizi');
         } 
       elseif($orderby == 'nome_cliente')
         {
@@ -79,7 +80,8 @@ class ContrattiDigitaliController extends MyController
           ->with([
             'commerciale',
             'cliente'
-            ]);
+            ])
+          ->withCount('servizi');
         }
 
       $precontratti = $precontratti->orderBy($orderby, $order);
@@ -422,7 +424,13 @@ class ContrattiDigitaliController extends MyController
      */
     public function destroy($id)
     {
-        //
+      $contratto = ContrattoDigitale::find($id);
+      $contratto->destroyMe();
+
+      return redirect()->route('contratto-digitale.index')->with('status', 'Precontratto elimnato correttamente!');
+
+
+
     }
 
 

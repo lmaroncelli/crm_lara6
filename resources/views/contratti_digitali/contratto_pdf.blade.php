@@ -89,7 +89,8 @@
     }
 
 
-    div.elenco_servizi thead th {
+    div.elenco_servizi thead th
+     {
       padding:5px;
       font-size: 15px;
     	background-color: #efefef;
@@ -98,11 +99,21 @@
       border: 1px solid #fff;
     }
 
-
-
+  
     div.elenco_servizi tr td{
       height:30px;
     }
+    
+    div.elenco_servizi tr.totali td
+     {
+      padding:3px;
+      height:20px;  
+    	background-color: #efefef;
+      font-weight:bold;
+      margin-bottom: 0px;
+      border: 1px solid #fff;
+    }
+
 
     div.elenco_servizi tr.sconto {
       color: crimson;
@@ -110,6 +121,11 @@
 
     div.elenco_servizi td.text-right {
       text-align: right;
+    }
+
+
+    div.elenco_servizi font-weight-bold {
+      font-weight: 700!important;
     }
 
 
@@ -127,9 +143,13 @@
       border: 1px solid #333;
     }
 
-
-    div.footer span, div.subfooter span {
-      font-weight: bold;
+    div.subfooter tr.condizioni_pagamento td
+     {
+      padding:3px;
+      height:20px;  
+    	background-color: #efefef;
+      font-weight:bold;
+      margin-bottom: 0px;
     }
 
 
@@ -140,6 +160,30 @@
   </style>
 </head>
 <body>
+  <script type="text/php">	 
+    $font = $fontMetrics->get_font("verdana");
+    // If verdana isn't available, we'll use sans-serif.
+    if (!isset($font)) { $fontMetrics->get_font("sans-serif"); }
+    $size = 9;
+    $color = array(0,0,0);
+    $text_height = $fontMetrics->get_font_height($font, $size);
+    
+    $w = $pdf->get_width();
+    $h = $pdf->get_height();
+
+    // HEADER
+    $header = $pdf->open_object();  
+    
+    $pdf->close_object();
+    $pdf->add_object($header, "all");
+
+    $text = "- {PAGE_NUM} -";  
+
+    // Center the text
+    $width = $fontMetrics->get_text_width("Pagina 1/2", $font, $size);
+    $pdf->page_text($w/2, 10, $text, $font, $size, $color);
+  </script>
+
   <main class="main">
     <div class="container">
 
@@ -192,7 +236,7 @@
             <div class="sub_header">
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
-                  <td width="50%" valign="top">
+                  <td width="48%" valign="top">
                     <div class="card">
                       <div class="card-header">
                         Cliente
@@ -207,7 +251,10 @@
                       </div>
                     </div>
                   </td>
-                  <td width="50%" valign="top">
+                  <td width="4%" valign="top">
+                    &nbsp;
+                  </td>
+                  <td width="48%" valign="top">
                     <div class="card">
                       <div class="card-header">
                         Dati fatturazione
@@ -229,7 +276,7 @@
       <div class="row mt-3">
         <div class="col">
           <div class="elenco_servizi">
-            <table width="100%" cellpadding="0" cellspacing="0">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0">
               <thead>
                 <tr>
                   <th scope="col">Servizi digitali INFOALBERGHI.COM</th>
@@ -262,6 +309,21 @@
                     </tr>
                   @endif
                 @endforeach
+                {{-- riga totali --}}
+                <tr class="totali">
+                  <td colspan="3" class="text-right font-weight-bold">TOTALE</td>
+                  <td class="text-right">{{$totali['tot_qta']}}</td>
+                  <td class="text-right">{{Utility::formatta_cifra($totali['tot_importo'])}}</td>
+                <tr class="totali">
+                  <td colspan="3" class="text-right font-weight-bold">IVA</td>
+                  <td class="text-right">{{Utility::getIva()}}%</td>
+                  <td class="text-right">{{Utility::formatta_cifra($totali['tot_iva'])}}</td>
+                <tr class="totali">
+                  <td colspan="3" class="text-right font-weight-bold">TOTALE FATTURA</td>
+                  <td></td>
+                  <td class="font-weight-bold text-right">{{Utility::formatta_cifra($totali['tot_importo_con_iva'])}}</td>
+                </tr>
+                {{-- / riga totali --}}
               </tbody>
             </table>
           </div>
@@ -271,12 +333,12 @@
       
       <div class="subfooter">
         <table width="100%" cellpadding="5" cellspacing="0">
-          <tr>
+          <tr class="condizioni_pagamento">
             <td>
-              <span>Condizioni di pagamento</span>
+              Condizioni di pagamento
             </td>
             <td>
-            <span>Data</span>
+            Data
             </td>
           </tr>
           <tr>

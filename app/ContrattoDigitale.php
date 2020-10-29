@@ -55,5 +55,15 @@ class ContrattoDigitale extends Model
    {
        return $this->belongsTo('App\Cliente', 'cliente_id', 'id');
    }
+
+   public function destroyMe()
+    {
+      foreach ($this->servizi as $row) 
+        {
+        $row->delete();
+        }
+        
+      self::delete();
+    }
    
 }

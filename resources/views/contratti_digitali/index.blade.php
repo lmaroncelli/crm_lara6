@@ -38,7 +38,13 @@
           <input type="hidden" name="orderby" id="orderby" value="">
           <input type="hidden" name="order" id="order" value="">
         </form>
-        <div>
+        @foreach ($precontratti as $p)
+          <form action="{{ route('contratto-digitale.destroy',$p->id) }}" method="POST" id="delete_item_{{$p->id}}">
+              @csrf
+              @method('DELETE')
+          </form>
+        @endforeach
+          <div>
           <table class="table table-responsive-sm m-table m-table--head-bg-success table-hover">
               <thead>
                   <tr>
@@ -91,12 +97,8 @@
               </thead>
               <tbody>
                   @foreach ($precontratti as $p)
-                      <form action="{{ route('contratto-digitale.destroy',$p->id) }}" method="POST" id="delete_item_{{$p->id}}">
-                          @csrf
-                          @method('DELETE')
-                      </form>
                       <tr>
-                        <th scope="row"><a href="{{ route('contratto-digitale.edit',$p->id) }}" title="Modifica precontratto">{{$p->data_creazione->format('d/m/Y H:i')}}</a></th>
+                        <th scope="row"><a href="{{ route('contratto-digitale.edit',$p->id) }}" title="Modifica precontratto">{{$p->data_creazione->format('d/m/Y H:i')}}</a> ({{$p->servizi_count}})</th>
                         <td>{{$p->tipo_contratto}}</td>
                         <td>{{optional($p->commerciale)->name}}</td>
                         <td>{{optional($p->cliente)->nome}}</td>
