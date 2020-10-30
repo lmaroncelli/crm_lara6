@@ -1,4 +1,4 @@
-@section('js_griglia_evidenze')
+
     <script type="text/javascript">
       
     jQuery(document).ready(function(){
@@ -6,12 +6,12 @@
 
       $("#refresh").click(function(e){
         e.preventDefault();
-          location.reload();
+        caricaGrigliaEvidenze();
       });
 
       // click su ogni cella della griglia
 
-      $(".clickable:not(.acquistata_1)").click(function(e){
+      $('body').on('click', ".clickable:not(.acquistata_1)", function(e){
 
           e.preventDefault();
 
@@ -69,7 +69,7 @@
 
         });// end clickable:not(.acquistata_1)
 
-        $(".compra_evidenza").click(function(e){
+        $('body').on('click', ".compra_evidenza", function(e){
 
             e.preventDefault();
 
@@ -119,7 +119,7 @@
           }); // end compra_evidenza
 
 
-          $(".clickable_prelazionata").click(function(e){
+          $('body').on('click', ".clickable_prelazionata",function(e){
 
               e.preventDefault();
 
@@ -172,7 +172,7 @@
 
           }); // end clickable_prelazionata
 
-          $(".prelaziona_evidenza").click(function(e){
+          $('body').on('click', ".prelaziona_evidenza", function(e){
 
               e.preventDefault();
 
@@ -219,7 +219,7 @@
 
 
     </script>
-@endsection
+
 
 
 <div class="m-portlet__body">

@@ -5,7 +5,40 @@
 
 <script type="text/javascript">
 
+      function caricaGrigliaEvidenze() {
+          
+          $(".spinner_lu.servizi").show();
+          
+          var contratto_id = '{{$contratto->id}}';
+          var macro_id = '{{$macro_id}}';
+
+          data = {
+            contratto_id:contratto_id,
+            macro_id:macro_id
+          };
+          
+          $.ajax({
+              url: "{{ route('crea_griglia_evidenza_contratto_ajax') }}",
+              type: 'POST',
+              data: data,
+              success: function(griglia) {
+                  $("#evidenze_contratto").html(griglia);
+
+                  $(".spinner_lu.servizi").hide();
+              },
+              error: function() {
+                $(".spinner_lu.servizi").hide();
+              }
+          });
+          
+
+      }
+
+
 jQuery(document).ready(function($){
+
+
+      caricaGrigliaEvidenze();
 
 
       /* click sul bottone per aggiornare il form totale*/
@@ -294,6 +327,44 @@ jQuery(document).ready(function($){
         });
     }); /* end addRowServizio*/
 
+
+
+
+    /* click bottone crea pdf */
+    $( "#crea_pdf" ).click(function(e) {
+      
+      e.preventDefault();
+      
+      $(".spinner_lu.servizi").show();
+        
+        var contratto_id = {{$contratto->id}};
+
+        data = {
+          contratto_id:contratto_id
+        };
+        
+        $.ajax({
+            url: "{{ route('contratto-digitale.crea-pdf-ajax') }}",
+            type: 'POST',
+            data: data,
+            success: function(msg) {
+                if (msg="ok") {
+                  $("#pdf_firmato").fadeIn('slow');
+                } else {
+                  alert(msg);
+                }
+              $(".spinner_lu.servizi").hide();
+            },
+            error: function() {
+              $(".spinner_lu.servizi").hide();
+              alert('errore imprevisto!');
+            }
+        });
+      
+      
+
+    }); /*end crea pdf */
+
     
 
 }); /* document.ready */
@@ -504,27 +575,12 @@ jQuery(document).ready(function($){
   </div>
 </form>
 <hr>
+<div class="evidenze_contratto" id="evidenze_contratto">
 
-<div class="evidenze_contratto">
-  {{-- griglia_evidenze --}}
-  <h4 class="m-portlet__head-text" style="width: 100px;">
-    Località
-  </h4>
-  {{--  Elenco macrolocalita  --}}
-  <div class="row">
-  <ul class="nav nav-tabs nav-griglia">
-    @foreach ($macro as $id => $nome)
-      <li class="nav-item">
-        <a class="nav-link @if ($id == $macro_id) active @endif" href="{{ route('contratto-digitale.edit', ['contratto_id' => $contratto->id, 'macro_id' => $id]) }}">{{$nome}}</a>
-      </li>
-    @endforeach
-    </ul>
-  </div> 
+{{-- @include('contratti_digitali.evidenze_contratto',['macro' => $macro, 'contratto' => $contratto, 'tipi_evidenza' => $tipi_evidenza]) --}}
 
-  <hr>
-  @include('evidenze.griglia_evidenze_inc', ['contratto_digitale' => 1])
-  <hr>
 </div> {{-- end evidenze_contratto --}}
+<hr>
 
 {{-- ServiziDigitali associati al contratto --}}
 <div class="table-responsive">
@@ -596,7 +652,6 @@ jQuery(document).ready(function($){
       <tr>
         <td colspan="7">
           <div id="container_row_ajax">
-            
           </div>
         </td>
       </tr>
@@ -648,7 +703,7 @@ jQuery(document).ready(function($){
 
 {{--  Nome file pdf --}}
 <div class="form-group row">
-  <label class="col-lg-1 col-form-label" for="text-input">Nome file pdf</label>
+  <label class="col-lg-1 col-form-label col-md-1" for="text-input">Nome file pdf</label>
     
   <div class="col-md-4">
     <div class="input-group">
@@ -661,8 +716,13 @@ jQuery(document).ready(function($){
 
   <div class="col-md-5">
     <button type="button" class="salva_nome_pdf btn btn-primary btn-xs">Salva</button>
-  <a href="{{ route('contratto-digitale.export-pdf', $contratto->id) }}" target="_blank" class="btn btn-danger btn-xs">Pdf</a>
+    <a id="crea_pdf" href="#" class="btn btn-danger btn-xs">Crea Pdf con firma</a>
   </div>
+
+  <div class="col-md-1 text-right" @if (!$exists) style="display:none;" @endif  id="pdf_firmato">
+    <a href="{{asset('storage/precontratti').'/'.$contratto->nome_file.'_firmato.pdf'}}" target="_blank" class="btn btn-success btn-xs">Apri Pdf</a>
+  </div>
+
   
 </div>
 {{--  end Nome file pdf --}}

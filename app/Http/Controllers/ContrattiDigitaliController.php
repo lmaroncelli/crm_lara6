@@ -20,6 +20,7 @@ use SetaPDF_Core_Reader_File;
 use SetaPDF_Core_Writer_File;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\MyController;
+use Illuminate\Support\Facades\Storage;
 
 class ContrattiDigitaliController extends MyController
 {
@@ -211,13 +212,88 @@ class ContrattiDigitaliController extends MyController
         //
     }
 
+
+
+    public function creaGrigliaEvidenzaContrattoAjax(Request $request)
+      {
+      
+      $contratto_id = $request->get('contratto_id'); 
+      $macro_id = $request->get('macro_id');
+
+      $contratto = ContrattoDigitale::with('cliente')->find($contratto_id);
+
+
+      //  IL CONTRATTO PUO' APPARTENERE AD UN CLIENTE GIA' ESISTENTE OPPURE A UNO NUOVO CHE NON ESISTE GIA' NEL CRM
+      if ($contratto->cliente_id == -1) 
+        {
+        $macro = MacroLocalita::orderBy('ordine')->pluck('nome','id');
+        } 
+      else 
+        {
+        if(!$macro_id)
+          {
+          $macro_id = $contratto->cliente->localita->macrolocalita_id;
+
+          $macrolocalita = MacroLocalita::find($macro_id);
+          $macro[$macrolocalita->id] = $macrolocalita->nome; 
+          }
+        }
+      $macro['-1'] = 'Parchi'; 
+      $macro['-2'] = 'Offerte Fiera';
+
+      $tipi_evidenza = TipoEvidenza::with(['macroLocalita','mesi','evidenze','evidenze.mesi'])->ofMacro($macro_id)->get(); 
+      
+
+      $utenti_commerciali = User::commerciale()->orderBy('name')->get();
+      $commerciali_nome = $utenti_commerciali->pluck('username','id')->toArray();
+      $commerciali_nome[0] = '';
+
+
+      if ($request->session()->has('servizi_venduti_ids')) 
+        {
+        $servizi_venduti_ids = $request->session()->get('servizi_venduti_ids');
+        }
+      else
+        {
+          $servizi_venduti_ids = 
+          $contratto->servizi()->where('sconto',0)
+          ->orWhere(function($query) use ($contratto_id) {
+            $query->where('contratto_id',$contratto_id);
+            $query->where('sconto',1);
+            $query->whereNull('servizio_scontato_id');
+          })
+          ->pluck('id')->toArray();
+
+        }
+
+      if ($request->session()->has('clienti_to_info'))
+        {
+        $clienti_to_info = $request->session()->get('clienti_to_info');
+        } 
+      else
+        {
+        $clienti_to_info = Cliente::attivo()->ofMacro($macro_id)->pluck('id_info','id')->toArray();
+        $clienti_to_info[-1] = '';
+        $clienti_to_info[0] = '';
+
+        session(['clienti_to_info' => $clienti_to_info]);
+        }
+
+
+
+      return view('contratti_digitali.evidenze_contratto',compact('macro', 'contratto', 'tipi_evidenza', 'macro_id','commerciali_nome','servizi_venduti_ids','clienti_to_info'));
+
+      }
+
+
+
     /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id, $macro_id = 0)
+    public function edit(Request $request, $id, $macro_id = 0)
     {
       $contratto = ContrattoDigitale::with('cliente')->find($id);
 
@@ -232,9 +308,6 @@ class ContrattiDigitaliController extends MyController
 
       //condizioni di pagamento
       $condizioni_pagamento = Utility::getCondizioniPagamento();
-
-      
-
 
 
       // GESTIONE GRIGLIA EVIDENZE
@@ -268,12 +341,24 @@ class ContrattiDigitaliController extends MyController
 
       $tipi_evidenza = TipoEvidenza::with(['macroLocalita','mesi','evidenze','evidenze.mesi'])->ofMacro($macro_id)->get(); 
 
+      
       // preparo un array tale che $clienti_to_info[id] = id_info senza dover fare sempre la query per ogni cella
       // dovrei filtrare per macrolocalita
       // scopeOfMacro($id_macro) x i clienti ??
-      $clienti_to_info = Cliente::attivo()->ofMacro($macro_id)->pluck('id_info','id')->toArray();
-      $clienti_to_info[-1] = '';
-      $clienti_to_info[0] = '';
+      if ($request->session()->has('clienti_to_info'))
+        {
+        $clienti_to_info = $request->session()->get('clienti_to_info');
+        } 
+      else
+        {
+        $clienti_to_info = Cliente::attivo()->ofMacro($macro_id)->pluck('id_info','id')->toArray();
+        $clienti_to_info[-1] = '';
+        $clienti_to_info[0] = '';
+
+        session(['clienti_to_info' => $clienti_to_info]);
+        }
+
+
       
 
       // preparo un array tale che $commerciale_nome[id_utente] = username senza dover fare sempre la query per ogni cella
@@ -344,9 +429,24 @@ class ContrattiDigitaliController extends MyController
         'id_macro' => $macro_id
         ]);
    
-      $servizi_venduti_ids = $servizi_venduti->pluck('id')->toArray();
 
-      return view('contratti_digitali.form', compact('contratto','i1','i2','i3','i4', 'mostra_iban_importato', 'commerciale_contratto','servizi_assoc','condizioni_pagamento','tipi_evidenza','clienti_to_info','commerciali_nome','macro','macro_id', 'utenti_commerciali', 'commerciali','servizi_assoc','totali','servizi_contratto','servizi_venduti_ids'));
+      
+      if ($request->session()->has('servizi_venduti_ids')) 
+        {
+        $servizi_venduti_ids = $request->session()->get('servizi_venduti_ids');
+        }
+      else
+        {
+        $servizi_venduti_ids = $servizi_venduti->pluck('id')->toArray();
+
+        // Quando aggiorno la griglia se non cambiano i servizi li prendo dalla sessione 
+        session(['servizi_venduti_ids' => $servizi_venduti_ids]);
+        }
+
+
+      $exists = Storage::disk('precontratti')->exists($contratto->nome_file.'_firmato.pdf');
+
+      return view('contratti_digitali.form', compact('contratto','i1','i2','i3','i4', 'mostra_iban_importato', 'commerciale_contratto','servizi_assoc','condizioni_pagamento','tipi_evidenza','clienti_to_info','commerciali_nome','macro','macro_id', 'utenti_commerciali', 'commerciali','servizi_assoc','totali','servizi_contratto','servizi_venduti_ids','exists'));
 
     }
 
@@ -686,14 +786,45 @@ class ContrattiDigitaliController extends MyController
 
       public function exportPdf($id)
         {
+        
+        $contratto = ContrattoDigitale::find($id);
+
+        $pdf = $this->_crea_pdf($id);
+        
+        return $pdf->stream();
+
+        return $pdf->download($contratto->nome_file.'.pdf');
+        
+        }
+    
+
+      
+    
+      
+
+      public function creaPdfAjax(Request $request)
+        {
+          $contratto_id = $request->get('contratto_id');
+
+          $pdf = $this->_crea_pdf($contratto_id);
+
+          return 'ok';
+
+        }
 
 
-          // include(base_path('vendor/setasign/setapdf-core/library/SetaPDF/Autoload.php'));
-          // include(base_path('vendor/setasign/setapdf-core/library/SetaPDF/Core/Reader/File.php'));
-          // include(base_path('vendor/setasign/setapdf-core/library/SetaPDF/Core/Writer/File.php'));
-          // include(base_path('vendor/setasign/setapdf-core/library/SetaPDF/Core/Document.php'));
+      
+
+      private function _crea_pdf($id)
+        {
+        // include(base_path('vendor/setasign/setapdf-core/library/SetaPDF/Autoload.php'));
+        // include(base_path('vendor/setasign/setapdf-core/library/SetaPDF/Core/Reader/File.php'));
+        // include(base_path('vendor/setasign/setapdf-core/library/SetaPDF/Core/Writer/File.php'));
+        // include(base_path('vendor/setasign/setapdf-core/library/SetaPDF/Core/Document.php'));
 
         $contratto = ContrattoDigitale::with(['commerciale','servizi','sconti_associati'])->find($id);
+
+        $nome_file = $contratto->nome_file;
 
         $commerciale_contratto = optional($contratto->commerciale)->name;
 
@@ -727,9 +858,11 @@ class ContrattiDigitaliController extends MyController
         //return view('contratti_digitali.contratto_pdf', compact('contratto','commerciale_contratto','servizi_assoc','totali'));
         
         $pdf = PDF::loadView('contratti_digitali.contratto_pdf', compact('contratto','commerciale_contratto','servizi_assoc','totali'));
+
+
         
-        $filepdf_path = public_path().'/file.pdf';
-        $filepdf_firmato_path = public_path().'/file_firmato.pdf';
+        $filepdf_path = storage_path('app/public/precontratti').'/'.$nome_file.'.pdf';
+        $filepdf_firmato_path = storage_path('app/public/precontratti').'/'.$nome_file.'_firmato.pdf';
 
         $pdf->save($filepdf_path);
 
@@ -827,21 +960,25 @@ class ContrattiDigitaliController extends MyController
         // save and finish
         $document->save()->finish();
 
-        
-        //return $pdf->stream();
 
-        //return $pdf->download($contratto->nome_file.'.pdf');
-        
+        return $pdf;
+
         }
     
-
-    /**
+    
+    
+    
+      
+      
+      
+      
+        /**
       * IBAN della società può essere già corretto oppure essere malformato
       *
       * @param [type] $iban
       * @return boolean
       */
-    private function _guess_iban($iban)
+      private function _guess_iban($iban)
       {
       $iban_check = explode(' ',$iban);
 

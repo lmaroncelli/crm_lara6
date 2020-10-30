@@ -172,6 +172,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('contratto-digitale/export_pdf/{contratto_id}', 'ContrattiDigitaliController@exportPdf')->name('contratto-digitale.export-pdf');
 
+    Route::post('contratto-digitale/crea_pdf_ajax', 'ContrattiDigitaliController@creaPdfAjax')->name('contratto-digitale.crea-pdf-ajax');
+
+    Route::post('contratto-digitale/crea_griglia_evidenza_contratto_ajax', 'ContrattiDigitaliController@creaGrigliaEvidenzaContrattoAjax')->name('crea_griglia_evidenza_contratto_ajax');
+
+
+
 
     /////////////
     // Servizi //
