@@ -99,7 +99,7 @@ jQuery(document).ready(function($){
 
 
       /* click bottone cancella riga servizio */
-      $( ".delRow" ).click(function(e) {
+      $('body').on('click', ".delRow", function(e) {
         
         e.preventDefault();
         
@@ -107,6 +107,7 @@ jQuery(document).ready(function($){
         
         if (confirm('Sei sicuro di eliminare '+ nome + '?')) {
 
+          $(".spinner_lu").show();
           $(".spinner_lu.servizi").show();
           
           var idservizio = $(this).data('idservizio');
@@ -123,23 +124,23 @@ jQuery(document).ready(function($){
               data: data,
               success: function(msg) {
                   if (msg="ok") {
-                    window.location.reload(true);
+                    caricaGrigliaEvidenze(destroy_session = 1);
+                    caricaServiziContratto(destroy_session = 1);
                   } else {
-                    $(".spinner_lu.servizi").hide();
                     alert(msg);
                   }
-              },
-              error: function() {
-                $(".spinner_lu.servizi").hide();
+                  $(".spinner_lu").hide();
+                  $(".spinner_lu.servizi").hide();
               }
           });
+    
         
         } /*endif confirm*/
 
       }); /*end delRow */
 
 
-    $(".scontoRow").click(function(e){
+    $('body').on('click', ".scontoRow", function(e){
       
       e.preventDefault();
 
