@@ -21,6 +21,7 @@ class FattureIndexComposer
                 $campi_fattura_search['data'] = 'data';
                 $campi_fattura_search['pagamento'] = 'pagamento';
                 $campi_fattura_search['societa'] = 'societa';
+                $campi_fattura_search['piva'] = 'P.IVA';
                 $campi_fattura_search['cliente'] = 'cliente';
                 $campi_fattura_search['note'] = 'note';
                 asort($campi_fattura_search);

@@ -131,6 +131,13 @@ class FattureController extends Controller
         $fatture = $fatture->whereIn('societa_id',$cocieta_ids);        
 
         }
+      elseif ($field == 'piva')
+        {
+        $ragSoc_ids = RagioneSociale::where('piva','LIKE','%'.$qf.'%')->pluck('id')->toArray();
+        $cocieta_ids = Societa::whereIn('ragionesociale_id',$ragSoc_ids)->pluck('id')->toArray();
+        $fatture = $fatture->whereIn('societa_id',$cocieta_ids);        
+
+        }
       elseif ($field == 'cliente')
         {
         $clienti_ids = Cliente::where('nome','LIKE','%'.$qf.'%')->pluck('id')->toArray();
