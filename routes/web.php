@@ -176,6 +176,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('contratto-digitale/crea_griglia_evidenza_contratto_ajax', 'ContrattiDigitaliController@creaGrigliaEvidenzaContrattoAjax')->name('crea_griglia_evidenza_contratto_ajax');
 
+    Route::post('contratto-digitale/carica_servizi_contratto_ajax', 'ContrattiDigitaliController@caricaServiziContrattoAjax')->name('carica_servizi_contratto_ajax');
+    
+
 
 
 

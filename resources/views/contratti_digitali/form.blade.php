@@ -5,16 +5,17 @@
 
 <script type="text/javascript">
 
-      function caricaGrigliaEvidenze() {
+      function caricaGrigliaEvidenze(destroy_session = 0) {
           
-          $(".spinner_lu.servizi").show();
+          $(".spinner_lu").show();
           
           var contratto_id = '{{$contratto->id}}';
           var macro_id = '{{$macro_id}}';
 
           data = {
             contratto_id:contratto_id,
-            macro_id:macro_id
+            macro_id:macro_id,
+            destroy_session:destroy_session
           };
           
           $.ajax({
@@ -22,7 +23,38 @@
               type: 'POST',
               data: data,
               success: function(griglia) {
+                  $("#evidenze_contratto").html("");
                   $("#evidenze_contratto").html(griglia);
+
+                  $(".spinner_lu").hide();
+              },
+              error: function() {
+                $(".spinner_lu").hide();
+              }
+          });
+          
+
+      }
+
+      function caricaServiziContratto(destroy_session = 0) {
+
+          $(".spinner_lu.servizi").show();
+          
+          var contratto_id = '{{$contratto->id}}';
+          var destroy_session = destroy_session;
+
+          data = {
+            contratto_id:contratto_id,
+            destroy_session:destroy_session
+          };
+          
+          $.ajax({
+              url: "{{ route('carica_servizi_contratto_ajax') }}",
+              type: 'POST',
+              data: data,
+              success: function(servizi) {
+                  $("#servizi_contratto").html("");
+                  $("#servizi_contratto").html(servizi);
 
                   $(".spinner_lu.servizi").hide();
               },
@@ -30,8 +62,7 @@
                 $(".spinner_lu.servizi").hide();
               }
           });
-          
-
+        
       }
 
 
@@ -39,6 +70,7 @@ jQuery(document).ready(function($){
 
 
       caricaGrigliaEvidenze();
+      caricaServiziContratto();
 
 
       /* click sul bottone per aggiornare il form totale*/
@@ -371,10 +403,250 @@ jQuery(document).ready(function($){
 </script>
 @endsection
 
+
+{{--  
+  questo js era in griglia_evidenze_inc.blade.php, ma siccome adesso questo snippet viene ricaricato con ajax
+  ricaricando anche il js SI INCASINA e fa le chiamate doppie 
+  
+  --}}
+@section('js_griglia_evidenze')
+  
+<script type="text/javascript">
+      
+  jQuery(document).ready(function(){
+
+
+    $('body').on('click', "#refresh", function(e) {
+      e.preventDefault();
+      let carica_servizi = $("#carica_servizi").val();
+      if(carica_servizi) {
+        caricaServiziContratto(carica_servizi);
+        caricaGrigliaEvidenze(carica_servizi);
+      }
+      $("#carica_servizi").val(0);
+    });
+
+    // click su ogni cella della griglia
+
+    $('body').on('click', ".clickable:not(.acquistata_1)", function(e){
+
+        e.preventDefault();
+
+        @if (!session()->has('id_cliente') || !session()->has('id_agente'))
+          
+          alert('seleziona un cliente!');
+
+        @else
+          
+          $(".spinner_lu").show();
+
+          var elem = $(this);
+
+          var id_evidenza = elem.attr("data-id-evidenza");
+          var id_mese = elem.attr("data-id-mese");
+          var data = {
+            'id_agente': "{{ session('id_agente') }}",
+            'id_cliente': "{{ session('id_cliente') }}",
+            'id_evidenza': id_evidenza,
+            'id_mese': id_mese
+          }  
+
+          $.ajax({
+                    url: "{{ route('assegna-mese-evidenza-ajax') }}",
+                    data: data,
+                    success: function(msg) {
+                        if (msg == 'ok') {
+                          //location.reload();
+                          elem.data('id-hotel',"{{ session('id_cliente') }}");
+                          
+                          var newclass = 'sfondo_'+ "{{ session('id_agente') }}";
+                          elem.toggleClass("sfondo_0 "+newclass);
+
+                          var elem_content = elem.find("div.contenuto_cella").html().trim();
+
+                          if (elem_content == '') 
+                            {
+                            elem.find("div.contenuto_cella").html("{{ session('id_info') }}");
+                            } 
+                          else 
+                            {
+                            elem.find("div.contenuto_cella").html('');
+                            }
+                          $("#refresh").show();
+                          $(".spinner_lu").hide();
+
+                        } else {
+                          $(".spinner_lu").hide();
+                          window.alert(msg);
+                        }
+                    }
+                });
+
+        @endif
+
+      });// end clickable:not(.acquistata_1)
+
+      $('body').on('click', ".compra_evidenza", function(e){
+
+          e.preventDefault();
+
+          @if (!session('id_cliente') || !session('id_agente'))
+            alert('selezionare il cliente'); return;
+          @else
+
+            $(".spinner_lu").show();
+            
+            var elem = $(this);
+            var id_evidenza = elem.attr("data-id-evidenza");
+            
+            @if (isset($contratto))
+              var contratto_id =  "{{$contratto->id}}";
+            @else
+              var contratto_id =  0;
+            @endif
+
+
+            var data = {
+              'id_agente': "{{ session('id_agente') }}",
+              'id_cliente': "{{ session('id_cliente') }}",
+              'contratto_id':contratto_id,
+              'id_evidenza': id_evidenza,
+            }
+            
+            $.ajax({
+                url: "{{ route('acquista-evidenza-ajax') }}",
+                data: data,
+                success: function(msg) {
+                    if (msg == 'ok') {
+                      //location.reload();
+                      elem.toggleClass('btn-primary btn-warning');
+                      elem.toggleClass('compra_evidenza evidenza_comprata');
+                      elem.prop('value', 'COMPRATA');
+                      $("#carica_servizi").val(1);
+                      $("#refresh").show();
+                      $(".spinner_lu").hide();
+                    } else {
+                      $(".spinner_lu").hide();
+                      window.alert(msg);
+                    }
+                }
+            });        
+
+          @endif
+
+        }); // end compra_evidenza
+
+
+        $('body').on('click', ".clickable_prelazionata",function(e){
+
+            e.preventDefault();
+
+            @if (!session('id_cliente') || !session('id_agente'))
+              alert('selezionare il cliente'); return;
+            @else
+              var elem = $(this);
+
+              var id_hotel = elem.attr("data-id-hotel");
+              var id_cliente_session = {{ session('id_cliente') }};
+
+              if (id_cliente_session != id_hotel) {
+                    
+                alert('selezionare il cliente corretto!!'); 
+
+                return;
+              }
+
+              $(".spinner_lu").show();
+              
+              var id_evidenza = elem.attr("data-id-evidenza");
+              var id_mese = elem.attr("data-id-mese");
+              
+              var data = {
+              'id_evidenza': id_evidenza,
+              'id_mese': id_mese
+              }  
+              
+              $.ajax({
+                  url: "{{ route('disassocia-mese-evidenza-prelazione-ajax') }}",
+                  data: data,
+                  success: function(msg) {
+                      if (msg == 'ok') {
+                        //location.reload();
+                        elem.removeClass("sfondo_prelazione");
+                        elem.addClass("sfondo_0");
+                        elem.removeClass("clickable_prelazionata");
+                        elem.data('id-hotel','0');
+                        elem.find("div.contenuto_cella").html('');
+                        $("#refresh").show();
+                        $(".spinner_lu").hide();
+                      } else {
+                        $(".spinner_lu").hide();
+                        window.alert(msg);
+                      }
+                  }
+              });        
+
+            @endif
+
+        }); // end clickable_prelazionata
+
+        $('body').on('click', ".prelaziona_evidenza", function(e){
+
+            e.preventDefault();
+
+            @if (!session('id_cliente') || !session('id_agente'))
+              alert('selezionare il cliente'); return;
+            @else
+
+              $(".spinner_lu").show();
+              
+              var elem = $(this);
+
+              var id_evidenza = elem.attr("data-id-evidenza");
+              
+              var data = {
+                'id_agente': "{{ session('id_agente') }}",
+                'id_cliente': "{{ session('id_cliente') }}",
+                'id_foglio_servizi': 0,
+                'id_evidenza': id_evidenza,
+              }
+              
+              $.ajax({
+                  url: "{{ route('prelaziona-evidenza-ajax') }}",
+                  data: data,
+                  success: function(msg) {
+                      if (msg == 'ok') {
+                        //location.reload();
+                        elem.toggleClass('btn-primary btn-warning');
+                        elem.toggleClass('prelaziona_evidenza evidenza_prelazionata');
+                        elem.prop('value', 'PRELAZIONATA');
+                        $("#refresh").show();
+                        $(".spinner_lu").hide();
+                      } else {
+                        $(".spinner_lu").hide();
+                        window.alert(msg);
+                      }
+                  }
+              });        
+
+            @endif
+
+        }); // end prelaziona_evidenza
+
+  }); // end jQuery(document).ready
+
+
+  </script>
+
+@endsection
+
+
+
 @section('content')
 <form action="{{ route('contratto-digitale.update',$contratto->id) }}" method="post" id="form_contratto_digitale">
   @csrf
   @method('PUT')
+  <input type="hidden" id="carica_servizi" value="0">
   <div class="row mt-2 row justify-content-between">
       <div class="col-lg-5">
       <div class="card card-accent-primary text-center">
@@ -575,131 +847,22 @@ jQuery(document).ready(function($){
   </div>
 </form>
 <hr>
+
+<div class="spinner_lu" style="display:none;"></div>
 <div class="evidenze_contratto" id="evidenze_contratto">
+</div>
 
-{{-- @include('contratti_digitali.evidenze_contratto',['macro' => $macro, 'contratto' => $contratto, 'tipi_evidenza' => $tipi_evidenza]) --}}
 
-</div> {{-- end evidenze_contratto --}}
 <hr>
 
-{{-- ServiziDigitali associati al contratto --}}
-<div class="table-responsive">
-  <table class="table">
-    <caption>Servizi venduti</caption>
-    <thead>
-      <tr>
-        <th scope="col">Servizi digitali INFOALBERGHI.COM</th>
-        <th scope="col">Dal</th>
-        <th scope="col">Al</th>
-        <th scope="col">Q.tà</th>
-        <th scope="col" class="text-right">Importo (€)</th>
-        <th colspan="2"></th>
-      </tr>
-    </thead>
-    <tbody>
-      @foreach ($servizi_assoc as $servizio)
-        @php
-            if ($servizio->sconto) 
-              {
-              $nome = 'lo sconto';
-              $title_del='Elimina '.$nome;
-              } 
-            else 
-              {
-              $nome = 'il servizio';
-              $title_del='Elimina '.$nome;
-              }
-        @endphp
-          @if ($servizio->sconto)
-            <tr class="sconto">
-              <td colspan="4">
-                <i class="fas fa-tags"></i>&nbsp;&nbsp;{{$servizio->nome}}  
-              </td>
-              <td class="text-right"> - {{Utility::formatta_cifra($servizio->importo, '€')}}</td>
-              <td></td>
-              <td class="text-right">
-                <button type="button" class="btn btn-danger btn-sm delRow" title="{{$title_del}}" data-nome ="{{$nome}}" data-idcontratto="{{$contratto->id}}" data-idservizio="{{$servizio->id}}"><i class="fas fa-trash-alt"></i></button>
-              </td>
-            </tr>
-          @else
-            <tr>
-              @if ($servizio->nome == 'ALTRO')
-                <td>{!!$servizio->altro_servizio!!}</td>                  
-              @else
-                <td>{{$servizio->nome}} - {{$servizio->localita}} @if ( !is_null($servizio->pagina) ) <br/> {{$servizio->pagina}} @endif</td>
-              @endif
-              <td>{{$servizio->dal}}</td>
-              <td>{{$servizio->al}}</td>
-              <td>{{$servizio->qta}}</td>
-              <td class="text-right">{{Utility::formatta_cifra($servizio->importo, '€')}}</td>
-
-              <td class="text-right">
-                
-                <button type="button" class="btn btn-primary btn-sm scontoRow" @if (!is_null($servizio->scontoAssociato)) disabled @endif title="Crea uno sconto per il servizio" data-idcontratto="{{$contratto->id}}" data-idservizio="{{$servizio->id}}">
-                  <i class="fas fa-piggy-bank"></i>
-                </button>
-              </td>
-              
-              <td class="text-right">
-                <button type="button" class="btn btn-danger btn-sm delRow" title="{{$title_del}}" data-nome ="{{$nome}}" data-idcontratto="{{$contratto->id}}" data-idservizio="{{$servizio->id}}"><i class="fas fa-trash-alt"></i></button>
-              </td>
-            </tr>
-          @endif
-      @endforeach
-      
-      {{-- riga sconto/servizio evidenza --}}
-      <div class="spinner_lu servizi" style="display:none;"></div>
-      <tr>
-        <td colspan="7">
-          <div id="container_row_ajax">
-          </div>
-        </td>
-      </tr>
-      {{-- /riga sconto/servizio evidenza --}}
-
-      {{-- Riga creazione servizio da vendere --}}
-      
-
-      <tr>
-        <td>
-          <div class="form-group">
-            <label for="servizio">Servizio da vendere</label>
-            <select required id="servizi_select" class="form-control" name="servizio" data-idcontratto="{{$contratto->id}}">
-              @foreach ($servizi_contratto as $key => $value)
-                <option value="{{$key}}">{{$value}}</option>
-              @endforeach
-            </select>
-          </div>
-        </td>
-      </tr>
-
-      {{-- /Riga creazione servizio da vendere --}}
-
-      {{-- riga totali --}}
-      <tr>
-        <td colspan="3" class="text-right font-weight-bold">TOTALE</td>
-        <td>{{$totali['tot_qta']}}</td>
-        <td class="text-right">{{Utility::formatta_cifra($totali['tot_importo'],'€')}}</td>
-        <td colspan="2"></td>
-      </tr>
-      <tr>
-        <td colspan="3" class="text-right font-weight-bold">IVA</td>
-        <td>{{Utility::getIva()}}%</td>
-        <td class="text-right">{{Utility::formatta_cifra($totali['tot_iva'],'€')}}</td>
-        <td colspan="2"></td>
-      </tr>
-      <tr>
-        <td colspan="3" class="text-right font-weight-bold">TOTALE FATTURA</td>
-        <td></td>
-        <td class="font-weight-bold text-right">{{Utility::formatta_cifra($totali['tot_importo_con_iva'],'€')}}</td>
-        <td colspan="2"></td>
-      </tr>
-      {{-- / riga totali --}}
-
-    </tbody>
-  </table>
+<div id="servizi_contratto">
+  
 </div>
-{{-- end ServiziDigitali associati al contratto --}}
+<div class="spinner_lu servizi" style="display:none;"></div>
+
+
+
+
 
 {{--  Nome file pdf --}}
 <div class="form-group row">

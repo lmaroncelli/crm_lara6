@@ -8,9 +8,10 @@ use App\Utility;
 use App\Evidenza;
 use App\TipoEvidenza;
 use App\MacroLocalita;
-use Illuminate\Http\Request;
-use App\Http\Controllers\MyController;
 use App\ServizioDigitale;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\MyController;
 
 class EvidenzeController extends MyController
 {
@@ -135,6 +136,8 @@ class EvidenzeController extends MyController
       $id_evidenza = $request->get('id_evidenza');
       $contratto_id = $request->get('contratto_id');
 
+      Log::debug("chiamata AcquistaEvidenzaAjax con id_agente = $id_agente, id_cliente = $id_cliente, id_evidenza = $id_evidenza, contratto_id = $contratto_id");
+
       $evidenza = Evidenza::find($id_evidenza);
 
       $anno = $evidenza->mesi()->first()->anno;
@@ -212,6 +215,9 @@ class EvidenzeController extends MyController
           );
 
         $servizio_digitale = ServizioDigitale::create($data_servizi_digitali);
+
+        Log::debug("servizio_digitale creato = " .$servizio_digitale);
+
 
         // Metto le evidddenze come Acquistate e le lego al contratto digitale 
         foreach ($ev_da_acquistare as $evidenza_mese) 

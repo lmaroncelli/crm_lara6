@@ -220,6 +220,8 @@ class ContrattiDigitaliController extends MyController
       $contratto_id = $request->get('contratto_id'); 
       $macro_id = $request->get('macro_id');
 
+      $destroy_session = $request->get('destroy_session');
+
       $contratto = ContrattoDigitale::with('cliente')->find($contratto_id);
 
 
@@ -249,7 +251,7 @@ class ContrattiDigitaliController extends MyController
       $commerciali_nome[0] = '';
 
 
-      if ($request->session()->has('servizi_venduti_ids')) 
+      if ($request->session()->has('servizi_venduti_ids') && !$destroy_session) 
         {
         $servizi_venduti_ids = $request->session()->get('servizi_venduti_ids');
         }
@@ -263,6 +265,9 @@ class ContrattiDigitaliController extends MyController
             $query->whereNull('servizio_scontato_id');
           })
           ->pluck('id')->toArray();
+
+          
+          session(['servizi_venduti_ids' => $servizi_venduti_ids]);
 
         }
 
@@ -283,6 +288,83 @@ class ContrattiDigitaliController extends MyController
 
       return view('contratti_digitali.evidenze_contratto',compact('macro', 'contratto', 'tipi_evidenza', 'macro_id','commerciali_nome','servizi_venduti_ids','clienti_to_info'));
 
+      }
+
+    
+      public function caricaServiziContrattoAjax(Request $request)
+        {
+        $contratto_id = $request->get('contratto_id');
+        $destroy_session = $request->get('destroy_session');
+
+        $contratto = ContrattoDigitale::with('cliente')->find($contratto_id);
+        
+        //================================================//
+        // Servizi associati al contratto
+        //================================================//
+
+        //Tutti i sevizi NON SCONTO OPPURE gli sconti GENERICI
+          
+        if ($request->session()->has('servizi_venduti') && !$destroy_session) 
+          {
+          $servizi_venduti = $request->session()->get('servizi_venduti');
+          }
+        else
+          {
+          $servizi_venduti = 
+              $contratto->servizi()->where('sconto',0)
+              ->orWhere(function($query) use ($contratto_id) {
+                $query->where('contratto_id',$contratto_id);
+                $query->where('sconto',1);
+                $query->whereNull('servizio_scontato_id');
+              })
+              ->get();
+          
+          session(['servizi_venduti' => $servizi_venduti]);
+          }
+        
+        
+        
+          // tutti gli sconti associati ad un servizio
+          if ($request->session()->has('sconti') && !$destroy_session) 
+            {
+            $sconti = $request->session()->get('sconti');
+            }
+          else
+            {
+            $sconti = $contratto->sconti_associati->keyBy('servizio_scontato_id');
+            
+            session(['sconti' => $sconti]);
+            }
+        
+          
+          $servizi_assoc = [];
+          $totali = [];
+          
+          $this->getServiziAssociatiAndTotali($servizi_venduti, $sconti, $servizi_assoc, $totali);
+
+
+            
+          //================================================//
+          // Servizi da scegliere 
+          //================================================//
+     
+          if ($request->session()->has('servizi_contratto')) 
+            {
+            $servizi_contratto = $request->session()->get('servizi_contratto');
+            }
+          else
+            {
+            $servizi_contratto = [' ' => 'SELEZIONA....'] + Utility::getServiziContratto();
+            session(['servizi_contratto' => $servizi_contratto]);
+            }
+        
+        
+          return view('contratti_digitali.servizi_contratto',compact('servizi_assoc', 'servizi_contratto', 'totali', 'contratto'));
+
+      
+          //================================================//
+          // /Servizi associati al contratto 
+          //================================================//
       }
 
 
@@ -386,11 +468,16 @@ class ContrattiDigitaliController extends MyController
           })
           ->get();
       
+      session(['servizi_venduti' => $servizi_venduti]);
+        
+      
       
       
       // tutti gli sconti associati ad un servizio
       $sconti = $contratto->sconti_associati->keyBy('servizio_scontato_id');
-      
+
+      session(['sconti' => $sconti]);
+    
 
 
        
@@ -411,16 +498,18 @@ class ContrattiDigitaliController extends MyController
     // Servizi da scegliere 
     //================================================//
      
-    $servizi_contratto = [' ' => 'SELEZIONA....'] + Utility::getServiziContratto();
     
+    $servizi_contratto = [' ' => 'SELEZIONA....'] + Utility::getServiziContratto();
+    session(['servizi_contratto' => $servizi_contratto]);
+  
     
 
     //================================================//
     // /Servizi da scegliere 
     //================================================//
 
-      # metto in sessione 
-      session([
+    # metto in sessione 
+    session([
         'id_cliente' => $contratto->cliente_id,
         'id_info' => $contratto->cliente->id_info,
         'id_agente' => $contratto->user_id,
@@ -430,23 +519,15 @@ class ContrattiDigitaliController extends MyController
         ]);
    
 
-      
-      if ($request->session()->has('servizi_venduti_ids')) 
-        {
-        $servizi_venduti_ids = $request->session()->get('servizi_venduti_ids');
-        }
-      else
-        {
-        $servizi_venduti_ids = $servizi_venduti->pluck('id')->toArray();
-
-        // Quando aggiorno la griglia se non cambiano i servizi li prendo dalla sessione 
-        session(['servizi_venduti_ids' => $servizi_venduti_ids]);
-        }
-
+    
+    $servizi_venduti_ids = $servizi_venduti->pluck('id')->toArray();
+    // Quando aggiorno la griglia se non cambiano i servizi li prendo dalla sessione 
+    session(['servizi_venduti_ids' => $servizi_venduti_ids]);
+     
 
       $exists = Storage::disk('precontratti')->exists($contratto->nome_file.'_firmato.pdf');
 
-      return view('contratti_digitali.form', compact('contratto','i1','i2','i3','i4', 'mostra_iban_importato', 'commerciale_contratto','servizi_assoc','condizioni_pagamento','tipi_evidenza','clienti_to_info','commerciali_nome','macro','macro_id', 'utenti_commerciali', 'commerciali','servizi_assoc','totali','servizi_contratto','servizi_venduti_ids','exists'));
+      return view('contratti_digitali.form', compact('contratto','i1','i2','i3','i4', 'mostra_iban_importato', 'commerciale_contratto','servizi_assoc','condizioni_pagamento','tipi_evidenza','clienti_to_info','commerciali_nome','macro','macro_id', 'utenti_commerciali', 'commerciali','totali','servizi_contratto','servizi_venduti_ids','exists'));
 
     }
 
