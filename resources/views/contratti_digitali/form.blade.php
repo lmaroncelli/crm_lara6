@@ -107,11 +107,10 @@ jQuery(document).ready(function($){
         
         if (confirm('Sei sicuro di eliminare '+ nome + '?')) {
 
-          $(".spinner_lu").show();
-          $(".spinner_lu.servizi").show();
-          
+
           var idservizio = $(this).data('idservizio');
           var idcontratto = $(this).data('idcontratto');
+          var destroy_session = 1;
 
           data = {
             idservizio:idservizio,
@@ -123,14 +122,15 @@ jQuery(document).ready(function($){
               type: 'POST',
               data: data,
               success: function(msg) {
-                  if (msg="ok") {
-                    caricaGrigliaEvidenze(destroy_session = 1);
-                    caricaServiziContratto(destroy_session = 1);
-                  } else {
-                    alert(msg);
+                  caricaServiziContratto(destroy_session);
+                  if (msg="is_evidenza") {
+                    caricaGrigliaEvidenze(destroy_session);
                   }
-                  $(".spinner_lu").hide();
-                  $(".spinner_lu.servizi").hide();
+              },
+              error: function() {
+                alert('Errore imprevisto!');
+                $(".spinner_lu").hide();
+                $(".spinner_lu.servizi").hide();
               }
           });
     
@@ -311,7 +311,7 @@ jQuery(document).ready(function($){
       $(".spinner_lu.servizi").show();
 
         var data = $("#formAddServizio").serialize();
-     
+        var destroy_session = 1;
         $.ajax({
             async:false,
             url: "{{ route('save-riga-servizio-ajax') }}",
@@ -319,7 +319,7 @@ jQuery(document).ready(function($){
             data: data,
             success: function(msg) {
               if (msg == 'ok') {
-                window.location.reload(true);
+                caricaServiziContratto(destroy_session);
               }
               else {
               

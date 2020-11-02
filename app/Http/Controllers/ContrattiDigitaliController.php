@@ -743,7 +743,7 @@ class ContrattiDigitaliController extends MyController
           }
 
         // cancello i servizi dalle evidenze
-        DB::table('tblEVEvidenzeMesi')
+        $is_evidenza = DB::table('tblEVEvidenzeMesi')
               ->where('servizioweb_id', $servizio->id)
               ->update(['cliente_id' => 0, 'user_id' => 0, 'acquistata' => 0, 'servizioweb_id' => 0]);
         }
@@ -751,7 +751,14 @@ class ContrattiDigitaliController extends MyController
       $servizio->delete();
 
 
-      return "ok";
+      if ($is_evidenza) 
+        {
+        return "is_evidenza";
+        } 
+      else 
+        {
+        return "NOT_is_evidenza";
+        }
       
 
       }
