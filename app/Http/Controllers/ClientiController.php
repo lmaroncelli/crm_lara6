@@ -290,5 +290,30 @@ class ClientiController extends Controller
         echo 'ok';
 
       }
+
+
+
+      public function elencoContratti(Request $request, $cliente_id)
+        {
+        
+        $cliente = Cliente::with('contratti')->withCount('contratti')->find($cliente_id); 
+        $ai = date('Y');
+        $af = date('Y')+1;  
+        $count = 0;
+        for ($i = -3; $i < 4; $i++) 
+          {
+            $anni_i[$ai+$i] = $ai+$i;
+            
+            if ($count) 
+              {
+              $anni_f[$ai+$i] = $ai+$i;
+              }
+            $count++;
+          }
+
+        $anni_f[$ai+$i] = $ai+$i;
+        
+        return view('clienti.elenco-contratti', compact('cliente','anni_i','anni_f'));
+        }
     
 }

@@ -22,6 +22,9 @@
         <li class="nav-item">
           <a class="nav-link @if( $controller == 'ClientiServiziController'  &&  $action == 'archiviati')  active @endif" href="{{ route('clienti-servizi-archiviati',['cliente_id' => $cliente->id]) }}">Storico servizi Venduti</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link @if( $controller == 'ClientiController'  &&  $action == 'elencoContratti')  active @endif" href="{{ route('clienti-contratti',['cliente_id' => $cliente->id]) }}">Contratti</a>
+        </li>
       </ul>
     </div>
 </div>

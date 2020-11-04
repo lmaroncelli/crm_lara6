@@ -2,12 +2,13 @@
 
 namespace App;
 
-use App\CategoriaCliente;
+use App\Societa;
 use App\Contatto;
-use App\GruppoCliente;
 use App\Localita;
 use App\Servizio;
-use App\Societa;
+use App\Contratto;
+use App\GruppoCliente;
+use App\CategoriaCliente;
 use App\TipologiaCliente;
 use Illuminate\Database\Eloquent\Model;
 
@@ -109,6 +110,12 @@ class Cliente extends Model
     public function servizi_attivi()
     {
         return $this->hasMany(Servizio::class, 'cliente_id', 'id')->where('attivo',1)->where('archiviato',0);
+    }
+
+
+    public function contratti()
+    {
+        return $this->hasMany(Contratto::class, 'cliente_id', 'id');
     }
 
 

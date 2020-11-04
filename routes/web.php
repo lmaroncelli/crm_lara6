@@ -66,6 +66,8 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::get('clienti/contratti/{cliente_id}', 'ClientiController@elencoContratti')->name('clienti-contratti');
+    Route::post('clienti/contratto-destroy/{contratto_id}', 'ClientiController@destroyContratto')->name('clienti-contratto-destroy');
+    Route::post('clienti/contratto-upload', 'ClientiController@uploadContratto')->name('contratto-upload');
     
 
 
