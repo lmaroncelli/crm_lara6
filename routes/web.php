@@ -65,6 +65,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('clienti/servizi/archivia', 'ClientiServiziController@archiviaAjax')->name('clienti-servizi-archivia');
 
 
+    Route::get('clienti/contratti/{cliente_id}', 'ClientiController@elencoContratti')->name('clienti-contratti');
+    
+
 
     Route::get('/associa-societa-ajax', 'ClientiFatturazioniController@associaSocietaAjax');
 
