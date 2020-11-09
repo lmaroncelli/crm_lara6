@@ -312,7 +312,7 @@ class ClientiController extends Controller
           }
 
         $anni_f[$ai+$i] = $ai+$i;
-        
+          
         return view('clienti.elenco-contratti', compact('cliente','anni_i','anni_f'));
         }
     
