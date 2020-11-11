@@ -25,6 +25,9 @@
         <li class="nav-item">
           <a class="nav-link @if( $controller == 'ClientiController'  &&  $action == 'elencoContratti')  active @endif" href="{{ route('clienti-contratti',['cliente_id' => $cliente->id]) }}">Contratti</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link @if( $controller == 'ClientiController'  &&  $action == 'elencoFoto')  active @endif" href="{{ route('clienti-foto',['cliente_id' => $cliente->id]) }}">Foto</a>
+        </li>
       </ul>
     </div>
 </div>

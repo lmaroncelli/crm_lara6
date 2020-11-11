@@ -67,10 +67,14 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('clienti/contratti/{cliente_id}', 'ClientiController@elencoContratti')->name('clienti-contratti');
     Route::post('clienti/contratto-destroy/{contratto_id}', 'ClientiController@destroyContratto')->name('clienti-contratto-destroy');
-
     // https://www.positronx.io/laravel-file-upload-with-validation/
     Route::post('clienti/contratto-upload', 'ClientiController@uploadContratto')->name('contratto-upload');
     
+
+    Route::get('clienti/foto/{cliente_id}', 'ClientiController@elencoFoto')->name('clienti-foto');
+    Route::post('clienti/foto-save', 'ClientiController@saveFoto')->name('clienti-foto-save');
+    Route::post('clienti/foto-destroy/{foto_id}', 'ClientiController@destroyFoto')->name('clienti-foto-destroy');
+
 
 
     Route::get('/associa-societa-ajax', 'ClientiFatturazioniController@associaSocietaAjax');

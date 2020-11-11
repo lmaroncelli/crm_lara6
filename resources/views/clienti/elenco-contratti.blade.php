@@ -21,7 +21,8 @@
   <div class="col">
     
     <form action="{{route('contratto-upload')}}" method="post" enctype="multipart/form-data">
-      
+      @csrf
+      <input type="hidden" name="cliente_id" value="{{$cliente->id}}">
       <div class="form-group row">
         <label class="col-md-2 text-change" for="titolo">Titolo:</label>
         <div class="col-md-6">
@@ -75,6 +76,10 @@
 
 
 @if ($cliente->contratti_count)
+  <form action="{{ route('clienti-contratti', $cliente->id) }}" method="get" id="searchForm" accept-charset="utf-8">
+    <input type="hidden" name="orderby" id="orderby" value="">
+    <input type="hidden" name="order" id="order" value="">
+  </form>
   @foreach ($cliente->contratti as $contratto)
     <form action="{{ route('clienti-contratto-destroy',$contratto->id) }}" method="POST" id="delete_item_{{$contratto->id}}">
         @csrf
@@ -146,5 +151,4 @@
 
 
 </script>
-   
 @endsection

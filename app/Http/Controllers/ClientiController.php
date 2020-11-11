@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\Cliente;
 use App\Contatto;
-use App\User;
+use App\Contratto;
 use Illuminate\Http\Request;
+use App\Http\Requests\UploadContratto;
+use Illuminate\Support\Facades\Storage;
 
 class ClientiController extends Controller
 {
@@ -295,8 +298,17 @@ class ClientiController extends Controller
 
       public function elencoContratti(Request $request, $cliente_id)
         {
+        $orderby = $request->get('orderby','data_inserimento');
+        $order = $request->get('order','desc');
+
+        $cliente = Cliente::with([
+                        'contratti' => function ($query) use ($orderby,  $order) {
+                          $query->orderBy($orderby,  $order);
+                          }
+                        ])
+                    ->withCount('contratti')
+                    ->find($cliente_id); 
         
-        $cliente = Cliente::with('contratti')->withCount('contratti')->find($cliente_id); 
         $ai = date('Y');
         $af = date('Y')+1;  
         $count = 0;
@@ -314,6 +326,70 @@ class ClientiController extends Controller
         $anni_f[$ai+$i] = $ai+$i;
           
         return view('clienti.elenco-contratti', compact('cliente','anni_i','anni_f'));
+        }
+      
+
+      public function uploadContratto(UploadContratto $request)
+        {
+        $contratto = new Contratto;
+        $fileName = $request->contratto->getClientOriginalName();
+        $request->file('contratto')->storeAs('contratti', $fileName, 'public');
+
+        $contratto->nome_file =  $fileName;
+
+
+        $cliente_id = $request->get('cliente_id');
+        $contratto->cliente_id =  $cliente_id;
+        $contratto->tipo =  $request->get('tipo');
+        $contratto->titolo =  $request->get('titolo');
+        $contratto->anno =  $request->get('anno_dal') . '-'. $request->get('anno_al');
+
+        $contratto->save();
+
+        return redirect()->route('clienti-contratti',['cliente_id' => $cliente_id])->with('status', 'Contratto '. $fileName.' caricato correttamente!');
+
+        }
+
+      public function destroyContratto($contratto_id)
+        {
+          $contratto = Contratto::find($contratto_id);
+          $cliente_id = $contratto->cliente_id;
+
+          Storage::disk('contratti')->delete($contratto->nome_file);
+
+          $contratto->delete();
+
+          return redirect()->route('clienti-contratti',['cliente_id' => $cliente_id])->with('status', 'Contratto eliminato correttamente!');
+
+
+        }
+
+
+        
+        public function elencoFoto(Request $request, $cliente_id)
+        {
+        $orderby = $request->get('orderby','anno');
+        $order = $request->get('order','desc');
+
+        $cliente = Cliente::with([
+                        'servizi_foto' => function ($query) use ($orderby,  $order) {
+                          $query->orderBy($orderby,  $order);
+                          }
+                        ])
+                    ->withCount('servizi_foto')
+                    ->find($cliente_id); 
+        
+        $a = date('Y');
+        $count = 0;
+
+        for ($i = -5; $i < 5; $i++) 
+          {
+            $anni[$a+$i] = $a+$i;
+      
+            $count++;
+          }
+                  
+        return view('clienti.elenco-servizi-foto', compact('cliente','anni'));
         }
     
 }

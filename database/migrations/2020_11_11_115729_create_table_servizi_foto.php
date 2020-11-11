@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTableContratti extends Migration
+class CreateTableServiziFoto extends Migration
 {
     /**
      * Run the migrations.
@@ -14,20 +14,17 @@ class CreateTableContratti extends Migration
      */
     public function up()
     {
-        Schema::create('tblContratti', function (Blueprint $table) {
+        Schema::create('tblServiziFoto', function (Blueprint $table) {
             $table->id();
             $table->integer('cliente_id');
-            $table->enum('tipo', ['Info Alberghi','Hotel Manager'])->default('Info Alberghi');
-            $table->string('titolo')->nullable()->default(null);
-            $table->string('anno')->nullable()->default(null);
-            $table->string('nome_file')->nullable()->default(null);
-            $table->timestamp('data_inserimento')->useCurrent();
+            $table->integer('anno');
+            $table->text('note')->nullable();
             $table->timestamp('updated_at')->useCurrent();
             $table->timestamp('created_at')->useCurrent();
         });
 
         Artisan::call('db:seed', [
-            '--class' => 'ContrattiSeeder',
+            '--class' => 'ServiziFotoSeeder',
             '--force' => true
         ]);
     }
@@ -39,6 +36,6 @@ class CreateTableContratti extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tblContratti');
+        Schema::dropIfExists('tblServiziFoto');
     }
 }

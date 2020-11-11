@@ -7,6 +7,7 @@ use App\Contatto;
 use App\Localita;
 use App\Servizio;
 use App\Contratto;
+use App\ServizioFoto;
 use App\GruppoCliente;
 use App\CategoriaCliente;
 use App\TipologiaCliente;
@@ -116,6 +117,12 @@ class Cliente extends Model
     public function contratti()
     {
         return $this->hasMany(Contratto::class, 'cliente_id', 'id');
+    }
+
+
+    public function servizi_foto()
+    {
+        return $this->hasMany(ServizioFoto::class, 'cliente_id', 'id');
     }
 
 
