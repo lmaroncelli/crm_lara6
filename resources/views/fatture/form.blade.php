@@ -4,7 +4,7 @@
 <div class="spinner_lu intestazione" style="display:none;"></div>
 @section('card-header')
     <div class="card-header">
-        {{ App\Utility::getNomeTipoFattura($fattura->tipo_id) }} N° <strong>{{$fattura->tipo_id == 'PF' ? $fattura->numero_prefattura : $fattura->numero_fattura}}</strong> - Data: <strong>{{ $fattura->data->format('d/m/Y') }}</strong> - 
+        {{ $fattura->getTipo() }} N° <strong>{{ $fattura->getNumero() }}</strong> - Data: <strong>{{ $fattura->getDataFattura() }}</strong> - 
         Metodo di pagamento:
         <select id="pagamento_id" name="pagamento_id" class="pagamento_card_header">
           @foreach ($tipo_pagamento as $key => $value)

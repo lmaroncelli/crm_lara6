@@ -6,6 +6,7 @@ use App\User;
 use App\Cliente;
 use App\Contatto;
 use App\Contratto;
+use App\ServizioFoto;
 use Illuminate\Http\Request;
 use App\Http\Requests\UploadContratto;
 use Illuminate\Support\Facades\Storage;
@@ -366,7 +367,7 @@ class ClientiController extends Controller
 
 
         
-        public function elencoFoto(Request $request, $cliente_id)
+      public function elencoFoto(Request $request, $cliente_id)
         {
         $orderby = $request->get('orderby','anno');
         $order = $request->get('order','desc');
@@ -390,6 +391,27 @@ class ClientiController extends Controller
           }
                   
         return view('clienti.elenco-servizi-foto', compact('cliente','anni'));
+        }
+
+      public function destroyFoto($foto_id)
+        {
+          $foto = ServizioFoto::find($foto_id);
+          $cliente_id = $foto->cliente_id;
+
+          $foto->delete();
+
+          return redirect()->route('clienti-foto',['cliente_id' => $cliente_id])->with('status', 'Servizio foto eliminato correttamente!');
+        }
+      
+
+      public function saveFoto(Request $request)
+        {
+        $cliente_id = $request->get('cliente_id');
+
+        ServizioFoto::create($request->all());
+
+        return redirect()->route('clienti-foto',['cliente_id' => $cliente_id])->with('status', 'Servizio foto creato correttamente!');
+
         }
     
 }

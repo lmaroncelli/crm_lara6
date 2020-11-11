@@ -13,6 +13,7 @@ use App\Societa;
 use App\Utility;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use PDF;
 
 class FattureController extends Controller
 {
@@ -630,6 +631,24 @@ class FattureController extends Controller
       $fattura_id = $scadenza_fattura->fattura_id;
       $scadenza_fattura->delete();
        return redirect('fatture/'.$fattura_id.'/edit');
+      }
+
+
+
+    public function pdf(Request $request, $fattura_id)
+      {
+      $fattura = Fattura::with([
+                'righe',
+                'scadenze',
+                'societa.RagioneSociale.localita.comune.provincia',
+                'societa.cliente.servizi_non_fatturati',
+                'prefatture',
+              ])->find($fattura_id);
+      
+      
+      $pdf = PDF::loadView('fatture.fattura_pdf', compact('fattura'));
+              
+      return $pdf->stream();
       }
 
 

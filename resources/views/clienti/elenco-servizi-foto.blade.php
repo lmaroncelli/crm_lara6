@@ -66,7 +66,7 @@
         <thead>
             <tr>
                 <th class="order" data-orderby="anno" @if (\Request::get('orderby') == 'anno' && \Request::get('order') == 'asc') data-order='desc' @else data-order='asc' @endif>
-                    Inserito 
+                    Anno 
                     @if (\Request::get('orderby') == 'anno') 
                         @if (\Request::get('order') == 'asc')
                             <i class="fa fa-sort-numeric-down"></i>

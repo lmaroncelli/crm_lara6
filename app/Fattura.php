@@ -2,10 +2,11 @@
 
 namespace App;
 
-use App\AvvisiFattura;
-use App\Pagamento;
-use App\RigaDiFatturazione;
 use App\Societa;
+use App\Utility;
+use App\Pagamento;
+use App\AvvisiFattura;
+use App\RigaDiFatturazione;
 use Illuminate\Database\Eloquent\Model;
 
 class Fattura extends Model
@@ -19,6 +20,7 @@ class Fattura extends Model
        'updated_at',
         'data',
    ];
+
 
 
    public function setDataAttribute($value)
@@ -106,6 +108,68 @@ class Fattura extends Model
 
 
 
+    
+
+
+    public function getTipo()
+			{
+			return Utility::getNomeTipoFattura($this->tipo_id);
+			}
+
+		public function getNumero()
+			{
+			return $this->tipo_id == 'PF' ? $this->numero_prefattura : $this->numero_fattura;
+			}
+
+		public function getDataFattura()
+			{
+			return $this->data->format('d/m/Y');
+			}
+
+		public function getSocietaNome()
+			{
+			return optional(optional($this->societa)->ragioneSociale)->nome;
+			}
+		
+		public function getSocietaIndirizzo()
+			{
+			return optional(optional($this->societa)->ragioneSociale)->indirizzo;
+			}
+		
+		public function getCap()
+			{
+			return optional(optional($this->societa)->ragioneSociale)->cap;
+			}
+		
+		public function getLocalita()
+			{
+			return optional(optional(optional($this->societa)->ragioneSociale)->localita)->nome;
+			}
+		
+		public function getSiglaProv()
+			{
+			return optional(optional(optional($this->societa)->ragioneSociale)->localita)->comune->provincia->sigla;
+			}
+		
+		public function getPiva()
+			{
+			return optional(optional($this->societa)->ragioneSociale)->piva;
+			}
+
+		public function getCf()
+			{
+			return optional(optional($this->societa)->ragioneSociale)->cf;
+			}
+
+		public function getSdi()
+			{
+			return optional(optional($this->societa)->ragioneSociale)->codice_sdi;
+			}
+
+
+
+
+
 
     /**
      * [_getClienteEagerLoaded Uso $orderby SOLO per fare i vari join]
@@ -153,7 +217,7 @@ class Fattura extends Model
     {
     $totale = 0;
 
-    foreach (self::righe()->get() as $r) 
+    foreach ($this->righe as $r) 
       {
       $totale += $r->totale;
       }
@@ -179,7 +243,7 @@ class Fattura extends Model
    public function fatturaChiusa()
      {
       $importo_scadenze = 0;
-      foreach (self::scadenze()->get() as $s) 
+      foreach ($this->scadenze as $s) 
         {
         $importo_scadenze += $s->importo;
         }
@@ -201,7 +265,7 @@ class Fattura extends Model
     public function getTotalePerChiudere()
       {
        $importo_scadenze = 0;
-       foreach (self::scadenze()->get() as $s) 
+       foreach ($this->scadenze as $s) 
          {
          $importo_scadenze += $s->importo;
          }
@@ -236,11 +300,11 @@ class Fattura extends Model
 
   public function destroyMe()
     {
-      foreach (self::righe as $row) 
+      foreach ($this->righe as $row) 
         {
         $row->delete();
         }
-      foreach (self::scadenze as $row) 
+      foreach ($this->scadenze as $row) 
         {
         $row->delete();
         }

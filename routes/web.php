@@ -133,6 +133,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/cambia-pagamento-fattura-ajax', 'FattureController@cambiaPagamentoFatturaAjax');
 
 
+    Route::get('fatture/pdf/{fattura_id}', 'FattureController@pdf')->name('fatture.pdf');
+
+
+
 
 
     ///////////////

@@ -17,13 +17,13 @@
     
     <div class="col-sm-4">
         <div>
-        <strong>{{optional(optional($fattura->societa)->ragioneSociale)->nome}}</strong>
+        <strong>{{$fattura->getSocietaNome()}}</strong>
         </div>
-        <div>{{optional(optional($fattura->societa)->ragioneSociale)->indirizzo}}</div>
-        <div>{{optional(optional($fattura->societa)->ragioneSociale)->cap}} - {{optional(optional(optional($fattura->societa)->ragioneSociale)->localita)->nome}} ({{optional(optional(optional($fattura->societa)->ragioneSociale)->localita)->comune->provincia->sigla}})</div>
-        <div>P.IVA {{ optional(optional($fattura->societa)->ragioneSociale)->piva }}</div>
-        <div>C.F. {{ optional(optional($fattura->societa)->ragioneSociale)->cf }}</div>
-        <div>Codice SDI {{ optional(optional($fattura->societa)->ragioneSociale)->codice_sdi }}</div>
+        <div>{{$fattura->getSocietaIndirizzo()}}</div>
+        <div>{{$fattura->getCap()}} - {{$fattura->getLocalita()}} ({{$fattura->getSiglaProv()}})</div>
+        <div>P.IVA {{ $fattura->getPiva() }}</div>
+        <div>C.F. {{ $fattura->getCf() }}</div>
+        <div>Codice SDI {{ $fattura->getSdi() }}</div>
         <hr>
         <div><strong>{{optional(optional($fattura->societa)->cliente)->nome}}</strong></div>
         <div>Tel.{{optional(optional($fattura->societa)->cliente)->telefono}}</div>
