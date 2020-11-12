@@ -97,18 +97,22 @@
     }
 
   
-    div.elenco_servizi tr td{
+    div.elenco_servizi tr.elenco td{
       height:50px;
     }
     
-    div.elenco_servizi tr.totali td
+    div.elenco_servizi tr.totale td
      {
-      padding:3px;
-      height:20px;  
-    	background-color: #efefef;
       font-weight:bold;
-      margin-bottom: 0px;
-      border: 1px solid #fff;
+    }
+
+    div.elenco_servizi tr.totale td.totalone {
+      padding:5px;
+      font-size: 12px;
+    	background-color: #000;
+      font-weight:bold;
+      color: #fff;
+      text-transform: uppercase;
     }
 
 
@@ -159,7 +163,7 @@
       text-align: right;
     }
 
-    tr.underline {
+    .underline {
       border-bottom:2px solid #000;
     }
 
@@ -237,15 +241,15 @@
         <div class="col">
           <div class="elenco_servizi">
             <table width="100%" border="0" cellpadding="0" cellspacing="0">
-                <tr class="underline">
-                    <th width="35%" class="text-left">Servizio</th>
-                    <th class="text-right">Qta</th>
-                    <th class="text-right">Prezzo</th>
-                    <th class="text-right">% Sconto</th>
-                    <th class="text-right">Netto</th>
-                    <th class="text-right">Al.IVA</th>
-                    <th class="text-right">IVA</th>
-                    <th class="text-right">Totale</th>
+                <tr>
+                    <th width="35%" class="underline text-left">Servizio</th>
+                    <th class="underline text-right">Qta</th>
+                    <th class="underline text-right">Prezzo</th>
+                    <th class="underline text-right">% Sconto</th>
+                    <th class="underline text-right">Netto</th>
+                    <th class="underline text-right">Al.IVA</th>
+                    <th class="underline text-right">IVA</th>
+                    <th class="underline text-right">Totale</th>
                 </tr>
             <tbody>
             @php
@@ -254,7 +258,7 @@
                 $tot = 0;
             @endphp
             @foreach ($fattura->righe as $riga)
-                <tr>
+                <tr class="elenco">
                     <td>{{$riga->servizio}}</td>
                     <td class="text-right">{{$riga->qta}}</td>
                     <td class="text-right">{{App\Utility::formatta_cifra($riga->totale_netto)}}</td>
@@ -278,21 +282,25 @@
             @php
               $tot = $tot_netto + $tot_iva;
             @endphp
-            <tr class="underline">
-              <th colspan="7" class="text-right">&nbsp;</th>
-              <th class="text-right">Totali</th>
-            </tr>
             <tr>
+              <th colspan="7" class="text-right underline">&nbsp;</th>
+              <th class="text-right underline">Totali</th>
+            </tr>
+            <tr class="totale">
               <td colspan="7" class="text-right">Totale Netto</td>
-              <td class="text-right">{{App\Utility::formatta_cifra($tot_netto)}}</th>
+              <td class="text-right">{{App\Utility::formatta_cifra($tot_netto, '€')}}</th>
             </tr>
-            <tr>
+            <tr class="totale">
               <td colspan="7" class="text-right">Totale IVA</td>
-              <td class="text-right">{{App\Utility::formatta_cifra($tot_iva)}}</th>
+              <td class="text-right">{{App\Utility::formatta_cifra($tot_iva, '€')}}</th>
             </tr>
-            <tr>
-              <td colspan="7" class="text-right">Totale</td>
-              <td class="text-right">{{App\Utility::formatta_cifra($tot)}}</th>
+            <tr class="totale">
+              <td colspan="8">&nbsp;</td>
+            </tr>
+            <tr class="totale">
+              <td colspan="6" class="text-right">&nbsp;</td>
+              <td class="text-right totalone">Totale</td>
+              <td class="text-right totalone">{{App\Utility::formatta_cifra($tot, '€')}}</th>
             </tr>
             </tbody>
             </table>
