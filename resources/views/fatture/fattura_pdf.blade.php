@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
-  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
-  <!-- Styles -->
-  <link href="{{ mix('css/app.css') }}" rel="stylesheet">
   <style>
 
     @font-face {
@@ -88,12 +86,11 @@
       padding: 10px 30px;
     }
 
-
     div.elenco_servizi thead th
      {
       padding:5px;
-      font-size: 15px;
-    	background-color: #efefef;
+      font-size: 12px;
+    	/* background-color: #efefef; */
       font-weight:bold;
       margin-bottom: 0px;
       border: 1px solid #fff;
@@ -101,7 +98,7 @@
 
   
     div.elenco_servizi tr td{
-      height:30px;
+      height:50px;
     }
     
     div.elenco_servizi tr.totali td
@@ -117,10 +114,6 @@
 
     div.elenco_servizi tr.sconto {
       color: crimson;
-    }
-
-    div.elenco_servizi td.text-right {
-      text-align: right;
     }
 
 
@@ -155,6 +148,19 @@
 
     div.footer .note {
       min-height: 60px;
+    }
+
+
+    .text-left {
+      text-align: left;
+    }
+
+    .text-right {
+      text-align: right;
+    }
+
+    tr.underline {
+      border-bottom:2px solid #000;
     }
 
   </style>
@@ -192,7 +198,7 @@
 
             <div class="header_pdf">
               <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tr style="border-bottom:#000 2px solid;">
+                <tr class="underline">
                     <td width="25%">Tipo documento</td>
                     <td width="13%" align="center">Numero</td>
                     <td width="17%" align="center">Data</td>
@@ -231,7 +237,64 @@
         <div class="col">
           <div class="elenco_servizi">
             <table width="100%" border="0" cellpadding="0" cellspacing="0">
-              
+                <tr class="underline">
+                    <th width="35%" class="text-left">Servizio</th>
+                    <th class="text-right">Qta</th>
+                    <th class="text-right">Prezzo</th>
+                    <th class="text-right">% Sconto</th>
+                    <th class="text-right">Netto</th>
+                    <th class="text-right">Al.IVA</th>
+                    <th class="text-right">IVA</th>
+                    <th class="text-right">Totale</th>
+                </tr>
+            <tbody>
+            @php
+                $tot_netto = 0;
+                $tot_iva = 0;
+                $tot = 0;
+            @endphp
+            @foreach ($fattura->righe as $riga)
+                <tr>
+                    <td>{{$riga->servizio}}</td>
+                    <td class="text-right">{{$riga->qta}}</td>
+                    <td class="text-right">{{App\Utility::formatta_cifra($riga->totale_netto)}}</td>
+                    <td class="text-right">
+                      @if ($riga->perc_sconto == 0)
+                        /
+                      @else
+                      {{$riga->perc_sconto}}%
+                      @endif
+                    </td>
+                    <td class="text-right">{{App\Utility::formatta_cifra($riga->totale_netto_scontato)}}</td>
+                    <td class="text-right">{{$riga->al_iva}}</td>
+                    <td class="text-right">{{App\Utility::formatta_cifra($riga->iva)}}</td>
+                    <td class="text-right">{{App\Utility::formatta_cifra($riga->totale)}}</td>
+                </tr>
+                @php
+                  $tot_netto += $riga->totale_netto_scontato;
+                  $tot_iva += $riga->iva;
+                @endphp 
+            @endforeach
+            @php
+              $tot = $tot_netto + $tot_iva;
+            @endphp
+            <tr class="underline">
+              <th colspan="7" class="text-right">&nbsp;</th>
+              <th class="text-right">Totali</th>
+            </tr>
+            <tr>
+              <td colspan="7" class="text-right">Totale Netto</td>
+              <td class="text-right">{{App\Utility::formatta_cifra($tot_netto)}}</th>
+            </tr>
+            <tr>
+              <td colspan="7" class="text-right">Totale IVA</td>
+              <td class="text-right">{{App\Utility::formatta_cifra($tot_iva)}}</th>
+            </tr>
+            <tr>
+              <td colspan="7" class="text-right">Totale</td>
+              <td class="text-right">{{App\Utility::formatta_cifra($tot)}}</th>
+            </tr>
+            </tbody>
             </table>
           </div>
         </div>

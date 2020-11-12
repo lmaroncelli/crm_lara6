@@ -9,8 +9,10 @@
         {!! csrf_field() !!}
         <input type="hidden" name="fattura_id" value="{{$fattura->id}}">
         <input type="hidden" id="empty_text_area" value="0"> 
-        <div class="form-group">
-            <label class="offset-lg-3 col-lg-1 col-form-label text-right" for="numero">Servizio:</label>
+        <div class="form-group row">
+            <div class="offset-lg-3 col-lg-1">
+                <label class=" col-form-label" for="numero">Servizio:</label>
+            </div>
             @if (count($servizio_prefill_arr))
                     <div class="col-lg-4"  id="prefill">
                         <select class="form-control m-select2" id="servizi" multiple name="servizi[]">

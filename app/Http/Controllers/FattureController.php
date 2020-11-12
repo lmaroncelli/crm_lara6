@@ -645,6 +645,7 @@ class FattureController extends Controller
                 'prefatture',
               ])->find($fattura_id);
       
+      //return view('fatture.fattura_pdf', compact('fattura'));
       
       $pdf = PDF::loadView('fatture.fattura_pdf', compact('fattura'));
               
