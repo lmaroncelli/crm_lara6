@@ -638,6 +638,7 @@ class FattureController extends Controller
     public function pdf(Request $request, $fattura_id)
       {
       $fattura = Fattura::with([
+                'pagamento',
                 'righe',
                 'scadenze',
                 'societa.RagioneSociale.localita.comune.provincia',

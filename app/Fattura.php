@@ -37,7 +37,7 @@ class Fattura extends Model
 
    public function scadenze()
    {
-      return $this->hasMany(ScadenzaFattura::class, 'fattura_id', 'id');
+      return $this->hasMany(ScadenzaFattura::class, 'fattura_id', 'id')->orderBy('data_scadenza','asc');
    }
 
 
@@ -215,7 +215,7 @@ class Fattura extends Model
 
    public function getTotale($save=false)
     {
-    $totale = 0;
+    $totale = 0.00;
 
     foreach ($this->righe as $r) 
       {
@@ -232,6 +232,18 @@ class Fattura extends Model
     }
 
 
+    public function getImportoScadenze()
+      {
+      $importo_scadenze = 0.00;
+      foreach ($this->scadenze as $s) 
+        {
+        $importo_scadenze += $s->importo;
+        }
+      
+      return $importo_scadenze;
+      }
+
+
     public function azzeraTotale()
       {
       $this->totale = 0.00;
@@ -242,16 +254,13 @@ class Fattura extends Model
   // quando il saldo è 0 la fattura è chiusa
    public function fatturaChiusa()
      {
-      $importo_scadenze = 0;
-      foreach ($this->scadenze as $s) 
+      
+      
+      
+      if($this->getTotale() > 0 && $this->getImportoScadenze() > 0)
         {
-        $importo_scadenze += $s->importo;
-        }
-
-      if($this->getTotale() > 0 && $importo_scadenze > 0)
-        {
-        // se la differenza è 0 ritorno TRUE
-        return !($this->getTotale() - $importo_scadenze);
+        // se sono uguali ritorno TRUE
+        return ( round($this->getTotale(),2) === round($this->getImportoScadenze(),2) );
         }
       else
         {
@@ -264,13 +273,8 @@ class Fattura extends Model
    // quando il saldo è 0 la fattura è chiusa
     public function getTotalePerChiudere()
       {
-       $importo_scadenze = 0;
-       foreach ($this->scadenze as $s) 
-         {
-         $importo_scadenze += $s->importo;
-         }
-
-       return $this->getTotale() - $importo_scadenze;
+      
+       return round($this->getTotale(),2) - round($this->getImportoScadenze(),2);
 
        }
 
