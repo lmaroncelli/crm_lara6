@@ -14,7 +14,7 @@ class RigheFatturazioneTableSeeder extends Seeder
     {
     			$tblRigheFatturazione  =  DB::connection('old')
     			                ->table('righe_di_fatturazione')
-    			                ->select(DB::raw('id, id_fattura as fattura_id, servizio, prezzo, qta, totale_netto, al_iva, iva, totale'))
+    			                ->select(DB::raw('id, id_fattura as fattura_id, servizio, prezzo, qta, totale_netto, perc_sconto, totale_netto_scontato, al_iva, iva, totale'))
     			                ->get();
 
     			$tblRigheFatturazione = collect($tblRigheFatturazione)->map(function($x){ return (array) $x; })->toArray(); 

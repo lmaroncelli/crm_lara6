@@ -23,8 +23,8 @@ class CreateTableFatture extends Migration
             $table->integer("societa_id")->unsigned()->nullable()->default(0);
             $table->text('note')->nullable()->default(null);
             $table->decimal('totale', 10, 2)->default(0.00);
-            $table->decimal('da_fatturare', 10, 2)->default(0.00);
-            $table->boolean('pagata')->default(false);
+            $table->decimal('da_fatturare', 10, 2)->nullable()->default(0.00);
+            $table->boolean('pagata')->nullable()->default(false);
             $table->timestamps();
         });
 

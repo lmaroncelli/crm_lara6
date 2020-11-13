@@ -99,6 +99,7 @@
   
     div.elenco_servizi tr.elenco td{
       height:50px;
+      font-size: 11px;
     }
     
     div.elenco_servizi tr.totale td
@@ -167,33 +168,52 @@
       border-bottom:2px solid #000;
     }
 
+
+
+     /** 
+      Set the margins of the page to 0, so the footer and the header
+      can be of the full height and width !
+    **/
+  @page {
+      margin: 0cm 0cm;
+  }
+
+  /** Define now the real margins of every page in the PDF **/
+  body {
+      margin-top: 2cm;
+      margin-left: 2cm;
+      margin-right: 2cm;
+      margin-bottom: 2cm;
+  }
+
+  /** Define the header rules **/
+  header {
+      position: fixed;
+      top: 0cm;
+      left: 0cm;
+      right: 0cm;
+      height: 75px;
+      background-image:url('http://crm_lara6.xxx/images/fattura_pdf/header.png');
+      background-repeat: no-repeat; 
+      background-position: center;
+      background-size: contain;
+  }
+
+  /** Define the footer rules **/
+  footer {
+      position: fixed; 
+      bottom: 0cm; 
+      left: 0cm; 
+      right: 0cm;
+      height: 2cm;
+  }
+
+
   </style>
 </head>
 <body>
-  <script type="text/php">	 
-    $font = $fontMetrics->get_font("verdana");
-    // If verdana isn't available, we'll use sans-serif.
-    if (!isset($font)) { $fontMetrics->get_font("sans-serif"); }
-    $size = 9;
-    $color = array(0,0,0);
-    $text_height = $fontMetrics->get_font_height($font, $size);
-    
-    $w = $pdf->get_width();
-    $h = $pdf->get_height();
 
-    // HEADER
-    $header = $pdf->open_object();  
-    
-    $pdf->close_object();
-    $pdf->add_object($header, "all");
-
-    $text = "- {PAGE_NUM} -";  
-
-    // Center the text
-    $width = $fontMetrics->get_text_width("Pagina 1/2", $font, $size);
-    $pdf->page_text($w/2, 10, $text, $font, $size, $color);
-  </script>
-
+  <header></header>
   <main class="main">
     <div class="container">
 
@@ -242,7 +262,7 @@
           <div class="elenco_servizi">
             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
-                    <th width="35%" class="underline text-left">Servizio</th>
+                    <th width="45%" class="underline text-left">Servizio</th>
                     <th class="underline text-right">Qta</th>
                     <th class="underline text-right">Prezzo</th>
                     <th class="underline text-right">% Sconto</th>
@@ -298,9 +318,9 @@
               <td colspan="8">&nbsp;</td>
             </tr>
             <tr class="totale">
-              <td colspan="6" class="text-right">&nbsp;</td>
+              <td colspan="5" class="text-right">&nbsp;</td>
               <td class="text-right totalone">Totale</td>
-              <td class="text-right totalone">{{App\Utility::formatta_cifra($tot, '€')}}</th>
+              <td colspan="2" class="text-right totalone">{{App\Utility::formatta_cifra($tot, '€')}}</th>
             </tr>
             </tbody>
             </table>

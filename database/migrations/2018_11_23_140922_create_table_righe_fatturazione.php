@@ -20,6 +20,8 @@ class CreateTableRigheFatturazione extends Migration
             $table->decimal('prezzo', 10, 2)->default(0.00);
             $table->integer('qta')->default(0);
             $table->decimal('totale_netto', 10, 2)->default(0.00);
+            $table->integer('perc_sconto')->nullable()->default(0);
+            $table->decimal('totale_netto_scontato', 10, 2)->nullable()->default(0.00);
             $table->integer('al_iva')->default(0);
             $table->decimal('iva', 10, 2)->default(0.00);
             $table->decimal('totale', 10, 2)->default(0.00);
