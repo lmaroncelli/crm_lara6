@@ -192,7 +192,7 @@
       top: 0cm;
       left: 0cm;
       right: 0cm;
-      height: 75px;
+      height: 72px;
       background-image:url('http://crm_lara6.xxx/images/fattura_pdf/header.png');
       background-repeat: no-repeat; 
       background-position: center;
@@ -205,7 +205,12 @@
       bottom: 0cm; 
       left: 0cm; 
       right: 0cm;
-      height: 2cm;
+      height: 65px;
+      background-image:url('http://crm_lara6.xxx/images/fattura_pdf/footer.png');
+      background-repeat: no-repeat; 
+      background-position: center;
+      background-size: contain;
+  }
   }
 
 
@@ -214,6 +219,7 @@
 <body>
 
   <header></header>
+  <footer></footer>
   <main class="main">
     <div class="container">
 
