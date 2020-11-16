@@ -106,11 +106,6 @@ class Fattura extends Model
          });
        }
 
-
-
-    
-
-
     public function getTipo()
 			{
 			return Utility::getNomeTipoFattura($this->tipo_id);
@@ -176,7 +171,7 @@ class Fattura extends Model
      * @param  [type] $orderby [description]
      * @return [type]          [description]
      */
-    public static function getFattureEagerLoaded($orderby)
+    public static function getFattureEagerLoaded($tipo= 'F', $orderby)
       {
       $fatture = self::with(
                     [
@@ -185,7 +180,7 @@ class Fattura extends Model
                       'societa.cliente',
                     ]
                   )
-                  ->tipo('F');
+                  ->tipo($tipo);
 
       if($orderby == 'nome_pagamento')
         {

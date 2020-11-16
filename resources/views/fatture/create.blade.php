@@ -24,7 +24,13 @@
             
             <select class="form-control col-xl-4" id="tipo_id" name="tipo_id">
                 @foreach ($tipo_fattura as $key => $value)
-                    <option value="{{$key}}" @if ( $fattura->tipo_id == $key || old('tipo_id') != null ) selected="selected" @endif>{{$value}}</option>
+                    <option value="{{$key}}" 
+                        @if ( old('tipo_id') != null && old('tipo_id') == $key ) 
+                            selected="selected" 
+                        @elseif( $key == $tipo_id ) 
+                            selected="selected"
+                        @endif>{{$value}}
+                    </option>
                 @endforeach
             </select>
 

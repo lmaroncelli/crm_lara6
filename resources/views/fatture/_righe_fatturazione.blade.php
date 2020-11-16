@@ -33,10 +33,10 @@
                     </a>
                 </td>
                 <td>
-                    <form action="{{ route('fatture.delete-riga') }}" method="POST" accept-charset="utf-8" class="deleteForm" id="delete-riga-form">
+                    <form action="{{ route('fatture.delete-riga') }}" method="POST" accept-charset="utf-8" class="deleteForm" id="delete_item_{{$riga->id}}">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                         <input type="hidden" name="rigafattura_id" value="{{ $riga->id }}" />
-                        <a href="#" class="delete btn btn-danger"> 
+                        <a data-id="{{$riga->id}}" href="#" class="delete btn btn-danger"> 
                             <i class="fa fa-trash"></i>
                         </a>
                     </form>

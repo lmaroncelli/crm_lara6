@@ -23,6 +23,7 @@
             {{-- intestazione fattura --}}
             @include('fatture._header_fattura')
             
+            @if(!is_null($prefatture_da_associare))
             <hr>
 
             <div class="">
@@ -31,6 +32,9 @@
                 {{-- PREFATTURE DA ASSOCIARE --}}
                 @include('fatture._prefatture_da_associare')
             </div>
+
+            @endif
+
 
             <hr>
 

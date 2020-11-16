@@ -1,6 +1,7 @@
 <form action="{{ url('fatture') }}" method="get" id="searchForm" accept-charset="utf-8">
   <input type="hidden" name="orderby" id="orderby" value="">
   <input type="hidden" name="order" id="order" value="">
+  <input type="hidden" name="tipo" id="tipo" value="{{$tipo}}">
 
   <div class="row p-3">
 

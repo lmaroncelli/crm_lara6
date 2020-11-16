@@ -101,6 +101,9 @@ Route::middleware(['auth'])->group(function () {
     /////////////
     // FATTURE //
     /////////////
+
+    
+    
     //Route::model('fatture', 'App\Fattura');
     Route::resource('fatture', 'FattureController')/*->middleware('log')*/;
     
@@ -109,12 +112,17 @@ Route::middleware(['auth'])->group(function () {
     
     // sovrascrivo edit
     Route::get('fatture/{fattura_id}/edit/{rigafattura_id?}/{scadenza_fattura_id?}', 'FattureController@edit')->name('fatture.edit');
-
+    
     Route::post('fatture/add-scadenza', 'FattureController@addScadenza')->name('fatture.add-scadenza');
     Route::post('fatture/update-scadenza/{scadenza_fattura_id}', 'FattureController@updateScadenza')->name('fatture.update-scadenza');
     Route::get('fatture/load-scadenza/{scadenza_fattura_id}', 'FattureController@loadScadenza')->name('fatture.load-scadenza');
-     Route::post('fatture/delete-scadenza', 'FattureController@deleteScadenza')->name('fatture.delete-scadenza');
-
+    Route::post('fatture/delete-scadenza', 'FattureController@deleteScadenza')->name('fatture.delete-scadenza');
+    
+    
+    
+    // index prefatture
+    Route::get('prefatture', 'FattureController@prefatture')->name('prefatture.index');
+    
 
     Route::post('fatture/add-riga', 'FattureController@addRiga')->name('fatture.add-riga');
     Route::post('fatture/add-note', 'FattureController@addNote')->name('fatture.add-note');
@@ -124,7 +132,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/fatture-prefatture-ajax', 'FattureController@fatturePrefattureAjax');
 
     Route::post('/last-fatture-ajax', 'FattureController@lastFattureAjax');
-
+    
     Route::post('/associa-fattura-prefattura-ajax', 'FattureController@associaFatturaPrefatturaAjax');
     
     Route::post('/cambia-intestazione-fattura-ajax', 'FattureController@cambiaIntestazioneFatturaAjax');

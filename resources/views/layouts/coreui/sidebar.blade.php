@@ -33,8 +33,8 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" href="#">
-        <i class="nav-icon icon-wallet"></i>Prefatture(TD)
+        <a class="nav-link" href="{{ route('prefatture.index') }}">
+        <i class="nav-icon icon-wallet"></i>Prefatture
         </a>
       </li>
 

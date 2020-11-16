@@ -38,7 +38,6 @@ class RouteServiceProvider extends ServiceProvider
         Route::pattern('rigafattura_id', '[0-9]+');
         Route::pattern('scadenza_fattura_id', '[0-9]+');
         Route::pattern('cliente_id', '[0-9]+');
-        Route::pattern('tipo_id', 'evidenze');
 
 
         //Route::pattern('macro_id', '[0-9]+');

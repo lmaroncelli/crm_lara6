@@ -1,4 +1,3 @@
-@if($prefatture_da_associare->count())
 <div class="spinner_lu prefatture" style="display:none;"></div>
 <div class="form-group mb-5">
 	<label>Prefatture da associare (in <span style="color:red;">rosso</span> quelle già pagate)</label>
@@ -14,4 +13,3 @@
     </div>
   @endforeach
 </div>
-@endif

@@ -70,14 +70,27 @@ class FattureController extends Controller
       }
 
 
+    
+    public function prefatture(Request $request)
+      {
+      return $this->index($request, $tipo = 'PF');
+      }
 
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $tipo = 'F')
     {
+
+      // SOVRASCRIVO IL TIPO se MI VIENE PASSATO DALLA REQUEST
+
+      if ($request->has('tipo') && $request->get('tipo') != $tipo) 
+        {
+        $tipo = $request->get('tipo');
+        }
+
 
       // campo libero
       $qf = $request->get('qf');
@@ -86,7 +99,6 @@ class FattureController extends Controller
 
       $orderby = $request->get('orderby');
       $order = $request->get('order');
-
 
       if(is_null($order))
        {
@@ -99,7 +111,7 @@ class FattureController extends Controller
        }
      
 
-     $fattureEagerLoaded = Fattura::getFattureEagerLoaded($orderby);
+     $fattureEagerLoaded = Fattura::getFattureEagerLoaded($tipo,$orderby);
 
      $fatture = $fattureEagerLoaded;
 
@@ -176,7 +188,7 @@ class FattureController extends Controller
                   ->orderBy($orderby, $order)
                   ->paginate(15)->setpath('')->appends($to_append);
 
-      return view('fatture.index', compact('fatture'));
+      return view('fatture.index', compact('fatture','tipo'));
     }
 
     /**
@@ -197,8 +209,10 @@ class FattureController extends Controller
           $tipo_pagamento = Pagamento::where('cod','=',-1)->orderBy('nome','asc')->pluck('nome','cod');
           }
 
+        
+        $last_fatture = Fattura::getLastNumber($tipo_id);
 
-        return view('fatture.create', compact('fattura','tipo_pagamento'));
+        return view('fatture.create', compact('fattura','tipo_pagamento','tipo_id', 'last_fatture'));
     }
 
     /**
@@ -310,7 +324,7 @@ class FattureController extends Controller
     $prefatture_da_associare = null;
     $prefatture_associate = [];
 
-    if(!is_null($societa))
+    if(!is_null($societa) && $fattura->tipo_id != 'PF')
     {
     $prefatture_ids = $societa->prefatture->pluck('id')->toArray();
     
@@ -627,9 +641,13 @@ class FattureController extends Controller
     public function deleteScadenza(Request $request)
       {
       $scadenza_fattura_id = $request->get('scadenza_fattura_id');
+      
       $scadenza_fattura = ScadenzaFattura::find($scadenza_fattura_id);
+      
       $fattura_id = $scadenza_fattura->fattura_id;
+      
       $scadenza_fattura->delete();
+
        return redirect('fatture/'.$fattura_id.'/edit');
       }
 

@@ -5,7 +5,7 @@
 <div class="row">
     <div class="col-sm-2">
       <div class="callout callout-info b-t-1 b-r-1 b-b-1">
-        Elenco fatture
+        Elenco @if ($tipo == 'F') fatture @else prefatture @endif 
         @if (isset($fatture))
         <br>
         <strong class="h4">{{$fatture->total()}}</strong>
@@ -15,7 +15,11 @@
     @if (count(Request()->query()))
       <div class="col-sm-2">
         <div class="callout callout-noborder">
-          <a href="{{ url('fatture') }}" title="Tutte le fatture" class="btn btn-warning">
+					@if ($tipo == 'F') 
+          	<a href="{{ url('fatture') }}" title="Tutte le fatture" class="btn btn-warning">
+					@else 
+						<a href="{{ url('prefatture') }}" title="Tutte le prefatture" class="btn btn-warning">
+					@endif
             Tutte
           </a>
         </div>
@@ -23,8 +27,8 @@
     @endif
       <div class="to-right">
         <div class="callout callout-noborder">
-          <a href="{{ route('fatture.create') }}" title="Nuova Fattura" class="btn btn-primary">
-            Nuova Fattura
+          <a href="{{ route('fatture.create',['tipo_id' => $tipo]) }}" title="Nuova Fattura" class="btn btn-primary">
+            Nuova @if ($tipo == 'F') Fattura @else Prefattura @endif 
           </a>
         </div>
       </div><!--/.col-->
