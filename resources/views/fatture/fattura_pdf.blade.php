@@ -286,8 +286,8 @@
     
       <?php if ( $fattura->tipo_id == 'PF' ) { ?>
       // Mark the document as a duplicate (avvicino la scritta ai box in fondo altrimenti si sovrappone al totale se ci sono molte voci)
-      $pdf->page_text($w/10, $h/2+30, "      Il presente documento non costituisce fattura valida ai fini del Dpr 633 26.10.72 e succ. mod.", $fontMetrics->get_font("verdana", "bold"),12, array(0.4196, 0.4196, 0.4196), 0, 0, -52);
-      $pdf->page_text($w/10, $h/2+45, "La fattura definitiva verra' emessa all'atto del pagamento del corrispettivo (Art. 6 3 c. Dpr 633/72)", $fontMetrics->get_font("verdana", "bold"),12, array(0.4196, 0.4196, 0.4196), 0, 0, -52);
+      $pdf->page_text($w/5, $h/2+160, "      Il presente documento non costituisce fattura valida ai fini del Dpr 633 26.10.72 e succ. mod.", $fontMetrics->get_font("verdana", "normal"),12, array(0.4196, 0.4196, 0.4196), 0, 0, -52);
+      $pdf->page_text($w/5, $h/2+175, "La fattura definitiva verra' emessa all'atto del pagamento del corrispettivo (Art. 6 3 c. Dpr 633/72)", $fontMetrics->get_font("verdana", "normal"),12, array(0.4196, 0.4196, 0.4196), 0, 0, -52);
       <?php } ?>
 
       $text = "Pagina {PAGE_NUM}/{PAGE_COUNT}";  
@@ -413,12 +413,12 @@
                     <th class="text-right underline">Totali</th>
                   </tr>
                   <tr class="totale">
-                    <td colspan="7" class="text-right">Totale Netto</td>
-                    <td class="text-right">{{App\Utility::formatta_cifra($tot_netto, '€')}}</th>
+                    <td colspan="6" class="text-right">Totale Netto</td>
+                    <td colspan="2" class="text-right">{{App\Utility::formatta_cifra($tot_netto, '€')}}</th>
                   </tr>
                   <tr class="totale">
-                    <td colspan="7" class="text-right">Totale IVA</td>
-                    <td class="text-right">{{App\Utility::formatta_cifra($tot_iva, '€')}}</th>
+                    <td colspan="6" class="text-right">Totale IVA</td>
+                    <td colspan="2" class="text-right">{{App\Utility::formatta_cifra($tot_iva, '€')}}</th>
                   </tr>
                   <tr class="totale">
                     <td colspan="8">&nbsp;</td>
@@ -458,13 +458,13 @@
                   </tr>
                   <tr style="font-size:11px;">
                       <td style="border-right:0px;">Data</td>
-                      <td>Importo</td>
+                      <td class="text-right">Importo</td>
                   </tr>
 
                       @foreach ($fattura->scadenze as $s)
                         <tr style="font-size:11px;">									
                           <td style="border-right:0px;">{{$s->data_scadenza->format('d/m/Y')}}</td>
-                          <td>{{ App\Utility::formatta_cifra($s->importo,'€')}}</td>
+                          <td class="text-right">{{ App\Utility::formatta_cifra($s->importo,'€')}}</td>
                         </tr>							 
                       @endforeach
                   </tbody>
@@ -491,18 +491,20 @@
               </table>
               @endif
 
-              <div style=" margin-right:20px;">
-                  <table width="200" border="0" align="right" class="coord space">
+              @if ($fattura->note != '')
+                <div style=" margin-right:20px;">
+                    <table width="200" border="0" align="right" class="coord space">
                       <tbody style="min-height:200px;" >
-                          <tr style="font-size:11px;">
-                              <td valign="top"><strong>Note:</strong></td>
-                          </tr>
-                          <tr style="font-size:11px;">
-                              <td valign="top" >{{$fattura->note}}</td>
-                          </tr>
+                        <tr style="font-size:11px;">
+                          <td valign="top"><strong>Note:</strong></td>
+                        </tr>
+                        <tr style="font-size:11px;">
+                          <td valign="top" >{{$fattura->note}}</td>
+                        </tr>
                       </tbody>
-                  </table>
-              </div>
+                    </table>
+                </div>
+              @endif
           </div>
             
         </div>
