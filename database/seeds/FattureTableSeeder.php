@@ -16,7 +16,7 @@ class FattureTableSeeder extends Seeder
     		
 	$tblFatture  =  DB::connection('old')
 	                ->table('fatture')
-	                ->select(DB::raw('id, id_tipo as tipo_id, numero_fattura, numero_prefattura, data, pagamenti_id as pagamento_id, note, totale, da_fatturare, societa_id, pagata'))
+	                ->select(DB::raw('id, id_tipo as tipo_id, numero_fattura, data, pagamenti_id as pagamento_id, note, totale, da_fatturare, societa_id, pagata'))
 	                ->get();
 
 	$tblFatture = collect($tblFatture)->map(function($x){ return (array) $x; })->toArray(); 

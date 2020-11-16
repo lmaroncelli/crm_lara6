@@ -140,7 +140,7 @@
 @section('js')
     <script type="text/javascript" charset="utf-8">
 
-        jQuery(document).ready(function(){
+      jQuery(document).ready(function(){
             
             $("#prodotti").select2({placeholder:"Seleziona i prodotti da filtrare"});
 
@@ -151,9 +151,46 @@
             $(".archiviato_check").click(function(){
                 $("#searchForm").submit();
             });
-  
-        });
-    
+
+
+            $.datepicker.setDefaults( $.datepicker.regional[ "it" ] );
+
+            var dateFormat = "dd/mm/yy",
+            inizio = $( "#inizio" )
+                .datepicker({
+                defaultDate: "-1y",
+                changeMonth: true,
+                changeYear: true,
+                numberOfMonths: 1
+                })
+                .on( "change", function() {
+                scadenza.datepicker( "option", "minDate", getDate( this ) );
+                }),
+            scadenza = $( "#scadenza" ).datepicker({
+                defaultDate: "+0d",
+                changeMonth: true,
+                changeYear: true,
+                numberOfMonths: 1
+            })
+            .on( "change", function() {
+                inizio.datepicker( "option", "maxDate", getDate( this ) );
+            });
+        
+            function getDate( element ) {
+
+              var date;
+							try {
+									date = $.datepicker.parseDate( dateFormat, element.value );
+							} catch( error ) {
+									date = null;
+							}
+        
+            	return date;
+
+        		};
+
+        
+			});
 
     </script>
 

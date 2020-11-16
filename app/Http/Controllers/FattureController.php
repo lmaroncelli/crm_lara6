@@ -230,18 +230,8 @@ class FattureController extends Controller
              'data' => 'required|date_format:"d/m/Y"'
          ]);
 
-      $fattura = Fattura::create($request->except(['numero']));
+      $fattura = Fattura::create($request->all());
       
-      if ($request->get('tipo_id') == 'PF') 
-        {
-        $fattura->numero_prefattura = $request->get('numero');
-        } 
-      else 
-        {
-        $fattura->numero_fattura = $request->get('numero');
-        }
-
-      $fattura->save();
       return redirect('fatture/'.$fattura->id.'/edit');
     }
 

@@ -17,7 +17,6 @@ class CreateTableFatture extends Migration
             $table->increments('id');
             $table->enum('tipo_id',['F','PF','NC'])->default('F');
             $table->string('numero_fattura',50)->nullable()->default('');
-            $table->string('numero_prefattura',50)->nullable()->default('');
             $table->date('data')->nullable()->default(null);
             $table->integer("pagamento_id")->nullable()->default(0);
             $table->integer("societa_id")->unsigned()->nullable()->default(0);

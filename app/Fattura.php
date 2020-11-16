@@ -13,7 +13,7 @@ class Fattura extends Model
 {
    protected $table = 'tblFatture';
 
-   protected $fillable = ['tipo_id','numero_fattura','numero_prefattura','data','societa_id','pagamento_id'];
+   protected $fillable = ['tipo_id','numero_fattura','data','societa_id','pagamento_id'];
 
    protected $dates = [
        'created_at',
@@ -27,7 +27,6 @@ class Fattura extends Model
     {
         $this->attributes['data'] = Utility::getCarbonDate($value);
     }
-
 
    public function righe()
    {
@@ -113,7 +112,7 @@ class Fattura extends Model
 
 		public function getNumero()
 			{
-			return $this->tipo_id == 'PF' ? $this->numero_prefattura : $this->numero_fattura;
+			return $this->numero_fattura;
 			}
 
 		public function getDataFattura()
