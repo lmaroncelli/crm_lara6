@@ -618,3 +618,47 @@ in composer.json aggiungo la entry files in modo da non dover più fare nessun i
             "vendor/setasign/setapdf-core/library/SetaPDF/Autoload.php"
         ]
     },
+
+
+
+
+# Evidenze nel contratto digitale
+
+> https://crm_lara6.xxx/contratto-digitale/5360/edit
+
+
+ContrattiDigitaliController@edit ==> resources/views/contratti_digitali/form.blade.php
+
+qui via ajax viene caricata la griglia onLoad
+
+url: "{{ route('crea_griglia_evidenza_contratto_ajax') }}",
+
+$("#evidenze_contratto").html(griglia);
+
+
+la ContrattiDigitaliController@creaGrigliaEvidenzaContrattoAjax
+
+carica la view evidenze_contratto.blade.php che include 
+
+__@include('evidenze.griglia_evidenze_inc', ['contratto_digitale' => 1])__
+
+
+TUTTI I JS sono nel file resources/views/contratti_digitali/form.blade.php
+
+dentro __@include('javascript_view.js_griglia')__
+
+
+
+# Evidenze da admin selezionando un agente
+
+> http://crm_lara6.xxx/evidenze/1
+
+EvidenzeController@index ==> evidenze/griglia.blade.php 
+
+che include 
+
+l file 
+
+__@include('javascript_view.js_griglia')__
+
+__@include('evidenze.griglia_evidenze_inc')__

@@ -1,9 +1,51 @@
 @extends('layouts.coreui.crm_lara6')
 
 @section('js')
+    
+    @include('javascript_view.js_griglia')
+
+
     <script type="text/javascript">
 
+      function caricaGrigliaEvidenze(destroy_session = 0) {
+                
+            $(".spinner_lu").show();
+            
+            var contratto_id = '{{$contratto->id}}';
+            var macro_id = '{{$macro_id}}';
+
+            data = {
+              contratto_id:contratto_id,
+              macro_id:macro_id,
+              destroy_session:destroy_session
+            };
+            
+            $.ajax({
+                url: "{{ route('crea_griglia_evidenza_ajax') }}",
+                type: 'POST',
+                data: data,
+                success: function(griglia) {
+                    $("#evidenze_contratto").html("");
+                    $("#evidenze_contratto").html(griglia);
+
+                    $(".spinner_lu").hide();
+                },
+                error: function() {
+                  $(".spinner_lu").hide();
+                }
+            });
+  
+      }
+
+
       $(function() {
+
+        $('body').on('click', "#refresh", function(e) {
+             e.preventDefault();
+             caricaGrigliaEvidenze();
+             alert('ricarica la griglia');
+           });
+
         var clientiDaAssegnare = {!!$clienti_autocomplete_js!!};
         
         $( ".clientiDaAssegnare" ).autocomplete({
@@ -208,8 +250,11 @@
               </div>
 
             @endif
+            <div class="spinner_lu" style="display:none;"></div>
             {{-- griglia_evidenze --}}
-             @include('evidenze.griglia_evidenze_inc')
+            <div class="griglia_evidenze" id="griglia_evidenze">
+              @include('evidenze.griglia_evidenze_inc')
+            </div>
             {{-- END griglia_evidenze --}}
             
         </div>
