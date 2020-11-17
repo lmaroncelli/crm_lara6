@@ -15,73 +15,100 @@ use App\Http\Controllers\MyController;
 
 class EvidenzeController extends MyController
 {
+
+
+    public function creaGrigliaEvidenzaAjax(Request $request)
+      {
+
+      $macro_id = $request->get('macro_id');
+
+      $tipi_evidenza = TipoEvidenza::with(['macroLocalita','mesi','evidenze','evidenze.mesi'])->ofMacro($macro_id)->get(); 
+
+      // preparo un array tale che $clienti_to_info[id] = id_info senza dover fare sempre la query per ogni cella
+      // dovrei filtrare per macrolocalita
+      // scopeOfMacro($id_macro) x i clienti ??
+      $clienti_to_info = Cliente::attivo()->ofMacro($macro_id)->pluck('id_info','id')->toArray();
+      $clienti_to_info[-1] = '';
+      $clienti_to_info[0] = '';
+
+      $utenti_commerciali = User::commerciale()->orderBy('name')->get();
+      // preparo un array tale che $commerciale_nome[id_utente] = username senza dover fare sempre la query per ogni cella
+      $commerciali_nome = $utenti_commerciali->pluck('username','id')->toArray();
+      $commerciali_nome[0] = '';
+
+
+      return view('evidenze.griglia_evidenze_inc', compact('tipi_evidenza','clienti_to_info','commerciali_nome'));
+
+      }
+
+
     public function index(Request $request, $macro_id = 0) 
       {
         
-        $macro = MacroLocalita::orderBy('ordine')->pluck('nome','id');
-        
-        $macro['-1'] = 'Parchi'; 
-        $macro['-2'] = 'Offerte Fiera'; 
+      $macro = MacroLocalita::orderBy('ordine')->pluck('nome','id');
+      
+      $macro['-1'] = 'Parchi'; 
+      $macro['-2'] = 'Offerte Fiera'; 
 
-        $utenti_commerciali = User::commerciale()->orderBy('name')->get();
-
-
-        $commerciali = $utenti_commerciali->pluck('name','id');
-
-        $tipi_evidenza = TipoEvidenza::with(['macroLocalita','mesi','evidenze','evidenze.mesi'])->ofMacro($macro_id)->get(); 
-
-        // preparo un array tale che $clienti_to_info[id] = id_info senza dover fare sempre la query per ogni cella
-        // dovrei filtrare per macrolocalita
-        // scopeOfMacro($id_macro) x i clienti ??
-        $clienti_to_info = Cliente::attivo()->ofMacro($macro_id)->pluck('id_info','id')->toArray();
-        $clienti_to_info[-1] = '';
-        $clienti_to_info[0] = '';
+      $utenti_commerciali = User::commerciale()->orderBy('name')->get();
 
 
-        // preparo un array tale che $commerciale_nome[id_utente] = username senza dover fare sempre la query per ogni cella
-        $commerciali_nome = $utenti_commerciali->pluck('username','id')->toArray();
-        $commerciali_nome[0] = '';
+      $commerciali = $utenti_commerciali->pluck('name','id');
+
+      $tipi_evidenza = TipoEvidenza::with(['macroLocalita','mesi','evidenze','evidenze.mesi'])->ofMacro($macro_id)->get(); 
+
+      // preparo un array tale che $clienti_to_info[id] = id_info senza dover fare sempre la query per ogni cella
+      // dovrei filtrare per macrolocalita
+      // scopeOfMacro($id_macro) x i clienti ??
+      $clienti_to_info = Cliente::attivo()->ofMacro($macro_id)->pluck('id_info','id')->toArray();
+      $clienti_to_info[-1] = '';
+      $clienti_to_info[0] = '';
 
 
-        // preparo i dati per l'autocomplete della selezione hotel
-        // deve essere una stringa del tipo ["ID-nome","ID-nome",..] 
-        $clienti_autocomplete_js = Utility::getAutocompleteJs($macro_id);
+      // preparo un array tale che $commerciale_nome[id_utente] = username senza dover fare sempre la query per ogni cella
+      $commerciali_nome = $utenti_commerciali->pluck('username','id')->toArray();
+      $commerciali_nome[0] = '';
 
-        return view('evidenze.griglia', compact('macro', 'macro_id','tipi_evidenza','clienti_to_info','commerciali','commerciali_nome','clienti_autocomplete_js'));
+
+      // preparo i dati per l'autocomplete della selezione hotel
+      // deve essere una stringa del tipo ["ID-nome","ID-nome",..] 
+      $clienti_autocomplete_js = Utility::getAutocompleteJs($macro_id);
+
+      return view('evidenze.griglia', compact('macro', 'macro_id','tipi_evidenza','clienti_to_info','commerciali','commerciali_nome','clienti_autocomplete_js'));
       }
 
     public function SelezionaClienteEvidenzeAjax(Request $request)
       {
-        $id_macro = $request->get('macro_id');
+      $id_macro = $request->get('macro_id');
 
-        // nella forma 1421 - Hotel Fantasy - Rimini
-        $item = $request->get('item');
+      // nella forma 1421 - Hotel Fantasy - Rimini
+      $item = $request->get('item');
 
-        list($id_info, $name) = explode("-", $item);
+      list($id_info, $name) = explode("-", $item);
 
-        $cliente = Cliente::byIdInfo($id_info)->first();
+      $cliente = Cliente::byIdInfo($id_info)->first();
 
-        $agente = $cliente->associato_a_commerciali()->first();
+      $agente = $cliente->associato_a_commerciali()->first();
 
-        if (!is_null($agente)) 
-          {
-          # metto in sessione 
-          session([
-            'id_cliente' => $cliente->id,
-            'id_info' => $id_info,
-            'id_agente' => $agente->id,
-            'nome_cliente' => $cliente->nome,
-            'nome_agente' => $agente->name,
-            'id_macro' => $id_macro
-            ]);
-          
+      if (!is_null($agente)) 
+        {
+        # metto in sessione 
+        session([
+          'id_cliente' => $cliente->id,
+          'id_info' => $id_info,
+          'id_agente' => $agente->id,
+          'nome_cliente' => $cliente->nome,
+          'nome_agente' => $agente->name,
+          'id_macro' => $id_macro
+          ]);
+        
 
-          echo 'ok';
-          } 
-        else 
-          {
-          echo "Nessun id per il commerciale del cliente!!";
-          }
+        echo 'ok';
+        } 
+      else 
+        {
+        echo "Nessun id per il commerciale del cliente!!";
+        }
         
       }
 
@@ -197,35 +224,48 @@ class EvidenzeController extends MyController
           }
 
 
-
-        // creo la riga da inserire nella tabella dei ServiziDigitali
-        $dal = '01/'.$primo_mese.'/'.$anno;
-        $al = Utility::getUltimoGiornoMese($anno.'/'.$ultimo_mese.'/01').'/'.$ultimo_mese . '/' .$anno;
-
-
-        $data_servizi_digitali = array (
-            'nome' => 'EVIDENZA',
-            'localita' => $tipoevidenza->macroLocalita->nome,
-            'pagina' => $tipoevidenza->nome,
-            'dal' => $dal,
-            'al' => $al,
-            'qta' => 1,
-            'importo' => $costo_tot,
-            'contratto_id' => $contratto_id
-          );
-
-        $servizio_digitale = ServizioDigitale::create($data_servizi_digitali);
-
-        Log::debug("servizio_digitale creato = " .$servizio_digitale);
-
-
-        // Metto le evidddenze come Acquistate e le lego al contratto digitale 
-        foreach ($ev_da_acquistare as $evidenza_mese) 
+        if($contratto_id)
           {
-          $evidenza_mese->pivot->acquistata = 1;
-          $evidenza_mese->pivot->servizioweb_id = $servizio_digitale->id;
+          // creo la riga da inserire nella tabella dei ServiziDigitali
+          $dal = '01/'.$primo_mese.'/'.$anno;
+          $al = Utility::getUltimoGiornoMese($anno.'/'.$ultimo_mese.'/01').'/'.$ultimo_mese . '/' .$anno;
 
-          $evidenza_mese->push();
+
+          $data_servizi_digitali = array (
+              'nome' => 'EVIDENZA',
+              'localita' => $tipoevidenza->macroLocalita->nome,
+              'pagina' => $tipoevidenza->nome,
+              'dal' => $dal,
+              'al' => $al,
+              'qta' => 1,
+              'importo' => $costo_tot,
+              'contratto_id' => $contratto_id
+            );
+
+          $servizio_digitale = ServizioDigitale::create($data_servizi_digitali);
+
+          Log::debug("servizio_digitale creato = " .$servizio_digitale);
+
+          // Metto le evidddenze come Acquistate e le lego al contratto digitale 
+          foreach ($ev_da_acquistare as $evidenza_mese) 
+            {
+            $evidenza_mese->pivot->acquistata = 1;
+            $evidenza_mese->pivot->servizioweb_id = $servizio_digitale->id;
+
+            $evidenza_mese->push();
+            }
+
+          }
+        else
+          {
+          // Metto le evidddenze come Acquistate e le lego al contratto digitale 
+          foreach ($ev_da_acquistare as $evidenza_mese) 
+            {
+            $evidenza_mese->pivot->acquistata = 1;
+            $evidenza_mese->pivot->servizioweb_id = 0;
+
+            $evidenza_mese->push();
+            }
           }
 
         echo "ok";

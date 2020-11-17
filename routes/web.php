@@ -153,6 +153,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('evidenze/{macro_id?}', 'EvidenzeController@index')->name('evidenze.view');
 
+    
+    Route::post('evidenze/crea_griglia_evidenza_ajax', 'EvidenzeController@creaGrigliaEvidenzaAjax')->name('crea_griglia_evidenza_ajax');
+
+
+
     Route::get('seleziona-cliente-evidenze-ajax', 'EvidenzeController@SelezionaClienteEvidenzeAjax')->name('seleziona-cliente-evidenze-ajax');
 
     Route::get('assegna-mese-evidenza-ajax', 'EvidenzeController@AssegnaMeseEvidenzaAjax')->name('assegna-mese-evidenza-ajax');
@@ -201,12 +206,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('contratto-digitale/carica_servizi_contratto_ajax', 'ContrattiDigitaliController@caricaServiziContrattoAjax')->name('carica_servizi_contratto_ajax');
     
-
-
-
-
-    //crea_griglia_evidenza_ajax
-
 
 
     /////////////

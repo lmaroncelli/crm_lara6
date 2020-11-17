@@ -11,11 +11,9 @@
                 
             $(".spinner_lu").show();
             
-            var contratto_id = '{{$contratto->id}}';
             var macro_id = '{{$macro_id}}';
 
             data = {
-              contratto_id:contratto_id,
               macro_id:macro_id,
               destroy_session:destroy_session
             };
@@ -25,8 +23,8 @@
                 type: 'POST',
                 data: data,
                 success: function(griglia) {
-                    $("#evidenze_contratto").html("");
-                    $("#evidenze_contratto").html(griglia);
+                    $("#griglia_evidenze").html("");
+                    $("#griglia_evidenze").html(griglia);
 
                     $(".spinner_lu").hide();
                 },
@@ -40,11 +38,13 @@
 
       $(function() {
 
+        caricaGrigliaEvidenze();
+
         $('body').on('click', "#refresh", function(e) {
              e.preventDefault();
              caricaGrigliaEvidenze();
-             alert('ricarica la griglia');
-           });
+            
+        });
 
         var clientiDaAssegnare = {!!$clienti_autocomplete_js!!};
         
@@ -80,8 +80,9 @@
             }
         });
 
-        $(".clickable.acquistata_1").click(function(e){
 
+        $('body').on('click', ".clickable.acquistata_1", function(e){
+      
           e.preventDefault();
           
           @if (!session()->has('nome_cliente') || !session()->has('nome_agente'))
@@ -89,8 +90,10 @@
             alert('seleziona un cliente!');
           
           @else
+            
+            var elem = $(this);
           
-            var id_hotel = $(this).attr("data-id-hotel");
+            var id_hotel = elem.attr("data-id-hotel");
             var id_cliente_session = {{ session('id_cliente') }};
 
             if (id_cliente_session != id_hotel) {
@@ -102,8 +105,9 @@
 
             $(".spinner_lu").show();
 
-            var id_evidenza = $(this).attr("data-id-evidenza");
-						var id_mese = $(this).attr("data-id-mese");
+
+            var id_evidenza = elem.attr("data-id-evidenza");
+						var id_mese = elem.attr("data-id-mese");
             
             var data = {
               'id_evidenza': id_evidenza,
@@ -115,8 +119,12 @@
 							        data: data,
 							        success: function(msg) {
 							            if (msg == 'ok') {
-							              location.reload();
-							            } else {
+							             //location.reload();
+							             elem.removeClass();
+                           elem.addClass('clickable sfondo_0 acquistata_0');
+                           $("#refresh").show();
+                           $(".spinner_lu").hide();
+                          } else {
                             $(".spinner_lu").hide();
 							              window.alert(msg);
 							            }
@@ -252,9 +260,7 @@
             @endif
             <div class="spinner_lu" style="display:none;"></div>
             {{-- griglia_evidenze --}}
-            <div class="griglia_evidenze" id="griglia_evidenze">
-              @include('evidenze.griglia_evidenze_inc')
-            </div>
+            <div class="griglia_evidenze" id="griglia_evidenze"></div>
             {{-- END griglia_evidenze --}}
             
         </div>
