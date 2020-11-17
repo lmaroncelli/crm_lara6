@@ -90,8 +90,8 @@ class ClientiController extends Controller
 
         $attivo_ia = $request->get('attivo_ia');
         $attivo = $request->get('attivo');
-
-
+        
+        
         $clienteEagerLoaded = Cliente::getClienteEagerLoaded($orderby);
 
 

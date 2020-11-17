@@ -64,12 +64,54 @@ class ContrattiDigitaliController extends MyController
     public function index(Request $request)
     {
 
+      // campo libero
+      $qf = $request->get('qf');
+      $field = $request->get('field');
+
       $orderby = $request->get('orderby','id');
       $order = $request->get('order','desc');
 
+      // ContrattoDigitale::withoutGlobalScope('data_creazione')
       $precontratti = ContrattoDigitale::with(['commerciale','cliente'])->withCount('servizi');
 
-      if ($orderby == 'nome_commerciale') 
+      $join_users = 0;
+      $join_clienti = 0;
+
+      if( !is_null($qf) && $field != '0' )
+       {
+        if($field == 'commerciale')
+          {
+            $precontratti = $precontratti
+            ->select(DB::raw('tblContrattiDigitali.*, users.name as nome_commerciale'))
+            ->join('users', 'users.id', '=', 'tblContrattiDigitali.user_id')
+            ->with([
+              'commerciale',
+              'cliente'
+              ])
+            ->withCount('servizi')
+            ->where('users.name','LIKE','%'.$qf.'%');
+            
+
+            $join_users = 1;
+
+          }
+        elseif($field == 'cliente') 
+          {
+            $precontratti = $precontratti
+            ->select(DB::raw('tblContrattiDigitali.*, tblClienti.nome as nome_cliente'))
+            ->join('tblClienti', 'tblClienti.id', '=', 'tblContrattiDigitali.cliente_id')
+            ->with([
+              'commerciale',
+              'cliente'
+              ])
+            ->withCount('servizi')
+            ->where('tblClienti.nome','LIKE','%'.$qf.'%');
+
+            $join_clienti = 1;
+          }
+       }
+
+      if ($orderby == 'nome_commerciale' && !$join_users) 
         {
           $precontratti = $precontratti
           ->select(DB::raw('tblContrattiDigitali.*, users.name as nome_commerciale'))
@@ -80,7 +122,7 @@ class ContrattiDigitaliController extends MyController
             ])
           ->withCount('servizi');
         } 
-      elseif($orderby == 'nome_cliente')
+      elseif($orderby == 'nome_cliente' && !$join_clienti)
         {
           $precontratti = $precontratti
           ->select(DB::raw('tblContrattiDigitali.*, tblClienti.nome as nome_cliente'))
@@ -96,10 +138,19 @@ class ContrattiDigitaliController extends MyController
       
       $to_append = ['order' => $order, 'orderby' => $orderby];
 
+      if( !is_null($qf) && $field != '0' )
+       {
+       $to_append['qf'] = $qf;
+       $to_append['field'] = $field;
+       }
+
       $precontratti = $precontratti->paginate(15)->setpath('')->appends($to_append);
 
+      $campi_precontratti_search[] = 'campo in cui cercare';
+      $campi_precontratti_search['commerciale'] = 'commerciale';
+      $campi_precontratti_search['cliente'] = 'cliente';
 
-      return view('contratti_digitali.index', compact('precontratti'));
+      return view('contratti_digitali.index', compact('precontratti','campi_precontratti_search'));
       
     }
 

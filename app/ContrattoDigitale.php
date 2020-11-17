@@ -2,7 +2,10 @@
 
 namespace App;
 
+
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class ContrattoDigitale extends Model
 {
@@ -20,6 +23,18 @@ class ContrattoDigitale extends Model
         'data_creazione',
     ];
 
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope('data_creazione', function (Builder $builder) {
+            $builder->where('data_creazione', '>',  Carbon::today()->subYears(1)->toDateTimeString());
+        });
+    }
 
 
    public function servizi()

@@ -6076,6 +6076,10 @@ html {
   color: #fff;
 }
 
+
+
+
+
 /** 
  * LOGIN
  */
@@ -6085,9 +6089,18 @@ ul.navbar-nav a.nav-link {
 }
 
 
+
+
+
+
 /*
 nav bar dark
  */
+
+
+ header.navbar a.navbar-brand {
+  margin-top: 2px;
+}
 
 div.sidebar,  header.app-header {
   background-color:#2f353a!important; 
