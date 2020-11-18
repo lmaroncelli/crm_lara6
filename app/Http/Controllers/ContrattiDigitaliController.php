@@ -61,18 +61,37 @@ class ContrattiDigitaliController extends MyController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $all = null)
     {
 
       // campo libero
       $qf = $request->get('qf');
       $field = $request->get('field');
 
-      $orderby = $request->get('orderby','id');
-      $order = $request->get('order','desc');
+      $orderby = $request->get('orderby');
+      $order = $request->get('order');
 
-      // ContrattoDigitale::withoutGlobalScope('data_creazione')
-      $precontratti = ContrattoDigitale::with(['commerciale','cliente'])->withCount('servizi');
+
+      if(is_null($order))
+      {
+        $order='desc';
+      }
+
+    if(is_null($orderby))
+      {
+        $orderby='id';
+      }
+
+      if ( !is_null($all) && $all == 'all' )
+        {
+        $url_index = 'contratto-digitale/all';
+        $precontratti = ContrattoDigitale::withoutGlobalScope('data_creazione')->with(['commerciale','cliente'])->withCount('servizi');
+        } 
+      else 
+        {
+        $url_index = 'contratto-digitale';
+        $precontratti = ContrattoDigitale::with(['commerciale','cliente'])->withCount('servizi');
+        }
 
       $join_users = 0;
       $join_clienti = 0;
@@ -144,13 +163,14 @@ class ContrattiDigitaliController extends MyController
        $to_append['field'] = $field;
        }
 
+      
       $precontratti = $precontratti->paginate(15)->setpath('')->appends($to_append);
 
       $campi_precontratti_search[] = 'campo in cui cercare';
       $campi_precontratti_search['commerciale'] = 'commerciale';
       $campi_precontratti_search['cliente'] = 'cliente';
 
-      return view('contratti_digitali.index', compact('precontratti','campi_precontratti_search'));
+      return view('contratti_digitali.index', compact('precontratti','campi_precontratti_search','url_index'));
       
     }
 

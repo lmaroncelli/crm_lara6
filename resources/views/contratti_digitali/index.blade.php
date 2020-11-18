@@ -2,6 +2,7 @@
 
 @section('content')
 
+
 <div class="row">
   <div class="col-sm-2">
     <div class="callout callout-info b-t-1 b-r-1 b-b-1">
@@ -15,7 +16,7 @@
   @if (count(Request()->query()))
     <div class="col-sm-2">
       <div class="callout callout-noborder">
-        <a href="{{ url('contratto-digitale') }}" title="Tutti i precontratti" class="btn btn-warning">
+        <a href="{{ url($url_index) }}" title="Tutti i precontratti" class="btn btn-warning">
           Tutti
         </a>
       </div>
@@ -34,7 +35,7 @@
 <div class="row">
     <div class="col">      
       @if (isset($precontratti))
-        <form action="{{ url('contratto-digitale') }}" method="get" id="searchForm" accept-charset="utf-8">
+        <form action="{{ url($url_index) }}" method="get" id="searchForm" accept-charset="utf-8">
           <input type="hidden" name="orderby" id="orderby" value="">
           <input type="hidden" name="order" id="order" value="">
           <div class="row p-3">
