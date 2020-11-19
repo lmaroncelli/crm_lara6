@@ -69,6 +69,18 @@ header.navbar a.navbar-brand {
 
 /* Utilizzo il component callout senza bordo nell'header dell'elenco clienti */
 
+/* link per visualizzare tutti o solo ultimi anni */
+
+a.all {
+  text-decoration: underline;
+  float: right;
+}
+
+a.all:hover {
+  text-decoration: none;
+}
+
+
 .callout-noborder {
   border-left: 0px;
 }

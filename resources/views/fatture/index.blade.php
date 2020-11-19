@@ -5,7 +5,14 @@
 <div class="row">
     <div class="col-sm-2">
       <div class="callout callout-info b-t-1 b-r-1 b-b-1">
-        Elenco @if ($tipo == 'F') fatture @else prefatture @endif 
+				Elenco 
+					@if ($tipo == 'F') 
+						fatture 
+						@if (!$all) <a class="all" href="{{ url('fatture/F/all') }}">Tutti</a> @else <a class="all" href="{{ url('fatture') }}">Ultimi anni</a> @endif 
+					@else 
+						prefatture
+						@if (!$all) <a class="all" href="{{ url('fatture/PF/all') }}">Tutti</a> @else <a class="all" href="{{ url('prefatture') }}">Ultimi anni</a> @endif
+					@endif  
         @if (isset($fatture))
         <br>
         <strong class="h4">{{$fatture->total()}}</strong>
@@ -16,7 +23,7 @@
       <div class="col-sm-2">
         <div class="callout callout-noborder">
 					@if ($tipo == 'F') 
-          	<a href="{{ url('fatture') }}" title="Tutte le fatture" class="btn btn-warning">
+          	<a href="{{ url($url_index) }}" title="Tutte le fatture" class="btn btn-warning">
 					@else 
 						<a href="{{ url('prefatture') }}" title="Tutte le prefatture" class="btn btn-warning">
 					@endif

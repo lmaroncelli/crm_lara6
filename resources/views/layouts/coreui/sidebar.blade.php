@@ -82,7 +82,7 @@
           <i class="nav-icon icon-wrench"></i>Settings
         </a>
           <ul class="nav-dropdown-items">
-            <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-directions"></i>Localita(TD)</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('localita.index') }}"><i class="nav-icon icon-directions"></i>Localita</a></li>
             <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-envelope"></i>Avvisi fatture(TD)</a></li>
             <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-share"></i>Gruppi clienti(TD)</a></li>
             <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-present"></i>Evidenze(TD)</a></li>

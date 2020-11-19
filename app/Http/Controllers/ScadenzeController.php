@@ -127,111 +127,109 @@ class ScadenzeController extends Controller
 				} 
 
 
-				if ( $request->has('scadenza_al') && $request->get('scadenza_al') !=0 ) 
+			if ( $request->has('scadenza_al') && $request->get('scadenza_al') !=0 ) 
+				{
+				$to_append['scadenza_al'] = $request->get('scadenza_al');
+
+				if (!$filter) 
 					{
-					$to_append['scadenza_al'] = $request->get('scadenza_al');
+					$scadenze = ScadenzaFattura::getScadenzeEagerLoaded()
+					->whereHas(
+					'fattura' , function($q) {
+					$q->where('tipo_id','!=','NC');
+					})
+					->notPagata()
+					->where('data_scadenza', '<=', Carbon::createFromFormat('d/m/Y',$request->get('scadenza_al'))->toDateString());  
 
-					if (!$filter) 
-						{
-						$scadenze = ScadenzaFattura::getScadenzeEagerLoaded()
-						->whereHas(
-						'fattura' , function($q) {
-						$q->where('tipo_id','!=','NC');
-						})
-						->notPagata()
-						->where('data_scadenza', '<=', Carbon::createFromFormat('d/m/Y',$request->get('scadenza_al'))->toDateString());  
-
-						$filter = 1;
-						} 
-					else 
-						{
-						$scadenze = $scadenze->where('data_scadenza', '<=', Carbon::createFromFormat('d/m/Y',$request->get('scadenza_al'))->toDateString());
-						}
-
+					$filter = 1;
 					} 
+				else 
+					{
+					$scadenze = $scadenze->where('data_scadenza', '<=', Carbon::createFromFormat('d/m/Y',$request->get('scadenza_al'))->toDateString());
+					}
+
+				} 
 			
 				
 
-				if(!$filter)
-					{
+			if(!$filter)
+				{
 
-					$scadenze = ScadenzaFattura::getScadenzeEagerLoaded()
-								->whereHas(
-								'fattura' , function($q) {
-								$q->where('tipo_id','!=','NC');
-								})
-								->where('tblScadenzeFattura.pagata',0);  
+				$scadenze = ScadenzaFattura::getScadenzeEagerLoaded()
+							->whereHas(
+							'fattura' , function($q) {
+							$q->where('tipo_id','!=','NC');
+							})
+							->where('tblScadenzeFattura.pagata',0);  
 
-					if ($orderby == 'tipo_pagamento') 
-						{					
-					
-						$scadenze = $scadenze
-									->join('tblFatture','tblScadenzeFattura.fattura_id', '=', 'tblFatture.id')
-									->join('tblPagamenti', 'tblFatture.pagamento_id', '=', 'tblPagamenti.cod');
-
-								
-						
-						$scadenze = $scadenze->orderBy('tblPagamenti.nome',$order);
-						}  
-					
-					
-					$filter = 1;
-					
-					}
-
-
-
-
-				if($orderby == 'data_scadenza' || $orderby == 'importo')
-					{
-					$scadenze = $scadenze->orderBy($orderby,$order);
-					}
-
-				if($orderby == 'giorni_rimasti')
-					{
-					$scadenze = $scadenze->orderByRaw("to_days(date_format(`tblScadenzeFattura`.`data_scadenza`,'%Y-%m-%d')) - to_days(now()) $order");
-					}
-
-
-				$scadenze_csv = $scadenze;
-
-				$scadenze_csv = $scadenze_csv->get();
-
-				// metto la query in sessione per utilizzarla nella creazione del CSV
-				$request->session()->put('scadenze_csv', $scadenze_csv); 
-
-				$scadenze = $scadenze
-										->paginate(50)->setpath('')->appends($to_append);
-
-
-				$pagamenti_fattura = Pagamento::whereNotNull('cod_PA')->where('cod','>',0)->get()->pluck('nome','id');
+				if ($orderby == 'tipo_pagamento') 
+					{					
 				
-				$commerciali = User::commerciale()->get()->pluck('name','id');
+					$scadenze = $scadenze
+								->join('tblFatture','tblScadenzeFattura.fattura_id', '=', 'tblFatture.id')
+								->join('tblPagamenti', 'tblFatture.pagamento_id', '=', 'tblPagamenti.cod');
+
+							
+					
+					$scadenze = $scadenze->orderBy('tblPagamenti.nome',$order);
+					}  
+				
+				
+				$filter = 1;
+				
+				}
+
+
+
+
+			if($orderby == 'data_scadenza' || $orderby == 'importo')
+				{
+				$scadenze = $scadenze->orderBy($orderby,$order);
+				}
+
+			if($orderby == 'giorni_rimasti')
+				{
+				$scadenze = $scadenze->orderByRaw("to_days(date_format(`tblScadenzeFattura`.`data_scadenza`,'%Y-%m-%d')) - to_days(now()) $order");
+				}
+
+
+			$scadenze_csv = $scadenze;
+
+			$scadenze_csv = $scadenze_csv->get();
+
+			// metto la query in sessione per utilizzarla nella creazione del CSV
+			$request->session()->put('scadenze_csv', $scadenze_csv); 
+
+			$scadenze = $scadenze
+									->paginate(50)->setpath('')->appends($to_append);
+
+
+			$pagamenti_fattura = Pagamento::whereNotNull('cod_PA')->where('cod','>',0)->get()->pluck('nome','id');
+			
+			$commerciali = User::commerciale()->get()->pluck('name','id');
 					
 
 
 
-				$scadenze_for_dates = ScadenzaFattura::
-											whereHas(
+			$scadenze_for_dates = ScadenzaFattura::with(['fattura.pagamento','fattura.societa.cliente','fattura.societa.ragioneSociale','fattura.avvisi'])
+											->whereHas(
 											'fattura' , function($q) {
 											$q->where('tipo_id','!=','NC');
 											})
-											->with(['fattura.pagamento','fattura.societa.cliente','fattura.societa.ragioneSociale','fattura.avvisi'])
 											->notPagata()
 											->orderBy('data_scadenza','desc');
 
-				// in questo modo ho preso le date distinte
-				// 2020-12-31 00:00:00
-				$collection = $scadenze_for_dates->get()->pluck('id','data_scadenza')->toArray();
+			// in questo modo ho preso le date distinte
+			// 2020-12-31 00:00:00
+			$collection = $scadenze_for_dates->pluck('id','data_scadenza')->toArray();
 
-				//dd($collection);
 
-				$date = [];   
+			$date = [];   
 
-				foreach ($collection as $data_s => $value) 
-					{        
-					$date[] =  Carbon::createFromFormat('Y-m-d H:i:s',$data_s)->format('d/m/Y');
-					}
+			foreach ($collection as $data_s => $value) 
+				{        
+				$date[] =  Carbon::createFromFormat('Y-m-d',$data_s)->format('d/m/Y');
+				}
 
 				return view('scadenze.index', compact('scadenze','pagamenti_fattura','date','commerciali'));
 

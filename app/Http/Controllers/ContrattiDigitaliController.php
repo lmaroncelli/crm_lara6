@@ -86,11 +86,13 @@ class ContrattiDigitaliController extends MyController
         {
         $url_index = 'contratto-digitale/all';
         $precontratti = ContrattoDigitale::withoutGlobalScope('data_creazione')->with(['commerciale','cliente'])->withCount('servizi');
+        $all = 1;
         } 
       else 
         {
         $url_index = 'contratto-digitale';
         $precontratti = ContrattoDigitale::with(['commerciale','cliente'])->withCount('servizi');
+        $all = 0;  
         }
 
       $join_users = 0;
@@ -170,7 +172,7 @@ class ContrattiDigitaliController extends MyController
       $campi_precontratti_search['commerciale'] = 'commerciale';
       $campi_precontratti_search['cliente'] = 'cliente';
 
-      return view('contratti_digitali.index', compact('precontratti','campi_precontratti_search','url_index'));
+      return view('contratti_digitali.index', compact('precontratti','campi_precontratti_search','url_index','all'));
       
     }
 

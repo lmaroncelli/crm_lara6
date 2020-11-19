@@ -6,7 +6,7 @@
 <div class="row">
   <div class="col-sm-2">
     <div class="callout callout-info b-t-1 b-r-1 b-b-1">
-       Elenco precontratti
+       Elenco precontratti  @if (!$all) <a class="all" href="{{ url('contratto-digitale/all') }}">Tutti</a> @else <a class="all" href="{{ url('contratto-digitale') }}">Ultimi anni</a> @endif
       @if (isset($precontratti))
       <br>
       <strong class="h4">{{$precontratti->total()}}</strong>

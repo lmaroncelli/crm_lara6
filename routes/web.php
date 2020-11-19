@@ -104,7 +104,8 @@ Route::middleware(['auth'])->group(function () {
 
     
     
-    //Route::model('fatture', 'App\Fattura');
+    Route::get('fatture/{tipo?}/{all?}', 'FattureController@index');
+    
     Route::resource('fatture', 'FattureController')/*->middleware('log')*/;
     
     // sovrascrivo create
@@ -254,6 +255,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('conteggi/{id}/termina','ConteggiController@termina')->name('conteggi.termina');
     Route::get('conteggi/{id}/apri','ConteggiController@apri')->name('conteggi.apri');
     Route::get('conteggi/{id}/approva','ConteggiController@approva')->name('conteggi.approva');
+
+
+
+     /////////////
+    // LOCALITA //
+    /////////////
+
+    Route::resource('localita', 'LocalitaController');
 
         
 });

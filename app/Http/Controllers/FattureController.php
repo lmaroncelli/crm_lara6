@@ -81,11 +81,10 @@ class FattureController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $tipo = 'F')
+    public function index(Request $request, $tipo = 'F', $all = null)
     {
 
       // SOVRASCRIVO IL TIPO se MI VIENE PASSATO DALLA REQUEST
-
       if ($request->has('tipo') && $request->get('tipo') != $tipo) 
         {
         $tipo = $request->get('tipo');
@@ -105,13 +104,23 @@ class FattureController extends Controller
          $order='desc';
        }
 
-     if(is_null($orderby))
+      if(is_null($orderby))
        {
          $orderby='tblFatture.data';
        }
      
-
-     $fattureEagerLoaded = Fattura::getFattureEagerLoaded($tipo,$orderby);
+      if ( !is_null($all) && $all == 'all' )
+        {
+        $url_index = 'fatture/'.$tipo.'/all';
+        $fattureEagerLoaded = Fattura::getFattureEagerLoaded($tipo,$orderby)->withoutGlobalScope('data');
+        $all = 1;
+        }
+      else
+        {
+        $tipo == 'F' ? $url_index = 'fatture' : $url_index = 'prefatture';
+        $fattureEagerLoaded = Fattura::getFattureEagerLoaded($tipo,$orderby);
+        $all = 0;
+        }
 
      $fatture = $fattureEagerLoaded;
 
@@ -188,7 +197,7 @@ class FattureController extends Controller
                   ->orderBy($orderby, $order)
                   ->paginate(15)->setpath('')->appends($to_append);
 
-      return view('fatture.index', compact('fatture','tipo'));
+      return view('fatture.index', compact('fatture','tipo','url_index','all'));
     }
 
     /**

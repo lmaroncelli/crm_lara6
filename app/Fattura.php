@@ -5,9 +5,12 @@ namespace App;
 use App\Societa;
 use App\Utility;
 use App\Pagamento;
+use Carbon\Carbon;
 use App\AvvisiFattura;
 use App\RigaDiFatturazione;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class Fattura extends Model
 {
@@ -20,6 +23,43 @@ class Fattura extends Model
        'updated_at',
         'data',
    ];
+
+
+
+
+   /**
+    * Override parent boot and Call deleting event
+    *
+    * @return void
+    */
+    protected static function boot() 
+      {
+        parent::boot();
+
+        static::deleting(function($fattura) {
+          foreach ($fattura->servizi as $servizio) {
+              $servizio->fattura_id = NULL;
+              $servizio->rigafatturazione_id = NULL;
+              $servizio->save();
+          }
+          $fattura->righe()->delete();
+          $fattura->scadenze()->delete();
+        });
+      }
+
+
+
+   /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope('data', function (Builder $builder) {
+            $builder->where('data', '>',  Carbon::today()->subYears(1)->toDateString());
+        });
+    }
 
 
 
@@ -84,26 +124,6 @@ class Fattura extends Model
    }
 
 
-
-   /**
-      * Override parent boot and Call deleting event
-      *
-      * @return void
-      */
-      protected static function boot() 
-       {
-         parent::boot();
-
-         static::deleting(function($fattura) {
-            foreach ($fattura->servizi as $servizio) {
-               $servizio->fattura_id = NULL;
-               $servizio->rigafatturazione_id = NULL;
-               $servizio->save();
-            }
-            $fattura->righe()->delete();
-            $fattura->scadenze()->delete();
-         });
-       }
 
     public function getTipo()
 			{
