@@ -101,6 +101,7 @@
                                   @else
                                     {{$s->giorni_rimasti}}
                                   @endif
+                                <a href="#" class="send_mail_notification" data-id="{{$s->id}}"><i class="fas fa-envelope"></i></a>
                                 </td>
                                 <td>{{optional(optional($s->fattura)->pagamento)->nome}}</td>
                                 <td>{{optional(optional(optional($s->fattura)->societa)->cliente)->commerciali()}}</td>
@@ -206,6 +207,12 @@
             $(".archiviato_check").click(function(){
                 $("#searchForm").submit();
             });*/
+
+          jQuery(".send_mail_notification").click(function(e){
+              e.preventDefault();
+              let scadenza_id = jQuery(this).data("id");
+              alert(scadenza_id);
+          });
   
         });
     
