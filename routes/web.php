@@ -213,6 +213,7 @@ Route::middleware(['auth'])->group(function () {
     /////////////
     // Servizi //
     /////////////
+    
     Route::get('servizi/{tipo?}', 'ServiziController@index')->name('servizi.index');
     
     Route::delete('/servizi/{id}', 'ServiziController@destroy')->name('servizi.destroy');
@@ -222,6 +223,7 @@ Route::middleware(['auth'])->group(function () {
     //////////////
     // Scadenze //
     //////////////
+    Route::post('servizi/send_mail_avviso_pagamento_ajax','ScadenzeController@sendMailAvvisoPagamentoAjax')->name('send-mail-avviso-pagamento-ajax');    
     Route::get('scadenze', 'ScadenzeController@index')->name('scadenze.index');
 
     Route::get('scadenze_csv', 'ScadenzeController@export_csv')->name('scadenze.csv');

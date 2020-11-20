@@ -1,7 +1,7 @@
 @extends('layouts.coreui.crm_lara6')
 
 @section('content')
-
+<div class="spinner_lu" style="display:none;"></div>
 <div class="row">
   <div class="col-sm-2">
     <div class="callout callout-info b-t-1 b-r-1 b-b-1">
@@ -211,7 +211,22 @@
           jQuery(".send_mail_notification").click(function(e){
               e.preventDefault();
               let scadenza_id = jQuery(this).data("id");
-              alert(scadenza_id);
+              
+              $(".spinner_lu").show();
+              
+              data = {
+                scadenza_id:scadenza_id
+                  };
+              
+              $.ajax({
+                  url: "{{ route('send-mail-avviso-pagamento-ajax') }}",
+                  data: data,
+                  success: function(msg) {
+                      alert('inviato');
+                  }
+              });
+              
+                  
           });
   
         });

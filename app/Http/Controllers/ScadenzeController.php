@@ -236,7 +236,23 @@ class ScadenzeController extends Controller
 			}
 			
 
-		public function  export_csv(Request $request) 
+			public function sendMailAvvisoPagamentoAjax(Request $request)
+				{
+				$scadenza_id = $request->get('scadenza_id');
+				
+				$fattura = ScadenzaFattura::find($scadenza_id)->fattura;
+
+				if(!is_null($fattura))
+					{
+					
+					}
+
+
+
+				}
+
+		
+			public function  export_csv(Request $request) 
 			{
 			if($request->session()->has('scadenze_csv'))
 				{
