@@ -26,7 +26,7 @@
         <div class="col-md-6">
             <select class="form-control" id="comune_id" name="comune_id">
               @foreach ($comuni_arr as $id => $comune)
-                <option value="{{$id}}" @if (old('comune_id') == $id ) selected="selected" @endif>{{$comune}}</option>
+                <option value="{{$id}}" @if (old('comune_id') == $id ) selected="selected" @elseif($localita->exists && $localita->comune_id == $id) selected="selected" @endif>{{$comune}}</option>
               @endforeach
             </select>
         </div>

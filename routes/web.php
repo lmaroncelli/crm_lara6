@@ -261,6 +261,9 @@ Route::middleware(['auth'])->group(function () {
      /////////////
     // LOCALITA //
     /////////////
+    Route::get('localita/comune/create', 'LocalitaController@comune_create')->name('comune.create');
+    Route::post('localita/comune/store', 'LocalitaController@comune_store')->name('comune.store');
+    Route::post('localita/comune/update/{comune_id}', 'LocalitaController@comune_update')->name('comune.update');
 
     Route::resource('localita', 'LocalitaController');
 

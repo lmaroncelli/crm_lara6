@@ -11,7 +11,9 @@ class Localita extends Model
 {
    protected $table = 'tblLocalita';
 
-   protected $guarded = ['id'];
+   protected $fillable = ['nome','comune_id'];
+
+
 
    public function clienti()
    {

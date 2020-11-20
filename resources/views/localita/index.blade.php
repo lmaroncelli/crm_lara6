@@ -26,6 +26,9 @@
         <a href="{{ route('localita.create') }}" title="Nuova localita" class="btn btn-primary">
           Nuova localita
         </a>
+        <a href="{{ route('comune.create') }}" title="Nuovo comune" class="btn btn-warning">
+          Nuovo comune
+        </a>
       </div>
     </div><!--/.col-->
 </div>
@@ -37,7 +40,12 @@
             @include('localita._ricerca_localita')
             
             @if (isset($localita))
-            
+              @foreach ($localita as $l)
+                <form action="{{ route('localita.destroy',$l->id) }}" method="POST" id="delete_item_{{$l->id}}">
+                    @csrf
+                    @method('DELETE')
+                </form>
+              @endforeach
               <div>
                   <table class="table table-responsive-sm m-table m-table--head-bg-success table-hover">
                       <thead>
@@ -91,11 +99,7 @@
                           </tr>
                       </thead>
                       <tbody>
-                          @foreach ($localita as $l)
-                              <form action="{{ route('localita.destroy',$l->id) }}" method="POST" id="delete_item_{{$l->id}}">
-                                  @csrf
-                                  @method('DELETE')
-                              </form>
+                          @foreach ($localita as $l)                          
                               <tr>
                                 <th scope="row"><a href="{{ route('localita.edit',$l->id) }}" title="Modifica localita">
                                   {{$l->nome}}</a></th>
