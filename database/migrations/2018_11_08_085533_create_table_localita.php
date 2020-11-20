@@ -17,7 +17,7 @@ class CreateTableLocalita extends Migration
             $table->increments('id');
             $table->string('nome');
             $table->integer('comune_id')->unsigned();
-            $table->integer('macrolocalita_id')->unsigned();
+            $table->integer('macrolocalita_id')->nullable()->default(null)->unsigned();
             $table->timestamps();
         });
 
