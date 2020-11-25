@@ -9,6 +9,9 @@ use Carbon\Carbon;
 use App\ScadenzaFattura;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AvvisoPagamento;
+
 
 class ScadenzeController extends Controller
 {
@@ -241,10 +244,27 @@ class ScadenzeController extends Controller
 				$scadenza_id = $request->get('scadenza_id');
 				
 				$fattura = ScadenzaFattura::find($scadenza_id)->fattura;
-
 				if(!is_null($fattura))
 					{
+					$cliente = optional($fattura->societa)->cliente;
+
+					if(!is_null($cliente))
+						{
+						$cliente->email_amministrativa != '' ? $mail_to = $cliente->email_amministrativa : $mail_to = $cliente->email;
+
+						// salva il pdf in storage_path('app/public/fatture') e restituisce il nome_file.pdf
+		    		$file_pdf =  $this->getPdfFattura($request, $fattura_id, $salva=1);
+						
+		    		$tipo_mail = "scaduto"; // check gg_rimasti
+
+		    		Mail::to($mail_to)->send(new AvvisoPagamento($tipo_mail, $file_pdf));
+
+		    		echo 'ok';
+						}
+
 					
+
+
 					}
 
 

@@ -210,6 +210,9 @@
 
           jQuery(".send_mail_notification").click(function(e){
               e.preventDefault();
+
+              alert('aoooooo');
+
               let scadenza_id = jQuery(this).data("id");
               
               $(".spinner_lu").show();
@@ -224,6 +227,8 @@
                   success: function(msg) {
                       alert('inviato');
                   }
+
+                  $(".spinner_lu").hide();
               });
               
                   

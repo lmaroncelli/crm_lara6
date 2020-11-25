@@ -104,26 +104,25 @@ Route::middleware(['auth'])->group(function () {
 
     
     
-    Route::get('fatture/{tipo?}/{all?}', 'FattureController@index');
-    
-    Route::resource('fatture', 'FattureController')/*->middleware('log')*/;
-    
     // sovrascrivo create
     Route::get('fatture/create/{tipo_id?}', 'FattureController@create')->name('fatture.create');
-    
     // sovrascrivo edit
     Route::get('fatture/{fattura_id}/edit/{rigafattura_id?}/{scadenza_fattura_id?}', 'FattureController@edit')->name('fatture.edit');
+
+
+
+    
+
+    Route::resource('fatture', 'FattureController')/*->middleware('log')*/;
+    
+    
     
     Route::post('fatture/add-scadenza', 'FattureController@addScadenza')->name('fatture.add-scadenza');
     Route::post('fatture/update-scadenza/{scadenza_fattura_id}', 'FattureController@updateScadenza')->name('fatture.update-scadenza');
     Route::get('fatture/load-scadenza/{scadenza_fattura_id}', 'FattureController@loadScadenza')->name('fatture.load-scadenza');
     Route::post('fatture/delete-scadenza', 'FattureController@deleteScadenza')->name('fatture.delete-scadenza');
     
-    
-    
-    // index prefatture
-    Route::get('prefatture', 'FattureController@prefatture')->name('prefatture.index');
-    
+
 
     Route::post('fatture/add-riga', 'FattureController@addRiga')->name('fatture.add-riga');
     Route::post('fatture/add-note', 'FattureController@addNote')->name('fatture.add-note');
@@ -131,6 +130,16 @@ Route::middleware(['auth'])->group(function () {
     Route::post('fatture/update-riga/{rigafattura_id}', 'FattureController@updateRiga')->name('fatture.update-riga');
     Route::post('fatture/delete-riga', 'FattureController@deleteRiga')->name('fatture.delete-riga');    
     Route::post('/fatture-prefatture-ajax', 'FattureController@fatturePrefattureAjax');
+
+    Route::get('fatture/pdf/{fattura_id}/{salva?}', 'FattureController@pdf')->name('fatture.pdf');
+    
+    // ATTENZIONE questa route deve andare in fondo a tutte quelle di tipo fatture/*
+    Route::get('fatture/{tipo?}/{all?}', 'FattureController@index');
+
+    // index prefatture
+    Route::get('prefatture', 'FattureController@prefatture')->name('prefatture.index');
+    
+
 
     Route::post('/last-fatture-ajax', 'FattureController@lastFattureAjax');
     
@@ -142,7 +151,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/cambia-pagamento-fattura-ajax', 'FattureController@cambiaPagamentoFatturaAjax');
 
 
-    Route::get('fatture/pdf/{fattura_id}', 'FattureController@pdf')->name('fatture.pdf');
 
 
 

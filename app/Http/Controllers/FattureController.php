@@ -13,11 +13,11 @@ use App\Societa;
 use App\Utility;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use PDF;
+use App\MyTrait\MyTrait;
 
 class FattureController extends Controller
 {
-
+    use MyTrait;
 
     private function _validate_riga_fatturazione(Request $request)
       {
@@ -651,24 +651,15 @@ class FattureController extends Controller
       }
 
 
-
-    public function pdf(Request $request, $fattura_id)
+     public function pdf(Request $request, $fattura_id)
       {
-      $fattura = Fattura::with([
-                'pagamento',
-                'righe',
-                'scadenze',
-                'societa.RagioneSociale.localita.comune.provincia',
-                'societa.cliente.servizi_non_fatturati',
-                'prefatture',
-              ])->find($fattura_id);
+
+      return $this->getPdfFattura($request, $fattura_id);
       
-      //return view('fatture.fattura_pdf', compact('fattura'));
-      
-      $pdf = PDF::loadView('fatture.fattura_pdf', compact('fattura'));
-              
-      return $pdf->stream();
       }
+
+
+
 
 
 }
