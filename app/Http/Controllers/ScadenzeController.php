@@ -11,10 +11,14 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\AvvisoPagamento;
+use App\MyTrait\MyTrait;
 
 
 class ScadenzeController extends Controller
 {
+
+		use MyTrait;
+
     public function index(Request $request)
      	{
 
@@ -241,33 +245,43 @@ class ScadenzeController extends Controller
 
 			public function sendMailAvvisoPagamentoAjax(Request $request)
 				{
-				$scadenza_id = $request->get('scadenza_id');
 				
-				$fattura = ScadenzaFattura::find($scadenza_id)->fattura;
-				if(!is_null($fattura))
+				try 
 					{
-					$cliente = optional($fattura->societa)->cliente;
+						$scadenza_id = $request->get('scadenza_id');
 
-					if(!is_null($cliente))
-						{
-						$cliente->email_amministrativa != '' ? $mail_to = $cliente->email_amministrativa : $mail_to = $cliente->email;
-
-						// salva il pdf in storage_path('app/public/fatture') e restituisce il nome_file.pdf
-		    		$file_pdf =  $this->getPdfFattura($request, $fattura_id, $salva=1);
+						$scadenza = ScadenzaFattura::with(['fattura.societa',
+																								'fattura.pagamento'
+																							])->find($scadenza_id); 
 						
-		    		$tipo_mail = "scaduto"; // check gg_rimasti
+						$fattura = optional($scadenza)->fattura;
+						
+						if(!is_null($fattura))
+							{
 
-		    		Mail::to($mail_to)->send(new AvvisoPagamento($tipo_mail, $file_pdf));
+							$cliente = optional($fattura->societa)->cliente;
+							$tipo_pagamento = optional($fattura->pagamento)->nome;
+							if(!is_null($cliente))
+								{
+								$cliente->email_amministrativa != '' ? $mail_to = $cliente->email_amministrativa : $mail_to = $cliente->email;
 
-		    		echo 'ok';
-						}
+								// salva il pdf in storage_path('app/public/fatture') e restituisce il nome_file.pdf
+				    		$file_pdf =  $this->getPdfFattura($request, $fattura->id, $salva=1);
+								
+				    		$scadenza->giorni_rimasti <= 0 ? $tipo_mail = "scaduto" : $tipo_mail = "in scadenza"; // check gg_rimasti
 
-					
+				    		Mail::to($mail_to)->send(new AvvisoPagamento($tipo_mail, $tipo_pagamento, $file_pdf));
 
+				    		echo 'Messaggio inviato correttamente';
+								}
 
+							}
+					} 
+				catch (\Exception $e) 
+					{
+					echo $e->getMessage();
 					}
-
-
+				
 
 				}
 

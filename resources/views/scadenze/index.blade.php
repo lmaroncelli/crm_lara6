@@ -185,16 +185,16 @@
 @section('js')
     <script type="text/javascript" charset="utf-8">
 
-        jQuery(document).ready(function(){
+        $(document).ready(function(){
             
 
-          jQuery("tr.dettaglio_fattura").click(function(){
-            jQuery(this).next().toggleClass('riga_fattura');
+          $("tr.dettaglio_fattura").click(function(){
+            $(this).next().toggleClass('riga_fattura');
             $(this).find("i").toggleClass('fa-angle-right fa-angle-down');
           })
 
-          jQuery("tr.avvisi_scadenze").click(function(){
-            jQuery(this).next().toggleClass('riga_scadenze');
+          $("tr.avvisi_scadenze").click(function(){
+            $(this).next().toggleClass('riga_scadenze');
           })
 
           $(".searching").click(function(){
@@ -208,30 +208,31 @@
                 $("#searchForm").submit();
             });*/
 
-          jQuery(".send_mail_notification").click(function(e){
+          $(".send_mail_notification").click(function(e){
+              
               e.preventDefault();
-
-              alert('aoooooo');
-
-              let scadenza_id = jQuery(this).data("id");
-              
               $(".spinner_lu").show();
-              
+
+
+              let scadenza_id = $(this).data("id");
+                            
               data = {
                 scadenza_id:scadenza_id
                   };
               
               $.ajax({
                   url: "{{ route('send-mail-avviso-pagamento-ajax') }}",
+                  type: 'POST',
                   data: data,
                   success: function(msg) {
-                      alert('inviato');
+                      alert(msg);
+                      $(".spinner_lu").hide();
+                  },
+                  error: function() {
+                    $(".spinner_lu").hide();
                   }
-
-                  $(".spinner_lu").hide();
               });
-              
-                  
+
           });
   
         });
