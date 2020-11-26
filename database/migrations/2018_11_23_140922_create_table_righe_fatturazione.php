@@ -33,6 +33,11 @@ class CreateTableRigheFatturazione extends Migration
              '--class' => 'RigheFatturazioneTableSeeder',
              '--force' => true
          ]);
+
+        Artisan::call( 'db:seed', [
+             '--class' => 'AdjustRigheFatturazioneSconto',
+             '--force' => true
+         ]);
     }
 
     /**
