@@ -409,6 +409,16 @@ table.wrapper tr.main {
 }
 
 
+
+a.send_mail_notification {
+  color:#333;
+  padding: .25rem 0 !important;
+  font-size: 22px;
+}
+
+
+
+
 /*  da 768 in avanti */
 @media (min-width: 768px) {
 

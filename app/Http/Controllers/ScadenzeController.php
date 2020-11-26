@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Utility;
 use App\Pagamento;
+use App\AvvisiFattura;
 use Carbon\Carbon;
 use App\ScadenzaFattura;
 use Illuminate\Support\Str;
@@ -271,6 +272,14 @@ class ScadenzeController extends Controller
 				    		$scadenza->giorni_rimasti <= 0 ? $tipo_mail = "scaduto" : $tipo_mail = "in scadenza"; // check gg_rimasti
 
 				    		Mail::to($mail_to)->send(new AvvisoPagamento($tipo_mail, $tipo_pagamento, $file_pdf));
+
+				    		AvvisiFattura::create([
+				    			'tipo_pagamento' => $tipo_mail,
+				    			'email' => $mail_to,
+				    			'giorni' => $scadenza->giorni_rimasti,
+				    			'data' => Carbon::now()->format('Y-m-d H:m:s'),
+				    			'fattura_id' =>  $fattura->id
+				    		]);
 
 				    		echo 'Messaggio inviato correttamente';
 								}

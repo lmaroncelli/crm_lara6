@@ -9,6 +9,8 @@ class AvvisiFattura extends Model
 {
     protected $table = 'tblAvvisiFatture';
 
+     protected $guarded = ['id'];
+
     protected $dates = [
         'data'
    		];
