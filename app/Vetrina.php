@@ -9,10 +9,10 @@ class Vetrina extends Model
 {
     protected $table = 'tblVetrine';
 
-   protected $guarded = ['id'];
+   protected $fillable = ['nome','descrizione','tipo'];
 
 
-   public function slot()
+   public function slots()
   	{
       return $this->hasMany(SlotVetrina::class, 'vetrina_id', 'id');
   	}

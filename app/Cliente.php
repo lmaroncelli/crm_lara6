@@ -7,6 +7,7 @@ use App\Contatto;
 use App\Localita;
 use App\Servizio;
 use App\Contratto;
+use App\SlotVetrina;
 use App\ServizioFoto;
 use App\GruppoCliente;
 use App\CategoriaCliente;
@@ -123,6 +124,11 @@ class Cliente extends Model
     public function servizi_foto()
     {
         return $this->hasMany(ServizioFoto::class, 'cliente_id', 'id');
+    }
+
+    public function slotVetrina()
+    {
+        return $this->hasOne(SlotVetrina::class, 'cliente_id', 'id');
     }
 
 

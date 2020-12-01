@@ -63,7 +63,7 @@
           <i class="nav-icon icon-social-dropbox"></i>Utility
         </a>
           <ul class="nav-dropdown-items">
-            <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-screen-tablet"></i>Vetrine(TD)</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('vetrine.index') }}"><i class="nav-icon icon-screen-tablet"></i>Vetrine</a></li>
             <li class="nav-item"><a class="nav-link" href=" {{ url('memorex') }} "><i class="nav-icon icon-book-open"></i>Memorex</a></li>
 
             @if (Auth::user()->hasType('A'))

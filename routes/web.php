@@ -277,6 +277,20 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('localita', 'LocalitaController');
 
+
+    /////////////
+    // VETRINE //
+    /////////////
+
+
+    Route::resource('vetrine', 'VetrineController');
+    Route::get('vetrina/slots/{vetrina_id}', 'VetrineController@slot_index')->name('slot.index');
+    Route::get('vetrina/slot/create/{vetrina_id}', 'VetrineController@slot_create')->name('slot.create');
+    Route::post('vetrina/slot/destroy/{slot_id}', 'VetrineController@slot_destroy')->name('slot.destroy');
+
+
+
+
         
 });
 
