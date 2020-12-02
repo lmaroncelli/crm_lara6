@@ -286,6 +286,9 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('vetrine', 'VetrineController');
     Route::get('vetrina/slots/{vetrina_id}', 'VetrineController@slot_index')->name('slot.index');
     Route::get('vetrina/slot/create/{vetrina_id}', 'VetrineController@slot_create')->name('slot.create');
+    Route::post('vetrina/slot/store/{vetrina_id}', 'VetrineController@slot_store')->name('slot.store');
+    Route::post('vetrina/slot/update/{slot_id}', 'VetrineController@slot_update')->name('slot.update');
+    Route::get('vetrina/slot/edit/{slot_id}', 'VetrineController@slot_edit')->name('slot.edit');
     Route::post('vetrina/slot/destroy/{slot_id}', 'VetrineController@slot_destroy')->name('slot.destroy');
 
 

@@ -138,6 +138,11 @@ class Cliente extends Model
          return $query->where('attivo',1);
      }
 
+    public function scopeAttivoIA($query)
+     {
+         return $query->where('attivo_IA',1);
+     }
+
 
     
     public function scopeOfMacro($query,$macro_id = 0)

@@ -77,7 +77,7 @@
                                 <th scope="row"><a href="{{ route('vetrine.edit',$v->id) }}" title="Modifica vetrina">
                                   {{$v->nome}}</a></th>
                                 <td>{{$v->tipo}}</td>
-                                <td><a href="{{ route('slot.index', $v->id) }}"></a>{{$v->slots_count}}</td>
+                                <td><a class="badge badge-success" href="{{ route('slot.index', $v->id) }}">{{$v->slots_count}}</a></td>
                                 <td>
                                   <a data-id="{{$v->id}}" href="#" class="delete btn btn-danger"><i class="fas fa-trash-alt"></i></a>
                                 </td>

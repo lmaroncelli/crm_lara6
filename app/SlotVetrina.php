@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Cliente;
+use App\Utility;
 use App\Vetrina;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,6 +12,11 @@ class SlotVetrina extends Model
    protected $table = 'tblSlotVetrine';
 
    protected $guarded = ['id'];
+
+   protected $dates = [
+     'data_disattivazione'
+];
+
 
 
 
@@ -23,6 +29,12 @@ class SlotVetrina extends Model
   public function cliente()
     {
         return $this->belongsTo(Cliente::class, 'cliente_id', 'id');
+    }
+
+
+    public function setDataDisattivazioneAttribute($value)
+    {
+        $this->attributes['data_disattivazione'] = Utility::getCarbonDate($value);
     }
 
      

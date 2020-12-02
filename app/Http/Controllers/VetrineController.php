@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Cliente;
+use App\SlotVetrina;
 use App\Vetrina;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -40,7 +42,32 @@ class VetrineController extends Controller
         
 
         return  Validator::make( $data ,$validation_rules,$custom_messages );
-        } 
+				} 
+				
+				protected function validatorSlot(array $data, $slot_id = null)
+				{
+					$validation_rules = [
+						'data_disattivazione' => 'required|date_format:"d/m/Y"',
+					];
+
+					if (is_null($slot_id)) 
+						{
+							$validation_rules['cliente_id'] = 'required|unique:tblSlotVetrine,cliente_id,'.$data['cliente_id'];
+						} 
+					else 
+						{
+						$validation_rules['cliente_id'] = 'required';
+						}
+					
+					
+	
+					$custom_messages['data_disattivazione.required'] = 'Inserire la data di disattivazione';
+					$custom_messages['data_disattivazione.date_format'] = 'La data di disattivazione non è nel formato corretto';
+					$custom_messages['cliente_id.unique'] = 'Il cliente ha già una vetrina';
+					
+	
+					return  Validator::make( $data ,$validation_rules,$custom_messages );
+					} 
             
 
     /**
@@ -57,7 +84,7 @@ class VetrineController extends Controller
 		
 		public function slot_index($vetrina_id = 0)
     {
-			$vetrina = Vetrina::find($vetrina_id);
+			$vetrina = Vetrina::with(['slots.cliente'])->find($vetrina_id);
 			$slots = $vetrina->slots()->paginate($this->num_items);
 
 			return view('vetrine.slots_index', compact('slots','vetrina'));
@@ -75,7 +102,24 @@ class VetrineController extends Controller
 
         return view('vetrine.form', compact('vetrina'));
 
-    }
+		}
+		
+
+		public function slot_create($vetrina_id = 0)
+			{
+			$slot = new SlotVetrina;
+			$vetrina = Vetrina::find($vetrina_id);
+			$clienti = Cliente::attivo()->attivoIA()->orderBy('id_info')->get();
+
+			$clienti_select = [];
+			foreach ($clienti as $cliente) 
+				{
+					$clienti_select[$cliente->id] = $cliente->id_info . ' - ' . $cliente->nome;
+				}
+
+			return view('vetrine.slot_form', compact('slot','vetrina','clienti_select'));
+
+			}
 
     /**
      * Store a newly created resource in storage.
@@ -90,7 +134,25 @@ class VetrineController extends Controller
         Vetrina::create($request->all());
 
         return redirect()->route('vetrine.index')->with('status', 'Vetrina inserita correttamente!');
-    }
+		}
+		
+		public function slot_store(Request $request, $vetrina_id)
+			{
+				$this->validatorSlot($request->all())->validate();
+
+				$slot = new SlotVetrina(
+						[
+						'cliente_id' => $request->get('cliente_id'), 
+						'data_disattivazione' => $request->get('data_disattivazione')
+						]);
+
+				$vetrina = Vetrina::find($vetrina_id);
+
+				$vetrina->slots()->save($slot);
+
+        return redirect()->route('slot.index',$vetrina_id)->with('status', 'Slot inserito correttamente!');
+
+			}
 
     /**
      * Display the specified resource.
@@ -112,7 +174,26 @@ class VetrineController extends Controller
     public function edit($id)
     {
         //
-    }
+		}
+		
+		public function slot_edit($slot_id = 0)
+			{
+			
+			$slot = SlotVetrina::find($slot_id);
+
+			$vetrina = $slot->vetrina;
+			
+			$clienti = Cliente::attivo()->attivoIA()->orderBy('id_info')->get();
+
+			$clienti_select = [];
+			foreach ($clienti as $cliente) 
+				{
+					$clienti_select[$cliente->id] = $cliente->id_info . ' - ' . $cliente->nome;
+				}
+
+			return view('vetrine.slot_form', compact('slot','vetrina','clienti_select'));
+
+			}
 
     /**
      * Update the specified resource in storage.
@@ -124,7 +205,21 @@ class VetrineController extends Controller
     public function update(Request $request, $id)
     {
         //
-    }
+		}
+		
+		public function slot_update(Request $request, $slot_id)
+			{
+				$this->validatorSlot($request->all(), $slot_id)->validate();
+
+				$slot = SlotVetrina::find($slot_id);
+				$slot->cliente_id =  $request->get('cliente_id'); 
+				$slot->data_disattivazione = $request->get('data_disattivazione');
+				
+				$slot->save();
+				
+        return redirect()->route('slot.index',$slot->vetrina_id)->with('status', 'Slot modificato correttamente!');
+
+			}
 
     /**
      * Remove the specified resource from storage.

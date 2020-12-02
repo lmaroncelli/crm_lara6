@@ -5,7 +5,7 @@
 <div class="row">
   <div class="col-sm-2">
     <div class="callout callout-info b-t-1 b-r-1 b-b-1">
-       Elenco slots vetrina {{vetrina->nome}}
+       Elenco slots {{$vetrina->nome}}
       @if (isset($slots))
       <br>
       <strong class="h4">{{$slots->total()}}</strong>
@@ -23,8 +23,8 @@
   @endif
     <div class="to-right">
       <div class="callout callout-noborder">
-        <a href="{{ route('vetrine.create') }}" title="Nuova vetrina" class="btn btn-primary">
-          Nuova vetrina
+        <a href="{{ route('slot.create', $vetrina->id) }}" title="Nuovo slot" class="btn btn-primary">
+          Nuovo slot
         </a>
       </div>
     </div><!--/.col-->
@@ -45,9 +45,9 @@
                       <thead>
                           <tr>
                               
-                              <th class="order" data-orderby="nome" @if (\Request::get('orderby') == 'nome' && \Request::get('order') == 'asc') data-order='desc' @else data-order='asc' @endif>
-                                  Nome 
-                                  @if (\Request::get('orderby') == 'nome') 
+                              <th class="order" data-orderby="nome_cliente" @if (\Request::get('orderby') == 'nome_cliente' && \Request::get('order') == 'asc') data-order='desc' @else data-order='asc' @endif>
+                                  Cliente 
+                                  @if (\Request::get('orderby') == 'nome_cliente') 
                                       @if (\Request::get('order') == 'asc')
                                           <i class="fa fa-sort-alpha-down"></i>
                                       @else 
@@ -56,9 +56,9 @@
                                   @endif
                               </th>
                               
-                              <th class="order" data-orderby="tipo" @if (\Request::get('orderby') == 'tipo' && \Request::get('order') == 'asc') data-order='desc' @else data-order='asc' @endif>
-                                  Tipo 
-                                  @if (\Request::get('orderby') == 'tipo') 
+                              <th class="order" data-orderby="data_disattivazione" @if (\Request::get('orderby') == 'data_disattivazione' && \Request::get('order') == 'asc') data-order='desc' @else data-order='asc' @endif>
+                                  Scadenza 
+                                  @if (\Request::get('orderby') == 'data_disattivazione') 
                                       @if (\Request::get('order') == 'asc')
                                           <i class="fa fa-sort-alpha-down"></i>
                                       @else 
@@ -66,31 +66,29 @@
                                       @endif
                                   @endif
                               </th>
-                              <th>Slots</th>
                               <th></th>
                           </tr>
                       </thead>
                       <tbody>
-                          @foreach ($vetrine as $v)                          
+                          @foreach ($slots as $s)                          
                               <tr>
-                                <th scope="row"><a href="{{ route('vetrine.edit',$v->id) }}" title="Modifica vetrina">
-                                  {{$v->nome}}</a></th>
-                                <td>{{$v->tipo}}</td>
-                                <td><a href="{{ route('slot.index', $v->id) }}"></a>{{$v->slots_count}}</td>
+                                <th scope="row"><a href="{{ route('slot.edit',$s->id) }}" title="Modifica vetrina">
+                                  {{optional($s->cliente)->nome}}</a></th>
+                                <td>{{$s->data_disattivazione->format('d/m/Y')}}</td>
                                 <td>
-                                  <a data-id="{{$v->id}}" href="#" class="delete btn btn-danger"><i class="fas fa-trash-alt"></i></a>
+                                  <a data-id="{{$s->id}}" href="#" class="delete btn btn-danger"><i class="fas fa-trash-alt"></i></a>
                                 </td>
                               </tr>
                           @endforeach
                       </tbody>
                   </table>
                   
-                  {{ $vetrine->links() }}
+                  {{ $slots->links() }}
               
               </div>
             @else
               <div>
-                Nessuna vetrina
+                Nessuno slot
               </div>
             @endif
             
