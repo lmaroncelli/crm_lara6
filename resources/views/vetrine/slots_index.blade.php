@@ -5,7 +5,7 @@
 <div class="row">
   <div class="col-sm-2">
     <div class="callout callout-info b-t-1 b-r-1 b-b-1">
-       Elenco slots {{$vetrina->nome}}
+       Elenco slots <a href="{{ route('vetrine.index') }}">{{$vetrina->nome}}</a>
       @if (isset($slots))
       <br>
       <strong class="h4">{{$slots->total()}}</strong>

@@ -27,7 +27,7 @@
         <label class="col-md-2 text-change" for="data_disattivazione">Scadenza:</label>
         <div class="col-xl-2">
           <div class="input-group date">
-              <input type="text" name="data_disattivazione" class="form-control" readonly value="{{ old('data_disattivazione') != '' ?  old('data_disattivazione') :  $slot->exists ? $slot->data_disattivazione->format('d/m/Y') : ''}}" id="data_disattivazione" />
+              <input type="text" name="data_disattivazione" class="form-control" readonly value="{{ ( old('data_disattivazione') != '' ?  old('data_disattivazione') :  ( $slot->exists ? $slot->data_disattivazione->format('d/m/Y') : '') ) }}" id="data_disattivazione" />
               <div class="input-group-append">
                   <span class="input-group-text">
                       <i class="fa fa-calendar"></i>

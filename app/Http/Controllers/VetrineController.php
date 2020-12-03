@@ -172,9 +172,12 @@ class VetrineController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
-        //
-		}
+    	{
+			$vetrina = Vetrina::find($id);
+
+      return view('vetrine.form', compact('vetrina'));
+
+			}
 		
 		public function slot_edit($slot_id = 0)
 			{
@@ -204,7 +207,13 @@ class VetrineController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+			$this->validator($request->all())->validate();
+			
+			$vetrina = Vetrina::find($id);
+
+			$vetrina->update($request->all());
+
+			return redirect()->route('vetrine.index')->with('status', 'Vetrina modificata correttamente!');
 		}
 		
 		public function slot_update(Request $request, $slot_id)
@@ -229,6 +238,18 @@ class VetrineController extends Controller
      */
     public function destroy($id)
     {
-        //
-    }
+			$vetrina = Vetrina::find($id);
+			$vetrina->destroyMe();
+
+			return redirect()->route('vetrine.index')->with('status', 'Vetrina eliminata correttamente!');
+		}
+		
+		public function slot_destroy($slot_id)
+			{
+			$slot = SlotVetrina::find($slot_id);
+			$vetrina_id = $slot->vetrina_id;
+			$slot->delete();
+
+			return redirect()->route('slot.index',$vetrina_id)->with('status', 'Slot eliminato correttamente!');
+			}
 }

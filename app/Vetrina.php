@@ -15,5 +15,16 @@ class Vetrina extends Model
    public function slots()
   	{
       return $this->hasMany(SlotVetrina::class, 'vetrina_id', 'id');
-  	}
+      }
+      
+    
+    public function destroyMe()
+      {
+      foreach ($this->slots as $row) 
+        {
+        $row->delete();
+        }
+        
+      self::delete();
+      }
 }
