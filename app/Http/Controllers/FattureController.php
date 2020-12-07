@@ -659,6 +659,471 @@ class FattureController extends Controller
       }
 
 
+      public function getXmlPA($fattura_id)
+        {
+        $fattura = Fattura::with(
+            [
+              'righe',
+              'scadenze',
+              'servizi',
+              'pagamento',
+              'societa.ragioneSociale.localita.comune.provincia',
+              'societa.cliente',
+            ]
+          )
+          ->find($fattura_id);
+          
+          //dd($fattura);
+
+          // CREATE XRM AS STRING
+
+          $xmlString = '';
+
+          $formatoTrasmissione = null;
+          $codiceDestinatario = null;
+          $PECDestinatario = null;
+
+          $tipoDocumento = null;
+          $cf = null;
+          $sigla_provincia = '';
+
+
+
+
+
+          $trova_iva_22 = false;
+          $trova_iva_null_N1 = false;
+          $trova_iva_null_N1_bis = false;
+          $trova_iva_null_N2 = false;
+          $trova_iva_null_N2_bis = false;
+          $trova_iva_null_N3 = false;
+          $imponibileImporto = 0;
+          $imponibileImporto_iva_nulla_N1 = 0;
+          $imponibileImporto_iva_nulla_N2 = 0;
+          $imponibileImporto_iva_nulla_N3 = 0;
+          $imponibileImporto_iva_nulla_N2_bis = 0;
+          $imponibileImporto_iva_nulla_N1_bis = 0;
+
+
+
+          $codice_sdi_fattura = $fattura->societa->ragioneSociale->codice_sdi;
+
+          $sigla_provincia = $fattura->societa->ragioneSociale->localita->comune->provincia->sigla;
+
+          // Attualmente la fattura verso il pubblico viene fatta solo a Gupi (Polizia Regionale) //
+          $codice_sdi_fattura == 'UFFHH9' ? $formatoTrasmissione = 'FPA12' : $formatoTrasmissione = 'FPR12';
+          
+
+          $codice_sdi_fattura == '' ? $codiceDestinatario = '0000000' : $codiceDestinatario  = $codice_sdi_fattura;
+          
+
+          // Indirizzo PEC al quale inviare il documento. Da valorizzare SOLO nei casi in cui l'elemento informativo 1.1.4 <CodiceDestinatario> vale '0000000'
+          $codiceDestinatario == '0000000' ? $PECDestinatario = $fattura->societa->ragioneSociale->pec : $PECDestinatario = '';
+
+          
+          if($fattura->pagamento->cod_PA == '')
+            {
+            $fattura->cod_PA = 'MP01';
+            }
+        
+          $fattura->numero_fattura = str_replace("/","", $fattura->numero_fattura);
+
+          if($fattura->tipo_fattura == 'F')
+            {
+            $tipoDocumento = 'TD01';
+            }
+          
+          if($fattura->tipo_fattura == 'NC')
+            {
+            $tipoDocumento = 'TD04';
+            }
+          
+          $fattura->societa->ragioneSociale->cf == '' ? $cf = $fattura->societa->ragioneSociale->piva : $cf = $fattura->societa->ragioneSociale->cf;
+
+
+          $xmlString .= 
+          '<p:FatturaElettronica xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" versione="FPR12" xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2 http://www.fatturapa.gov.it/export/fatturazione/sdi/fatturapa/v1.2/Schema_del_file_xml_FatturaPA_versione_1.2.xsd">
+            <FatturaElettronicaHeader>
+                <DatiTrasmissione>
+                    <IdTrasmittente>
+                        <IdPaese>IT</IdPaese>
+                        <IdCodice>03479440400</IdCodice>
+                    </IdTrasmittente>
+                    <ProgressivoInvio>'.$fattura->numero_fattura.'</ProgressivoInvio>
+                    <FormatoTrasmissione>'.$formatoTrasmissione.'</FormatoTrasmissione>
+                    <CodiceDestinatario>'.$codiceDestinatario.'</CodiceDestinatario>';
+
+          if($PECDestinatario != '')
+            {
+            $xmlString .=
+            '<PECDestinatario>'.$PECDestinatario.'</PECDestinatario>';
+            }
+          
+          $xmlString .= 
+            '</DatiTrasmissione>
+            <CedentePrestatore>
+                <DatiAnagrafici>
+                    <IdFiscaleIVA>
+                    <IdPaese>IT</IdPaese>
+                    <IdCodice>03479440400</IdCodice>
+                    </IdFiscaleIVA>
+                    <Anagrafica>
+                    <Denominazione>Info Alberghi S.r.l.</Denominazione>
+                    </Anagrafica>
+                    <RegimeFiscale>RF01</RegimeFiscale>
+                </DatiAnagrafici>
+                <Sede>
+                    <Indirizzo>Via Gambalunga, 81/A</Indirizzo>
+                    <CAP>47921</CAP>
+                    <Comune>Rimini</Comune>
+                    <Provincia>RN</Provincia>
+                    <Nazione>IT</Nazione>
+                </Sede>
+            </CedentePrestatore>';
+
+
+
+
+            if ($sigla_provincia == 'SM') 
+              {
+              $idpaese = 'SM';
+              $codice_fiscale = 'hidden';
+              } 
+            else 
+              {
+              $idpaese = 'IT';
+              $codice_fiscale = '';
+              }
+
+            $xmlString .= 
+              '<CessionarioCommittente>
+                  <DatiAnagrafici>
+                      <IdFiscaleIVA>
+                          <IdPaese>'.$idpaese.'</IdPaese>
+                          <IdCodice>'.$fattura->societa->ragioneSociale->piva.'</IdCodice>
+                      </IdFiscaleIVA>';
+
+            if($codice_fiscale != 'hidden')
+              {
+              $xmlString .= '<CodiceFiscale>'.$cf.'</CodiceFiscale>';
+              }
+            
+            $xmlString .= 
+                    '<Anagrafica>
+                        <Denominazione>'.Utility::onlyAlpha(htmlspecialchars($fattura->societa->ragioneSociale->nome)).'</Denominazione>
+                    </Anagrafica>
+                </DatiAnagrafici>
+                <Sede>
+                    <Indirizzo>'.$fattura->societa->ragioneSociale->indirizzo.'</Indirizzo>
+                    <CAP>'.$fattura->societa->ragioneSociale->cap.'</CAP>
+                    <Comune>'.$fattura->societa->ragioneSociale->localita->comune->nome.'</Comune>
+                    <Provincia>'.$sigla_provincia.'</Provincia>
+                    <Nazione>'.$idpaese.'</Nazione>
+                </Sede>
+              </CessionarioCommittente>
+            </FatturaElettronicaHeader>';
+
+            
+            $xmlString .= 
+            '<FatturaElettronicaBody>
+              <DatiGenerali>
+                <DatiGeneraliDocumento>
+                <TipoDocumento>'.$tipoDocumento.'</TipoDocumento>
+                <Divisa>EUR</Divisa>
+                <Data>'.$fattura->data.'</Data>
+                <Numero>'.$fattura->numero_fattura.'</Numero>
+                <ImportoTotaleDocumento>'.sprintf('%.2f',$fattura->totale).'</ImportoTotaleDocumento>
+                <Causale>'.Utility::onlyAlpha(substr(htmlspecialchars(str_replace(["€","/"], ["euro","-"],$fattura->note)), 0, 180)).'</Causale>';
+
+                if (strlen(Utility::onlyAlpha(substr(htmlspecialchars(str_replace(["€","/"], ["euro","-"],$fattura->note)), 180)))) 
+                  {
+                  $xmlString .= '<Causale>'.Utility::onlyAlpha(substr(htmlspecialchars(str_replace(["€","/"], ["euro","-"],$fattura->note)), 180)).'</Causale>';
+                  }
+              
+            $xmlString .= 
+                  '</DatiGeneraliDocumento>
+              </DatiGenerali>';
+
+            $xmlString .= 
+              '<DatiBeniServizi>';
+
+            
+            foreach ($fattura->righe as $key => $riga_fatturazione) 
+              {
+                $nl = $key+1;
+
+                $xmlString .= '<DettaglioLinee>';
+                $xmlString .= '<NumeroLinea>'. $nl.'</NumeroLinea>';
+                $xmlString .= 
+                '<Descrizione>'. Utility::onlyAlpha(htmlspecialchars(str_replace(["€","/"], ["euro","-"],$riga_fatturazione->servizio))) .'</Descrizione>
+                <Quantita>'. sprintf('%.2f',$riga_fatturazione->qta) .'</Quantita>
+                <PrezzoUnitario>'. sprintf('%.2f',$riga_fatturazione->prezzo) .'</PrezzoUnitario>';
+
+                if (!$riga_fatturazione->perc_sconto) 
+                  {
+                  $xmlString .= '<PrezzoTotale>'. sprintf('%.2f',$riga_fatturazione->totale_netto) .'</PrezzoTotale>';  
+                  }
+                else
+                  {
+                  $importo_sconto = $riga_fatturazione->totale_netto - $riga_fatturazione->totale_netto_scontato;
+                  $xmlString .= '<ScontoMaggiorazione><Tipo>SC</Tipo>';
+                  $xmlString .= '<Percentuale>'.$riga_fatturazione->perc_sconto.'</Percentuale>';
+                  $xmlString .= '<Importo>'.sprintf('%.2f',$importo_sconto).'</Importo>';
+                  $xmlString .= '</ScontoMaggiorazione>';  
+                  $xmlString .= '<PrezzoTotale>'. sprintf('%.2f',$riga_fatturazione->totale_netto_scontato) .'</PrezzoTotale>';  
+                  }
+
+                $xmlString .= '<AliquotaIVA>'. sprintf('%.2f',$riga_fatturazione->al_iva) .'</AliquotaIVA>';
+
+                
+
+                if ($riga_fatturazione->al_iva == 0 && (strpos($riga_fatturazione->servizio, 'art.15 DPR 633/72') !== false || strpos($riga_fatturazione->servizio, 'art. 15 DPR 633/72') !== false)) 
+                  {
+                  $xmlString .= '<Natura>N1</Natura>';
+
+                  if (!$riga_fatturazione->perc_sconto) 
+                    {
+                    $imponibileImporto_iva_nulla_N1 += $riga_fatturazione->totale_netto;
+                    }
+                  else
+                    {
+                    $imponibileImporto_iva_nulla_N1 += $riga_fatturazione->totale_netto_scontato;
+                    }
+                  
+                  if(!$trova_iva_null_N1)
+                    {
+                    $trova_iva_null_N1 = true;
+                    }
+                  }               
+                elseif($riga_fatturazione->al_iva == 0 && ( strpos($riga_fatturazione->servizio, 'art.2 DPR 633/72') !== false || strpos($riga_fatturazione->servizio, 'art. 2 DPR 633/72') !== false)) 
+                  {
+                  
+                  $xmlString .= '<Natura>N2</Natura>';
+
+                  if (!$riga_fatturazione->perc_sconto) 
+                    {
+                    $imponibileImporto_iva_nulla_N2 += $riga_fatturazione->totale_netto;
+                    }
+                  else
+                    {
+                    $imponibileImporto_iva_nulla_N2 += $riga_fatturazione->totale_netto_scontato;
+                    
+                    }
+
+                  if(!$trova_iva_null_N2)
+                    {
+                    $trova_iva_null_N2 = true;
+                    }
+
+                  } 
+                elseif($riga_fatturazione->al_iva == 0 && ( strpos($riga_fatturazione->servizio, 'ex Art. 7 comma 4 DPR 633/72') !== false || strpos($riga_fatturazione->servizio, 'ex Art.7 comma 4 DPR 633/72') !== false ||  strpos($fattura->note, 'ex Art.7 comma 4 DPR 633/72') !== false ||  strpos($fattura->note, 'ex Art. 7 comma 4 DPR 633/72') !== false))
+                  {
+                  
+                  $xmlString .= '<Natura>N3</Natura>';
+
+                  if (!$riga_fatturazione->perc_sconto) 
+                    {
+                    $imponibileImporto_iva_nulla_N3 += $riga_fatturazione->totale_netto;
+                    }
+                  else
+                    {
+                    $imponibileImporto_iva_nulla_N3 += $riga_fatturazione->totale_netto_scontato;                 
+                    }
+
+                  if(!$trova_iva_null_N3)
+                    {
+                    $trova_iva_null_N3 = true;
+                    }
+                  
+                  }
+                elseif($riga_fatturazione->al_iva == 0 && (strpos($riga_fatturazione->servizio, 'FUORI CAMPO IVA ART.13') !== false))
+                  {
+                    $xmlString .= '<Natura>N2</Natura>';
+
+                    if (!$riga_fatturazione->perc_sconto) 
+                      {
+                      $imponibileImporto_iva_nulla_N2_bis += $riga_fatturazione->totale_netto;
+                      }
+                    else
+                      {
+                      $imponibileImporto_iva_nulla_N2_bis += $riga_fatturazione->totale_netto_scontato;
+                      
+                      }
+    
+                    if(!$trova_iva_null_N2_bis)
+                      {
+                      $trova_iva_null_N2_bis = true;
+                      }
+                  }
+                elseif($riga_fatturazione->al_iva == 0 && (strpos($riga_fatturazione->servizio, 'Escl.art.15') !== false) )
+                  {
+
+                    $xmlString .= '<Natura>N1</Natura>';
+
+                    if (!$riga_fatturazione->perc_sconto) 
+                      {
+                      $imponibileImporto_iva_nulla_N1_bis += $riga_fatturazione->totale_netto;
+                      }
+                    else
+                      {
+                      $imponibileImporto_iva_nulla_N1_bis += $riga_fatturazione->totale_netto_scontato;
+                      }
+                    
+                    if(!$trova_iva_null_N1_bis)
+                      {
+                      $trova_iva_null_N1_bis = true;
+                      }
+
+                  }
+                else 
+                  {
+                  
+                  if (!$riga_fatturazione->perc_sconto) 
+                  {
+                  $imponibileImporto += $riga_fatturazione->totale_netto;
+                  }
+                else
+                  {
+                  $imponibileImporto += $riga_fatturazione->totale_netto_scontato;
+                  }
+                  
+                if (!$trova_iva_22) 
+                  {
+                  $trova_iva_22 = true;
+                  $iva = $riga_fatturazione->al_iva;
+                  }
+
+                  }
+                
+                $xmlString .= '</DettaglioLinee>';
+
+              } // endforeach
+            
+            if($trova_iva_22)
+              {
+              $imposta = $imponibileImporto*$iva/100;
+              $xmlString .= '
+              <DatiRiepilogo>
+                <AliquotaIVA>'. sprintf('%.2f',$iva) .'</AliquotaIVA>
+                <ImponibileImporto>'. sprintf('%.2f',$imponibileImporto) .'</ImponibileImporto>
+                <Imposta>'. sprintf('%.2f',$imposta) .'</Imposta>
+                <EsigibilitaIVA>I</EsigibilitaIVA>
+              </DatiRiepilogo>';
+              }
+            
+            if($trova_iva_null_N1)
+              {
+              $xmlString .= '
+              <DatiRiepilogo>
+                <AliquotaIVA>0.00</AliquotaIVA>
+                <Natura>N1</Natura>
+                <ImponibileImporto>'. sprintf('%.2f',$imponibileImporto_iva_nulla_N1) .'</ImponibileImporto>
+                <Imposta>0.00</Imposta>
+                <RiferimentoNormativo>Art.15 DPR 633/72</RiferimentoNormativo>
+              </DatiRiepilogo>';
+              }
+            
+            if($trova_iva_null_N1_bis)
+              {
+              $xmlString .= '
+              <DatiRiepilogo>
+                <AliquotaIVA>0.00</AliquotaIVA>
+                <Natura>N1</Natura>
+                <ImponibileImporto>'. sprintf('%.2f',$imponibileImporto_iva_nulla_N1_bis) .'</ImponibileImporto>
+                <Imposta>0.00</Imposta>
+                <RiferimentoNormativo>Escl.art.15</RiferimentoNormativo>
+              </DatiRiepilogo>';
+              }
+            
+            if($trova_iva_null_N2)
+              {
+              $xmlString .= '
+              <DatiRiepilogo>
+                <AliquotaIVA>0.00</AliquotaIVA>
+                <Natura>N2</Natura>
+                <ImponibileImporto>'. sprintf('%.2f',$imponibileImporto_iva_nulla_N2) .'</ImponibileImporto>
+                <Imposta>0.00</Imposta>
+                <RiferimentoNormativo>Fuori campo iva ex art. 2 DPR 633/72</RiferimentoNormativo>
+              </DatiRiepilogo>';
+              }
+            
+            if($trova_iva_null_N2_bis)
+              {
+              $xmlString .= '
+              <DatiRiepilogo>
+                <AliquotaIVA>0.00</AliquotaIVA>
+                <Natura>N2</Natura>
+                <ImponibileImporto>'. sprintf('%.2f',$imponibileImporto_iva_nulla_N2_bis) .'</ImponibileImporto>
+                <Imposta>0.00</Imposta>
+                <RiferimentoNormativo>FUORI CAMPO IVA ART.13</RiferimentoNormativo>
+              </DatiRiepilogo>';
+              }
+
+            if($trova_iva_null_N3)
+              {
+              $xmlString .= '
+              <DatiRiepilogo>
+                <AliquotaIVA>0.00</AliquotaIVA>
+                <Natura>N3</Natura>
+                <ImponibileImporto>'. sprintf('%.2f',$imponibileImporto_iva_nulla_N3) .'</ImponibileImporto>
+                <Imposta>0.00</Imposta>
+                <RiferimentoNormativo>Fattura esente ex Art. 7 comma 4 DPR 633/72</RiferimentoNormativo>
+              </DatiRiepilogo>';
+              }
+            
+            $xmlString .= '</DatiBeniServizi>';
+            
+             /*
+            Pagamento: molte righe scadenza == ripetere <DettaglioPagamento> ??
+            TP01 pagamento a rate
+            TP02 pagamento completo
+            */
+            
+            if ($fattura->righe()->count()) 
+              {
+              $condizioniPagamento = 'TP01';
+              } 
+            else 
+              {
+              $condizioniPagamento = 'TP02';
+              }
+            
+            $xmlString .= '
+            <DatiPagamento>
+              <CondizioniPagamento>'.$condizioniPagamento.'</CondizioniPagamento>';
+
+            // se è NC
+
+            if ($tipoDocumento == 'TD04') 
+              {
+                $totale = $imponibileImporto + $imposta + $imponibileImporto_iva_nulla_N1;
+                $xmlString .= '
+                  <DettaglioPagamento>
+                    <ModalitaPagamento>'.$fattura->pagamento->cod_PA.'</ModalitaPagamento>
+                    <DataScadenzaPagamento>'.$fattura->data.'</DataScadenzaPagamento>
+                    <ImportoPagamento>'.sprintf('%.2f',$totale).'</ImportoPagamento>
+                  </DettaglioPagamento>';
+              } 
+            else 
+              {
+                foreach ($fattura->scadenze as $riga_scadenza) 
+                  {
+                    $xmlString .= '
+                    <DettaglioPagamento>
+                      <ModalitaPagamento>'.$fattura->pagamento->cod_PA.'</ModalitaPagamento>
+                      <DataScadenzaPagamento>'.$riga_scadenza->data_scadenza.'</DataScadenzaPagamento>
+                      <ImportoPagamento>'.sprintf('%.2f',$riga_scadenza->importo).'</ImportoPagamento>
+                      <IstitutoFinanziario>Crédit Agricole Cariparma</IstitutoFinanziario>
+                      <IBAN>IT41H0623024221000046430439</IBAN>
+                      <ABI>06230</ABI>
+                      <CAB>24221</CAB>
+                    </DettaglioPagamento>';
+                  }
+              }
+
+          
+
+        } // end function getXmlPA
 
 
 

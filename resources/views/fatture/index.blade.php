@@ -114,6 +114,7 @@
 																@endif
 														</th>
 														<th></th>
+														<th></th>
 												</tr>
 										</thead>
 										<tbody>
@@ -126,13 +127,18 @@
 																<td>{!!optional(optional($fattura->societa)->ragioneSociale)->nome!!}</td>
 																<td>{{optional(optional($fattura->societa)->cliente)->nome}}</td>
 																<td>
-																<form action="{{ route('fatture.destroy', $fattura->id) }}" method="POST" accept-charset="utf-8" class="deleteForm" id="delete-riga-form">
-																		@csrf
-																		@method('DELETE')
-																		<a href="#" style="margin-bottom: 5px!important;" class="delete btn btn-danger m-btn m-btn--icon m-btn--icon-only"> 
-																				<i class="fas fa-trash-alt"></i>
-																		</a>
-																</form>
+																	<a href="{{ route('fatture.xml-pa', $fattura->id) }}" style="margin-bottom: 5px!important;" class="btn btn-info m-btn m-btn--icon m-btn--icon-only">
+																		<i class="fas fa-code"></i>
+																	</a>
+																</td>
+																<td>
+																	<form action="{{ route('fatture.destroy', $fattura->id) }}" method="POST" accept-charset="utf-8" class="deleteForm" id="delete-riga-form">
+																			@csrf
+																			@method('DELETE')
+																			<a href="#" style="margin-bottom: 5px!important;" class="delete btn btn-danger m-btn m-btn--icon m-btn--icon-only"> 
+																					<i class="fas fa-trash-alt"></i>
+																			</a>
+																	</form>
 																</td>
 														</tr>
 												@endforeach

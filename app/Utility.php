@@ -438,4 +438,12 @@ class Utility extends Model
 		}
 
 
+
+	public static function onlyAlpha($s)
+		{
+		$result = preg_replace("/[^a-zA-Z0-9\s-,]+/", "", $s);
+		return $result;
+		} 
+
+
 }

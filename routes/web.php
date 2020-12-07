@@ -111,6 +111,7 @@ Route::middleware(['auth'])->group(function () {
 
 
 
+    Route::get('fatture/xml/{fattura_id}', 'FattureController@getXmlPA')->name('fatture.xml-pa');
     
 
     Route::resource('fatture', 'FattureController')/*->middleware('log')*/;
