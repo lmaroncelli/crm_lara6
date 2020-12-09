@@ -673,7 +673,8 @@ class FattureController extends Controller
           )
           ->find($fattura_id);
           
-          //dd($fattura);
+
+
 
           // CREATE XRM AS STRING
 
@@ -1113,15 +1114,38 @@ class FattureController extends Controller
                       <ModalitaPagamento>'.$fattura->pagamento->cod_PA.'</ModalitaPagamento>
                       <DataScadenzaPagamento>'.$riga_scadenza->data_scadenza.'</DataScadenzaPagamento>
                       <ImportoPagamento>'.sprintf('%.2f',$riga_scadenza->importo).'</ImportoPagamento>
-                      <IstitutoFinanziario>Crédit Agricole Cariparma</IstitutoFinanziario>
-                      <IBAN>IT41H0623024221000046430439</IBAN>
-                      <ABI>06230</ABI>
-                      <CAB>24221</CAB>
+                      <IstitutoFinanziario>'.Utility::getBancaIa()['nome'].'</IstitutoFinanziario>
+                      <IBAN>'.Utility::getBancaIa()['iban'].'</IBAN>
+                      <ABI>'.Utility::getBancaIa()['abi'].'</ABI>
+                      <CAB>'.Utility::getBancaIa()['cab'].'</CAB>
                     </DettaglioPagamento>';
                   }
               }
 
+            $xmlString .= 
+                  '</DatiPagamento>
+                </FatturaElettronicaBody>
+          </p:FatturaElettronica>';
+
+
+
+
+          $replace = array("");
+
+          $find = array("&","'"," ");
+          $nome_hotel = str_replace($find,$replace,strtolower($fattura->societa->cliente->nome));
           
+          $find = array("/","\\");
+          $numero_fattura = str_replace($find,$replace,$fattura->numero_fattura);
+
+          $nomefile = $numero_fattura.'_'.$nome_hotel.'.xml';
+
+          header('Content-type: text/xml; charset=utf-8');
+          header('Content-Disposition: attachment; filename="'.$nomefile.'"');
+
+
+          echo $xmlString;
+
 
         } // end function getXmlPA
 

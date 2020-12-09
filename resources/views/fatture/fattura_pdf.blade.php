@@ -483,10 +483,10 @@
                           <td colspan="3"></td>
                       </tr>
                       <tr style="font-size:11px;">
-                          <td colspan="3">Crédit Agricole Cariparma<br> 
-                          C/C: 000046430439<br>intestato a: INFO ALBERGHI S.R.L.<br> 
-                          ABI: 06230 - CAB: 24221 - CIN: H<br> 
-                          IBAN: IT 41 H 06230 24221 000046430439<br></td>
+                          <td colspan="3">{{App\Utility::getBancaIa()['nome']}}<br> 
+                          C/C: {{App\Utility::getBancaIa()['cc']}}<br>intestato a: {{App\Utility::getBancaIa()['intestatario']}}<br> 
+                          ABI: {{App\Utility::getBancaIa()['abi']}} - CAB: {{App\Utility::getBancaIa()['cab']}} - CIN: {{App\Utility::getBancaIa()['cin']}}<br> 
+                          IBAN: {{App\Utility::getBancaIa()['iban']}}<br></td>
                       </tr>
               </table>
               @endif

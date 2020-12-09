@@ -79,6 +79,15 @@ class Utility extends Model
 																'TORRE PEDRERA' => 'TORRE PEDRERA'];
 											 
 
+	private static $banca_ia = [
+			'nome' => "Crédit Agricole Cariparma",
+			'cc' => "000046430439",
+			'abi' => '06230',
+			'cab' => '24221',
+			'cin' => 'H',
+			'iban' => "IT 41 H 06230 24221 000046430439",
+			'intestatario' => "INFO ALBERGHI SRL"
+	];
 
 	/**
 	 * Prende l'id del visitatore
@@ -430,6 +439,11 @@ class Utility extends Model
 		}
 		
 
+	public static function getBancaIa()
+		{
+		return self::$banca_ia;
+		}
+
 
 	public static function getUltimoGiornoMese($data = '')
 		{
@@ -441,7 +455,7 @@ class Utility extends Model
 
 	public static function onlyAlpha($s)
 		{
-		$result = preg_replace("/[^a-zA-Z0-9\s-,]+/", "", $s);
+		$result = preg_replace("/[^a-zA-Z0-9\s\-,]+/", "", $s);
 		return $result;
 		} 
 

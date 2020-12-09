@@ -3,9 +3,9 @@ Gentile Cliente,<br>
 La presente per rammentarLe che è scaduto il termine di pagamento relativo al documento che alleghiamo in copia.<br>
 <br>
 Le ricordo di effettuare questo pagamento con bonifico bancario intestato a:<br>
-INFO ALBERGHI SRL<br>
-Iban: IT41H 06230 24221 000046430439<br>
-(Banca Crédit Agricole Cariparma)<br>
+{{App\Utility::getBancaIa()['intestatario']}}<br>
+Iban: {{App\Utility::getBancaIa()['iban']}}<br>
+(Banca {{App\Utility::getBancaIa()['nome']}})<br>
 Con l'occasione inviamo cordiali saluti.<br>
 <br>
 <br>
