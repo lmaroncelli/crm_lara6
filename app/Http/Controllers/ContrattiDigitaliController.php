@@ -978,10 +978,7 @@ class ContrattiDigitaliController extends MyController
 
       private function _crea_pdf($id)
         {
-        // include(base_path('vendor/setasign/setapdf-core/library/SetaPDF/Autoload.php'));
-        // include(base_path('vendor/setasign/setapdf-core/library/SetaPDF/Core/Reader/File.php'));
-        // include(base_path('vendor/setasign/setapdf-core/library/SetaPDF/Core/Writer/File.php'));
-        // include(base_path('vendor/setasign/setapdf-core/library/SetaPDF/Core/Document.php'));
+        $n_servizi_per_pagina = 8;
 
         $contratto = ContrattoDigitale::with(['commerciale','servizi','sconti_associati'])->find($id);
 
@@ -1016,9 +1013,15 @@ class ContrattiDigitaliController extends MyController
         // /Servizi associati al contratto 
         //================================================//
         
-        //return view('contratti_digitali.contratto_pdf', compact('contratto','commerciale_contratto','servizi_assoc','totali'));
         
-        $pdf = PDF::loadView('contratti_digitali.contratto_pdf', compact('contratto','commerciale_contratto','servizi_assoc','totali'));
+        $chunk_servizi = $servizi_assoc->chunk($n_servizi_per_pagina);
+
+        
+        $n_sottotab = $chunk_servizi->count();
+        
+        //return view('contratti_digitali.contratto_pdf', compact('contratto','commerciale_contratto','servizi_assoc','totali','n_servizi_per_pagina','chunk_servizi', 'n_sottotab'));
+
+        $pdf = PDF::loadView('contratti_digitali.contratto_pdf', compact('contratto','commerciale_contratto','servizi_assoc','totali','n_servizi_per_pagina','chunk_servizi', 'n_sottotab'));
 
 
         
@@ -1035,72 +1038,69 @@ class ContrattiDigitaliController extends MyController
         $pages = $document->getCatalog()->getPages();
         $pageCount = $pages->count();
         $penultima = $pageCount - 1;
-
-        $n_sottotab = count(array_chunk($servizi_assoc->toArray(), 10));
-
-
+       
         for ($i=1; $i <= $n_sottotab; $i++) 
           {
 
-          // add a field left top with an offset of 10 points
-          SignatureField::add(
-              $document,
-              'CLIENTE',
-              $i,
-              SignatureField::POSITION_RIGHT_BOTTOM,
-              array('x' => -40, 'y' => 1),
-              200,
-              50
-          );
+            // add a field left top with an offset of 10 points
+            SignatureField::add(
+                $document,
+                'CLIENTE',
+                $i,
+                SignatureField::POSITION_RIGHT_BOTTOM,
+                array('x' => -40, 'y' => 1),
+                200,
+                50
+            );
           
           }
 
 
-        if(false) {
-            ///////////////////////////////////////////
-            // aggiungo le firme in penultima pagina //
-            ///////////////////////////////////////////
-            SignatureField::add(
-                $document,
-                'AgenteIA 1',
-                $penultima,
-                SignatureField::POSITION_LEFT_BOTTOM,
-                array('x' => 70, 'y' => 190),
-                200,
-                50
-            );
+      
+        ///////////////////////////////////////////
+        // aggiungo le firme in penultima pagina //
+        ///////////////////////////////////////////
+        SignatureField::add(
+            $document,
+            'AgenteIA 1',
+            $penultima,
+            SignatureField::POSITION_LEFT_BOTTOM,
+            array('x' => 70, 'y' => 260),
+            200,
+            50
+        );
 
-            SignatureField::add(
-                $document,
-                'CLIENTE 1',
-                $penultima,
-                SignatureField::POSITION_RIGHT_BOTTOM,
-                array('x' => -70, 'y' => 190),
-                200,
-                50
-            );    
+        SignatureField::add(
+            $document,
+            'CLIENTE 1',
+            $penultima,
+            SignatureField::POSITION_RIGHT_BOTTOM,
+            array('x' => -70, 'y' => 260),
+            200,
+            50
+        );    
 
 
-            SignatureField::add(
-                $document,
-                'AgenteIA 2',
-                $penultima,
-                SignatureField::POSITION_LEFT_BOTTOM,
-                array('x' => 70, 'y' => 30),
-                200,
-                50
-            );
+        SignatureField::add(
+            $document,
+            'AgenteIA 2',
+            $penultima,
+            SignatureField::POSITION_LEFT_BOTTOM,
+            array('x' => 70, 'y' => 70),
+            200,
+            50
+        );
 
-            SignatureField::add(
-                $document,
-                'CLIENTE 2',
-                $penultima,
-                SignatureField::POSITION_RIGHT_BOTTOM,
-                array('x' => -70, 'y' => 30),
-                200,
-                50
-            );
-        }
+        SignatureField::add(
+            $document,
+            'CLIENTE 2',
+            $penultima,
+            SignatureField::POSITION_RIGHT_BOTTOM,
+            array('x' => -70, 'y' => 70),
+            200,
+            50
+        );
+        
 
 
         ////////////////////////////////////////
@@ -1111,7 +1111,7 @@ class ContrattiDigitaliController extends MyController
             'TITOLARE TRATTAMENTO',
             $pageCount,
             SignatureField::POSITION_RIGHT_BOTTOM,
-            array('x' => -70, 'y' => 190),
+            array('x' => -70, 'y' => 350),
             200,
             50
         );
