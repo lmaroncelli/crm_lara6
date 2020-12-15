@@ -8,14 +8,14 @@
 				Elenco 
 					@if ($tipo == 'F') 
 						fatture 
-						@if (!$all) <a class="all" href="{{ url('fatture/F/all') }}">Tutti</a> @else <a class="all" href="{{ url('fatture') }}">Ultimi anni</a> @endif 
+						@if (!$all) <a class="all" href="{{ url('fatture/F/all') }}">Tutti</a> @else <a class="all" href="{{ url('fatture') }}">Ultimo anno</a> @endif 
 					@else 
 						prefatture
-						@if (!$all) <a class="all" href="{{ url('fatture/PF/all') }}">Tutti</a> @else <a class="all" href="{{ url('prefatture') }}">Ultimi anni</a> @endif
+						@if (!$all) <a class="all" href="{{ url('fatture/PF/all') }}">Tutti</a> @else <a class="all" href="{{ url('prefatture') }}">Ultimo anno</a> @endif
 					@endif  
         @if (isset($fatture))
-        <br>
-        <strong class="h4">{{$fatture->total()}}</strong>
+				<br>
+        <strong class="h4"><a href="#" data-toggle="tooltip" data-placement="right" @if (!$all) title="di default il sistema mostra le fatture dell'ULTIMO ANNO" @else title="sono mostrate TUTTE le fatture presenti" @endif data-original-title="Ultimo anno">{{$fatture->total()}}</a></strong>
         @endif
       </div>
     </div><!--/.col-->
@@ -115,6 +115,7 @@
 														</th>
 														<th></th>
 														<th></th>
+														<th></th>
 												</tr>
 										</thead>
 										<tbody>
@@ -126,6 +127,11 @@
 																<td>{{App\Utility::formatta_cifra($fattura->totale,'€')}}</td>
 																<td>{!!optional(optional($fattura->societa)->ragioneSociale)->nome!!}</td>
 																<td>{{optional(optional($fattura->societa)->cliente)->nome}}</td>
+																<td>
+																	<a href="{{ route('societa-fatture',['cliente_id' => $fattura->societa->cliente_id, 'societa_id' => $fattura->societa_id]) }}" style="margin-bottom: 5px!important;" class="btn btn-warning m-btn m-btn--icon m-btn--icon-only">
+																		<i class="fas fa-list"></i>
+																	</a>
+																</td>
 																<td>
 																	<a href="{{ route('fatture.xml-pa', $fattura->id) }}" style="margin-bottom: 5px!important;" class="btn btn-info m-btn m-btn--icon m-btn--icon-only">
 																		<i class="fas fa-code"></i>

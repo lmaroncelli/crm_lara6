@@ -1,3 +1,10 @@
+@if($fattura->fatturaChiusa())
+<div class="row mt-3 mb-3">
+    <div class="col-lg-6 offset-lg-3">
+        <button class="btn btn-outline-danger btn-lg btn-block" type="button"><i class="fas fa-check-circle"></i> La fattura è chiusa.</button>
+    </div>
+</div>
+@endif
 <input type="hidden" id="intestazione_cambiata" value=0>
 <div class="row mb-5">
     <div class="col-sm-4">
@@ -30,8 +37,10 @@
         <div>Fax {{optional(optional($fattura->societa)->cliente)->fax}}</div>
     </div>
     
+    @if(!$fattura->fatturaChiusa())
     <div class="col-sm-4">
         <button type="button" class="btn btn-warning" data-toggle="modal" data-keyboard="false" data-backdrop="static" data-target="#m_modal_societa">CAMBIA INTESTAZIONE</button>
     </div>
+    @endif
     
 </div>

@@ -1,16 +1,21 @@
 @extends('layouts.coreui.crm_lara6')
-
-
 <div class="spinner_lu intestazione" style="display:none;"></div>
 @section('card-header')
     <div class="card-header">
         {{ $fattura->getTipo() }} N° <strong>{{ $fattura->getNumero() }}</strong> - Data: <strong>{{ $fattura->getDataFattura() }}</strong> - 
-        Metodo di pagamento:
-        <select id="pagamento_id" name="pagamento_id" class="pagamento_card_header">
-          @foreach ($tipo_pagamento as $key => $value)
-              <option value="{{$key}}" @if ( $fattura->pagamento_id == $key ) selected="selected" @endif>{{$value}}</option>
-          @endforeach
-      </select> 
+				Metodo di pagamento:
+				@if($fattura->fatturaChiusa())
+					{{$fattura->pagamento->nome}}
+				@else
+					<select id="pagamento_id" name="pagamento_id" class="pagamento_card_header">
+						@foreach ($tipo_pagamento as $key => $value)
+								<option value="{{$key}}" @if ( $fattura->pagamento_id == $key ) selected="selected" @endif>{{$value}}</option>
+						@endforeach
+					</select>
+				@endif
+				<span style="float: right">
+					<a href="{{ route('fatture.index') }}" class="btn btn-warning" type="button"><i class="far fa-caret-square-left"></i></a>
+				</span>
     </div>
 @endsection
 
@@ -90,10 +95,16 @@
                     {{-- Avviso Fattura chiusa --}}
                     <div class="row">
                         <div class="col-lg-6 offset-lg-3">
-                        <div class="alert alert-danger" role="alert">
-                            <strong>Perfetto!</strong> La fattura è chiusa.
+													<button class="btn btn-outline-danger btn-lg btn-block" type="button"><i class="fas fa-check-circle"></i> La fattura è chiusa.</button>
                         </div>
-                        </div>
+                    </div>
+                    <div class="row align-items-center mt-3" style="justify-content: center;">
+                    	<div class="col-1">
+                    		<a class="btn btn-pill btn-block btn-danger" href="{{ route('fatture.pdf', $fattura->id) }}" target="_blank">Esporta <i class="fas fa-file-pdf"></i></a>
+											</div>
+											<div class="col-1">
+                    		<a class="btn btn-pill btn-block btn-primary" href="{{ route('fatture.xml-pa', $fattura->id) }}" target="_blank">Esporta <i class="fas fa-code"></i></a>
+                    	</div>
                     </div>
                     @endif
                 </div>  

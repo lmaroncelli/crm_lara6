@@ -264,6 +264,7 @@ class FattureController extends Controller
     public function edit($id, $rigafattura_id = 0, $scadenza_fattura_id = 0)
     {
     $fattura = Fattura::with([
+                          'pagamento',
                           'righe',
                           'scadenze',
                           'societa.RagioneSociale.localita.comune.provincia',

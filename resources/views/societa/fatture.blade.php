@@ -49,7 +49,7 @@
                       </thead>
                       <tbody>
                           @foreach ($fatture as $fattura)
-                            <form action="{{ route('fatture.destroy', ['id' => $fattura->id]) }}" method="post" id="delete_item_{{$fattura->id}}">
+                            <form action="{{ route('fatture.destroy', $fattura->id) }}" method="post" id="delete_item_{{$fattura->id}}">
                               @csrf
                               @method('DELETE')
                             </form>

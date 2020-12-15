@@ -10,7 +10,7 @@
                 </div>
                 <div class="col-lg-2" style="align-self: flex-end; margin-bottom: 12px;">
                     <button type="submit" class="btn btn-warning m-btn m-btn--icon m-btn--wide">
-                        <span><i class="fa flaticon-chat-1"></i><span>Aggiungi</span></span>
+                        <span><i class="far fa-sticky-note"></i> <span>Salva</span></span>
                     </button>
                 </div>
                 <div class="col-lg-4">
