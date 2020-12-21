@@ -128,14 +128,16 @@
 																<td>{!!optional(optional($fattura->societa)->ragioneSociale)->nome!!}</td>
 																<td>{{optional(optional($fattura->societa)->cliente)->nome}}</td>
 																<td>
-																	<a href="{{ route('societa-fatture',['cliente_id' => $fattura->societa->cliente_id, 'societa_id' => $fattura->societa_id]) }}" style="margin-bottom: 5px!important;" class="btn btn-warning m-btn m-btn--icon m-btn--icon-only">
+																	<a href="{{ route('societa-fatture',['cliente_id' => optional($fattura->societa)->cliente_id, 'societa_id' => $fattura->societa_id]) }}" style="margin-bottom: 5px!important;" class="btn btn-warning m-btn m-btn--icon m-btn--icon-only">
 																		<i class="fas fa-list"></i>
 																	</a>
 																</td>
 																<td>
-																	<a href="{{ route('fatture.xml-pa', $fattura->id) }}" style="margin-bottom: 5px!important;" class="btn btn-info m-btn m-btn--icon m-btn--icon-only">
-																		<i class="fas fa-code"></i>
-																	</a>
+																	@if (!is_null(optional($fattura->pagamento)->cod_PA))
+																		<a href="{{ route('fatture.xml-pa', $fattura->id) }}" style="margin-bottom: 5px!important;" class="btn btn-info m-btn m-btn--icon m-btn--icon-only">
+																			<i class="fas fa-code"></i>
+																		</a>
+																	@endif
 																</td>
 																<td>
 																	<form action="{{ route('fatture.destroy', $fattura->id) }}" method="POST" accept-charset="utf-8" class="deleteForm" id="delete-riga-form">

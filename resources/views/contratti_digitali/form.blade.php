@@ -5,7 +5,7 @@
 
 <script type="text/javascript">
 
-      function caricaGrigliaEvidenze(destroy_session = 0) {
+      function caricaGrigliaEvidenze(destroy_session = 1) {
           
           $(".spinner_lu").show();
           
@@ -36,7 +36,7 @@
 
       }
 
-      function caricaServiziContratto(destroy_session = 0) {
+      function caricaServiziContratto(destroy_session = 1) {
 
           $(".spinner_lu.servizi").show();
           
@@ -69,7 +69,10 @@
 jQuery(document).ready(function($){
 
 
-      caricaGrigliaEvidenze();
+      @if($contratto->cliente_id != -1)
+        caricaGrigliaEvidenze();
+      @endif
+
       caricaServiziContratto();
 
 
@@ -252,6 +255,38 @@ jQuery(document).ready(function($){
         });
     }); /* end addRowSconto*/
           
+
+    /* select localita */
+    $('body').on('change', '#localita_select', function (e){
+      $(".spinner_lu.servizi").show();
+
+      var localita_id = $(this).val();
+      var contratto_id = '{{$contratto->id}}';
+      var destroy_session = 1;
+
+      data = {
+        contratto_id:contratto_id,
+        localita_id:localita_id,
+        destroy_session:destroy_session
+      };
+      
+      $.ajax({
+          url: "{{ route('crea_griglia_evidenza_contratto_ajax') }}",
+          type: 'POST',
+          data: data,
+          success: function(griglia) {
+              $("#evidenze_contratto").html("");
+              $("#evidenze_contratto").html(griglia);
+
+              $(".spinner_lu").hide();
+          },
+          error: function() {
+            $(".spinner_lu").hide();
+          }
+      });
+
+      
+    });
 
     
     /* select servizi */
@@ -584,7 +619,7 @@ jQuery(document).ready(function($){
           </label>
         </div>
         <div class="form-group col-sm-7">
-          <input class="form-control" class="data_pagamento" name="data_pagamento_{{$value}}" type="text" placeholder="" value="{{old('data_pagamento'.$value) != '' ?  old('data_pagamento'.$value) :  $contratto->condizioni_pagamento == $cp ? $contratto->data_pagamento : '' }}">
+          <input class="form-control" class="data_pagamento" name="data_pagamento_{{$value}}" type="text" placeholder="" value="{{ (old('data_pagamento'.$value) != '' ?  old('data_pagamento'.$value) :  ($contratto->condizioni_pagamento == $cp ? $contratto->data_pagamento : '')) }}">
         </div>
     </div>
   @endforeach
@@ -639,6 +674,9 @@ jQuery(document).ready(function($){
 
 <div class="spinner_lu" style="display:none;"></div>
 <div class="evidenze_contratto" id="evidenze_contratto">
+  @if($contratto->cliente_id == -1)
+    @include('contratti_digitali.localita_cliente')
+  @endif
 </div>
 
 

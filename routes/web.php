@@ -189,8 +189,9 @@ Route::middleware(['auth'])->group(function () {
     // CONTRATTI DIGITALI //
     ////////////////////////
 
-    Route::get('contratto-digitale/{all?}', 'ContrattiDigitaliController@index');
     Route::resource('contratto-digitale', 'ContrattiDigitaliController');
+    
+    Route::get('contratto-digitale/{all?}', 'ContrattiDigitaliController@index');
 
     // sovrascrivo edit
     Route::get('contratto-digitale/{contratto_id}/edit/{macro_id?}', 'ContrattiDigitaliController@edit')->name('contratto-digitale.edit');

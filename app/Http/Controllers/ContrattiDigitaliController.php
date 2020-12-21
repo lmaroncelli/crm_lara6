@@ -20,6 +20,7 @@ use SetaPDF_Core_Reader_File;
 use SetaPDF_Core_Writer_File;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\MyController;
+use App\Localita;
 use Illuminate\Support\Facades\Storage;
 
 class ContrattiDigitaliController extends MyController
@@ -204,6 +205,9 @@ class ContrattiDigitaliController extends MyController
       // $validatedData = $request->validate($validation_arr);
       
       //dd($request->all());
+
+
+      // E' un CLIENTE ESISTENTE
       if ($request->has('item') && $request->get('item') != '') 
         {
         $item = $request->get('item');
@@ -212,12 +216,17 @@ class ContrattiDigitaliController extends MyController
         $cliente = Cliente::with('localita')->byIdInfo($id_info)->first();
         $dati_cliente = $cliente->id_info . ' - ' .$cliente->nome."\n".$cliente->localita->nome;
 
+        $cliente_id = $cliente->id;
+
 
         $rag_soc = RagioneSociale::with('localita.comune.provincia')->find($request->get('fatturazione'));
 
         $dati_fatturazione = $rag_soc->nome . "\n" .$rag_soc->indirizzo . "\n" . $rag_soc->cap . "-" .$rag_soc->localita->nome .'('. $rag_soc->localita->comune->provincia->sigla .") \nP.IVA: ". $rag_soc->piva . "\nCodice Fiscale: ".$rag_soc->cf;
 
         $societa = Societa::withRagioneSociale($rag_soc->id)->first();
+
+
+        $dati_referente = $request->referente;
         
         // IBAN della società può essere già corretto oppure essere malformato
         if($this->_guess_iban($societa->iban))
@@ -245,19 +254,35 @@ class ContrattiDigitaliController extends MyController
         } 
       else 
         {
+
+        $dati_cliente = $request->get('cliente');
+        $cliente_id = -1;
+        $dati_fatturazione = $request->get('fatturazione');
+        $dati_referente = $request->get('referente');
+
+        $iban = "" ;
+        $iban_importato = "";
+
+        $email = "";
+        $email_amministrativa = "";
+        $sito_web = "";
+
+        $pec = "";
+        $codice_destinatario = "";
         
+
         }
       
 
          $data = array (
          'user_id' => $request->id_commerciale,
-         'cliente_id' => $cliente->id,
+         'cliente_id' => $cliente_id,
          'dati_cliente' => $dati_cliente,
          'data_creazione' => now(),
          'tipo_contratto' => $request->tipo_contratto,
          'segnalatore' => $request->segnalatore,
          'dati_fatturazione' => $dati_fatturazione,
-         'dati_referente' => $request->referente,
+         'dati_referente' => $dati_referente,
          'iban' => $iban,
          'iban_importato' => $iban_importato,
          'pec' => $pec,
@@ -290,14 +315,26 @@ class ContrattiDigitaliController extends MyController
     public function creaGrigliaEvidenzaContrattoAjax(Request $request)
       {
       
+      $tipi_evidenza = collect([]);
+
       $contratto_id = $request->get('contratto_id'); 
-      $macro_id = $request->get('macro_id');
+      
+      // SELEZIONE LOCALITA da NUOVO UTENTE
+      if($request->has('localita_id'))
+        {
+        $localita_id = $request->get('localita_id');
+        $macro_id = Localita::find($localita_id)->macrolocalita_id;
+        }
+      else
+        {
+        $macro_id = $request->get('macro_id');
+        }
 
+      
       $destroy_session = $request->get('destroy_session');
-
+      
       $contratto = ContrattoDigitale::with('cliente')->find($contratto_id);
-
-
+      
       //  IL CONTRATTO PUO' APPARTENERE AD UN CLIENTE GIA' ESISTENTE OPPURE A UNO NUOVO CHE NON ESISTE GIA' NEL CRM
       if ($contratto->cliente_id == -1) 
         {
@@ -308,11 +345,11 @@ class ContrattiDigitaliController extends MyController
         if(!$macro_id)
           {
           $macro_id = $contratto->cliente->localita->macrolocalita_id;
-
+          }
           $macrolocalita = MacroLocalita::find($macro_id);
           $macro[$macrolocalita->id] = $macrolocalita->nome; 
-          }
         }
+         
       $macro['-1'] = 'Parchi'; 
       $macro['-2'] = 'Offerte Fiera';
 
@@ -344,7 +381,7 @@ class ContrattiDigitaliController extends MyController
 
         }
 
-      if ($request->session()->has('clienti_to_info'))
+      if ($request->session()->has('clienti_to_info') && !$destroy_session)
         {
         $clienti_to_info = $request->session()->get('clienti_to_info');
         } 
@@ -356,8 +393,8 @@ class ContrattiDigitaliController extends MyController
 
         session(['clienti_to_info' => $clienti_to_info]);
         }
-
-
+      
+      //dd($macro);
 
       return view('contratti_digitali.evidenze_contratto',compact('macro', 'contratto', 'tipi_evidenza', 'macro_id','commerciali_nome','servizi_venduti_ids','clienti_to_info'));
 
@@ -464,6 +501,8 @@ class ContrattiDigitaliController extends MyController
       //condizioni di pagamento
       $condizioni_pagamento = Utility::getCondizioniPagamento();
 
+      $localita_cliente_select = [];
+
 
       // GESTIONE GRIGLIA EVIDENZE
 
@@ -471,6 +510,7 @@ class ContrattiDigitaliController extends MyController
       if ($contratto->cliente_id == -1) 
         {
         $macro = MacroLocalita::orderBy('ordine')->pluck('nome','id');
+        $localita_cliente_select = Localita::where('macrolocalita_id','!=',0)->orderBy('nome','asc')->pluck('nome','id')->toArray();
         } 
       else 
         {
@@ -584,7 +624,7 @@ class ContrattiDigitaliController extends MyController
     # metto in sessione 
     session([
         'id_cliente' => $contratto->cliente_id,
-        'id_info' => $contratto->cliente->id_info,
+        'id_info' => optional($contratto->cliente)->id_info,
         'id_agente' => $contratto->user_id,
         'nome_cliente' => '',
         'nome_agente' => '',
@@ -600,7 +640,7 @@ class ContrattiDigitaliController extends MyController
 
       $exists = Storage::disk('precontratti')->exists($contratto->nome_file.'_firmato.pdf');
 
-      return view('contratti_digitali.form', compact('contratto','i1','i2','i3','i4', 'mostra_iban_importato', 'commerciale_contratto','servizi_assoc','condizioni_pagamento','tipi_evidenza','clienti_to_info','commerciali_nome','macro','macro_id', 'utenti_commerciali', 'commerciali','totali','servizi_contratto','servizi_venduti_ids','exists'));
+      return view('contratti_digitali.form', compact('contratto','i1','i2','i3','i4', 'mostra_iban_importato', 'commerciale_contratto','servizi_assoc','condizioni_pagamento','tipi_evidenza','clienti_to_info','commerciali_nome','macro','macro_id', 'utenti_commerciali', 'commerciali','totali','servizi_contratto','servizi_venduti_ids','exists','localita_cliente_select'));
 
     }
 

@@ -68,7 +68,7 @@
                             {{-- se è prelazionata ha lo sfondo ad hoc ed il nome del commerciale che ha la prelazione --}}
                       <td class="clickable_prelazionata sfondo_prelazione" data-id-evidenza="{{$evidenza->id}}" data-id-mese="{{$item_ev_mese->pivot->mese_id}}" data-id-hotel="{{$item_ev_mese->pivot->cliente_id}}">
                               <div class="contenuto_cella">
-                                {{$clienti_to_info[$item_ev_mese->pivot->cliente_id]}}<br/>{{ucfirst($commerciali_nome[$item_ev_mese->pivot->user_id])}}
+                                {{ isset($clienti_to_info[$item_ev_mese->pivot->cliente_id]) ? $clienti_to_info[$item_ev_mese->pivot->cliente_id] : '' }}<br/>{{ucfirst($commerciali_nome[$item_ev_mese->pivot->user_id])}}
                               </div>
                             </td>
                           
@@ -87,7 +87,7 @@
                             {{-- ha lo sfondo del commerciale senza nome --}}
                             <td class="{{$class}} clickable sfondo_{{$item_ev_mese->pivot->user_id}} acquistata_{{$item_ev_mese->pivot->acquistata}}" data-id-evidenza="{{$evidenza->id}}" data-id-mese="{{$item_ev_mese->pivot->mese_id}}" data-id-hotel="{{$item_ev_mese->pivot->cliente_id}}">
                               <div class="contenuto_cella">
-                                {{$clienti_to_info[$item_ev_mese->pivot->cliente_id]}}
+                                {{isset($clienti_to_info[$item_ev_mese->pivot->cliente_id]) ? $clienti_to_info[$item_ev_mese->pivot->cliente_id] : ''}}
                               </div>
                             </td>
 
