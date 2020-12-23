@@ -333,7 +333,7 @@ class ContrattiDigitaliController extends MyController
       
       $destroy_session = $request->get('destroy_session');
       
-      $contratto = ContrattoDigitale::with('cliente')->find($contratto_id);
+      $contratto = ContrattoDigitale::withoutGlobalScope('data_creazione')->with('cliente')->find($contratto_id);
       
       //  IL CONTRATTO PUO' APPARTENERE AD UN CLIENTE GIA' ESISTENTE OPPURE A UNO NUOVO CHE NON ESISTE GIA' NEL CRM
       if ($contratto->cliente_id == -1) 
@@ -406,7 +406,7 @@ class ContrattiDigitaliController extends MyController
         $contratto_id = $request->get('contratto_id');
         $destroy_session = $request->get('destroy_session');
 
-        $contratto = ContrattoDigitale::with('cliente')->find($contratto_id);
+        $contratto = ContrattoDigitale::withoutGlobalScope('data_creazione')->with('cliente')->find($contratto_id);
         
         //================================================//
         // Servizi associati al contratto
@@ -487,8 +487,8 @@ class ContrattiDigitaliController extends MyController
      */
     public function edit(Request $request, $id, $macro_id = 0)
     {
-      $contratto = ContrattoDigitale::with('cliente')->find($id);
-
+      $contratto = ContrattoDigitale::withoutGlobalScope('data_creazione')->with('cliente')->find($id);
+      
       // gestione IBAN
       $this->_gestione_iban($i1, $i2, $i3, $i4, $mostra_iban_importato, $contratto);
 
@@ -697,7 +697,7 @@ class ContrattiDigitaliController extends MyController
       $request_to_except = ['i1','i2','i3','i4','nome_file_scelto'];
       
       
-      $contratto = ContrattoDigitale::find($id);
+      $contratto = ContrattoDigitale::withoutGlobalScope('data_creazione')->find($id);
 
 
       foreach (Utility::getCondizioniPagamento() as $cp => $value) 
@@ -725,7 +725,7 @@ class ContrattiDigitaliController extends MyController
      */
     public function destroy($id)
     {
-      $contratto = ContrattoDigitale::find($id);
+      $contratto = ContrattoDigitale::withoutGlobalScope('data_creazione')->find($id);
       $contratto->destroyMe();
 
       return redirect()->route('contratto-digitale.index')->with('status', 'Precontratto elimnato correttamente!');
@@ -988,7 +988,7 @@ class ContrattiDigitaliController extends MyController
       public function exportPdf($id)
         {
         
-        $contratto = ContrattoDigitale::find($id);
+        $contratto = ContrattoDigitale::withoutGlobalScope('data_creazione')->find($id);
 
         $pdf = $this->_crea_pdf($id);
         
@@ -1020,7 +1020,7 @@ class ContrattiDigitaliController extends MyController
         {
         $n_servizi_per_pagina = 8;
 
-        $contratto = ContrattoDigitale::with(['commerciale','servizi','sconti_associati'])->find($id);
+        $contratto = ContrattoDigitale::withoutGlobalScope('data_creazione')->with(['commerciale','servizi','sconti_associati'])->find($id);
 
         $nome_file = $contratto->nome_file;
 

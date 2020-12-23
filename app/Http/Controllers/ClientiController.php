@@ -413,5 +413,24 @@ class ClientiController extends Controller
         return redirect()->route('clienti-foto',['cliente_id' => $cliente_id])->with('status', 'Servizio foto creato correttamente!');
 
         }
+
+
+      public function elencoPrecontratti(Request $request, $cliente_id)
+        {
+        $orderby = $request->get('orderby','id');
+        $order = $request->get('order','desc');
+
+        $cliente = Cliente::with([
+                        'contrattiDigitaliAll' => function ($query) use ($orderby,  $order) {
+                          $query->orderBy($orderby,  $order);
+                          },
+                          'contrattiDigitaliAll.commerciale',
+                          'contrattiDigitaliAll.cliente'
+                        ])
+                     ->find($cliente_id);
+        
+        
+        return view('clienti.elenco-precontratti', compact('cliente'));
+        }
     
 }

@@ -77,6 +77,11 @@ Route::middleware(['auth'])->group(function () {
 
 
 
+    Route::get('clienti/precontratti/{cliente_id}', 'ClientiController@elencoPrecontratti')->name('clienti-precontratti');
+
+
+
+
     Route::get('/associa-societa-ajax', 'ClientiFatturazioniController@associaSocietaAjax');
 
 
@@ -188,10 +193,11 @@ Route::middleware(['auth'])->group(function () {
      ////////////////////////
     // CONTRATTI DIGITALI //
     ////////////////////////
-
-    Route::resource('contratto-digitale', 'ContrattiDigitaliController');
     
     Route::get('contratto-digitale/{all?}', 'ContrattiDigitaliController@index');
+    
+    Route::resource('contratto-digitale', 'ContrattiDigitaliController');
+    
 
     // sovrascrivo edit
     Route::get('contratto-digitale/{contratto_id}/edit/{macro_id?}', 'ContrattiDigitaliController@edit')->name('contratto-digitale.edit');
