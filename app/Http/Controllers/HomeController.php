@@ -3,6 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Cliente;
+use App\Fattura;
+use App\Memorex;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -24,7 +29,27 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+
+        //  Memorex scaduti
+        $memorex_count = Memorex::notHM()
+            ->scadute()
+            ->count();
+
+        
+        $clienti_attivi_count = Cliente::attivo()->count();
+        $clienti_attivi_ia_count = Cliente::attivoIA()->count();
+
+
+        //  fatture ultimi 10 gg
+        $last_days = 10;
+        $date_ago = Carbon::now()->subDays($last_days)->toDateString();
+
+        $fatture_count = Fattura::withoutGlobalScope('data')->where('tipo_id', 'F')->where('created_at', '>', $date_ago)->count();
+        $prefatture_count = Fattura::withoutGlobalScope('data')->where('tipo_id','PF')->where('created_at','>',$date_ago)->count();
+
+        //dd(Str::replaceArray('?', $fatture_count->getBindings(), $fatture_count->toSql()));
+
+        return view('home', compact('memorex_count', 'clienti_attivi_count', 'clienti_attivi_ia_count', 'fatture_count', 'prefatture_count', 'last_days'));
     }
 
 

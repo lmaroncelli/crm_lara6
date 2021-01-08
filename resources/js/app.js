@@ -38,6 +38,11 @@ Vue.component('nome-servizio-cliente', require('./components/NomeServizioCliente
 
 
 
+Vue.component('graph-attivazioni', require('./components/GraphAttivazioni.vue').default);
+
+
+
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

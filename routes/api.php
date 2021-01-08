@@ -11,6 +11,7 @@ use App\ModalitaVendita;
 use App\CommercialeMemorex;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Resources\ServizioResource;
 use App\Http\Resources\MemorexCollection;
 use App\Http\Resources\Memorex as MemorexResource;
@@ -259,9 +260,9 @@ Route::patch('clienti-servizi/{id}', function(Request $request, $id) {
 
 
 
-
-//MEMOREX//
-
+//////////////////////////
+////////MEMOREX///////////
+//////////////////////////
 
 Route::get('/memorex/riferimenti', function(){
 	$riferimenti = CommercialeMemorex::pluck('nome','id')
@@ -452,4 +453,55 @@ Route::delete('memorex/{id}', function ($id) {
 
 
 
-//FINE MEMOREX//
+//////////////////////////
+/////FINE MEMOREX/////////
+//////////////////////////
+
+
+
+//////////////////////////
+/////CHART ATTIVAZIONI////
+//////////////////////////
+
+
+
+Route::get('attivazioni/{anno}', function ($anno) {
+
+  $attivati = DB::table('tblClienti')
+    ->select(DB::raw("cast(date_format(data_attivazione_IA,'%c') as SIGNED) as mese, count(*) as num"))
+    ->where('data_attivazione_IA', '>',$anno.'-01-01')
+    ->groupBy("mese")
+    ->orderBy("mese")
+    ->get();
+
+  $attivazione_anni = [];
+
+  if ($attivati->count()) 
+  {
+    for ($i=1; $i < 13 ; $i++) 
+    { 
+      foreach ($attivati as $attivato) 
+      {
+        if ($attivato->mese == $i) 
+        {
+          $attivazione_anni[$i] = $attivato->num;
+        }
+      }
+    }
+  } 
+  
+  return $attivazione_anni;
+  
+
+ 
+
+
+});
+
+
+
+
+
+/////////////////////////
+//END CHART ATTIVAZIONI//
+/////////////////////////

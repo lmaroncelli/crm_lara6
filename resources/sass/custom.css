@@ -67,6 +67,18 @@ header.navbar a.navbar-brand {
 }
 
 
+
+/* HOMEPAGE  */
+
+
+div.link_to:hover {
+  cursor: pointer;
+}
+
+i.icon-homepage {
+  font-size: 25px;
+}
+
 /* Utilizzo il component callout senza bordo nell'header dell'elenco clienti */
 
 /* link per visualizzare tutti o solo ultimi anni */

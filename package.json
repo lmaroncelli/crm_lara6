@@ -29,11 +29,13 @@
         "@coreui/icons": "^1.0.1",
         "bootstrap-editable": "^1.0.1",
         "bootstrap-switch": "^3.4.0",
+        "chart.js": "^2.9.4",
         "jquery-autocomplete": "^1.2.8",
         "perfect-scrollbar": "^1.5.0",
         "select2": "^4.0.13",
         "simple-line-icons": "^2.5.5",
         "sweetalert2": "^8.19.0",
-        "v-calendar": "^1.0.8"
+        "v-calendar": "^1.0.8",
+        "vue-chartjs": "^3.5.1"
     }
 }
