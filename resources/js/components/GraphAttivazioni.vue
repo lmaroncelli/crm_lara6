@@ -3,6 +3,7 @@
     <linear-graph-attivazioni
       v-if="loaded_from_api"
       :annoCorrente="anno_corrente_obj"
+      :annoPrecedente="anno_precedente_obj"
       />
   </div>
 </template>
@@ -26,14 +27,18 @@ export default {
 
       anno_corrente_obj: {
         label: 'Data One',
-        backgroundColor: '#f87979',
-        data: []
+        backgroundColor: 'rgb(255, 99, 132)',
+        borderColor: 'rgb(255, 99, 132)',
+        data: [],
+        fill: false,
       },
 
       anno_precedente_obj: {
         label: 'Data two',
-        backgroundColor: '#0f9f59',
-        data: [50, 30]
+        backgroundColor: 'rgb(54, 162, 235)',
+        borderColor: 'rgb(54, 162, 235)',
+        data: [],
+        fill: false,
       },
 
     }
@@ -45,24 +50,37 @@ export default {
   // and the second one is an options object.
 
   mounted () {
-    this.getAttivati(2020);
+    this.getAttivati(new Date().getFullYear());
   },
 
 
   methods: {
 
-    getAttivati(anno) {
+     getAttivati(anno) {
             axios.get('/api/attivazioni/'+anno)
               .then(response => {
                   var res = []; 
-                  for(var i in response.data) 
+                  for(var i in response.data) {
                       res.push(response.data[i]); 
+                  }
                   console.log('res = '+res);
                   this.anno_corrente_obj.data = res;
-                  this.loaded_from_api = true;
+                  this.anno_corrente_obj.label = 'Anno '+anno;
+                  let anno_prec = anno -1;
+                  axios.get('/api/attivazioni/'+anno_prec)
+                  .then(response => {
+                    var res = []; 
+                    for(var i in response.data) {
+                        res.push(response.data[i]); 
+                    }
+                    console.log('res = '+res);
+                    this.anno_precedente_obj.data = res;
+                    this.anno_precedente_obj.label = 'Anno '+anno_prec;
+
+                    this.loaded_from_api = true;
+                  });                  
               });
-        },
-  
+      }
   },
 
 }

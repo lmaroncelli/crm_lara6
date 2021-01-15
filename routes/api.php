@@ -477,18 +477,32 @@ Route::get('attivazioni/{anno}', function ($anno) {
   $attivazione_anni = [];
 
   if ($attivati->count()) 
-  {
+    {
     for ($i=1; $i < 13 ; $i++) 
-    { 
-      foreach ($attivati as $attivato) 
-      {
-        if ($attivato->mese == $i) 
+      { 
+        $trovato = false;
+        foreach ($attivati as $attivato) 
         {
-          $attivazione_anni[$i] = $attivato->num;
+          if ($attivato->mese == $i) 
+            {
+            $attivazione_anni[$i] = $attivato->num;
+            $trovato = true;
+            }
+        }
+
+        if (!$trovato) 
+        {
+        $attivazione_anni[$i] = 0;
         }
       }
     }
-  } 
+  else 
+    {
+    for ($i = 1; $i < 13; $i++) {
+      $attivazione_anni[$i] = 0;
+    }
+    
+    } 
   
   return $attivazione_anni;
   

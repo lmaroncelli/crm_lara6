@@ -13,56 +13,17 @@ nel file blade home.blade.php includo il componente
 
 <graph-attivazioni></graph-attivazioni>
 
+GraphAttivazioni.vue è un __wrapper component__ che chiama il __child component__  LinearGraphAttivazioni passandogli i dati da disegnare 
 
-Prima indico i 2 anni come oggetti statici
+<linear-graph-attivazioni
+      v-if="loaded_from_api"
+      :annoCorrente="anno_corrente_obj"
+      :annoPrecedente="anno_precedente_obj"
+      />
 
-<script>
-import { Line } from 'vue-chartjs'
+e fa la chiamata solo dopo aver ricevuto i dati dalla API mediante la chiamata axios.get('/api/attivazioni/'+anno);
+dentro lo then della prima chimata axios faccio la seconda chiamata con l'anno precedente ed alla fine this.loaded_from_api = true; in modo che linear-graph-attivazioni venga attivato
 
-export default {
-  extends: Line,
 
-  data() {
-    return {
 
-      mesi: ['January', 'February'],
-
-      anno_corrente_obj: {
-        label: 'Data One',
-        backgroundColor: '#f87979',
-        data: [40, 20]
-      },
-
-      anno_precedente_obj: {
-        label: 'Data two',
-        backgroundColor: '#0f9f59',
-        data: [50, 30]
-      },
-
-    }
-  },
-
-  // this.renderChart() is provided by the Bar component 
-  // and accepts two parameters: both are objects. 
-  // The first one is your chart data, 
-  // and the second one is an options object.
-
-  mounted () {
-    this.renderChart(
-      {
-        labels: this.mesi,
-        datasets:[
-            this.anno_corrente_obj,
-            this.anno_precedente_obj
-            ]
-      },
-      {
-        responsive: true
-      }
-    )
-  }
-}
-</script>
-
-poi li creo come risultato dell'interrogazione al DB 
 

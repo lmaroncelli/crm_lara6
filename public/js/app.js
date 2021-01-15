@@ -2195,6 +2195,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'GraphAttivazioni',
@@ -2206,13 +2207,17 @@ __webpack_require__.r(__webpack_exports__);
       loaded_from_api: false,
       anno_corrente_obj: {
         label: 'Data One',
-        backgroundColor: '#f87979',
-        data: []
+        backgroundColor: 'rgb(255, 99, 132)',
+        borderColor: 'rgb(255, 99, 132)',
+        data: [],
+        fill: false
       },
       anno_precedente_obj: {
         label: 'Data two',
-        backgroundColor: '#0f9f59',
-        data: [50, 30]
+        backgroundColor: 'rgb(54, 162, 235)',
+        borderColor: 'rgb(54, 162, 235)',
+        data: [],
+        fill: false
       }
     };
   },
@@ -2221,7 +2226,7 @@ __webpack_require__.r(__webpack_exports__);
   // The first one is your chart data, 
   // and the second one is an options object.
   mounted: function mounted() {
-    this.getAttivati(2020);
+    this.getAttivati(new Date().getFullYear());
   },
   methods: {
     getAttivati: function getAttivati(anno) {
@@ -2236,7 +2241,20 @@ __webpack_require__.r(__webpack_exports__);
 
         console.log('res = ' + res);
         _this.anno_corrente_obj.data = res;
-        _this.loaded_from_api = true;
+        _this.anno_corrente_obj.label = 'Anno ' + anno;
+        var anno_prec = anno - 1;
+        axios.get('/api/attivazioni/' + anno_prec).then(function (response) {
+          var res = [];
+
+          for (var i in response.data) {
+            res.push(response.data[i]);
+          }
+
+          console.log('res = ' + res);
+          _this.anno_precedente_obj.data = res;
+          _this.anno_precedente_obj.label = 'Anno ' + anno_prec;
+          _this.loaded_from_api = true;
+        });
       });
     }
   }
@@ -2262,7 +2280,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   "extends": vue_chartjs__WEBPACK_IMPORTED_MODULE_0__["Line"],
-  props: ['annoCorrente'],
+  props: ['annoCorrente', 'annoPrecedente'],
   data: function data() {
     return {
       mesi: ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre']
@@ -2275,9 +2293,37 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     this.renderChart({
       labels: this.mesi,
-      datasets: [this.annoCorrente]
+      datasets: [this.annoCorrente, this.annoPrecedente]
     }, {
-      responsive: true
+      responsive: true,
+      title: {
+        display: true,
+        text: 'Andamento attivazioni clienti Info Alberghi'
+      },
+      tooltips: {
+        mode: 'index',
+        intersect: false
+      },
+      hover: {
+        mode: 'nearest',
+        intersect: true
+      },
+      scales: {
+        xAxes: [{
+          display: true,
+          scaleLabel: {
+            display: true,
+            labelString: 'Month'
+          }
+        }],
+        yAxes: [{
+          display: true,
+          scaleLabel: {
+            display: true,
+            labelString: 'Value'
+          }
+        }]
+      }
     });
   }
 });
@@ -115632,7 +115678,10 @@ var render = function() {
     [
       _vm.loaded_from_api
         ? _c("linear-graph-attivazioni", {
-            attrs: { annoCorrente: _vm.anno_corrente_obj }
+            attrs: {
+              annoCorrente: _vm.anno_corrente_obj,
+              annoPrecedente: _vm.anno_precedente_obj
+            }
           })
         : _vm._e()
     ],
