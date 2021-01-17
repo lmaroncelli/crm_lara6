@@ -187,13 +187,15 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('assegna-costo-tipo-evidenza-mese-ajax', 'EvidenzeController@AssegnaCostoTipoEvidenzaMeseAjax')->name('assegna-costo-tipo-evidenza-mese-ajax');
 
-    
-    
 
-     ////////////////////////
+
+
+    ////////////////////////
     // CONTRATTI DIGITALI //
     ////////////////////////
-    
+
+    Route::get('contratto-digitale/create', 'ContrattiDigitaliController@create')->name('contratto-digitale.create');
+
     Route::get('contratto-digitale/{all?}', 'ContrattiDigitaliController@index');
     
     Route::resource('contratto-digitale', 'ContrattiDigitaliController');
@@ -223,6 +225,20 @@ Route::middleware(['auth'])->group(function () {
     Route::post('contratto-digitale/crea_griglia_evidenza_contratto_ajax', 'ContrattiDigitaliController@creaGrigliaEvidenzaContrattoAjax')->name('crea_griglia_evidenza_contratto_ajax');
 
     Route::post('contratto-digitale/carica_servizi_contratto_ajax', 'ContrattiDigitaliController@caricaServiziContrattoAjax')->name('carica_servizi_contratto_ajax');
+
+
+    ////////////////////
+    // FOGLIO SERVIZI //
+    ////////////////////
+
+
+    Route::resource('foglio-servizi', 'FoglioServiziController');
+
+    Route::post('load-cliente-foglio-servizi-ajax', 'FoglioServiziController@loadClienteFoglioServiziAjax')->name('load-cliente-foglio-servizi-ajax');
+
+
+
+
     
 
 
