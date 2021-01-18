@@ -41,7 +41,29 @@ class FoglioServiziController extends Controller
      */
     public function store(Request $request)
     {
-        //
+		
+			//dd($request->all());
+
+			// E' un CLIENTE ESISTENTE
+			if ($request->has('cliente_id') && $request->get('cliente_id') != '') 
+				{
+					
+				$data = array (
+					'user_id' => $request->id_commerciale,
+					'cliente_id' => $request->cliente_id,
+					'nome_hotel' => $request->cliente,
+					'localita' => $request->localita,
+					'sms' => $request->sms,
+					'whatsapp' => $request->whatsapp,
+					'skype' => $request->skype
+					);
+				
+				}
+			else {
+				
+			}
+			
+			
     }
 
     /**
@@ -103,7 +125,7 @@ class FoglioServiziController extends Controller
 
 			$data = [];
 
-			$data['id_cliente'] = $cliente->id;
+			$data['cliente_id'] = $cliente->id;
 
 			$data['cliente'] = $cliente->nome;
 			$data['localita'] = $cliente->localita->nome;

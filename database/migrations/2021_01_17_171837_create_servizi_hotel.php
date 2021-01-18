@@ -107,7 +107,7 @@ class CreateServiziHotel extends Migration
             $table->boolean('bonifico')->nullable()->default(false);
             $table->boolean('paypal')->nullable()->default(false);
             $table->boolean('bancomat')->nullable()->default(false);
-            $table->text('altri_pagamenti')->nullable();
+            $table->text('note_pagamenti')->nullable();
 
             $table->boolean('inglese')->nullable()->default(false);
             $table->boolean('francese')->nullable()->default(false);
@@ -131,18 +131,13 @@ class CreateServiziHotel extends Migration
             $table->string('nome_file')->nullable()->default(null);
             $table->date('data_firma')->nullable()->default(null);
 
-
-
-
-
-
-
-
-
-
-
             $table->timestamps();
         });
+
+        Artisan::call('db:seed', [
+            '--class' => 'ServiziHotelTableSeeder',
+            '--force' => true
+        ]);
     }
 
     /**

@@ -34,16 +34,11 @@
               return text === "Nuovo cliente?" ? "Cliente esistente?" : "Nuovo cliente?";
             })
 
+            $('#cliente_id').val('');
             $(".seleziona_cliente").toggleClass('nascondi');
             $(".dati_cliente").toggleClass('nascondi');
 
-            
-
-            swapRequiredProp($('.clientiDaAssegnare'));
-            swapRequiredProp($('#sms'));
-            swapRequiredProp($('#whatsapp'));
-            swapRequiredProp($('#skype'));
-
+          
         });
 
         var clientiDaAssegnare = {!!$clienti_autocomplete_js!!};
@@ -65,6 +60,7 @@
                           dataType: 'json',
                           data: data,
                           success: function(data) {
+                            $('#cliente_id').val(data.cliente_id);
                             $('#cliente').val(data.cliente);
                             $('#localita').val(data.localita);
                             $('#sms').val(data.sms);
@@ -73,15 +69,10 @@
                             
                             $(".seleziona_cliente").toggleClass('nascondi');
                             $(".dati_cliente").toggleClass('nascondi');
-
-                            swapRequiredProp($('.clientiDaAssegnare'));
-                            swapRequiredProp($('#sms'));
-                            swapRequiredProp($('#whatsapp'));
-                            swapRequiredProp($('#skype'));
-
+                          
                           }
                       }).done(function() {
-                        $("#salva_e_continua").toggleClass('nascondi');
+                        $("#salva_e_continua").removeClass('nascondi');
                         $(".spinner_lu").hide();
                       });// end ajax call
               }
@@ -137,12 +128,13 @@
         <label for="cliente">Cliente</label> <a href="" class="toggle">Nuovo cliente?</a>
         
         <div class="input-group mb-3 dati_cliente">
-          <input name="item" class="clientiDaAssegnare form-control" style="width:400px" placeholder="Seleziona cliente..." value="{{ old('item') }}" required>     
+          <input name="item" class="clientiDaAssegnare form-control" style="width:400px" placeholder="Seleziona cliente..." value="{{ old('item') }}">     
           <button type="button" class="btn btn-success btn-xs">OK</button>
         </div>
         
-         <input type="text"  class="form-control dati_cliente nascondi" name="cliente" id="cliente" placeholder="Cliente">
-       
+         <input type="text"  class="form-control dati_cliente nascondi" name="cliente" id="cliente" placeholder="Cliente" required>
+
+         <input type="hidden" name="cliente_id" id="cliente_id" value="">
        
       </div>
     </div>
@@ -154,7 +146,7 @@
     <div class="col-lg-5">
       <div class="form-group">
         <label for="cliente">Località</label>
-         <input type="text"  class="form-control dati_cliente nascondi" name="localita" id="localita" placeholder="Località">
+         <input type="text"  class="form-control dati_cliente nascondi" name="localita" id="localita" placeholder="Località" required>
         <div id="dati_fatturazione" class="seleziona_cliente">Seleziona un cliente</div>
       </div>
     </div>
