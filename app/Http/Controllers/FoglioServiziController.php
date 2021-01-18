@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Cliente;
 use App\Utility;
+use App\FoglioServizi;
 use Illuminate\Http\Request;
 
 class FoglioServiziController extends Controller
@@ -42,27 +43,29 @@ class FoglioServiziController extends Controller
     public function store(Request $request)
     {
 		
-			//dd($request->all());
+			$data = array(
+				'user_id' => $request->id_commerciale,
+				'nome_hotel' => $request->cliente,
+				'localita' => $request->localita,
+				'sms' => $request->sms,
+				'whatsapp' => $request->whatsapp,
+				'skype' => $request->skype
+			);
 
 			// E' un CLIENTE ESISTENTE
 			if ($request->has('cliente_id') && $request->get('cliente_id') != '') 
 				{
-					
-				$data = array (
-					'user_id' => $request->id_commerciale,
-					'cliente_id' => $request->cliente_id,
-					'nome_hotel' => $request->cliente,
-					'localita' => $request->localita,
-					'sms' => $request->sms,
-					'whatsapp' => $request->whatsapp,
-					'skype' => $request->skype
-					);
-				
+				$data['cliente_id'] = $request->cliente_id;
 				}
-			else {
-				
-			}
-			
+			else 
+				{
+				$data['cliente_id'] = -1;
+				}
+
+
+			$foglio = FoglioServizi::create($data);
+
+			return redirect()->route('foglio-servizi.edit', $foglio->id);
 			
     }
 
@@ -85,7 +88,14 @@ class FoglioServiziController extends Controller
      */
     public function edit($id)
     {
-        //
+		$foglio = FoglioServizi::with('cliente')->find($id);
+
+		// commerciale selezionato
+		$commerciale_contratto = User::find($foglio->user_id)->name;
+
+		return view('foglio_servizi.form', compact('foglio', 'commerciale_contratto'));
+
+
     }
 
     /**

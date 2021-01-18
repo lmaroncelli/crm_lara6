@@ -105,6 +105,12 @@ class Cliente extends Model
     }
 
 
+    public function fogliServizi()
+    {
+      return $this->hasMany('App\FoglioServizi', 'cliente_id', 'id');
+    }
+
+
     ////////////////////////////////////////////////////////////////////////
     // servizi da fatturare per un cliente NON archiviato e SENZA fattura //
     ////////////////////////////////////////////////////////////////////////

@@ -48,10 +48,10 @@ class CreateServiziHotel extends Migration
             $table->boolean('aprile_25')->nullable()->default(false);
             $table->boolean('maggio_1')->nullable()->default(false);
             $table->string('altra_apertura')->nullable()->default(null);
-            $table->integer('n_camere');
-            $table->integer('n_app');
-            $table->integer('n_suite');
-            $table->integer('n_letti');
+            $table->integer('n_camere')->nullable()->default(0);
+            $table->integer('n_app')->nullable()->default(0);
+            $table->integer('n_suite')->nullable()->default(0);
+            $table->integer('n_letti')->nullable()->default(0);
             $table->boolean('h_24')->nullable()->default(false);
             $table->string('rec_dalle_ore', 2)->nullable()->default(null);
             $table->string('rec_dalle_minuti', 2)->nullable()->default(null);

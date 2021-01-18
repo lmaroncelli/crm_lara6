@@ -6530,3 +6530,13 @@ ul#filtro_scadenze {
   justify-content: space-around;
 }
 
+
+/* FOGLIO SERVIZI */
+
+.spacerBlu {
+    clear: both;
+    height: 3px;
+    background-color: #35a6e8;
+    margin: 30px 0;
+}
+

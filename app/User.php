@@ -61,6 +61,12 @@ class User extends Authenticatable
         return $this->hasMany('App\ContrattoDigitale', 'user_id', 'id');
     }
 
+
+    public function fogliServizi()
+    {
+        return $this->hasMany('App\FoglioServizi', 'user_id', 'id');
+    }
+
     public function conteggi()
     {
         return $this->hasMany('App\Conteggio', 'user_id', 'id');

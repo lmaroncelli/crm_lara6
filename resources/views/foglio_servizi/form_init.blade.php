@@ -97,7 +97,7 @@
   <div class="row mt-2 row justify-content-between">
       <div class="col-lg-5">
       <div class="card card-accent-primary text-center">
-          <div class="card-header">CONTRATTO FORNITURA SERVIZI</div>
+          <div class="card-header">MODULO SERVIZI HOTEL</div>
           <div class="card-body">
               <div class="form-group">
                 <label for="id_commerciale">Nome Agente</label>
