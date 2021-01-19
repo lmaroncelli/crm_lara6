@@ -117,6 +117,45 @@ class Utility extends Model
 	];
 
 
+	private static $fs_trattamenti_e_note = [
+
+		'ai' => 'all inclusive',
+		'note_ai' => 'note_ai',
+		'pc' => 'pens. completa',
+		'note_pc' => 'note_pc',
+		'mp' => 'mezza pensione',
+		'note_mp' => 'note_mp',
+		'mp_spiaggia' => 'mezza pensione + spiaggia',
+		'note_mp_spiaggia' => 'note_mp_spiaggia',
+		'bb' => 'bed&breakfast',
+		'note_bb' => 'note_bb',
+		'bb_spiaggia' => 'bed&breakfast + spiaggia',
+		'note_bb_spiaggia' => 'note_bb_spiaggia',
+		'sd' => 'solo dormire',
+		'note_sd' => 'note_sd',
+		'sd_spiaggia' => 'solo dormire + spiaggia',
+		'note_sd_spiaggia' => 'note_sd_spiaggia'
+	];
+
+
+	private static $fs_pagamenti = [
+		'contanti' => 'contanti' ,
+		'assegno' => 'assegno' , 
+		'carta_credito' => 'carta di credito' , 
+		'bonifico' => 'bonifico' , 
+		'paypal' => 'paypal', 
+		'bancomat' => 'bancomat' 
+	];
+
+
+	private static $fs_lingue = [
+		'inglese' => 'inglese' ,
+		'francese' => 'francese' , 
+		'tedesco' => 'tedesco' , 
+		'spagnolo' => 'spagnolo' , 
+		'russo' => 'russo'
+	];
+	
 	/**
 	 * Prende l'id del visitatore
 	 * 
@@ -486,7 +525,7 @@ class Utility extends Model
 		$minuti['15'] = '15';
 		$minuti['30'] = '30';
 		$minuti['45'] = '45';
-		
+
 		return $minuti; 
 	}
 
@@ -501,6 +540,12 @@ class Utility extends Model
 	}
 
 
+	public static function getFsTrattamentiENote()
+	{
+		return self::$fs_trattamenti_e_note;
+	}
+
+
 
 
 	public static function getHotelCategoria()
@@ -512,6 +557,23 @@ class Utility extends Model
 	{
 		return self::$hotel_apertura;
 	}
+
+
+	public static function getFsPagamenti()
+	{
+		return self::$fs_pagamenti;
+	}
+
+
+
+	public static function getFsLingue()
+	{
+		return self::$fs_lingue;
+	}
+
+	
+
+
 
 	public static function getUltimoGiornoMese($data = '')
 		{

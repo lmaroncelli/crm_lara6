@@ -407,7 +407,262 @@
         </select>
       </div>
   </div> {{-- row --}}
-       
+
+  <div class="row">
+    <div class="col-md-6">
+      <label>
+          ORARIO DI CHECK IN:
+      </label>
+      <input type="text" name="checkin" id="checkin" class="form-control"  value="{{old('checkin') != '' ?  old('checkin') :  $foglio->checkin}}">
+    </div>
+
+    <div class="col-md-6">
+      <label>
+         ORARIO DI CHECK OUT:
+      </label>
+      <input type="text" name="checkout" id="checkout" class="form-control"  value="{{old('checkout') != '' ?  old('checkout') :  $foglio->checkout}}">
+    </div>
+  </div>
+
+  <div class="spacerBlu"></div>
+
+   <div class="row">
+
+    <div class="col-md-2">  
+      <label style="margin-top: 5px;">
+         ORARIO DEI PASTI
+      </label>
+    </div>
+    <div class="col-md-4">
+      <input type="checkbox" name="pasti_anno_prec" id="pasti_anno_prec" value="1" {{ old('pasti_anno_prec') || $foglio->pasti_anno_prec ? 'checked' : '' }} class="beautiful_checkbox">
+      <label for="pasti_anno_prec">
+         Stessi orari anno precedente
+      </label>
+    </div>
+   </div>
+
+   <div class="row">
+     <div class="col-md-4">
+        <div class="row">
+          <label class="col-md-12">Colazione</label>
+          <div class="col-md-2">
+            <select required id="colazione_dalle_ore" class="form-control" name="colazione_dalle_ore">
+            @foreach (Utility::getFsOre() as $id => $value)
+              <option value="{{$id}}" {{old('colazione_dalle_ore') == $id || $foglio->colazione_dalle_ore == $id ? 'selected' : '' }}>{{$value}}</option>
+            @endforeach
+          </select>
+          </div>
+          <div class="col-md-2">
+            <select required id="colazione_dalle_minuti" class="form-control" name="colazione_dalle_minuti">
+              @foreach (Utility::getFsMinuti() as $id => $value)
+                <option value="{{$id}}" {{old('colazione_dalle_minuti') == $id || $foglio->colazione_dalle_minuti == $id ? 'selected' : '' }}>{{$value}}</option>
+              @endforeach
+            </select>
+          </div>
+          <label class="col-md-2">
+              alle
+          </label>
+          <div class="col-md-2">
+            <select required id="colazione_alle_ore" class="form-control" name="colazione_alle_ore">
+              @foreach (Utility::getFsOre() as $id => $value)
+                <option value="{{$id}}" {{old('colazione_alle_ore') == $id || $foglio->colazione_alle_ore == $id ? 'selected' : '' }}>{{$value}}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select required id="colazione_alle_minuti" class="form-control" name="colazione_alle_minuti">
+              @foreach (Utility::getFsMinuti() as $id => $value)
+                <option value="{{$id}}" {{old('colazione_alle_minuti') == $id || $foglio->colazione_alle_minuti == $id ? 'selected' : '' }}>{{$value}}</option>
+              @endforeach
+            </select>
+          </div>
+        </div>
+
+     </div>
+
+     <div class="col-md-4">
+        <div class="row">
+          <label class="col-md-12">Pranzo</label>
+          <div class="col-md-2">
+            <select required id="pranzo_dalle_ore" class="form-control" name="pranzo_dalle_ore">
+            @foreach (Utility::getFsOre() as $id => $value)
+              <option value="{{$id}}" {{old('pranzo_dalle_ore') == $id || $foglio->pranzo_dalle_ore == $id ? 'selected' : '' }}>{{$value}}</option>
+            @endforeach
+          </select>
+          </div>
+          <div class="col-md-2">
+            <select required id="pranzo_dalle_minuti" class="form-control" name="pranzo_dalle_minuti">
+              @foreach (Utility::getFsMinuti() as $id => $value)
+                <option value="{{$id}}" {{old('pranzo_dalle_minuti') == $id || $foglio->pranzo_dalle_minuti == $id ? 'selected' : '' }}>{{$value}}</option>
+              @endforeach
+            </select>
+          </div>
+          <label class="col-md-2">
+              alle
+          </label>
+          <div class="col-md-2">
+            <select required id="pranzo_alle_ore" class="form-control" name="pranzo_alle_ore">
+              @foreach (Utility::getFsOre() as $id => $value)
+                <option value="{{$id}}" {{old('pranzo_alle_ore') == $id || $foglio->pranzo_alle_ore == $id ? 'selected' : '' }}>{{$value}}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select required id="pranzo_alle_minuti" class="form-control" name="pranzo_alle_minuti">
+              @foreach (Utility::getFsMinuti() as $id => $value)
+                <option value="{{$id}}" {{old('pranzo_alle_minuti') == $id || $foglio->pranzo_alle_minuti == $id ? 'selected' : '' }}>{{$value}}</option>
+              @endforeach
+            </select>
+          </div>
+        </div>
+        
+     </div>
+
+
+     <div class="col-md-4">
+        <div class="row">
+          <label class="col-md-12">Cena</label>
+          <div class="col-md-2">
+            <select required id="cena_dalle_ore" class="form-control" name="cena_dalle_ore">
+            @foreach (Utility::getFsOre() as $id => $value)
+              <option value="{{$id}}" {{old('cena_dalle_ore') == $id || $foglio->cena_dalle_ore == $id ? 'selected' : '' }}>{{$value}}</option>
+            @endforeach
+          </select>
+          </div>
+          <div class="col-md-2">
+            <select required id="cena_dalle_minuti" class="form-control" name="cena_dalle_minuti">
+              @foreach (Utility::getFsMinuti() as $id => $value)
+                <option value="{{$id}}" {{old('cena_dalle_minuti') == $id || $foglio->cena_dalle_minuti == $id ? 'selected' : '' }}>{{$value}}</option>
+              @endforeach
+            </select>
+          </div>
+          <label class="col-md-2">
+              alle
+          </label>
+          <div class="col-md-2">
+            <select required id="cena_alle_ore" class="form-control" name="cena_alle_ore">
+              @foreach (Utility::getFsOre() as $id => $value)
+                <option value="{{$id}}" {{old('cena_alle_ore') == $id || $foglio->cena_alle_ore == $id ? 'selected' : '' }}>{{$value}}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select required id="cena_alle_minuti" class="form-control" name="cena_alle_minuti">
+              @foreach (Utility::getFsMinuti() as $id => $value)
+                <option value="{{$id}}" {{old('cena_alle_minuti') == $id || $foglio->cena_alle_minuti == $id ? 'selected' : '' }}>{{$value}}</option>
+              @endforeach
+            </select>
+          </div>
+        </div>
+        
+     </div>
+  </div>
+
+  <div class="spacerBlu"></div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <label>TRATTAMENTI PRINCIPALI:</label>
+    </div>
+  </div>
+
+  <div class="row" style="padding-top: 0;">
+    @foreach (Utility::getFsTrattamentiENote() as $key => $val)
+      @if (strpos($key,'note_') !== false)
+        <div class="col-md-9">
+          <textarea name="{{$key}}" placeholder="Elenca i servizi inclusi" class="form-control">{{old('$key') != '' ?  old('$key') :  $foglio->$key}}</textarea>
+        </div>
+      @else
+        <div class="col-md-3">
+          <input type="checkbox" name="{{$key}}" id="{{$key}}" value="1" {{ old('$key') || $foglio->$key ? 'checked' : '' }}  class="beautiful_checkbox"> 
+          <label for="{{$key}}">
+          {{$val}}
+          </label>
+        </div>
+      @endif
+    @endforeach
+  </div>
+
+  <div class="spacerBlu"></div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <label>SI CHIEDE CAPARRA AL MOMENTO DELLA PRENOTAZIONE?</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-1">
+      <select required id="caparra" class="form-control" name="caparra">
+        @foreach (['si','no'] as $value)
+          <option value="{{$id}}" {{old('caparra') == $id || $foglio->caparra == $id ? 'selected' : '' }}>{{$value}}</option>
+        @endforeach
+      </select>
+    </div>
+    <label class="col-md-offset-1 col-md-1">altro</label>
+    <div class="col-md-6">
+      <input type="text" name="altra_caparra" id="altra_caparra" class="form-control" value="{{old('altra_caparra') != '' ?  old('altra_caparra') :  $foglio->altra_caparra}}">
+    </div>
+  </div>
+  
+  <div class="spacerBlu"></div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <label>PAGAMENTI ACCETTATI:</label>
+    </div>
+  </div>
+  <div class="row">
+    @foreach (Utility::getFsPagamenti() as $key => $val)
+      <div class="col-md-2">
+        <input type="checkbox" name="{{$key}}" id="{{$key}}" value="1" {{ old('$key') || $foglio->$key ? 'checked' : '' }}  class="beautiful_checkbox"> 
+        <label for="{{$key}}">
+        {{$val}}
+        </label>
+      </div>
+    @endforeach
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <label>Note pagamenti</label>
+    </div>
+  </div>
+  <div class="row" style="padding-top: 0;">
+    <div class="col-md-12">
+      <textarea name="note_pagamenti" class="form-control">{{old('note_pagamenti') != '' ?  old('note_pagamenti') :  $foglio->note_pagamenti}}</textarea>
+    </div>
+  </div>
+
+  <div class="spacerBlu"></div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <label>LINGUE PARLATE:</label>
+    </div>
+  </div>
+  <div class="row">
+    @foreach (Utility::getFsLingue() as $key => $val)
+      <div class="col-md-2">
+        <input type="checkbox" name="{{$key}}" id="{{$key}}" value="1" {{ old('$key') || $foglio->$key ? 'checked' : '' }}  class="beautiful_checkbox"> 
+        <label for="{{$key}}">
+        {{$val}}
+        </label>
+      </div>
+    @endforeach
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <label>Altro</label>
+    </div>
+  </div>
+  <div class="row" style="padding-top: 0;">
+    <div class="col-md-12">
+      <textarea name="altra_lingua" class="form-control">{{old('altra_lingua') != '' ?  old('altra_lingua') :  $foglio->altra_lingua}}</textarea>
+    </div>
+  </div>
+
+  <div class="spacerBlu"></div>
+  
+
 
 </form>
 
