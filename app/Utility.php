@@ -99,7 +99,6 @@ class Utility extends Model
 			'hr' => 'Hotel + Residence'
 	];
 
-
 	private static $hotel_categoria = [
 			'' => 'seleziona', 
 			'1' => '&#9733;', 
@@ -478,6 +477,30 @@ class Utility extends Model
 	{
 	return self::$fs_tipologia;
 	}
+
+
+
+	public static function getFsMinuti()
+	{
+		$minuti['00'] = '00';
+		$minuti['15'] = '15';
+		$minuti['30'] = '30';
+		$minuti['45'] = '45';
+		
+		return $minuti; 
+	}
+
+
+	public static function getFsOre()
+	{
+		for ($i = 1; $i <= 24; $i++) {
+			$ore[$i] = $i;
+		}
+
+		return $ore; 
+	}
+
+
 
 
 	public static function getHotelCategoria()

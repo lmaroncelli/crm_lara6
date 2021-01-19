@@ -38,7 +38,7 @@
   
         return date;
       }
-      
+
 		});
 	
 
@@ -241,6 +241,7 @@
   <div id="opzioni_apertura">
 
     <div class="spacerBlu"></div>
+    
     <div class="row aperture">
       <div class="col-md-4">
         <label class="row_label">DATE APERTURA HOTEL</label> 
@@ -261,8 +262,152 @@
       </div>
     </div>
 
+     <div class="row">
+      <div class="col-md-12">
+        (In caso siate aperti in periodi dell’anno al di fuori della stagione estiva indicate quali):
+      </div>
+    </div>
+
+    <div class="row form-inline altre_aperture">
+      <div class="col-md-2">
+        <input type="checkbox" name="fiere" id="fiere" value="1" {{ old('fiere') || $foglio->fiere ? 'checked' : '' }}  class="beautiful_checkbox"> 
+        <label for="fiere">
+          fiere
+        </label>
+      </div>
+      <div class="col-md-2">
+        <input type="checkbox" name="pasqua" id="pasqua" value="1" {{ old('pasqua') || $foglio->pasqua ? 'checked' : '' }}  class="beautiful_checkbox">
+        <label for="pasqua">
+           pasqua
+        </label>
+      </div>
+      <div class="col-md-2">
+        <input type="checkbox" name="capodanno" id="capodanno" value="1" {{ old('capodanno') || $foglio->capodanno ? 'checked' : '' }}  class="beautiful_checkbox"> 
+        <label for="capodanno">
+          capodanno
+        </label>
+      </div>
+      <div class="col-md-2">
+        <input type="checkbox" name="aprile_25" id="aprile_25" value="1" {{ old('aprile_25') || $foglio->aprile_25 ? 'checked' : '' }}  class="beautiful_checkbox">
+        <label for="aprile_25">
+           25 aprile
+        </label>
+      </div>
+      <div class="col-md-2">
+        <input type="checkbox" name="maggio_1" id="maggio_1" value="1" {{ old('maggio_1') || $foglio->maggio_1 ? 'checked' : '' }}  class="beautiful_checkbox">
+        <label for="maggio_1">
+           1° maggio
+        </label>
+      </div>
+    </div>
+
+    <div class="row">
+      <label class="col-md-2">
+        altro
+      </label>
+      <div class="col-md-5">
+        <input type="text" name="altra_apertura" id="altra_apertura" class="form-control"  value="{{old('altra_apertura') != '' ?  old('altra_apertura') :  $foglio->altra_apertura}}">
+      </div>
+    </div>
+    
+  </div> {{-- opzioni_apertura --}}
+
+  <div class="spacerBlu"></div>
+
+  <div class="row">
+    <label class="col-md-3">
+      N. locali e posti letto
+    </label>
+    <div class="col-md-5">
+      <input type="checkbox" name="numeri_anno_prec" id="numeri_anno_prec" value="1" {{ old('numeri_anno_prec') || $foglio->numeri_anno_prec ? 'checked' : '' }} class="beautiful_checkbox">       
+    <label for="numeri_anno_prec">Stessi numeri anno precedente</label>
+    </div>
   </div>
 
+  <div id="elenco_numeri_locali">
+    <div class="row">
+
+      <div class="col-md-3">
+        <label>
+            NUMERO CAMERE:
+        </label>
+        <input type="text" name="n_camere" id="n_camere" class="form-control"  value="{{old('n_camere') != '' ?  old('n_camere') :  $foglio->n_camere}}">
+      </div>
+
+      <div class="col-md-3">
+        <label>
+            NUMERO APPARTAMENTI:
+        </label>
+        <input type="text" name="n_app" id="n_app" class="form-control"  value="{{old('n_app') != '' ?  old('n_app') :  $foglio->n_app}}">
+      </div>
+
+      <div class="col-md-3">
+        <label>
+            NUMERO SUITE:
+        </label>
+        <input type="text" name="n_suite" id="n_suite" class="form-control"  value="{{old('n_suite') != '' ?  old('n_suite') :  $foglio->n_suite}}">
+      </div>
+
+      <div class="col-md-3">
+        <label>
+            NUMERO LETTI:
+        </label>
+        <input type="text" name="n_letti" id="n_letti" class="form-control"  value="{{old('n_letti') != '' ?  old('n_letti') :  $foglio->n_letti}}">
+      </div>
+    </div>
+  </div>
+
+  <div class="spacerBlu"></div>
+
+  <div class="row">
+
+    <div class="col-md-2">  
+      <label style="margin-top: 5px;">
+         ORARIO APERTURA RECEPTION
+      </label>
+    </div>
+    <div class="col-md-4">
+      <input type="checkbox" name="h_24" id="h_24" value="1" {{ old('h_24') || $foglio->h_24 ? 'checked' : '' }} class="beautiful_checkbox">
+      <label for="h_24">
+         24 ore su 24
+      </label>
+    </div>   
+      <label class="col-md-1 orari_reception">
+          dalle
+      </label>
+      <div class="col-md-1 orari_reception">
+        <select required id="rec_dalle_ore" class="form-control" name="rec_dalle_ore">
+          @foreach (Utility::getFsOre() as $id => $value)
+            <option value="{{$id}}" {{old('rec_dalle_ore') == $id || $foglio->rec_dalle_ore == $id ? 'selected' : '' }}>{{$value}}</option>
+          @endforeach
+        </select>
+      </div>
+      <div class="col-md-1 orari_reception">
+        <select required id="rec_dalle_minuti" class="form-control" name="rec_dalle_minuti">
+          @foreach (Utility::getFsMinuti() as $id => $value)
+            <option value="{{$id}}" {{old('rec_dalle_minuti') == $id || $foglio->rec_dalle_minuti == $id ? 'selected' : '' }}>{{$value}}</option>
+          @endforeach
+        </select>
+      </div>
+      <label class="col-md-1 orari_reception">
+          alle
+      </label>
+      <div class="col-md-1 orari_reception">
+        <select required id="rec_alle_ore" class="form-control" name="rec_alle_ore">
+          @foreach (Utility::getFsOre() as $id => $value)
+            <option value="{{$id}}" {{old('rec_alle_ore') == $id || $foglio->rec_alle_ore == $id ? 'selected' : '' }}>{{$value}}</option>
+          @endforeach
+        </select>
+      </div>
+      <div class="col-md-1 orari_reception">
+        <select required id="rec_alle_minuti" class="form-control" name="rec_alle_minuti">
+          @foreach (Utility::getFsMinuti() as $id => $value)
+            <option value="{{$id}}" {{old('rec_alle_minuti') == $id || $foglio->rec_alle_minuti == $id ? 'selected' : '' }}>{{$value}}</option>
+          @endforeach
+        </select>
+      </div>
+  </div> {{-- row --}}
+       
 
 </form>
 
