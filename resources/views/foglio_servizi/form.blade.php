@@ -4,9 +4,41 @@
 @section('js')
 	<script type="text/javascript" charset="utf-8">
 		
-
 		jQuery(document).ready(function(){
+      
+        $.datepicker.setDefaults( $.datepicker.regional[ "it" ] );
 
+        var dateFormat = "dd/mm/yy",
+       
+        dal = $( "#dal" )
+          .datepicker({
+            defaultDate: "+0d",
+            changeMonth: true,
+            numberOfMonths: 1
+          })
+          .on( "change", function() {
+            al.datepicker( "option", "minDate", getDate( this ) );
+          }),
+        al = $( "#al" ).datepicker({
+          defaultDate: "+1w",
+          changeMonth: true,
+          numberOfMonths: 1
+        })
+        .on( "change", function() {
+          dal.datepicker( "option", "maxDate", getDate( this ) );
+        });
+  
+      function getDate( element ) {
+        var date;
+        try {
+          date = $.datepicker.parseDate( dateFormat, element.value );
+        } catch( error ) {
+          date = null;
+        }
+  
+        return date;
+      }
+      
 		});
 	
 
@@ -159,11 +191,14 @@
   <div id="elenco_pti_forza">
     <div class="row">
       
-      @php for ($i=1; $i < 10; $i++) { @endphp  
+      @php 
+        for ($i=1; $i < 10; $i++) {
+          $col = 'pf_'.$i; 
+      @endphp  
         <div class="col-md-4">
           <div class="input-group margin-bottom-sm">
-            <div class="input-group-prepend"><span class="input-group-text" id="btnGroupAddon"><i class="fas fa-check-square"></i></span></div>
-            <input type="text" name="pf_2" id="pf_2" class="form-control"  value="{{old('pf_1') != '' ?  old('pf_1') :  $foglio->pf_1}}"  maxlength="28">
+            <div class="input-group-prepend"><span class="input-group-text" id="btnGroupAddon"><i class="far fa-check-square"></i></span></div>
+            <input type="text" name="{{$col}}" id="{{$col}}" class="form-control"  value="{{old($col) != '' ?  old($col) :  $foglio->$col}}"  maxlength="28">
           </div>
         </div>
       @php } @endphp
@@ -171,6 +206,62 @@
     </div> <!-- row -->
  </div> <!-- elenco_pti_forza -->
 
+ <div class="spacerBlu"></div>
+
+  <div class="row">
+     <div class="col-md-4">
+        <label>Tipologia</label>
+        <select required id="tipo" class="form-control" name="tipo">
+          @foreach (Utility::getFsTipologia() as $tipo_id => $tipo)
+            <option value="{{$tipo_id}}" {{old('tipo') == $tipo_id || $foglio->tipo == $tipo_id ? 'selected' : '' }}>{{$tipo}}</option>
+          @endforeach
+        </select>
+     </div>
+
+     <div class="col-md-4">
+        <label>Categoria</label>
+        <select required id="categoria" class="form-control" name="tipo">
+          @foreach (Utility::getHotelCategoria() as $categoria_id => $categoria)
+            <option value="{{$categoria_id}}" {{old('categoria') == $categoria_id || $foglio->categoria == $categoria_id ? 'selected' : '' }}>{!!$categoria!!}</option>
+          @endforeach
+        </select>
+     </div>
+
+
+     <div class="col-md-4">
+        <label>Apertura</label>
+        <select required id="apertura" class="form-control" name="tipo">
+          @foreach (Utility::getHotelApertura() as $apertura_id => $apertura)
+            <option value="{{$apertura_id}}" {{old('apertura') == $apertura_id || $foglio->apertura == $apertura_id ? 'selected' : '' }}>{{$apertura}}</option>
+          @endforeach
+        </select>
+     </div>
+  </div>
+
+  <div id="opzioni_apertura">
+
+    <div class="spacerBlu"></div>
+    <div class="row aperture">
+      <div class="col-md-4">
+        <label class="row_label">DATE APERTURA HOTEL</label> 
+      </div>
+      <div class="col-md-4">
+          <label>DAL</label>
+          <div class="input-group margin-bottom-sm">
+            <div class="input-group-prepend"><span class="input-group-text" id="btnGroupAddon"><i class="far fa-calendar-alt"></i></span></div>
+            <input type="text" id="dal" name="dal" value="" class="form-control">
+          </div>
+      </div>
+      <div class="col-md-4">
+         <label>AL</label>
+         <div class="input-group margin-bottom-sm">
+            <div class="input-group-prepend"><span class="input-group-text" id="btnGroupAddon"><i class="far fa-calendar-alt"></i></span></div>
+            <input type="text" id="al" name="al" value="" class="form-control">
+          </div>
+      </div>
+    </div>
+
+  </div>
 
 
 </form>

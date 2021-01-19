@@ -89,6 +89,35 @@ class Utility extends Model
 			'intestatario' => "INFO ALBERGHI SRL"
 	];
 
+
+	// FOGLIO SERVIZI
+
+	private static $fs_tipologia = [
+			'' => 'seleziona', 
+			'h' => 'Hotel', 
+			'r' => 'Residence', 
+			'hr' => 'Hotel + Residence'
+	];
+
+
+	private static $hotel_categoria = [
+			'' => 'seleziona', 
+			'1' => '&#9733;', 
+			'2' => '&#9733;&#9733;', 
+			'3' => '&#9733;&#9733;&#9733;', 
+			'3Sup' => '&#9733;&#9733;&#9733;Sup', 
+			'4' => '&#9733;&#9733;&#9733;&#9733;', 
+			'5' => '&#9733;&#9733;&#9733;&#9733;&#9733;'
+	];
+
+
+	private static $hotel_apertura = [
+			'' => 'seleziona', 
+			'a' => 'Annuale', 
+			's' => 'Stagionale'
+	];
+
+
 	/**
 	 * Prende l'id del visitatore
 	 * 
@@ -444,6 +473,22 @@ class Utility extends Model
 		return self::$banca_ia;
 		}
 
+
+	public static function getFsTipologia()
+	{
+	return self::$fs_tipologia;
+	}
+
+
+	public static function getHotelCategoria()
+	{
+		return self::$hotel_categoria;
+	}
+
+	public static function getHotelApertura()
+	{
+		return self::$hotel_apertura;
+	}
 
 	public static function getUltimoGiornoMese($data = '')
 		{
