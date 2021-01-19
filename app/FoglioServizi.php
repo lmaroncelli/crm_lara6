@@ -32,5 +32,10 @@ class FoglioServizi extends Model
         return $this->belongsTo('App\Cliente', 'cliente_id', 'id');
     }
 
-    
+    public function infoPiscina()
+    {
+        return $this->hasOne('App\InfoPiscina', 'foglio_id', 'id');
+    }
+
+
 }

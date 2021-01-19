@@ -661,8 +661,25 @@
   </div>
 
   <div class="spacerBlu"></div>
-  
 
+  <div class="row">
+    <div class="col-md-2">  
+      <label style="margin-top: 5px;">
+         INFO PISCINA
+      </label>
+    </div>
+    <div class="col-md-4">
+      <input type="checkbox" name="piscina" id="piscina" value="1" {{ old('piscina') || $foglio->piscina ? 'checked' : '' }} class="beautiful_checkbox">
+      <label for="piscina">
+        Ho una piscina
+      </label>
+    </div>
+  </div>
+
+
+  <div id="elenco_campi_piscina">
+    
+  </div>
 
 </form>
 
