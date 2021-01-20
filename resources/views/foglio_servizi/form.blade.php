@@ -678,7 +678,93 @@
 
 
   <div id="elenco_campi_piscina">
-    
+      
+    <div class="row">
+      <div class="col-md-6">
+        <label>
+            superficie (mq.)
+        </label>
+        <input class="form-control misure" maxlength="3" name="sup" type="text" value="{{old('sup') != '' ?  old('sup') :  $infoPiscina->sup}}" id="sup">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <label>
+            altezza unica (cm.)
+        </label>
+        <input id="h" class="form-control misure" maxlength="3" name="h" type="text" value="{{old('h') != '' ?  old('h') :  $infoPiscina->h}}">
+      </div>
+      <div class="col-md-4">
+        <label>
+            altezza min. (cm.)
+        </label>
+        <input id="h_min" class="form-control misure" maxlength="3" name="h_min" type="text" value="{{old('h_min') != '' ?  old('h_min') :  $infoPiscina->h_min}}">
+      </div>
+      <div class="col-md-4">
+        <label>
+            altezza max. (cm.)
+        </label>
+          <input id="h_max" class="form-control misure" maxlength="3" name="h_max" type="text" value="{{old('h_max') != '' ?  old('h_max') :  $infoPiscina->h_max}}">
+      </div>
+    </div>
+
+    <div class="row">
+      <label class="col-md-3">
+          PERIODO APERTURA
+      </label>
+      <label class="col-md-1">
+          da
+      </label>
+      <div class="col-md-2">
+        <select required id="aperto_dal" class="form-control" name="aperto_dal">
+          @foreach (Utility::getFsMesi() as $id => $value)
+            <option value="{{$id}}" {{old('aperto_dal') == $id || $infoPiscina->aperto_dal == $id ? 'selected' : '' }}>{{$value}}</option>
+          @endforeach
+        </select>
+      </div>
+      <label class="col-md-1">
+          a
+      </label>
+      <div class="col-md-2">
+        <select required id="aperto_al" class="form-control" name="aperto_al">
+          @foreach (Utility::getFsMesi() as $id => $value)
+            <option value="{{$id}}" {{old('aperto_al') == $id || $infoPiscina->aperto_al == $id ? 'selected' : '' }}>{{$value}}</option>
+          @endforeach
+        </select>
+      </div>
+      <div class="col-md-2">
+        <input type="checkbox" name="aperto_annuale" id="aperto_annuale" value="1" {{ old('aperto_annuale') || $infoPiscina->aperto_annuale ? 'checked' : '' }} class="beautiful_checkbox">
+        <label for="aperto_annuale">
+          annuale
+        </label>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <label>POSIZIONE:</label>
+      </div>
+    </div>
+    <div class="row posizione_piscina">
+      @foreach (Utility::getFsPosizionePiscina() as $key => $val)
+      <div class="col-md-2">
+        <input type="radio" name="posizione" id="{{$key}}" value="{{$val}}" {{ old('$key') || $infoPiscina->posizione == $val ? 'checked' : '' }} class=""> 
+        <label for="{{$key}}">
+        {{$val}}
+        </label>
+      </div>
+      @endforeach
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <label>CARATTERISTICHE:</label>
+      </div>
+    </div>
+
+
+
   </div>
 
 </form>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Cliente;
 use App\Utility;
+use App\InfoPiscina;
 use App\FoglioServizi;
 use Illuminate\Http\Request;
 
@@ -90,10 +91,22 @@ class FoglioServiziController extends Controller
     {
 		$foglio = FoglioServizi::with('cliente')->find($id);
 
+		$infoPiscina = $foglio->infoPiscina;
+		
+		// se infoPiscina non esiste la creo vuota e la associo al foglio
+		if ( is_null($infoPiscina) ) 
+		{
+			$infoPiscina = new InfoPiscina;
+
+			$infoPiscina->foglioServizi()->associate($foglio);
+
+			$infoPiscina->save();
+		}
+
 		// commerciale selezionato
 		$commerciale_contratto = User::find($foglio->user_id)->name;
 
-		return view('foglio_servizi.form', compact('foglio', 'commerciale_contratto'));
+		return view('foglio_servizi.form', compact('foglio', 'commerciale_contratto', 'infoPiscina'));
 
 
     }

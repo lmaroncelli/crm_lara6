@@ -155,6 +155,22 @@ class Utility extends Model
 		'spagnolo' => 'spagnolo' , 
 		'russo' => 'russo'
 	];
+
+
+	private static $fs_mesi = [
+		'1' => 'Gennaio',
+		'2' => 'Febbraio',
+		'3' => 'Marzo',
+		'4' => 'Aprile',
+		'5' => 'Maggio',
+		'6' => 'Giugno',
+		'7' => 'Luglio',
+		'8' => 'Agosto',
+		'9' => 'Settembre',
+		'10' => 'Ottobre',
+		'11' => 'Novembre',
+		'12' => 'Dicembre',
+	];
 	
 	/**
 	 * Prende l'id del visitatore
@@ -565,13 +581,51 @@ class Utility extends Model
 	}
 
 
-
 	public static function getFsLingue()
 	{
 		return self::$fs_lingue;
 	}
 
-	
+	public static function getFsMesi()
+	{
+		return self::$fs_mesi;
+	}
+
+
+
+	public static function getFsPosizionePiscina()
+	{
+		$posizione['giardino'] = 'giardino';
+		$posizione['piano rialzato'] = 'piano rialzato';
+		$posizione['panoramica sul tetto'] = 'panoramica sul tetto';
+		$posizione['in spiaggia'] = 'in spiaggia';
+		$posizione['interna'] = 'interna';
+		$posizione['interna ed esterna'] = 'interna ed esterna';
+
+		return $posizione;
+	}
+
+	public static function getFsCaratteristichePiscina()
+	{
+		$carr['coperta'] = 'coperta';
+		$carr['riscaldata'] = 'riscaldata';
+		$carr['salata'] = 'salata';
+		$carr['idro'] = 'idromassaggio';
+		$carr['idro_cervicale'] = 'idromass. cervicale';
+		$carr['scivoli'] = 'scivoli';
+		$carr['trampolino'] = 'trampolino';
+		$carr['aperitivi'] = 'aperitivi in piscina';
+		$carr['getto_bolle'] = 'getto di bolle';
+		$carr['cascata'] = 'cascata d\'acqua';
+		$carr['musica_sub'] = 'musica subacquea';
+		$carr['wi_fi'] = 'zona wi-fi';
+		$carr['pagamento'] = 'a pagamento';
+		$carr['salvataggio'] = 'bagnino di salvataggio';
+		$carr['nuoto_contro'] = 'nuoto controcorrente';
+
+
+		return $carr;
+	}
 
 
 
