@@ -628,6 +628,19 @@ class Utility extends Model
 	}
 
 
+	public static function getFsPosizioneVasca()
+	{
+		$posizione['giardino'] = 'giardino';
+		$posizione['piano rialzato'] = 'piano rialzato';
+		$posizione['panoramica sul tetto'] = 'panoramica sul tetto';
+		$posizione['in spiaggia'] = 'in spiaggia';
+		$posizione['interna'] = 'interna';
+		$posizione['esterna'] = 'esterna';
+
+		return $posizione;
+	}
+
+
 
 	public static function getUltimoGiornoMese($data = '')
 		{

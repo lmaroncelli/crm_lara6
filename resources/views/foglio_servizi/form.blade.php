@@ -762,10 +762,158 @@
         <label>CARATTERISTICHE:</label>
       </div>
     </div>
+    @php
+      $row_carr = array_chunk(Utility::getFsCaratteristichePiscina(), 4, true);
+    @endphp
+    @foreach ($row_carr as $n_row => $caratteristichePiscina_in_row)
+      <div class="row">
+        @foreach ($caratteristichePiscina_in_row as $carr => $carr_view)
+          <div class="col-md-3">
+            <input type="checkbox" name="{{$carr}}" id="{{$carr}}" value="1" {{ old($carr) || $infoPiscina->$carr ? 'checked' : '' }} class="beautiful_checkbox">
+            <label for="{{$carr}}">
+              {{$carr_view}}
+            </label>
+          </div>
+        @endforeach
+      </div>
+    @endforeach
 
+    <div class="row">
+      <div class="col-md-6">
+        <label>
+           N. lettini prendisole
+        </label>
+        <input id="lettini_dispo" class="form-control" maxlength="3" name="lettini_dispo" type="text" value="{{old('lettini_dispo') != '' ?  old('lettini_dispo') :  $infoPiscina->lettini_dispo}}">
+      </div>
+      <div class="col-md-3">
+        <label>
+            N. ore esposta al sole
+        </label>
+        <input id="espo_sole" class="form-control" maxlength="3" name="espo_sole" type="text" value="{{old('espo_sole') != '' ?  old('espo_sole') :  $infoPiscina->espo_sole}}">
+      </div>
+      <div class="col-md-3">
+        <input type="checkbox" name="espo_sole_tutto_giorno" id="espo_sole_tutto_giorno" value="1" {{ old('espo_sole_tutto_giorno') || $infoPiscina->espo_sole_tutto_giorno ? 'checked' : '' }} class="beautiful_checkbox">
+        <label for="espo_sole_tutto_giorno">
+          tutto il giorno
+        </label>
+      </div>
+    </div>
 
+    <div class="row">
+      <div class="col-md-12">
+        <label>Peculiarità</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <textarea name="peculiarita_piscina" class="form-control">{{old('peculiarita_piscina') != '' ?  old('peculiarita_piscina') :  $foglio->peculiarita_piscina}}</textarea>
+      </div>
+    </div>
 
+    <hr>
+    <div class="row">
+      <div class="col-md-12">
+        <label>VASCA BIMIBI</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <label>
+          superficie (mq.)
+        </label>
+        <input id="vasca_bimbi_sup" class="form-control" maxlength="3" name="vasca_bimbi_sup" type="text" value="{{old('vasca_bimbi_sup') != '' ?  old('vasca_bimbi_sup') :  $infoPiscina->vasca_bimbi_sup}}">
+      </div>
+      <div class="col-md-4">
+        <label>
+            altezza unica (cm.)
+        </label>
+        <input id="vasca_bimbi_h" class="form-control" maxlength="3" name="vasca_bimbi_h" type="text" value="{{old('vasca_bimbi_h') != '' ?  old('vasca_bimbi_h') :  $infoPiscina->vasca_bimbi_h}}">
+      </div>
+      <div class="col-md-4">
+        <input type="checkbox" name="vasca_bimbi_riscaldata" id="vasca_bimbi_riscaldata" value="1" {{ old('vasca_bimbi_riscaldata') || $infoPiscina->vasca_bimbi_riscaldata ? 'checked' : '' }} class="beautiful_checkbox">
+        <label for="vasca_bimbi_riscaldata">
+          riscaldata
+        </label>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+      <div class="col-md-12">
+        <label>VASCA IDROMASSAGGIO A PARTE</label>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <label>
+          N. vasche disponibili
+        </label>
+        <input id="vasca_idro_n_dispo" class="form-control" maxlength="3" name="vasca_idro_n_dispo" type="text" value="{{old('vasca_idro_n_dispo') != '' ?  old('vasca_idro_n_dispo') :  $infoPiscina->vasca_idro_n_dispo}}">
+      </div>
+      <div class="col-md-4">
+        <label>
+            N. posti disponibili
+        </label>
+        <input id="vasca_idro_posti_dispo" class="form-control" maxlength="3" name="vasca_idro_posti_dispo" type="text" value="{{old('vasca_idro_posti_dispo') != '' ?  old('vasca_idro_posti_dispo') :  $infoPiscina->vasca_idro_posti_dispo}}">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <label>Posizione:</label>
+      </div>
+    </div>
+    <div class="row posizione_vasca">
+      @foreach (Utility::getFsPosizioneVasca() as $key => $val)
+      <div class="col-md-2">
+        <input type="radio" name="vasca_posizione" id="v_{{$key}}" value="{{$val}}" {{ old('$key') || $infoPiscina->vasca_posizione == $val ? 'checked' : '' }} class=""> 
+        <label for="v_{{$key}}">
+        {{$val}}
+        </label>
+      </div>
+      @endforeach
+    </div>
+
+    <div class="row">
+      <div class="col-md-3">
+        <input type="checkbox" name="vasca_idro_riscaldata" id="vasca_idro_riscaldata" value="1" {{ old('vasca_idro_riscaldata') || $infoPiscina->vasca_idro_riscaldata ? 'checked' : '' }} class="beautiful_checkbox">
+        <label for="vasca_idro_riscaldata">
+          riscaldata
+        </label>
+      </div>
+      <div class="col-md-3">
+        <input type="checkbox" name="vasca_pagamento" id="vasca_pagamento" value="1" {{ old('vasca_pagamento') || $infoPiscina->vasca_pagamento ? 'checked' : '' }} class="beautiful_checkbox">
+        <label for="vasca_pagamento">
+          a pagamento
+        </label>
+      </div>
+    </div>
+
+  </div> {{-- elenco_campi_piscina --}}
+
+  <div class="spacerBlu"></div>
+
+  <div class="row">
+    <div class="col-md-2">  
+      <label style="margin-top: 5px;">
+         INFO BENESSERE
+      </label>
+    </div>
+    <div class="col-md-4">
+      <input type="checkbox" name="benessere" id="benessere" value="1" {{ old('benessere') || $foglio->benessere ? 'checked' : '' }} class="beautiful_checkbox">
+      <label for="benessere">
+        Ho un centro benessere
+      </label>
+    </div>
   </div>
+
+  <div id="elenco_campi_benessere">
+
+    
+
+  </div> {{-- elenco_campi_benessere --}}
 
 </form>
 

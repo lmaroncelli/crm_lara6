@@ -37,5 +37,10 @@ class FoglioServizi extends Model
         return $this->hasOne('App\InfoPiscina', 'foglio_id', 'id');
     }
 
+    public function centroBenessere()
+    {
+        return $this->hasOne('App\CentroBenessere', 'foglio_id', 'id');
+    }
+
 
 }
