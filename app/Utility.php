@@ -627,6 +627,28 @@ class Utility extends Model
 		return $carr;
 	}
 
+	public static function getFsCaratteristicheCentroBenessere()
+	{
+
+		$carr['piscina_benessere'] = 'piscina';
+		$carr['idromassaggio'] = 'idromassaggio';
+		$carr['sauna_finlandese'] = 'sauna finlandese';
+		$carr['bagno_turco'] = 'bagno turco';
+		$carr['docce_emozionali'] = 'docce emozionali';
+		$carr['cascate_ghiaccio'] = 'cascate di ghiaccio';
+		$carr['aromaterapia'] = 'aromaterapia';
+		$carr['percorso_kneipp'] = 'percorso kneipp';
+		$carr['cromoterapia'] = 'cromoterapia';
+		$carr['massaggi'] = 'massaggi';
+		$carr['trattamenti_estetici'] = 'trattamenti estetici';
+		$carr['area_relax'] = 'area relax';
+		$carr['letto_marmo_riscaldato'] = 'letto di marmo riscaldato';
+		$carr['stanza_sale'] = 'stanza del sale';
+		$carr['kit_benessere'] = 'kit benessere in dotazione';
+
+		return $carr;
+	}
+
 
 	public static function getFsPosizioneVasca()
 	{

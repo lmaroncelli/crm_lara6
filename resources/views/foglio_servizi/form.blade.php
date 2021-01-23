@@ -598,7 +598,7 @@
         @endforeach
       </select>
     </div>
-    <label class="col-md-offset-1 col-md-1">altro</label>
+    <label class="offset-md-1 col-md-1">altro</label>
     <div class="col-md-6">
       <input type="text" name="altra_caparra" id="altra_caparra" class="form-control" value="{{old('altra_caparra') != '' ?  old('altra_caparra') :  $foglio->altra_caparra}}">
     </div>
@@ -911,7 +911,172 @@
 
   <div id="elenco_campi_benessere">
 
-    
+     <div class="row">
+      <div class="col-md-6">
+        <label>
+            superficie (mq.)
+        </label>
+        <input class="form-control misure" maxlength="3" name="sup_b" type="text" value="{{old('sup_b') != '' ?  old('sup_b') :  $centroBenessere->sup_b}}" id="sup_b">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <label>Ho un'area fitness</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2">
+        <select required id="area_fitness" class="form-control" name="area_fitness">
+        @foreach (['si','no'] as $value)
+          <option value="{{$id}}" {{old('area_fitness') == $id || $centroBenessere->area_fitness == $id ? 'selected' : '' }}>{{$value}}</option>
+        @endforeach
+        </select>
+      </div>
+      <label class="offset-md-3 col-md-1">superficie (mq.)</label>
+      <div class="col-md-5">
+        <input type="text" name="sup_fitness" id="sup_fitness" class="form-control" value="{{old('sup_fitness') != '' ?  old('sup_fitness') :  $centroBenessere->sup_fitness}}">
+      </div>
+    </div>
+
+    <div class="row">
+      <label class="col-md-3">
+          PERIODO APERTURA
+      </label>
+      <label class="col-md-1">
+          da
+      </label>
+      <div class="col-md-2">
+        <select required id="aperto_dal_b" class="form-control" name="aperto_dal_b">
+          @foreach (Utility::getFsMesi() as $id => $value)
+            <option value="{{$id}}" {{old('aperto_dal_b') == $id || $centroBenessere->aperto_dal_b == $id ? 'selected' : '' }}>{{$value}}</option>
+          @endforeach
+        </select>
+      </div>
+      <label class="col-md-1">
+          a
+      </label>
+      <div class="col-md-2">
+        <select required id="aperto_al_b" class="form-control" name="aperto_al_b">
+          @foreach (Utility::getFsMesi() as $id => $value)
+            <option value="{{$id}}" {{old('aperto_al_b') == $id || $centroBenessere->aperto_al_b == $id ? 'selected' : '' }}>{{$value}}</option>
+          @endforeach
+        </select>
+      </div>
+      <div class="col-md-2">
+        <input type="checkbox" name="aperto_annuale_b" id="aperto_annuale_b" value="1" {{ old('aperto_annuale_b') || $centroBenessere->aperto_annuale_b ? 'checked' : '' }} class="beautiful_checkbox">
+        <label for="aperto_annuale_b">
+          annuale
+        </label>
+      </div>
+    </div>
+
+       <!-- a pagamento -->
+    <div class="row">
+      <div class="col-md-12">
+        <label>A pagamento</label>
+      </div>
+    </div>
+    <div class="row" style="padding-top: 0;">
+      <div class="col-md-2">
+         <select required id="a_pagamento" class="form-control" name="a_pagamento">
+          @foreach (['si','no'] as $value)
+            <option value="{{$id}}" {{old('a_pagamento') == $id || $centroBenessere->a_pagamento == $id ? 'selected' : '' }}>{{$value}}</option>
+          @endforeach
+          </select>
+      </div>
+    </div>
+
+
+     <div class="row">
+      <label class="col-md-2">Posizione:</label>
+      <div class="col-md-3">
+        <input type="checkbox" name="in_hotel" id="in_hotel" value="1" {{ old('in_hotel') || $centroBenessere->in_hotel ? 'checked' : '' }} class="beautiful_checkbox">
+        <label for="in_hotel">
+          in hotel
+        </label>
+      </div>
+      <label class="col-md-1">a</label>
+      <div class="col-md-2">
+        <input type="text" name="distanza_hotel" id="distanza_hotel" class="form-control input_distanza_hotel"  value="{{old('distanza_hotel') != '' ?  old('distanza_hotel') :  $centroBenessere->distanza_hotel}}">
+      </div>
+      <label class="col-md-2"> metri dall'hotel</label>
+    </div>
+
+     <!-- eta minima per accedere -->
+    <div class="row">
+      <label class="col-md-3">Età minima per accedere</label>
+      <div class="col-md-5">
+        <input type="text" name="eta_minima" id="eta_minima" class="form-control input_eta_minima"  value="{{old('eta_minima') != '' ?  old('eta_minima') :  $centroBenessere->eta_minima}}">
+      </div>
+      <label class="col-md-1">anni</label>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <label>CARATTERISTICHE:</label>
+      </div>
+    </div>
+    @php
+      $row_carr = array_chunk(Utility::getFsCaratteristicheCentroBenessere(), 4, true);
+    @endphp
+    @foreach ($row_carr as $n_row => $caratteristicheCentroBenessere_in_row)
+      <div class="row">
+        @foreach ($caratteristicheCentroBenessere_in_row as $carr => $carr_view)
+          <div class="col-md-3">
+            <input type="checkbox" name="{{$carr}}" id="{{$carr}}" value="1" {{ old($carr) || $centroBenessere->$carr ? 'checked' : '' }} class="beautiful_checkbox">
+            <label for="{{$carr}}">
+              {{$carr_view}}
+            </label>
+          </div>
+        @endforeach
+      </div>
+    @endforeach
+
+    <div class="row">
+      <div class="col-md-12">
+        <label>Peculiarità</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <textarea name="peculiarita" class="form-control">{{old('peculiarita') != '' ?  old('peculiarita') :  $centroBenessere->peculiarita}}</textarea>
+      </div>
+    </div>
+
+    <div class="row">
+    <div class="col-md-12">
+      <label>Obbligo di prenotazione</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2">
+      <select required id="obbligo_prenotazione" class="form-control" name="obbligo_prenotazione">
+        @foreach (['si','no'] as $value)
+          <option value="{{$id}}" {{old('obbligo_prenotazione') == $id || $centroBenessere->obbligo_prenotazione == $id ? 'selected' : '' }}>{{$value}}</option>
+        @endforeach
+      </select>
+    </div>
+  </div>
+
+  <!-- uso in esclusiva -->
+  <div class="row">
+    <div class="col-md-12">
+      <label>Uso in esclusiva</label>
+    </div>
+  </div>
+  <div class="row" style="padding-top: 0;">
+    <div class="col-md-2">
+       <select required id="uso_esclusivo" class="form-control" name="uso_esclusivo">
+        @foreach (['seleziona', 'si','no','a richiesta'] as $value)
+          <option value="{{$id}}" {{old('uso_esclusivo') == $id || $centroBenessere->uso_esclusivo == $id ? 'selected' : '' }}>{{$value}}</option>
+        @endforeach
+      </select>
+    </div>
+  </div>
+
+
+
 
   </div> {{-- elenco_campi_benessere --}}
 
