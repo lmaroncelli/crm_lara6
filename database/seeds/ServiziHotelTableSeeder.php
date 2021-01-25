@@ -21,10 +21,10 @@ class ServiziHotelTableSeeder extends Seeder
             return (array) $x;
         })->toArray();
 
-        DB::connection('mysql')->table('tblServiziHotel')->truncate();
+        DB::connection('mysql')->table('tblFogliServizi')->truncate();
 
         foreach ($ServiziHotel as $servizio) {
-            DB::connection('mysql')->table('tblServiziHotel')->insert($servizio);
+            DB::connection('mysql')->table('tblFogliServizi')->insert($servizio);
         }
     }
 }

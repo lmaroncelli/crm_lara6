@@ -13,7 +13,7 @@ class CreateServiziHotel extends Migration
      */
     public function up()
     {
-        Schema::create('tblServiziHotel', function (Blueprint $table) {
+        Schema::create('tblFogliServizi', function (Blueprint $table) {
             $table->id();
             $table->integer('sorgente_id')->default(0);
             $table->integer('user_id')->unsigned();
@@ -147,6 +147,6 @@ class CreateServiziHotel extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tblServiziHotel');
+        Schema::dropIfExists('tblFogliServizi');
     }
 }

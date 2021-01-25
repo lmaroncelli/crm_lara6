@@ -13,7 +13,7 @@ class CreateElencoServiziHotel extends Migration
      */
     public function up()
     {
-        Schema::create('tblElencoServiziHotel', function (Blueprint $table) {
+        Schema::create('tblServiziFoglio', function (Blueprint $table) {
             $table->id();
             $table->integer('gruppo_id')->nullable()->default(null);
             $table->string('nome')->nullable()->default(null);
@@ -35,6 +35,6 @@ class CreateElencoServiziHotel extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tblElencoServiziHotel');
+        Schema::dropIfExists('tblServiziFoglio');
     }
 }

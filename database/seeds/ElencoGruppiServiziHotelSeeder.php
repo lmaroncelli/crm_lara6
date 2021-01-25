@@ -21,10 +21,10 @@ class ElencoGruppiServiziHotelSeeder extends Seeder
             return (array) $x;
         })->toArray();
 
-        DB::connection('mysql')->table('tblElencoGruppiServiziHotel')->truncate();
+        DB::connection('mysql')->table('tblGruppiServiziFoglio')->truncate();
 
         foreach ($tblGruppoServiziHotel as $gruppo) {
-            DB::connection('mysql')->table('tblElencoGruppiServiziHotel')->insert($gruppo);
+            DB::connection('mysql')->table('tblGruppiServiziFoglio')->insert($gruppo);
         }
 
     }

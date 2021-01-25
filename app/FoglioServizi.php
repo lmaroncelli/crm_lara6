@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class FoglioServizi extends Model
 {
-    protected $table = 'tblServiziHotel';
+    protected $table = 'tblFogliServizi';
 
     protected $guarded = ['id'];
 
@@ -40,6 +40,11 @@ class FoglioServizi extends Model
     public function centroBenessere()
     {
         return $this->hasOne('App\CentroBenessere', 'foglio_id', 'id');
+    }
+
+    public function servizi()
+    {
+        return $this->belongsToMany('App\ServizioFoglio', 'tblFoglioAssociaServizi', 'foglio_id', 'servizio_id');
     }
 
 

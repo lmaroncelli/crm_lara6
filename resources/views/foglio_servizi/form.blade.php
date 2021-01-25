@@ -1075,10 +1075,41 @@
     </div>
   </div>
 
-
-
-
   </div> {{-- elenco_campi_benessere --}}
+
+
+  <div class="spacerBlu"></div>
+
+
+  {{-- Elenco gruppiServizi --}}
+
+  @foreach ($gruppiServizi as $gruppo)
+    <div class="row">
+      <div class="col-md-12">
+        <label>{{$gruppo->nome}}</label>
+      </div>
+    </div>
+    <div class="elenco_servizi">
+      @foreach ($gruppo->elenco_servizi as $servizio)
+        <div class="row">
+          <div class="col-md-3">
+            <input type="checkbox" name="{{$servizio->id}}" id="{{$servizio->id}}" value="1" {{ old($servizio->id) || array_key_exists($servizio->id, $ids_servizi_associati) ? 'checked' : '' }}  class="beautiful_checkbox">
+            <label for="{{$servizio->id}}">
+              {{$servizio->nome}}
+            </label>
+          </div>
+          <div class="col-md-3">
+            <input type="text" 
+                    name="nota_servizio_{{$servizio->id}}" 
+                    id="nota_servizio_{{$servizio->id}}" 
+                    class="form-control"  
+                    value="{{ 
+                      old('nota_servizio_'.$servizio->id) != '' ?  old('nota_servizio_'.$servizio->id) : (array_key_exists($servizio->id, $ids_servizi_associati) ? $ids_servizi_associati[$servizio->id] : '')  }} ">
+          </div>  
+        </div>
+      @endforeach
+    </div>
+  @endforeach
 
 </form>
 

@@ -8,6 +8,7 @@ use App\Utility;
 use App\InfoPiscina;
 use App\FoglioServizi;
 use App\CentroBenessere;
+use App\GruppoServiziFoglio;
 use Illuminate\Http\Request;
 
 class FoglioServiziController extends Controller
@@ -90,7 +91,12 @@ class FoglioServiziController extends Controller
      */
     public function edit($id)
     {
-		$foglio = FoglioServizi::with('cliente')->find($id);
+        $foglio = FoglioServizi::with('cliente')->find($id);
+
+        // commerciale selezionato
+        $commerciale_contratto = User::find($foglio->user_id)->name;
+
+
 
 		$infoPiscina = $foglio->infoPiscina;
 		
@@ -104,6 +110,8 @@ class FoglioServiziController extends Controller
 			$infoPiscina->save();
         }
 
+
+
         $centroBenessere = $foglio->centroBenessere;
 
         // se infoPiscina non esiste la creo vuota e la associo al foglio
@@ -116,10 +124,16 @@ class FoglioServiziController extends Controller
             $centroBenessere->save();
         }
 
-		// commerciale selezionato
-		$commerciale_contratto = User::find($foglio->user_id)->name;
 
-		return view('foglio_servizi.form', compact('foglio', 'commerciale_contratto', 'infoPiscina', 'centroBenessere'));
+        // elenco GruppiServizi 
+        $gruppiServizi = GruppoServiziFoglio::with(['elenco_servizi'])->orderBy('order')->get();
+
+        // ids servizi associati al foglio
+        $ids_servizi_associati = $foglio->servizi()->pluck('tblFoglioAssociaServizi.note', 'tblFoglioAssociaServizi.servizio_id')->toArray();
+
+
+
+		return view('foglio_servizi.form', compact('foglio', 'commerciale_contratto', 'infoPiscina', 'centroBenessere', 'gruppiServizi', 'ids_servizi_associati'));
 
 
     }

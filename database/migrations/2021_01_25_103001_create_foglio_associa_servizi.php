@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateElencoGruppiServiziHotel extends Migration
+class CreateFoglioAssociaServizi extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,16 @@ class CreateElencoGruppiServiziHotel extends Migration
      */
     public function up()
     {
-        Schema::create('tblGruppiServiziFoglio', function (Blueprint $table) {
+        Schema::create('tblFoglioAssociaServizi', function (Blueprint $table) {
             $table->id();
-            $table->string('nome')->nullable()->default(null);
-            $table->integer('info_id')->nullable()->default(null);
-            $table->integer('order')->nullable()->default(null);
+            $table->integer('foglio_id')->nullable()->default(null);
+            $table->integer('servizio_id')->nullable()->default(null);
+            $table->string('note')->nullable()->default(null);
             $table->timestamps();
         });
 
         Artisan::call('db:seed', [
-            '--class' => 'ElencoGruppiServiziHotelSeeder',
+            '--class' => 'FoglioAssociaServiziSeeder',
             '--force' => true
         ]);
     }
@@ -34,6 +34,6 @@ class CreateElencoGruppiServiziHotel extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tblGruppiServiziFoglio');
+        Schema::dropIfExists('tblFoglioAssociaServizi');
     }
 }
