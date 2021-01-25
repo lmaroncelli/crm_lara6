@@ -1084,6 +1084,7 @@
   {{-- Elenco gruppiServizi --}}
 
   @foreach ($gruppiServizi as $gruppo)
+
     <div class="row">
       <div class="col-md-12">
         <label>{{$gruppo->nome}}</label>
@@ -1092,7 +1093,7 @@
     <div class="elenco_servizi">
       @foreach ($gruppo->elenco_servizi as $servizio)
         <div class="row">
-          <div class="col-md-3">
+          <div class="col-md-5">
             <input type="checkbox" name="{{$servizio->id}}" id="{{$servizio->id}}" value="1" {{ old($servizio->id) || array_key_exists($servizio->id, $ids_servizi_associati) ? 'checked' : '' }}  class="beautiful_checkbox">
             <label for="{{$servizio->id}}">
               {{$servizio->nome}}
@@ -1109,6 +1110,31 @@
         </div>
       @endforeach
     </div>
+    @if ( isset($serv_agg[$gruppo->id]) )        
+      @foreach ($serv_agg[$gruppo->id] as $servizio)
+            @php
+                list($id_serv_agg,$nome_serv_agg) = explode('|',$servizio);
+            @endphp
+          <div class="row">
+            <div class="col-md-12">
+              {{$nome_serv_agg}}
+            </div>
+          </div>
+      @endforeach
+    @endif
+    <!-- servizio aggiuntivo -->
+    <div class="row">
+      <div class="col-md-2 col offset-md-1">
+        <label for="servizio_add_{{$gruppo->id}}" style="font-weight: normal;">
+            Servizio aggiuntivo
+        </label>       
+      </div>
+      <div class="col-md-6">
+        <input type="text" id="servizio_add_{{$gruppo->id}}" class="form-control">
+        <a class="btn btn-primary add_servizio" id="{{$gruppo->id}}">add</a>
+      </div>
+    </div>
+
   @endforeach
 
 </form>

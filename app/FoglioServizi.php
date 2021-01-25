@@ -47,5 +47,10 @@ class FoglioServizi extends Model
         return $this->belongsToMany('App\ServizioFoglio', 'tblFoglioAssociaServizi', 'foglio_id', 'servizio_id');
     }
 
+    public function servizi_aggiuntivi()
+    {
+        return $this->hasMany('App\ServizioAggiuntivoFoglio', 'foglio_id', 'id');
+    }
+
 
 }

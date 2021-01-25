@@ -133,7 +133,21 @@ class FoglioServiziController extends Controller
 
 
 
-		return view('foglio_servizi.form', compact('foglio', 'commerciale_contratto', 'infoPiscina', 'centroBenessere', 'gruppiServizi', 'ids_servizi_associati'));
+        // servizi aggiuntivi associati al foglio
+        $serviziAggiuntivi = $foglio->servizi_aggiuntivi;
+
+        $serv_agg = [];
+
+        foreach ($serviziAggiuntivi as $serv) {
+            if (isset($serv_agg[$serv->gruppo_id])) {
+                $serv_agg[$serv->gruppo_id][] = [$serv->id.'|'.$serv->nome];
+            } else {
+                $serv_agg[$serv->gruppo_id] = [$serv->id . '|' . $serv->nome];
+            }
+        }
+
+        //dd($serv_agg);
+		return view('foglio_servizi.form', compact('foglio', 'commerciale_contratto', 'infoPiscina', 'centroBenessere', 'gruppiServizi', 'ids_servizi_associati', 'serv_agg'));
 
 
     }

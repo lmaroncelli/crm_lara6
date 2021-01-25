@@ -17,5 +17,10 @@ class GruppoServiziFoglio extends Model
         return $this->hasMany('App\ServizioFoglio', 'gruppo_id', 'id');
     }
 
+    public function servizi_aggiuntivi()
+    {
+        return $this->hasMany('App\ServizioAggiuntivoFoglio', 'gruppo_id', 'id');
+    }
+
 
 }
