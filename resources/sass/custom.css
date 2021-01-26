@@ -458,3 +458,24 @@ ul#filtro_scadenze {
     background-color: #35a6e8;
     margin: 30px 0;
 }
+
+div.elenco_servizi .row.servizio {
+    border: 0px solid #8fd1e6;
+    padding: 25px 40px;
+}
+
+.flex-container {
+  display: flex;
+}
+
+.elenco_servizi .flex-container input[type="checkbox"] {
+    width: 18px;
+    height: 25px;
+}
+
+.elenco_servizi .flex-container label {
+    width: 240px;
+    height: 40px;
+    margin-left: 10px;
+}
+
