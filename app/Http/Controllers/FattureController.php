@@ -921,7 +921,7 @@ class FattureController extends Controller
                 elseif($riga_fatturazione->al_iva == 0 && ( strpos($riga_fatturazione->servizio, 'ex Art. 7 comma 4 DPR 633/72') !== false || strpos($riga_fatturazione->servizio, 'ex Art.7 comma 4 DPR 633/72') !== false ||  strpos($fattura->note, 'ex Art.7 comma 4 DPR 633/72') !== false ||  strpos($fattura->note, 'ex Art. 7 comma 4 DPR 633/72') !== false))
                   {
                   
-                  $xmlString .= '<Natura>N3</Natura>';
+                  $xmlString .= '<Natura>N2.1</Natura>';
 
                   if (!$riga_fatturazione->perc_sconto) 
                     {
@@ -1066,7 +1066,7 @@ class FattureController extends Controller
               $xmlString .= '
               <DatiRiepilogo>
                 <AliquotaIVA>0.00</AliquotaIVA>
-                <Natura>N3</Natura>
+                <Natura>N2.1</Natura>
                 <ImponibileImporto>'. sprintf('%.2f',$imponibileImporto_iva_nulla_N3) .'</ImponibileImporto>
                 <Imposta>0.00</Imposta>
                 <RiferimentoNormativo>Fattura esente ex Art. 7 comma 4 DPR 633/72</RiferimentoNormativo>
