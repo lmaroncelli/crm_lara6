@@ -6560,5 +6560,13 @@ div.elenco_servizi .row.servizio {
     margin-left: 10px;
 }
 
+.servizio i.fa-trash {
+  color:#f00;
+}
+
+.servizio i.fa-trash:hover {
+  cursor: pointer;
+}
+
 
 

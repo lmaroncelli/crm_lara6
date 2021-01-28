@@ -39,6 +39,71 @@
         return date;
       }
 
+
+
+       $(".add_servizio").click(function(event){
+          
+          event.preventDefault();
+          var gruppo_id = $(this).attr('id');
+          var value = $("#servizio_add_"+gruppo_id).val();
+
+
+          if (value == '') {
+          
+            return false;
+          
+          } else {
+
+            var foglio_id = '{{$foglio->id}}';  
+            var data = {
+                gruppo_id: gruppo_id,
+                nome_servizio: value,
+                foglio_id:foglio_id,
+                };
+            
+            $.ajax({
+                url: "{{ route('add-servizio-aggiuntivo-foglio-servizi-ajax') }}",
+                type: 'POST',
+                data: data,
+                success: function(msg) {
+                    $(msg).appendTo( $('#serv_agg_placeholder_'+gruppo_id) );
+                    $("#servizio_add_"+gruppo_id).val('');
+                }
+              });
+          
+          }
+          
+          });
+
+       /*
+        http://stackoverflow.com/questions/9344306/jquery-click-doesnt-work-on-ajax-generated-content
+         */
+        $('body').on('click', '.del_aggiuntivo', function (event) {
+            event.preventDefault();
+            var id = $(this).attr('id');
+            if (confirm('Sei sicuro di voler eliminare questo servizio ?')) {
+              data = {
+                id:id
+              };
+
+              $.ajax({
+                  url: "{{ route('del-servizio-aggiuntivo-foglio-servizi-ajax') }}",
+                  type: 'POST',
+                  data: data,
+                  success: function(msg) { 
+                      if (msg == 'ok') {
+                        $("#row_"+id).fadeOut();
+                      } else  {
+                        alert('Errore');
+                      }
+                  }
+                });
+
+            } /* end if*/
+
+        }); /* /del_aggiuntivo */
+
+
 		});
 	
 
@@ -1075,7 +1140,7 @@
     <div class="elenco_servizi">
       @foreach ($gruppo->elenco_servizi as $key => $servizio)
         <div class="row form-group servizio">
-          <div class="col-xl-4 col-md-8 flex-container">
+          <div class="col-xl-2 col-md-4 flex-container">
             <input type="checkbox" name="{{$servizio->id}}" id="{{$servizio->id}}" value="1" {{ old($servizio->id) || array_key_exists($servizio->id, $ids_servizi_associati) ? 'checked' : '' }}  class="beautiful_checkbox">
             <label for="{{$servizio->id}}">
               {{$servizio->nome}}
@@ -1091,31 +1156,32 @@
           </div>  
         </div>
       @endforeach
-    </div>
-    @if ( isset($serv_agg[$gruppo->id]) )        
-      @foreach ($serv_agg[$gruppo->id] as $servizio)
+      @if ( isset($serv_agg[$gruppo->id]) )        
+        @foreach ($serv_agg[$gruppo->id] as $servizio)
             @php
                 list($id_serv_agg,$nome_serv_agg) = explode('|',$servizio);
             @endphp
-          <div class="row form-group">
-            <div class="col-md-12">
-              {{$nome_serv_agg}}
-            </div>
-          </div>
-      @endforeach
-    @endif
-    <!-- servizio aggiuntivo -->
-    <div class="row form-group">
-      <div class="col-md-2 col offset-md-1">
-        <label for="servizio_add_{{$gruppo->id}}">
+            @include('foglio_servizi._riga_servizio_agg')
+        @endforeach
+      @endif
+      <div id="serv_agg_placeholder_{{$gruppo->id}}">
+        <!-- aggiungo i serivizi via ajax -->
+      </div>
+      <!-- servizio aggiuntivo -->
+      <div class="row form-group servizio">
+        <label class="col-xl-2 col-md-4 col-form-label" for="servizio_add_{{$gruppo->id}}">
             Servizio aggiuntivo
         </label>       
+        <div class="col-xl-4 col-md-4">
+          <input type="text" id="servizio_add_{{$gruppo->id}}" class="form-control">
+        </div>
+        <div class="col-xl-1 col-md-1">
+          <a class="btn btn-primary add_servizio" id="{{$gruppo->id}}"><i class="fas fa-plus-square"></i></a>
+        </div>
       </div>
-      <div class="col-md-6">
-        <input type="text" id="servizio_add_{{$gruppo->id}}" class="form-control">
-        <a class="btn btn-primary add_servizio" id="{{$gruppo->id}}">add</a>
-      </div>
+
     </div>
+
 
   @endforeach
 

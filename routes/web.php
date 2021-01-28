@@ -236,6 +236,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('load-cliente-foglio-servizi-ajax', 'FoglioServiziController@loadClienteFoglioServiziAjax')->name('load-cliente-foglio-servizi-ajax');
 
+    Route::post('del-servizio-aggiuntivo-foglio-servizi-ajax', 'FoglioServiziController@delServizioAggiuntivoAjax')->name('del-servizio-aggiuntivo-foglio-servizi-ajax');
+
+    Route::post('add-servizio-aggiuntivo-foglio-servizi-ajax', 'FoglioServiziController@addServizioAggiuntivoAjax')->name('add-servizio-aggiuntivo-foglio-servizi-ajax');
+
 
 
 

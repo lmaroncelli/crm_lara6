@@ -10,6 +10,7 @@ use App\FoglioServizi;
 use App\CentroBenessere;
 use App\GruppoServiziFoglio;
 use Illuminate\Http\Request;
+use App\ServizioAggiuntivoFoglio;
 
 class FoglioServiziController extends Controller
 {
@@ -139,15 +140,34 @@ class FoglioServiziController extends Controller
         $serv_agg = [];
 
         foreach ($serviziAggiuntivi as $serv) {
-            if (isset($serv_agg[$serv->gruppo_id])) {
-                $serv_agg[$serv->gruppo_id][] = [$serv->id.'|'.$serv->nome];
-            } else {
-                $serv_agg[$serv->gruppo_id] = [$serv->id . '|' . $serv->nome];
-            }
+            $serv_agg[$serv->gruppo_id][] = $serv->id.'|'.$serv->nome;
         }
 
-        //dd($serv_agg);
-		return view('foglio_servizi.form', compact('foglio', 'commerciale_contratto', 'infoPiscina', 'centroBenessere', 'gruppiServizi', 'ids_servizi_associati', 'serv_agg'));
+        /*
+        dd($serv_agg);
+        array:5 [▼
+                1 => array:2 [▼
+                    0 => "9074|servizio spiaggia"
+                    1 => "9075|idromassaggio"
+                ]
+                4 => array:2 [▼
+                    0 => "9076|cucina dietetica"
+                    1 => "9077|cucina per intolleranze"
+                ]
+                10 => array:1 [▼
+                    0 => "9078|servizio spiaggia con pedana semovibile e carrozzina disabili da mare"
+                ]
+                14 => array:1 [▼
+                    0 => "9079|parcheggio in hotel solo  per carico e scarico"
+                ]
+                2 => array:2 [▼
+                    0 => "9080|centro massaggi in hotel adiacente di stessa gestione"
+                    1 => "9081|parrucchiera in hotel adiacente di stessa gestione"
+                ]
+        ]
+        */ 
+
+        return view('foglio_servizi.form', compact('foglio', 'commerciale_contratto', 'infoPiscina', 'centroBenessere', 'gruppiServizi', 'ids_servizi_associati', 'serv_agg'));
 
 
     }
@@ -198,6 +218,38 @@ class FoglioServiziController extends Controller
 			$data['skype'] = $cliente->skype;
 
 			echo json_encode($data);
+
+    }
+
+    public function  addServizioAggiuntivoAjax(Request $request) {
+
+        $gruppo_id =  $request->gruppo_id;
+        $nome_servizio = $request->nome_servizio;
+        $foglio_id = $request->foglio_id;
+
+        try {
+            $servizo_aggiuntivo = ServizioAggiuntivoFoglio::create([
+                'foglio_id' => $foglio_id,
+                'gruppo_id' => $gruppo_id,
+                'nome' => $nome_servizio
+            ]);
+            
+            return view('foglio_servizi._riga_servizio_agg', ['id_serv_agg' => $servizo_aggiuntivo->id, 'nome_serv_agg' => $servizo_aggiuntivo->nome]);
+
+        } catch (\Exception $e) {
+
+            echo $e->getMessage();
+        } 
+
+    }
+
+    public function delServizioAggiuntivoAjax(Request $request) {
+
+        $id = $request->id;
+
+        ServizioAggiuntivoFoglio::destroy($id);
+
+        echo "ok";
 
     }
 
