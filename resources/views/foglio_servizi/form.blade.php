@@ -5,9 +5,86 @@
 	<script type="text/javascript" charset="utf-8">
 		
 		jQuery(document).ready(function(){
-      
-        $.datepicker.setDefaults( $.datepicker.regional[ "it" ] );
 
+        /* toggle visibility 9 pti di forza*/
+        $('#pti_anno_prec').change(function () {                
+          $('#elenco_pti_forza').toggle(!this.checked);
+          $('#note_pti_forza').toggle(this.checked);
+        }).change(); //ensure visible state matches initially
+      
+        /* toggle visibility apertura reception */
+        $('#h_24').change(function () {                
+          $('#orari_reception').toggle(!this.checked);
+        }).change(); //ensure visible state matches initially
+
+
+        /* toggle visibility date aperture / annuale */
+        $('#tipo_apertura').change(function(){
+            if($('#tipo_apertura').val() == 'a') {
+                $('#opzioni_apertura').hide(); 
+            } else {
+                $('#opzioni_apertura').show(); 
+            } 
+        }).change();
+      
+
+        /* toggle visibility numeri */
+        $('#numeri_anno_prec').change(function () {                
+           $('#elenco_numeri_locali').toggle(!this.checked);
+        }).change(); //ensure visible state matches initially
+
+
+        /* toggle visibility apertura reception */
+        $('#h_24').change(function () {                
+           $('.orari_reception').toggle(!this.checked);
+        }).change(); //ensure visible state matches initially
+
+
+        /* toggle visibility orari dei pasti*/
+        $('#pasti_anno_prec').change(function () {                
+           $('#elenco_orario_pasti').toggle(!this.checked);
+        }).change(); //ensure visible state matches initially
+
+
+
+        /* toggle visibility piscina */
+        $('#piscina').change(function () {                
+           $('#elenco_campi_piscina').toggle(this.checked);
+           $('#importa_campi_piscina').toggle(this.checked);
+           // se apro la sezione piscina "metto il check al servizio piscina in servizi in hotel"
+           $("#servizio_94").prop('checked', this.checked);
+
+           // visualizzo il messaggio di obbligatorietà delle note
+           $("#obbligatorio_piscina").toggle(this.checked);
+
+        }).change(); //ensure visible state matches initially
+
+        $('#servizio_94').change(function () {
+             // visualizzo il messaggio di obbligatorietà delle note
+           $("#obbligatorio_piscina").toggle(this.checked);
+        }).change(); //ensure visible state matches initially
+
+
+        /* toggle visibility benessere */
+        $('#benessere').change(function () {                
+           $('#elenco_campi_benessere').toggle(this.checked);
+           $('#importa_campi_benessere').toggle(this.checked);
+           // se apro la sezione benessere "metto il check al servizio benessere in servizi in hotel"
+           $("#servizio_96").prop('checked', this.checked);
+
+           // visualizzo il messaggio di obbligatorietà delle note
+           $("#obbligatorio_benessere").toggle(this.checked);
+
+        }).change(); //ensure visible state matches initially
+
+        $('#servizio_96').change(function () {
+             // visualizzo il messaggio di obbligatorietà delle note
+           $("#obbligatorio_benessere").toggle(this.checked);
+        }).change(); //ensure visible state matches initially
+
+
+        //  apertura stagionale date
+        $.datepicker.setDefaults( $.datepicker.regional[ "it" ] );
         var dateFormat = "dd/mm/yy",
        
         dal = $( "#dal" )
@@ -107,11 +184,48 @@
 		});
 	
 
+
+     // ===== Scroll to Top ==== 
+      $(window).scroll(function() {
+          if ($(this).scrollTop() >= 50) {        // If page is scrolled more than 50px
+              $('#return-to-top').fadeIn(200);    // Fade in the arrow
+          } else {
+              $('#return-to-top').fadeOut(200);   // Else fade out the arrow
+          }
+      });
+      $('#return-to-top').click(function() {      // When arrow is clicked
+          $('body,html').animate({
+              scrollTop : 0                       // Scroll to top of body
+          }, 500);
+      });
+
+
+      // ===== Go to Bottom ==== 
+      $(window).scroll(function() {
+          var $h = $(document).height();
+          var $limit = $h -50;
+          //console.log($limit);
+          if ($(this).scrollTop() >= 50 && $(this).scrollTop() < $limit) {        // If page is scrolled more than 50px
+              $('#go-to-bottom').fadeIn(200);    // Fade in the arrow
+          }  
+          else {
+              $('#go-to-bottom').fadeOut(200);   // Else fade out the arrow
+          }
+      });
+      $('#go-to-bottom').click(function() {      // When arrow is clicked
+          $('body,html').animate({
+              scrollTop: $(document).height()                    // Scroll to top of body
+          }, 500);
+      });
 	</script>
 	
 @endsection
 
 @section('content')
+<!-- Return to Top -->
+<a href="javascript:" id="return-to-top"><i class="fa fa-chevron-up"></i></a>
+<!-- Go to Bottom --> 
+<a href="javascript:" id="go-to-bottom"><i class="fa fa-chevron-down"></i></a>
 <div class="spinner_lu" style="display:none;"></div>
 <form action="{{ route('foglio-servizi.update',$foglio->id) }}" method="post" id="form_foglio_servizi">
   @csrf
@@ -239,7 +353,7 @@
   </div>
     
   <div id="note_pti_forza">
-    <div class="row form-group">
+    <div class="row">
       <div class="col-md-12">
         <label class="font-weight-bold">Note sui punti di forza</label>
       </div>
@@ -295,7 +409,7 @@
 
      <div class="col-md-4">
         <label class="font-weight-bold">Apertura</label>
-        <select required id="apertura" class="form-control" name="tipo">
+        <select required class="form-control" name="tipo" id="tipo_apertura">
           @foreach (Utility::getHotelApertura() as $apertura_id => $apertura)
             <option value="{{$apertura_id}}" {{old('apertura') == $apertura_id || $foglio->apertura == $apertura_id ? 'selected' : '' }}>{{$apertura}}</option>
           @endforeach
@@ -427,13 +541,13 @@
     <label class="font-weight-bold col-md-6 col-xl-2 col-form-label">
         ORARIO APERTURA RECEPTION
     </label>
-    <div class="col-md-6 col-xl-4">
+    <div class="col-md-6 col-xl-2">
       <input type="checkbox" name="h_24" id="h_24" value="1" {{ old('h_24') || $foglio->h_24 ? 'checked' : '' }} class="beautiful_checkbox">
       <label for="h_24" class="font-weight-bold col-form-label">
          24 ore su 24
       </label>
     </div>   
-    <label class="col-md-2 col-xl-1 orari_reception font-weight-bold col-form-label">
+    <label class="col-md-2 col-xl-1 orari_reception font-weight-bold col-form-label text-right">
         dalle
     </label>
     <div class="col-md-2 col-xl-1 orari_reception">
@@ -450,7 +564,7 @@
         @endforeach
       </select>
     </div>
-    <label class="col-md-2 col-xl-1 orari_reception font-weight-bold col-form-label">
+    <label class="col-md-2 col-xl-1 orari_reception font-weight-bold col-form-label text-right">
         alle
     </label>
     <div class="col-md-2 col-xl-1 orari_reception">
@@ -487,20 +601,19 @@
 
   <div class="spacerBlu"></div>
 
-   <div class="row form-group">
-
-    <label class="font-weight-bold col-md-2">
+  <div class="row form-group">
+    <label class="font-weight-bold col-md-3">
         ORARIO DEI PASTI
     </label>
-    <div class="col-md-4">
-      <input type="checkbox" name="pasti_anno_prec" id="pasti_anno_prec" value="1" {{ old('pasti_anno_prec') || $foglio->pasti_anno_prec ? 'checked' : '' }} class="beautiful_checkbox">
-      <label for="pasti_anno_prec col-form-label">
-         Stessi orari anno precedente
+    <div class="col-md-5">
+      <input type="checkbox" name="pasti_anno_prec" id="pasti_anno_prec" value="1" {{ old('pasti_anno_prec') || $foglio->pasti_anno_prec ? 'checked' : '' }}>
+      <label for="pasti_anno_prec" class="col-form-label font-weight-bold">
+          Stessi orari anno precedente
       </label>
     </div>
-   </div>
+  </div>
 
-   <div class="row form-group">
+   <div class="row form-group" id="elenco_orario_pasti">
      <div class="col-xl-4 col-md-12">
         <div class="row form-group">
           <label class="col-md-12 font-weight-bold col-form-label">Colazione</label>
@@ -652,7 +765,7 @@
   <div class="row form-group">
     <div class="col-xl-1 col-md-3">
       <select required id="caparra" class="form-control" name="caparra">
-        @foreach (['si','no'] as $value)
+        @foreach (['seleziona', 'si','no'] as $value)
           <option value="{{$id}}" {{old('caparra') == $id || $foglio->caparra == $id ? 'selected' : '' }}>{{$value}}</option>
         @endforeach
       </select>
@@ -680,7 +793,7 @@
       </div>
     @endforeach
   </div>
-  <div class="row form-group">
+  <div class="row">
     <div class="col-md-12">
       <label class="font-weight-bold">Note pagamenti</label>
     </div>
@@ -708,7 +821,7 @@
       </div>
     @endforeach
   </div>
-  <div class="row form-group">
+  <div class="row">
     <div class="col-md-12">
       <label class="font-weight-bold">Altro</label>
     </div>
@@ -772,7 +885,7 @@
       <label class="col-xl-3 col-md-2 font-weight-bold">
           PERIODO APERTURA
       </label>
-      <label class="col-xl-1 col-md-1 font-weight-bold col-form-label">
+      <label class="col-xl-1 col-md-1 font-weight-bold col-form-label text-right">
           da
       </label>
       <div class="col-xl-2 col-md-3 font-weight-bold">
@@ -782,7 +895,7 @@
           @endforeach
         </select>
       </div>
-      <label class="col-xl-1 col-md-1 font-weight-bold col-form-label">
+      <label class="col-xl-1 col-md-1 font-weight-bold col-form-label text-right">
           a
       </label>
       <div class="col-xl-2 col-md-3">
@@ -858,7 +971,7 @@
       </div>
     </div>
 
-    <div class="row form-group">
+    <div class="row">
       <div class="col-md-12">
         <label class="font-weight-bold">Peculiarità</label>
       </div>
@@ -1002,7 +1115,7 @@
       <label class="col-xl-3 col-md-2 font-weight-bold">
           PERIODO APERTURA
       </label>
-      <label class="col-xl-1 col-md-1 font-weight-bold col-form-label">
+      <label class="col-xl-1 col-md-1 font-weight-bold col-form-label text-right">
           da
       </label>
       <div class="col-xl-2 col-md-3 font-weight-bold">
@@ -1012,7 +1125,7 @@
           @endforeach
         </select>
       </div>
-      <label class="col-xl-1 col-md-1 font-weight-bold col-form-label">
+      <label class="col-xl-1 col-md-1 font-weight-bold col-form-label text-right">
           a
       </label>
       <div class="col-xl-2 col-md-3">
@@ -1051,11 +1164,11 @@
           in hotel
         </label>
       </div>
-      <label class="col-xl-1 col-md-1 font-weight-bold col-form-label">a</label>
+      <label class="col-xl-1 col-md-1 font-weight-bold col-form-label text-right">a</label>
       <div class="col-xl-1 col-md-2">
         <input type="text" name="distanza_hotel" id="distanza_hotel" class="form-control input_distanza_hotel"  value="{{old('distanza_hotel') != '' ?  old('distanza_hotel') :  $centroBenessere->distanza_hotel}}">
       </div>
-      <label class="col-xl-2 col-md-2 col-form-label font-weight-bold"> metri dall'hotel</label>
+      <label class="col-xl-2 col-md-4 col-form-label font-weight-bold"> metri dall'hotel</label>
     </div>
 
      <!-- eta minima per accedere -->
@@ -1088,7 +1201,7 @@
       </div>
     @endforeach
 
-    <div class="row form-group">
+    <div class="row">
       <div class="col-md-12">
         <label class="font-weight-bold">Peculiarità</label>
       </div>
@@ -1146,13 +1259,25 @@
               {{$servizio->nome}}
             </label>
           </div>
-          <div class="col-xl-3 col-md-4">
+          <div class="col-xl-8 col-md-8">
             <input type="text" 
                     name="nota_servizio_{{$servizio->id}}" 
                     id="nota_servizio_{{$servizio->id}}" 
                     class="form-control"  
                     value="{{ 
                       old('nota_servizio_'.$servizio->id) != '' ?  old('nota_servizio_'.$servizio->id) : (array_key_exists($servizio->id, $ids_servizi_associati) ? $ids_servizi_associati[$servizio->id] : '')  }} ">
+
+            @if ($servizio->id == 94)
+            <div id="obbligatorio_piscina" class="alert alert-danger" role="alert">
+              É obbligatorio compilare questo campo
+            </div>
+            @endif
+
+            @if ($servizio->id == 96)
+            <div id="obbligatorio_benessere" class="alert alert-danger" role="alert">
+              É obbligatorio compilare questo campo
+            </div>
+            @endif
           </div>  
         </div>
       @endforeach
@@ -1182,8 +1307,44 @@
 
     </div>
 
-
+    <div class="spacerBlu"></div>
   @endforeach
+
+ <div class="row form-group">
+    <label class="col-xl-1 col-md-2 col-form-label">Data:</label>
+    <div class="col-xl-1 col-md-5 ">
+      <input type="text" name="data_firma" id="data_firma" class="form-control input_data_firma"  value="{{old('data_firma') != '' ?  old('data_firma') :  $foglio->data_firma->format('d/m/Y')}}">
+    </div>
+  </div>
+    {{--  Nome file pdf --}}
+<div class="form-group row">
+  <label class="col-xl-1 col-md-3 col-form-label " for="text-input">Nome file pdf</label>
+    
+  <div class="col-xl-4 col-md-9">
+    <div class="input-group">
+      <input class="form-control" id="nome_file_scelto" type="text" name="nome_file_scelto" placeholder="Nome file pdf" value="{{old('nome_file') != '' ?  old('nome_file') :  $foglio->nome_file}}"> 
+      <div class="input-group-append">
+        <span class="input-group-text">.pdf</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl-2 col-md-5">
+    <button type="button" class="salva_nome_pdf btn btn-primary btn-xs">Salva</button>
+    <a id="crea_pdf" href="#" class="btn btn-danger btn-xs">Crea Pdf con firma</a>
+  </div>
+
+  <div class="col-xl-2 col-md-5 col-xs-12" id="pdf_firmato">
+    <a href="{{asset('storage/precontratti').'/'.$foglio->nome_file.'_firmato.pdf'}}" target="_blank" class="btn btn-success btn-xs">Apri Pdf</a>
+  </div>
+
+  
+</div>
+{{--  end Nome file pdf --}}
+
+    <div class="spacerBlu"></div>
+
+
 
 </form>
 

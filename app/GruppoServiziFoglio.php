@@ -14,7 +14,7 @@ class GruppoServiziFoglio extends Model
     
     public function elenco_servizi()
     {
-        return $this->hasMany('App\ServizioFoglio', 'gruppo_id', 'id');
+        return $this->hasMany('App\ServizioFoglio', 'gruppo_id', 'id')->orderBy('order');
     }
 
     public function servizi_aggiuntivi()
