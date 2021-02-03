@@ -93,14 +93,14 @@ class Utility extends Model
 	// FOGLIO SERVIZI
 
 	private static $fs_tipologia = [
-			'' => 'seleziona', 
+			'0' => 'seleziona', 
 			'h' => 'Hotel', 
 			'r' => 'Residence', 
 			'hr' => 'Hotel + Residence'
 	];
 
 	private static $hotel_categoria = [
-			'' => 'seleziona', 
+			'0' => 'seleziona', 
 			'1' => '&#9733;', 
 			'2' => '&#9733;&#9733;', 
 			'3' => '&#9733;&#9733;&#9733;', 
@@ -111,7 +111,7 @@ class Utility extends Model
 
 
 	private static $hotel_apertura = [
-			'' => 'seleziona', 
+			'0' => 'seleziona', 
 			'a' => 'Annuale', 
 			's' => 'Stagionale'
 	];

@@ -246,7 +246,7 @@
                 </div>
                 <div class="col-md-6 text-left">
                   <label class="font-weight-bold">SMS</label>
-                  <input type="text" name="sms" id="sms" class="form-control"  value="{{old('skype') != '' ?  old('skype') :  $foglio->skype}}">
+                  <input type="text" name="sms" id="sms" class="form-control"  value="{{old('sms') != '' ?  old('sms') :  $foglio->sms}}">
                 </div>
             </div>
             <div class="row form-group ">
@@ -399,7 +399,7 @@
 
      <div class="col-md-4">
         <label class="font-weight-bold">Categoria</label>
-        <select required id="categoria" class="form-control" name="tipo">
+        <select required id="categoria" class="form-control" name="categoria">
           @foreach (Utility::getHotelCategoria() as $categoria_id => $categoria)
             <option value="{{$categoria_id}}" {{old('categoria') == $categoria_id || $foglio->categoria == $categoria_id ? 'selected' : '' }}>{!!$categoria!!}</option>
           @endforeach
@@ -409,7 +409,7 @@
 
      <div class="col-md-4">
         <label class="font-weight-bold">Apertura</label>
-        <select required class="form-control" name="tipo" id="tipo_apertura">
+        <select required class="form-control" name="tipo_apertura" id="tipo_apertura">
           @foreach (Utility::getHotelApertura() as $apertura_id => $apertura)
             <option value="{{$apertura_id}}" {{old('apertura') == $apertura_id || $foglio->apertura == $apertura_id ? 'selected' : '' }}>{{$apertura}}</option>
           @endforeach
@@ -494,9 +494,15 @@
   <div class="row form-group">
     <label class="col-md-3 font-weight-bold">
       N. locali e posti letto
+        </label>
     </label>
+    <input type="hidden" name="numeri_anno_prec" value=0>
     <div class="col-md-5">
-      <input type="checkbox" name="numeri_anno_prec" id="numeri_anno_prec" value="1" {{ old('numeri_anno_prec') || $foglio->numeri_anno_prec ? 'checked' : '' }} class="beautiful_checkbox">       
+      <input type="checkbox" 
+      name="numeri_anno_prec" 
+      id="numeri_anno_prec" 
+      value="1" 
+      {{ old('numeri_anno_prec') == '0' ? '' : (old('numeri_anno_prec') == 1 || $foglio->numeri_anno_prec ? 'checked' : '') }} class="beautiful_checkbox">       
     <label for="numeri_anno_prec" class="font-weight-bold">Stessi numeri anno precedente</label>
     </div>
   </div>
@@ -506,8 +512,7 @@
 
       <div class="col-xl-3 col-md-6">
         <label class="font-weight-bold">
-            NUMERO CAMERE:
-        </label>
+            NUMERO CAMERE: 
         <input type="text" name="n_camere" id="n_camere" class="form-control"  value="{{old('n_camere') != '' ?  old('n_camere') :  $foglio->n_camere}}">
       </div>
 
@@ -537,12 +542,13 @@
   <div class="spacerBlu"></div>
 
   <div class="row form-group">
+    <input type="hidden" name="h_24" value=0>
 
     <label class="font-weight-bold col-md-6 col-xl-2 col-form-label">
         ORARIO APERTURA RECEPTION
     </label>
     <div class="col-md-6 col-xl-2">
-      <input type="checkbox" name="h_24" id="h_24" value="1" {{ old('h_24') || $foglio->h_24 ? 'checked' : '' }} class="beautiful_checkbox">
+      <input type="checkbox" name="h_24" id="h_24" value="1" {{ old('h_24') == '0' ? '' : (old('h_24') || $foglio->h_24 ? 'checked' : '') }} class="beautiful_checkbox">
       <label for="h_24" class="font-weight-bold col-form-label">
          24 ore su 24
       </label>
@@ -602,11 +608,13 @@
   <div class="spacerBlu"></div>
 
   <div class="row form-group">
+    <input type="hidden" name="pasti_anno_prec" value=0>
+
     <label class="font-weight-bold col-md-3">
         ORARIO DEI PASTI
     </label>
     <div class="col-md-5">
-      <input type="checkbox" name="pasti_anno_prec" id="pasti_anno_prec" value="1" {{ old('pasti_anno_prec') || $foglio->pasti_anno_prec ? 'checked' : '' }}>
+      <input type="checkbox" name="pasti_anno_prec" id="pasti_anno_prec" value="1" {{old('pasti_anno_prec') == 0 ? '' : (old('pasti_anno_prec') || $foglio->pasti_anno_prec ? 'checked' : '') }}>
       <label for="pasti_anno_prec" class="col-form-label font-weight-bold">
           Stessi orari anno precedente
       </label>
@@ -742,11 +750,12 @@
     @foreach (Utility::getFsTrattamentiENote() as $key => $val)
       @if (strpos($key,'note_') !== false)
         <div class="col-xl-9 col-md-8 mt-3">
-          <textarea name="{{$key}}" placeholder="Elenca i servizi inclusi" class="form-control">{{old('$key') != '' ?  old('$key') :  $foglio->$key}}</textarea>
+          <textarea name="{{$key}}" placeholder="Elenca i servizi inclusi" class="form-control">{{old($key) != '' ?  old($key) :  $foglio->$key}}</textarea>
         </div>
       @else
         <div class="col-xl-3 col-md-4 mt-3">
-          <input type="checkbox" name="{{$key}}" id="{{$key}}" value="1" {{ old('$key') || $foglio->$key ? 'checked' : '' }}  class="beautiful_checkbox"> 
+          <input type="hidden" name="{{$key}}" value="0">
+          <input type="checkbox" name="{{$key}}" id="{{$key}}" value="1" {{ old($key) == '0' ? '' : (old($key) || $foglio->$key ? 'checked' : '') }}  class="beautiful_checkbox"> 
           <label for="{{$key}}" class="font-weight-bold  col-form-label">
           {{$val}}
           </label>
@@ -766,7 +775,11 @@
     <div class="col-xl-1 col-md-3">
       <select required id="caparra" class="form-control" name="caparra">
         @foreach (['seleziona', 'si','no'] as $value)
-          <option value="{{$id}}" {{old('caparra') == $id || $foglio->caparra == $id ? 'selected' : '' }}>{{$value}}</option>
+          @if ( old('caparra') !== null)   
+            <option value="{{$value}}" {{old('caparra') == $value ? 'selected' : '' }}>{{$value}}</option>
+          @else
+            <option value="{{$value}}" {{ $foglio->caparra == $value ? 'selected' : '' }}>{{$value}}</option>
+          @endif
         @endforeach
       </select>
     </div>
@@ -786,7 +799,7 @@
   <div class="row form-group">
     @foreach (Utility::getFsPagamenti() as $key => $val)
       <div class="col-xl-2 col-md-4">
-        <input type="checkbox" name="{{$key}}" id="{{$key}}" value="1" {{ old('$key') || $foglio->$key ? 'checked' : '' }}  class="beautiful_checkbox"> 
+        <input type="checkbox" name="{{$key}}" id="{{$key}}" value="1" {{ old($key) || $foglio->$key ? 'checked' : '' }}  class="beautiful_checkbox"> 
         <label for="{{$key}}" class="font-weight-bold">
         {{$val}}
         </label>
@@ -814,7 +827,7 @@
   <div class="row form-group">
     @foreach (Utility::getFsLingue() as $key => $val)
       <div class="col-xl-2 col-md-4">
-        <input type="checkbox" name="{{$key}}" id="{{$key}}" value="1" {{ old('$key') || $foglio->$key ? 'checked' : '' }}  class="beautiful_checkbox"> 
+        <input type="checkbox" name="{{$key}}" id="{{$key}}" value="1" {{ old($key) || $foglio->$key ? 'checked' : '' }}  class="beautiful_checkbox"> 
         <label for="{{$key}}" class="font-weight-bold">
         {{$val}}
         </label>
@@ -921,7 +934,7 @@
     <div class="row form-group posizione_piscina">
       @foreach (Utility::getFsPosizionePiscina() as $key => $val)
       <div class="col-xl-2 col-md-4">
-        <input type="radio" name="posizione" id="{{$key}}" value="{{$val}}" {{ old('$key') || $infoPiscina->posizione == $val ? 'checked' : '' }} class=""> 
+        <input type="radio" name="posizione" id="{{$key}}" value="{{$val}}" {{ old($key) || $infoPiscina->posizione == $val ? 'checked' : '' }} class=""> 
         <label for="{{$key}}" class="font-weight-bold">
         {{$val}}
         </label>
@@ -1040,7 +1053,7 @@
     <div class="row form-group posizione_vasca">
       @foreach (Utility::getFsPosizioneVasca() as $key => $val)
       <div class="col-xl-2 col-md-4">
-        <input type="radio" name="vasca_posizione" id="v_{{$key}}" value="{{$val}}" {{ old('$key') || $infoPiscina->vasca_posizione == $val ? 'checked' : '' }} class=""> 
+        <input type="radio" name="vasca_posizione" id="v_{{$key}}" value="{{$val}}" {{ old($key) || $infoPiscina->vasca_posizione == $val ? 'checked' : '' }} class=""> 
         <label for="v_{{$key}}" class="font-weight-bold">
         {{$val}}
         </label>
@@ -1330,7 +1343,7 @@
   </div>
 
   <div class="col-xl-2 col-md-5">
-    <button type="button" class="salva_nome_pdf btn btn-primary btn-xs">Salva</button>
+    <button type="submit" class="salva_nome_pdf btn btn-primary btn-xs">Salva</button>
     <a id="crea_pdf" href="#" class="btn btn-danger btn-xs">Crea Pdf con firma</a>
   </div>
 

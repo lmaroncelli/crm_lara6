@@ -53,4 +53,27 @@ class FoglioServizi extends Model
     }
 
 
+
+
+    public function getPrezzoMinAttribute($value) {
+        return number_format($value, 2, ',', ' ');
+    }
+
+    public function getPrezzoMaxAttribute($value)
+    {
+        return number_format($value, 2, ',', ' ');
+    }
+
+
+    public function setPrezzoMinAttribute($value)
+    {
+        return number_format($value, 2, '.', ' ');
+    }
+
+    public function setPrezzoMaxAttribute($value)
+    {
+        return number_format($value, 2, '.', ' ');
+    }
+
+
 }

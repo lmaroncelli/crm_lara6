@@ -11,6 +11,7 @@ use App\CentroBenessere;
 use App\GruppoServiziFoglio;
 use Illuminate\Http\Request;
 use App\ServizioAggiuntivoFoglio;
+use App\Http\Requests\FoglioServiziRequest;
 
 class FoglioServiziController extends Controller
 {
@@ -179,9 +180,9 @@ class FoglioServiziController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(FoglioServiziRequest $request, $id)
     {
-        //
+        dd($request->all());
     }
 
     /**
