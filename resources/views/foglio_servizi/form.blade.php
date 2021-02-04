@@ -798,8 +798,9 @@
   </div>
   <div class="row form-group">
     @foreach (Utility::getFsPagamenti() as $key => $val)
+      <input type="hidden" name="{{$key}}" value="0">
       <div class="col-xl-2 col-md-4">
-        <input type="checkbox" name="{{$key}}" id="{{$key}}" value="1" {{ old($key) || $foglio->$key ? 'checked' : '' }}  class="beautiful_checkbox"> 
+        <input type="checkbox" name="{{$key}}" id="{{$key}}" value="1" {{ old($key) == '0' ? '' : (old($key) || $foglio->$key ? 'checked' : '') }}  class="beautiful_checkbox"> 
         <label for="{{$key}}" class="font-weight-bold">
         {{$val}}
         </label>
@@ -826,8 +827,9 @@
   </div>
   <div class="row form-group">
     @foreach (Utility::getFsLingue() as $key => $val)
+      <input type="hidden" name="{{$key}}" value="0">
       <div class="col-xl-2 col-md-4">
-        <input type="checkbox" name="{{$key}}" id="{{$key}}" value="1" {{ old($key) || $foglio->$key ? 'checked' : '' }}  class="beautiful_checkbox"> 
+        <input type="checkbox" name="{{$key}}" id="{{$key}}" value="1" {{ old($key) == '0' ? '' : ( old($key) || $foglio->$key ? 'checked' : '' )}}  class="beautiful_checkbox"> 
         <label for="{{$key}}" class="font-weight-bold">
         {{$val}}
         </label>
@@ -854,7 +856,8 @@
       </label>
     </div>
     <div class="col-xl-4 col-md-4">
-      <input type="checkbox" name="piscina" id="piscina" value="1" {{ old('piscina') || $foglio->piscina ? 'checked' : '' }} class="beautiful_checkbox">
+      <input type="hidden" name="piscina" value="0">
+      <input type="checkbox" name="piscina" id="piscina" value="1" {{ old('piscina') == '0' ? '' : (old('piscina') || $foglio->piscina ? 'checked' : '') }} class="beautiful_checkbox">
       <label for="piscina" class="font-weight-bold">
         Ho una piscina
       </label>

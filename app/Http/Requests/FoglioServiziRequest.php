@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Utility;
 use Illuminate\Foundation\Http\FormRequest;
 
 class FoglioServiziRequest extends FormRequest
@@ -58,24 +59,89 @@ class FoglioServiziRequest extends FormRequest
         }
 
         if ($this->request->has('numeri_anno_prec') && $this->request->get('numeri_anno_prec') == '0') {
-            $rules['n_camere'] = 'required|regex:/^[1-9]*$/';
-            $rules['n_letti'] = 'required|regex:/^[1-9]*$/';
-            $rules['n_app'] = 'required|regex:/^[0-9]*$/';
-            $rules['n_suite'] = 'required|regex:/^[0-9]*$/';
-
-            
+            $rules['n_camere'] = 'required|gt:0';
+            $rules['n_letti'] = 'required|gt:0';
+            $rules['n_app'] = 'required|gte:0';
+            $rules['n_suite'] = 'required|gte:0';            
         }
-
 
         $rules['checkin'] = 'required';
         $rules['checkout'] = 'required';
-
         $rules['caparra'] = "not_in:seleziona";
 
-        
+        // trattamenti almeno 1 voce
+        // se non  sono selezionate c'è hidden = 0
+        if ( !$this->request->get('ai') &&
+            !$this->request->get('pc') &&
+            !$this->request->get('mp') &&
+            !$this->request->get('mp_spiaggia') &&
+            !$this->request->get('bb') &&
+            !$this->request->get('bb_spiaggia') &&
+            !$this->request->get('sd') &&
+            !$this->request->get('sd_spiaggia') ) {
 
-        
-    
+                $rules['ai'] = 'not_in:0';
+               
+            }
+
+        // se selziono un trattamento devo specificare le note relative
+        foreach (Utility::getFsTrattamentiENote() as $key => $val) {
+            if(strpos($key, 'note_') === false && $this->request->get($key) && $this->request->get('note_'.$key) == '') {
+                $rules['note_'. $key] = 'required';
+            }
+        }
+
+        // pagamenti almeno 1 voce
+        // se non  sono selezionate c'è hidden = 0
+        if (
+            !$this->request->get('contanti') &&
+            !$this->request->get('assegno') &&
+            !$this->request->get('carta_credito') &&
+            !$this->request->get('bonifico') &&
+            !$this->request->get('paypal') &&
+            !$this->request->get('bancomat')
+        ) {
+
+            $rules['contanti'] = 'not_in:0';
+        }
+
+
+        // lingue almeno 1 voce
+        // se non  sono selezionate c'è hidden = 0
+        if (
+            !$this->request->get('inglese') &&
+            !$this->request->get('francese') &&
+            !$this->request->get('tedesco') &&
+            !$this->request->get('spagnolo') &&
+            !$this->request->get('russo')
+        ) {
+
+            $rules['inglese'] = 'not_in:0';
+        }
+
+
+        // PISCINA
+
+        if ($this->request->get('piscina')) {
+            $rules['sup'] = 'required|gt:0';
+
+            if(
+                ($this->request->get('h') == '' || $this->request->get('h') == 0) &&
+                ($this->request->get('h_min') == '' || $this->request->get('h_min') == 0) && 
+                ($this->request->get('h_max') == '' || $this->request->get('h_max') == 0)
+              ) {
+
+                    $rules['h'] = 'required|gte:0';
+                    $rules['h_min'] = 'required|gte:0';
+                    $rules['h_max'] = 'required|gte:0';
+
+            }
+            
+
+            $rules['posizione'] = 'required';
+        }
+
+        //dd($rules);
 
         return $rules;
     }
@@ -96,7 +162,20 @@ class FoglioServiziRequest extends FormRequest
             'n_letti.regex' => 'Specificare un numero di letti maggiore di 0',
             'n_app.regex' => 'Specificare un numero di appartamenti (nel caso 0)',
             'n_suite.regex' => 'Specificare un numero di suite (nel caso 0)',
+            'ai.not_in' => 'Selezionare almeno un trattamento',
+            'contanti.not_in' => 'Selezionare almeno un pagamento',
+            'inglese.not_in' => 'Selezionare almeno una lingua parlata',
+            'sup.gt' => 'Specificare una superficie della piscina maggiore di 0',
+            'posizione.required' => 'Specificare la posizione della piscina',
         ];
+
+        foreach (Utility::getFsTrattamentiENote() as $key => $val) {
+            if (strpos($key, 'note_') === false && $this->request->get($key) && $this->request->get('note_' . $key) == '') {
+                $messages['note_' . $key. '.required'] = 'Inserire le note per ogni trattamento selezionato';
+            }
+        }
+
+        //dd($messages);
 
         return $messages;
     }
