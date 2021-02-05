@@ -138,7 +138,21 @@ class FoglioServiziRequest extends FormRequest
             }
             
 
+            if ($this->request->get('aperto_dal') == $this->request->get('aperto_al')) {
+                $rules['aperto_annuale'] = 'required';
+                
+            }
+
             $rules['posizione'] = 'required';
+
+            $rules['lettini_dispo'] = 'required|gte:0';
+
+            $rules['espo_sole'] = 'required|gte:0';
+            $rules['vasca_bimbi_sup'] = 'required|gte:0';
+            $rules['vasca_bimbi_h'] = 'required|gte:0';
+            $rules['vasca_idro_n_dispo'] = 'required|gte:0';
+            $rules['vasca_idro_posti_dispo'] = 'required|gte:0';
+
         }
 
         //dd($rules);
@@ -167,6 +181,16 @@ class FoglioServiziRequest extends FormRequest
             'inglese.not_in' => 'Selezionare almeno una lingua parlata',
             'sup.gt' => 'Specificare una superficie della piscina maggiore di 0',
             'posizione.required' => 'Specificare la posizione della piscina',
+            'aperto_annuale.required' => 'I mesi di apertura e chiusura della piscina coincidono. Specificare annuale',
+
+
+            'lettini_dispop.gte' => 'Specificare un numero di lettini maggiore di 0',
+            'espo_sole.gte' => 'Specificare un numero di ore di esposizione al sole maggiore di 0',
+            'vasca_bimbi_sup.gte' => 'Specificare una superficie della vasca bimbi maggiore di 0',
+            'vasca_bimbi_h.gte' => 'Specificare una altezza della vasca bimbi maggiore di 0',
+            'vasca_idro_n_dispo.gte' => 'Specificare le vasche disponibili',
+            'vasca_idro_posti_dispo.gte' => 'Specificare i posti disponibili delle vasche',
+
         ];
 
         foreach (Utility::getFsTrattamentiENote() as $key => $val) {

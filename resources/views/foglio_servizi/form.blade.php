@@ -899,7 +899,7 @@
 
     <div class="row form-group">
       <label class="col-xl-3 col-md-2 font-weight-bold">
-          PERIODO APERTURA
+          PERIODO APERTURA GGGGG
       </label>
       <label class="col-xl-1 col-md-1 font-weight-bold col-form-label text-right">
           da
@@ -907,7 +907,11 @@
       <div class="col-xl-2 col-md-3 font-weight-bold">
         <select required id="aperto_dal" class="form-control" name="aperto_dal">
           @foreach (Utility::getFsMesi() as $id => $value)
-            <option value="{{$id}}" {{old('aperto_dal') == $id || $infoPiscina->aperto_dal == $id ? 'selected' : '' }}>{{$value}}</option>
+            @if (old('aperto_dal'))
+            <option value="{{$id}}" {{ old('aperto_dal') == $id ? 'selected' : '' }}>{{$value}}</option>
+            @else
+            <option value="{{$id}}" {{ $infoPiscina->aperto_dal == $id ? 'selected' : '' }}>{{$value}}</option>
+            @endif
           @endforeach
         </select>
       </div>
@@ -917,7 +921,11 @@
       <div class="col-xl-2 col-md-3">
         <select required id="aperto_al" class="form-control" name="aperto_al">
           @foreach (Utility::getFsMesi() as $id => $value)
-            <option value="{{$id}}" {{old('aperto_al') == $id || $infoPiscina->aperto_al == $id ? 'selected' : '' }}>{{$value}}</option>
+           @if (old('aperto_al'))
+            <option value="{{$id}}" {{ old('aperto_al') == $id ? 'selected' : '' }}>{{$value}}</option>
+            @else
+            <option value="{{$id}}" {{ $infoPiscina->aperto_al == $id ? 'selected' : '' }}>{{$value}}</option>
+            @endif
           @endforeach
         </select>
       </div>
