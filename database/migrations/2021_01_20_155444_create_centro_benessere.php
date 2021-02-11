@@ -16,17 +16,17 @@ class CreateCentroBenessere extends Migration
         Schema::create('tblCentroBenessere', function (Blueprint $table) {
             $table->id();
             $table->integer('foglio_id')->default(0);
-            $table->integer('sup_b')->default(0);
+            $table->integer('sup_b')->nullable()->default(0);
             $table->string('area_fitness', 2)->nullable()->default(null);
-            $table->integer('sup_fitness')->default(0);
+            $table->integer('sup_fitness')->nullable()->default(0);
             $table->string('aperto_dal_b', 2)->nullable()->default(null);
             $table->string('aperto_al_b', 2)->nullable()->default(null);
             $table->boolean('aperto_annuale_b')->nullable()->default(false);
             
             $table->string('a_pagamento', 2)->nullable()->default(null);
             $table->boolean('in_hotel')->nullable()->default(false);
-            $table->integer('distanza_hotel')->default(0);
-            $table->integer('eta_minima')->default(0);
+            $table->integer('distanza_hotel')->nullable()->default(0);
+            $table->integer('eta_minima')->nullable()->default(0);
             $table->string('obbligo_prenotazione', 2)->nullable()->default(null);
             $table->string('uso_esclusivo')->nullable()->default(null);
 

@@ -21,7 +21,7 @@ class ServizioFoglio extends Model
 
     public function fogliServizi()
     {
-        return $this->belongsToMany('App\FoglioServizi', 'tblFoglioAssociaServizi', 'servizio_id', 'foglio_id');
+        return $this->belongsToMany('App\FoglioServizi', 'tblFoglioAssociaServizi', 'servizio_id', 'foglio_id')->withPivot('note');
     }
 
 }

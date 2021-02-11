@@ -153,7 +153,39 @@ class FoglioServiziRequest extends FormRequest
             $rules['vasca_idro_n_dispo'] = 'required|gte:0';
             $rules['vasca_idro_posti_dispo'] = 'required|gte:0';
 
-        }
+        } // end if piscina
+
+
+        // BENESSERE
+        
+        if ($this->request->get('benessere')) {
+
+            $rules['sup_b'] = 'required|gt:0';
+            $rules['area_fitness'] = "not_in:seleziona";
+
+
+            if ($this->request->get('area_fitness') == 'si') {
+                $rules['sup_fitness'] = 'required|gt:0';
+            }
+
+            if ($this->request->get('aperto_dal_b') == $this->request->get('aperto_al_b')) {
+                $rules['aperto_annuale_b'] = 'required';
+            }
+
+            $rules['a_pagamento'] = "not_in:seleziona";
+
+            if (!$this->request->get('in_hotel')) {
+                $rules['distanza_hotel'] = 'required|gt:0';
+            }
+
+
+        } // end if benessere
+
+
+        $rules['data_firma'] = 'required|date_format:d/m/Y';
+        $rules['nome_file'] = 'required|alpha_dash';
+
+        
 
         //dd($rules);
 
@@ -191,6 +223,19 @@ class FoglioServiziRequest extends FormRequest
             'vasca_idro_n_dispo.gte' => 'Specificare le vasche disponibili',
             'vasca_idro_posti_dispo.gte' => 'Specificare i posti disponibili delle vasche',
 
+            'sup_b.gt' => 'Specificare una superficie area benessere maggiore di 0',
+            'area_fitness.not_in' => 'Specificare se si possiede area fitness',
+            'sup_fitness.gt' => 'Specificare una superficie area fitness maggiore di 0',
+
+            'aperto_annuale_b.required' => 'I mesi di apertura e chiusura del centro benessere coincidono. Specificare annuale',
+
+            'a_pagamento.not_in' => 'Specificare se il centro benessere è a pagamento',
+            'distanza_hotel.gt' => 'Specificare la distanza del centro benessere dall\'hotel',
+
+            'data_firma.required' => 'La data in fondo al documento è obbligatoria',
+            'data_firma.date_format' => 'La data in fondo al documento non ha un formato valido (d/m/Y)',
+            'nome_file.required' => 'Specificare il nome del file PDF (senza estensione, spazi e spazi)',
+            'nome_file.alpha_dash' => 'Il nome del file può contenere solo caratteri alfanumerici (senza spazi e punti)',
         ];
 
         foreach (Utility::getFsTrattamentiENote() as $key => $val) {

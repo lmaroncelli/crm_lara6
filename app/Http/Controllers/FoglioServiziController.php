@@ -7,6 +7,7 @@ use App\Cliente;
 use App\Utility;
 use App\InfoPiscina;
 use App\FoglioServizi;
+use App\ServizioFoglio;
 use App\CentroBenessere;
 use App\GruppoServiziFoglio;
 use Illuminate\Http\Request;
@@ -15,6 +16,97 @@ use App\Http\Requests\FoglioServiziRequest;
 
 class FoglioServiziController extends Controller
 {
+
+
+private function fieldsPiscina() {
+    $fields = ['sup',
+                'h',
+                'h_min',
+                'h_max',
+                'aperto_dal',
+                'aperto_al',
+                'aperto_annuale',
+                'espo_sole',
+                'espo_sole_tutto_giorno',
+                'posizione',
+                'coperta',
+                'riscaldata',
+                'salata',
+                'idro',
+                'idro_cervicale',
+                'scivoli',
+                'trampolino',
+                'aperitivi',
+                'getto_bolle',
+                'cascata',
+                'musica_sub',
+                'wi_fi',
+                'pagamento',
+                'vasca_posizione',
+                'salvataggio',
+                'nuoto_contro',
+                'peculiarita_piscina',
+                'lettini_dispo',
+                'vasca_bimbi_h',
+                'vasca_bimbi_sup',
+                'vasca_idro_posti_dispo',
+                'vasca_idro_riscaldata',
+                'vasca_pagamento',
+                'vasca_idro_n_dispo',
+                'vasca_bimbi_riscaldata'];
+
+    return $fields;
+}
+
+
+    private function fieldsBenessere() {
+
+        $fields = [
+            'sup_b',
+            'area_fitness',
+            'sup_fitness',
+            'aperto_dal_b',
+            'aperto_al_b',
+            'aperto_annuale_b',
+            'a_pagamento',
+            'in_hotel',
+            'distanza_hotel',
+            'eta_minima',
+            'obbligo_prenotazione',
+            'uso_esclusivo',
+            'piscina_benessere',
+            'idromassaggio',
+            'sauna_finlandese',
+            'bagno_turco',
+            'docce_emozionali',
+            'cascate_ghiaccio',
+            'aromaterapia',
+            'percorso_kneipp',
+            'cromoterapia',
+            'massaggi',
+            'trattamenti_estetici',
+            'area_relax',
+            'letto_marmo_riscaldato',
+            'stanza_sale',
+            'kit_benessere',
+            'peculiarita'
+        ];
+
+        return $fields;        
+    }
+
+
+    private function fieldsServiziENote(){
+        $servizi_e_note = ServizioFoglio::pluck('id')->toArray();
+        foreach (ServizioFoglio::pluck('id')->toArray() as $id) {
+            $servizi_e_note[] = 'nota_servizio_'.$id;
+        }
+
+        return $servizi_e_note;
+
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -168,6 +260,7 @@ class FoglioServiziController extends Controller
         ]
         */ 
 
+        
         return view('foglio_servizi.form', compact('foglio', 'commerciale_contratto', 'infoPiscina', 'centroBenessere', 'gruppiServizi', 'ids_servizi_associati', 'serv_agg'));
 
 
@@ -182,7 +275,80 @@ class FoglioServiziController extends Controller
      */
     public function update(FoglioServiziRequest $request, $id)
     {
-        dd($request->all());
+        $foglio = FoglioServizi::find($id);
+
+        $to_exclude = array_merge($this->fieldsPiscina(), $this->fieldsBenessere(), $this->fieldsServiziENote(), ['dal', 'al', 'data_firma', '_token', '_method']);
+
+        //? Mantengo intatta la request
+        $my_request = $request;
+        
+        $my_request = $my_request->except($to_exclude);
+                
+
+        $foglio->update($my_request);
+
+        //? gestione servizi
+        $servizi_sync = [];
+
+        foreach (ServizioFoglio::pluck('id')->toArray() as $servizio_id) {
+
+            if( $request->has($servizio_id) && $request->get($servizio_id) == '1' ) {
+                if ($request->get('nota_servizio_'. $servizio_id) == '') {
+                    $servizi_sync[$servizio_id] = $request->get($servizio_id);
+                } else {
+                    $servizi_sync[$servizio_id] = ['note' => $request->get('nota_servizio_' . $servizio_id)];
+                }
+            }
+        }
+
+        $foglio->servizi()->sync($servizi_sync);
+
+
+
+        //? gestione piscina
+        $foglio->infoPiscina()->delete();
+        
+        if($request->piscina == '1') {
+            
+            $values_piscina = [];
+            
+            foreach ($this->fieldsPiscina() as $value) {
+                $values_piscina[$value] = $request->get($value);
+            }
+
+            $infoPiscina = new InfoPiscina($values_piscina);
+
+            $infoPiscina->foglioServizi()->associate($foglio);
+
+            $infoPiscina->save();
+    
+        }
+
+
+        //? gestione centro benessere
+        $foglio->centroBenessere()->delete();
+        
+        if ($request->benessere == '1') {
+
+            $values_benessere = [];
+
+            foreach ($this->fieldsBenessere() as $value) {
+                $values_benessere[$value] = $request->get($value);
+            }
+
+            $centroBenessere = new CentroBenessere($values_benessere);
+
+            $centroBenessere->foglioServizi()->associate($foglio);
+
+            $centroBenessere->save();
+        }
+        
+
+
+
+        return redirect()->route('foglio-servizi.edit', $foglio->id)->with('status', 'Foglio modificato correttamente!');
+
+
     }
 
     /**

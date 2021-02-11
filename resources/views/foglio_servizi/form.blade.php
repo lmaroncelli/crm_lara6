@@ -19,8 +19,8 @@
 
 
         /* toggle visibility date aperture / annuale */
-        $('#tipo_apertura').change(function(){
-            if($('#tipo_apertura').val() == 'a') {
+        $('#apertura').change(function(){
+            if($('#apertura').val() == 'a') {
                 $('#opzioni_apertura').hide(); 
             } else {
                 $('#opzioni_apertura').show(); 
@@ -409,7 +409,7 @@
 
      <div class="col-md-4">
         <label class="font-weight-bold">Apertura</label>
-        <select required class="form-control" name="tipo_apertura" id="tipo_apertura">
+        <select required class="form-control" name="apertura" id="apertura">
           @foreach (Utility::getHotelApertura() as $apertura_id => $apertura)
             <option value="{{$apertura_id}}" {{old('apertura') == $apertura_id || $foglio->apertura == $apertura_id ? 'selected' : '' }}>{{$apertura}}</option>
           @endforeach
@@ -930,7 +930,8 @@
         </select>
       </div>
       <div class="col-xl-2 col-md-2">
-        <input type="checkbox" name="aperto_annuale" id="aperto_annuale" value="1" {{ old('aperto_annuale') || $infoPiscina->aperto_annuale ? 'checked' : '' }} class="beautiful_checkbox">
+        <input type="hidden" name="aperto_annuale" value="0">
+        <input type="checkbox" name="aperto_annuale" id="aperto_annuale" value="1" {{ old('aperto_annuale') == '0' ? '' : (old('aperto_annuale') || $infoPiscina->aperto_annuale ? 'checked' : '') }} class="beautiful_checkbox">
         <label for="aperto_annuale" class="font-weight-bold col-form-label">
           annuale
         </label>
@@ -964,8 +965,9 @@
     @foreach ($row_carr as $n_row => $caratteristichePiscina_in_row)
       <div class="row form-group">
         @foreach ($caratteristichePiscina_in_row as $carr => $carr_view)
+          <input type="hidden" name="{{$carr}}" value="0">
           <div class="col-xl-3 col-md-6">
-            <input type="checkbox" name="{{$carr}}" id="{{$carr}}" value="1" {{ old($carr) || $infoPiscina->$carr ? 'checked' : '' }} class="beautiful_checkbox">
+            <input type="checkbox" name="{{$carr}}" id="{{$carr}}" value="1" {{ old($carr) == '0' ? '' : (old($carr) || $infoPiscina->$carr ? 'checked' : '') }} class="beautiful_checkbox">
             <label for="{{$carr}}" class="font-weight-bold">
               {{$carr_view}}
             </label>
@@ -988,7 +990,8 @@
         <input id="espo_sole" class="form-control" maxlength="3" name="espo_sole" type="text" value="{{old('espo_sole') != '' ?  old('espo_sole') :  $infoPiscina->espo_sole}}">
       </div>
       <div class="col-md-3">
-        <input type="checkbox" name="espo_sole_tutto_giorno" id="espo_sole_tutto_giorno" value="1" {{ old('espo_sole_tutto_giorno') || $infoPiscina->espo_sole_tutto_giorno ? 'checked' : '' }} class="beautiful_checkbox">
+        <input type="hidden" name="espo_sole_tutto_giorno" value="0">
+        <input type="checkbox" name="espo_sole_tutto_giorno" id="espo_sole_tutto_giorno" value="1" {{ old('espo_sole_tutto_giorno') == '0' ? '' : (old('espo_sole_tutto_giorno') || $infoPiscina->espo_sole_tutto_giorno ? 'checked' : '') }} class="beautiful_checkbox">
         <label for="espo_sole_tutto_giorno" class="font-weight-bold">
           tutto il giorno
         </label>
@@ -1026,7 +1029,8 @@
         <input id="vasca_bimbi_h" class="form-control" maxlength="3" name="vasca_bimbi_h" type="text" value="{{old('vasca_bimbi_h') != '' ?  old('vasca_bimbi_h') :  $infoPiscina->vasca_bimbi_h}}">
       </div>
       <div class="col-md-4">
-        <input type="checkbox" name="vasca_bimbi_riscaldata" id="vasca_bimbi_riscaldata" value="1" {{ old('vasca_bimbi_riscaldata') || $infoPiscina->vasca_bimbi_riscaldata ? 'checked' : '' }} class="beautiful_checkbox">
+        <input type="hidden" name="vasca_bimbi_riscaldata" value="0">
+        <input type="checkbox" name="vasca_bimbi_riscaldata" id="vasca_bimbi_riscaldata" value="1" {{ old('vasca_bimbi_riscaldata') == '0' ? '' : (old('vasca_bimbi_riscaldata') || $infoPiscina->vasca_bimbi_riscaldata ? 'checked' : '') }} class="beautiful_checkbox">
         <label for="vasca_bimbi_riscaldata" class="font-weight-bold">
           riscaldata
         </label>
@@ -1074,13 +1078,15 @@
 
     <div class="row form-group">
       <div class="col-md-3">
-        <input type="checkbox" name="vasca_idro_riscaldata" id="vasca_idro_riscaldata" value="1" {{ old('vasca_idro_riscaldata') || $infoPiscina->vasca_idro_riscaldata ? 'checked' : '' }} class="beautiful_checkbox">
+        <input type="hidden" name="vasca_idro_riscaldata" value="0">
+        <input type="checkbox" name="vasca_idro_riscaldata" id="vasca_idro_riscaldata" value="1" {{ old('vasca_idro_riscaldata') == '0' ? '' : (old('vasca_idro_riscaldata') || $infoPiscina->vasca_idro_riscaldata ? 'checked' : '') }} class="beautiful_checkbox">
         <label for="vasca_idro_riscaldata" class="font-weight-bold">
           riscaldata
         </label>
       </div>
       <div class="col-md-3">
-        <input type="checkbox" name="vasca_pagamento" id="vasca_pagamento" value="1" {{ old('vasca_pagamento') || $infoPiscina->vasca_pagamento ? 'checked' : '' }} class="beautiful_checkbox">
+        <input type="hidden" name="vasca_pagamento" value="0">
+        <input type="checkbox" name="vasca_pagamento" id="vasca_pagamento" value="1" {{ old('vasca_pagamento') == '0' ? '' : (old('vasca_pagamento') || $infoPiscina->vasca_pagamento ? 'checked' : '') }} class="beautiful_checkbox">
         <label for="vasca_pagamento" class="font-weight-bold">
           a pagamento
         </label>
@@ -1098,7 +1104,8 @@
       </label>
     </div>
     <div class="col-xl-4 col-md-4">
-      <input type="checkbox" name="benessere" id="benessere" value="1" {{ old('benessere') || $foglio->benessere ? 'checked' : '' }} class="beautiful_checkbox">
+      <input type="hidden" name="benessere" value="0">
+      <input type="checkbox" name="benessere" id="benessere" value="1" {{ old('benessere') == '0' ? '' : (old('benessere') || $foglio->benessere ? 'checked' : '') }} class="beautiful_checkbox">
       <label for="benessere" class="font-weight-bold">
         Ho un centro benessere
       </label>
@@ -1124,9 +1131,15 @@
     <div class="row form-group">
       <div class="col-xl-2 col-md-2">
         <select required id="area_fitness" class="form-control" name="area_fitness">
-        @foreach (['si','no'] as $value)
-          <option value="{{$id}}" {{old('area_fitness') == $id || $centroBenessere->area_fitness == $id ? 'selected' : '' }}>{{$value}}</option>
+        
+        @foreach (['seleziona', 'si','no'] as $value)
+          @if ( old('area_fitness') !== null)   
+            <option value="{{$value}}" {{old('area_fitness') == $value ? 'selected' : '' }}>{{$value}}</option>
+          @else
+            <option value="{{$value}}" {{$centroBenessere->area_fitness == $value ? 'selected' : '' }}>{{$value}}</option>
+          @endif
         @endforeach
+
         </select>
       </div>
       <label class="offset-xl-3 col-xl-1 offset-md-1 col-md-3 font-weight-bold col-form-label">superficie (mq.)</label>
@@ -1160,7 +1173,8 @@
         </select>
       </div>
       <div class="col-xl-2 col-md-2">
-        <input type="checkbox" name="aperto_annuale_b" id="aperto_annuale_b" value="1" {{ old('aperto_annuale_b') || $centroBenessere->aperto_annuale_b ? 'checked' : '' }} class="beautiful_checkbox">
+        <input type="hidden" name="aperto_annuale_b" value="0">
+        <input type="checkbox" name="aperto_annuale_b" id="aperto_annuale_b" value="1" {{ old('aperto_annuale_b') == '0' ? '' : (old('aperto_annuale_b') || $centroBenessere->aperto_annuale_b ? 'checked' : '') }} class="beautiful_checkbox">
         <label for="aperto_annuale_b" class="font-weight-bold col-form-label">
           annuale
         </label>
@@ -1171,11 +1185,15 @@
     <div class="row form-group">
       <label class="font-weight-bold col-xl-2 col-md-3 col-form-label">A pagamento</label>
       <div class="col-xl-2 col-md-2">
-          <select required id="a_pagamento" class="form-control" name="a_pagamento">
-          @foreach (['si','no'] as $value)
-            <option value="{{$id}}" {{old('a_pagamento') == $id || $centroBenessere->a_pagamento == $id ? 'selected' : '' }}>{{$value}}</option>
+        <select required id="a_pagamento" class="form-control" name="a_pagamento">
+          @foreach (['seleziona', 'si','no'] as $value)
+            @if ( old('a_pagamento') !== null)   
+              <option value="{{$value}}" {{old('a_pagamento') == $value ? 'selected' : '' }}>{{$value}}</option>
+            @else
+              <option value="{{$value}}" {{$centroBenessere->a_pagamento == $value ? 'selected' : '' }}>{{$value}}</option>
+            @endif
           @endforeach
-          </select>
+        </select>
       </div>
     </div>
 
@@ -1183,7 +1201,8 @@
      <div class="row form-group">
       <label class="col-xl-2 col-md-2 font-weight-bold  col-form-label">Posizione:</label>
       <div class="col-xl-3 col-md-3">
-        <input type="checkbox" name="in_hotel" id="in_hotel" value="1" {{ old('in_hotel') || $centroBenessere->in_hotel ? 'checked' : '' }} class="beautiful_checkbox">
+        <input type="hidden" name="in_hotel" value="0">
+        <input type="checkbox" name="in_hotel" id="in_hotel" value="1" {{ old('in_hotel') == '0' ? '' : (old('in_hotel') || $centroBenessere->in_hotel ? 'checked' : '') }} class="beautiful_checkbox">
         <label for="in_hotel" class="font-weight-bold col-form-label">
           in hotel
         </label>
@@ -1213,10 +1232,11 @@
       $row_carr = array_chunk(Utility::getFsCaratteristicheCentroBenessere(), 4, true);
     @endphp
     @foreach ($row_carr as $n_row => $caratteristicheCentroBenessere_in_row)
-      <div class="row form-group">
-        @foreach ($caratteristicheCentroBenessere_in_row as $carr => $carr_view)
+    <div class="row form-group">
+      @foreach ($caratteristicheCentroBenessere_in_row as $carr => $carr_view)
+          <input type="hidden" name="{{$carr}}" value="0">
           <div class="col-xl-3 col-md-6">
-            <input type="checkbox" name="{{$carr}}" id="{{$carr}}" value="1" {{ old($carr) || $centroBenessere->$carr ? 'checked' : '' }} class="beautiful_checkbox">
+            <input type="checkbox" name="{{$carr}}" id="{{$carr}}" value="1" {{ old($carr) == '0' ? '' : (old($carr) || $centroBenessere->$carr ? 'checked' : '') }} class="beautiful_checkbox">
             <label for="{{$carr}}" class="font-weight-bold">
               {{$carr_view}}
             </label>
@@ -1241,7 +1261,7 @@
       <div class="col-xl-2 col-md-2">
         <select required id="obbligo_prenotazione" class="form-control" name="obbligo_prenotazione">
         @foreach (['si','no'] as $value)
-          <option value="{{$id}}" {{old('obbligo_prenotazione') == $id || $centroBenessere->obbligo_prenotazione == $id ? 'selected' : '' }}>{{$value}}</option>
+          <option value="{{$value}}" {{old('obbligo_prenotazione') == $value || $centroBenessere->obbligo_prenotazione == $value ? 'selected' : '' }}>{{$value}}</option>
         @endforeach
         </select>
       </div>
@@ -1253,7 +1273,7 @@
     <div class="col-xl-3 col-md-3">
        <select required id="uso_esclusivo" class="form-control" name="uso_esclusivo">
         @foreach (['seleziona', 'si','no','a richiesta'] as $value)
-          <option value="{{$id}}" {{old('uso_esclusivo') == $id || $centroBenessere->uso_esclusivo == $id ? 'selected' : '' }}>{{$value}}</option>
+          <option value="{{$value}}" {{old('uso_esclusivo') == $value || $centroBenessere->uso_esclusivo == $value ? 'selected' : '' }}>{{$value}}</option>
         @endforeach
       </select>
     </div>
@@ -1276,9 +1296,10 @@
     </div>
     <div class="elenco_servizi">
       @foreach ($gruppo->elenco_servizi as $key => $servizio)
+        <input type="hidden" name="{{$servizio->id}}" value="0">
         <div class="row form-group servizio">
           <div class="col-xl-2 col-md-4 flex-container">
-            <input type="checkbox" name="{{$servizio->id}}" id="{{$servizio->id}}" value="1" {{ old($servizio->id) || array_key_exists($servizio->id, $ids_servizi_associati) ? 'checked' : '' }}  class="beautiful_checkbox">
+            <input type="checkbox" name="{{$servizio->id}}" id="{{$servizio->id}}" value="1" {{ old($servizio->id) == '0' ? '' : (old($servizio->id) || array_key_exists($servizio->id, $ids_servizi_associati) ? 'checked' : '') }}  class="beautiful_checkbox">
             <label for="{{$servizio->id}}">
               {{$servizio->nome}}
             </label>
@@ -1337,16 +1358,16 @@
  <div class="row form-group">
     <label class="col-xl-1 col-md-2 col-form-label">Data:</label>
     <div class="col-xl-1 col-md-5 ">
-      <input type="text" name="data_firma" id="data_firma" class="form-control input_data_firma"  value="{{old('data_firma') != '' ?  old('data_firma') :  $foglio->data_firma->format('d/m/Y')}}">
+      <input type="text" name="data_firma" id="data_firma" class="form-control input_data_firma"  value="{{old('data_firma') != '' ?  old('data_firma') :  optional($foglio->data_firma)->format('d/m/Y')}}">
     </div>
   </div>
     {{--  Nome file pdf --}}
 <div class="form-group row">
-  <label class="col-xl-1 col-md-3 col-form-label " for="text-input">Nome file pdf</label>
+  <label class="col-xl-1 col-md-3 col-form-label " for="nome_file">Nome file pdf</label>
     
   <div class="col-xl-4 col-md-9">
     <div class="input-group">
-      <input class="form-control" id="nome_file_scelto" type="text" name="nome_file_scelto" placeholder="Nome file pdf" value="{{old('nome_file') != '' ?  old('nome_file') :  $foglio->nome_file}}"> 
+      <input class="form-control" id="nome_file" type="text" name="nome_file" placeholder="Nome file pdf" value="{{old('nome_file') != '' ?  old('nome_file') :  $foglio->nome_file}}"> 
       <div class="input-group-append">
         <span class="input-group-text">.pdf</span>
       </div>
