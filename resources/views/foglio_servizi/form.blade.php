@@ -181,6 +181,41 @@
         }); /* /del_aggiuntivo */
 
 
+      $( "#crea_pdf" ).click(function(e) {
+      
+        e.preventDefault();
+      
+        $(".spinner_lu").show();
+        
+        var foglio_id = {{$foglio->id}};
+
+        data = {
+          foglio_id:foglio_id
+        };
+        
+        $.ajax({
+            url: "{{ route('contratto-digitale.crea-pdf-ajax') }}",
+            type: 'POST',
+            data: data,
+            success: function(msg) {
+                if (msg="ok") {
+                  $("#pdf_firmato").fadeIn('slow');
+                } else {
+                  alert(msg);
+                }
+              $(".spinner_lu").hide();
+            },
+            error: function() {
+              $(".spinner_lu").hide();
+              alert('errore imprevisto!');
+            }
+        });
+      
+      
+
+    }); /*end crea pdf */
+
+
 		});
 	
 

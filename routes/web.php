@@ -241,6 +241,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('add-servizio-aggiuntivo-foglio-servizi-ajax', 'FoglioServiziController@addServizioAggiuntivoAjax')->name('add-servizio-aggiuntivo-foglio-servizi-ajax');
 
 
+    Route::post('foglio-servizi.crea-pdf-ajax', 'FoglioServiziController@creaPdfAjax')->name('foglio-servizi.crea-pdf-ajax');
+
+
+    
+
+
 
 
     

@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
+use SetaPDF_Core_Document;
+use SetaPDF_Core_Reader_File;
+use SetaPDF_Core_Writer_File;
 use App\User;
 use App\Cliente;
 use App\Utility;
@@ -343,11 +347,7 @@ private function fieldsPiscina() {
             $centroBenessere->save();
         }
         
-
-
-
         return redirect()->route('foglio-servizi.edit', $foglio->id)->with('status', 'Foglio modificato correttamente!');
-
 
     }
 
@@ -418,6 +418,36 @@ private function fieldsPiscina() {
 
         echo "ok";
 
+    }
+
+
+
+
+
+    private function _crea_pdf($id) {
+
+        $foglio = FoglioServizi::with(['commerciale',
+                                        'infoPiscina',
+                                        'centroBenessere',
+                                        'cliente.categoria'
+                                ])
+                                ->find($id);
+
+
+        return view('foglio_servizi.foglio_servizi_pdf', compact('foglio'));
+
+        //$pdf = PDF::loadView('contratti_digitali.contratto_pdf', compact('contratto', 'commerciale_contratto', 'servizi_assoc', 'totali', 'n_servizi_per_pagina', 'chunk_servizi', 'n_sottotab'));
+
+    }
+
+
+    public function creaPdfAjax(Request $request) {
+
+        $foglio_id = $request->get('foglio_id');
+
+        $pdf = $this->_crea_pdf($foglio_id);
+
+        return 'ok';
     }
 
 
