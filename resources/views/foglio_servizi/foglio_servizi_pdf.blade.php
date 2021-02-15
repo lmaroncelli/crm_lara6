@@ -14,6 +14,25 @@
         font-style: normal;
     }
 
+
+    .fa-check:before {
+            font-family: DejaVu Sans;
+            font-style: normal;
+            content: "\2611";
+            color:#000;
+            font-size: 18px;
+    }
+
+     .fa-check-empty:before {
+            font-family: DejaVu Sans;
+            content: "\2610";
+            color:#000;
+            font-style: normal;
+            font-size: 18px;
+    }
+
+
+
     body {
       font-family: calibri, sans-serif;
       margin: 0;
@@ -48,8 +67,7 @@
       text-transform: uppercase;
     }
 
-    div.card-body ul, 
-    div.info ul {
+    div.card-body ul {
       list-style-type: none;
       padding: 0;
       margin: 0;
@@ -65,149 +83,25 @@
       text-transform: uppercase;
     }
 
-
-    .info {
-      padding: 0;
-      margin: 0;
-      padding-left: 15px;
-    }
-    .info ul {
-      list-style-type: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .info ul li {
-      padding: 0;
-      margin: 0;
-    }
-
-
-    div.dati_cliente {
-      padding: 2px 10px 1px 10px;
-    }
-
-
-    div.elenco_servizi thead th
-     {
-      padding:5px;
-      font-size: 13px;
-    	background-color: #efefef;
-      font-weight:bold;
-      margin-bottom: 0px;
-      border: 1px solid #fff;
-    }
-
-  
-    div.elenco_servizi tr td{
-      height:30px;
-    }
-    
-    div.elenco_servizi tr.totali td
-     {
-      padding:3px;
-      height:20px;  
-    	background-color: #efefef;
-      font-weight:bold;
-      margin-bottom: 0px;
-      border: 1px solid #fff;
-    }
-
-
-    div.elenco_servizi tr.sconto {
-      color: crimson;
-    }
-
-    div.elenco_servizi td.text-right {
-      text-align: right;
-    }
-
-
-    div.elenco_servizi font-weight-bold {
-      font-weight: 700!important;
-    }
-
-
-    div.subfooter{
-      position: fixed;
-      margin: 0 auto;
-      bottom: 240px;
-      border: 1px solid #333;
-    }
-
-    div.footer{
-      position: fixed;
-      margin: 0 auto;
-      bottom: 150px;
-      border: 1px solid #333;
-    }
-
-    div.subfooter tr.condizioni_pagamento td
-     {
-      padding:3px;
-      height:20px;  
-    	background-color: #efefef;
-      font-weight:bold;
-      margin-bottom: 0px;
-    }
-
-
-    div.footer .note {
-      min-height: 60px;
-    }
-
     table.p_break_after {
         page-break-after: always;
     }
 
-    /* PARTE STATICA */
-    ul.elenco_condizioni {
-      font-size: 10.2px;
-      list-style-type: none;
-      margin: 0;
-      padding:0;
-      line-height: 10px;
-      text-align: justify;
-      page-break-inside: auto;
+    ul.list {
+      display: inline; 
+      padding: 0 20px; 
     }
 
-    ul.elenco_condizioni.altre li{
-        margin: 10px 0;
+    ul.one_row li:first-child {
+      font-weight: bold;
+      margin-right: 50px;
+      padding: 0; 
     }
 
-    ul.elenco_condizioni li {
-        text-align: justify;
-        page-break-inside: auto;
-    }
-
-    ul.elenco_condizioni li.title {
-        margin: 0 0 10px 0;
-    }
-
-    ul.elenco_condizioni li.subtitle  {
-      margin-top: 6px;
-    }
-
-    ul.elenco_condizioni li.subtitle b {
-        font-weight: bold;
-        text-transform: uppercase;
-    }
-
-    table.firme_ultima_pagina {
-        margin-top: 5px;
-    }
-
-    table.firme_ultima_pagina td {
-        height: 10px;
-    }
-
-    table.firme_ultima_pagina tr.firme td {
-        height:50px;
-    }
-
-    .bi {
-        font-weight: bold!important;
-        font-variant: italic!important;
+    ul.one_row li,
+    ul.list li{
+      display: inline; 
+      padding: 0 20px; 
     }
 
 
@@ -220,49 +114,9 @@
         bottom: 0px;
         font-size: 10px;
         /*border: 1px solid green;*/
+
+
     }
-
-    table.respomsabile_trattamento {
-            margin-top:35px;
-        }
-
-        
-    table.respomsabile_trattamento ul {
-        font-size: 10.2px;
-        text-align: justify;
-        line-height: 10px;
-        list-style: none;
-        text-indent: 0px;
-        margin:0;
-        padding:0;
-    }
-
-    table.respomsabile_trattamento ul li {
-        text-align: justify;
-        margin:0;
-        padding:0;
-    }
-
-    table.respomsabile_trattamento ul li:before {
-        content: "-";
-    }
-    
-
-    table.respomsabile_trattamento ol {
-        text-align: justify;
-        list-style-type: upper-alpha;
-        text-indent: 0px;
-        margin:0;
-        padding:0;
-        padding-left:18px;
-    }
-
-    table.respomsabile_trattamento ol li {
-        text-align: justify;
-        margin:0;
-        padding:0;
-    }
-
 
   </style>
 </head>
@@ -303,32 +157,34 @@
               <div class="header_pdf">
                 <table width="100%" cellpadding="0" cellspacing="0">
                   <tr>
-                    <td width="38%" valign="top">
+                    <td width="60%" valign="top">
                       <div class="card">
                         <div class="card-header">MODULO SERVIZI HOTEL</div>
                         <div class="card-body">
-                          <ul>
-                            <li><span>Nome Hotel</span> {{strtoupper($foglio->nome_hotel)}}</li>
-                            <li><span>Anno Stagione</span> {{ strtoupper($foglio->stagione) }}</li>
-                            <li><span>Categoria</span> {{ strtoupper($foglio->cliente->categoria->name) }}</li>
-                          </ul>
+                          <table class="table">
+                              <tr>
+                                <td width="50%" valign="top">
+                                  <ul>
+                                    <li><span>Hotel</span> {{strtoupper($foglio->nome_hotel)}} {!! strtoupper($foglio->cliente->categoria->name) !!}</li>
+                                    <li><span>Anno Stagione</span> {{ strtoupper($foglio->stagione) }}</li>
+                                    <li><span>WhatsApp</span> {{ strtoupper($foglio->whatsapp) }}</li>
+                                    <li><span>Apertura</span> {{ strtoupper($foglio->getApertura()) }}</li>
+                                  </ul>
+                                </td>
+                                <td width="50%" valign="top">
+                                  <ul>
+                                    <li><span>Localita</span> {{strtoupper($foglio->cliente->localita->nome)}}</li>
+                                    <li><span>Tipologia</span> {{ strtoupper($foglio->getTipologia()) }}</li>
+                                    <li><span>SMS</span> {{ strtoupper($foglio->sms) }}</li>
+                                    <li><span>Prezzi Min/Max</span> {{ $foglio->prezzo_min .' / '. $foglio->prezzo_max }}</li>
+                                  </ul>
+                                </td>
+                              </tr>
+                          </table>
                         </div>
                       </div>
                     </td>
-                    <td width="33%" valign="top">
-                      <div class="info">
-                        <ul>
-                          <li><b>Info Alberghi Srl</b></li>
-                          <li>Via Gambalunga, 81/A</li>
-                          <li>47921 Rimini (RN)</li>
-                          <li>Tel 0541-29187 - Fax 0541-202027</li>
-                          <li>P. Iva 03479440400</li>
-                          <li>info@info-alberghi.com</li>
-                          <li>www.info-alberghi.com</li>
-                        </ul>
-                      </div>
-                    </td>
-                    <td align="right">
+                    <td width="40%" align="right">
                       <img src="{{ asset('images/logo_pdf.png') }}">
                     </td>
                   </tr>
@@ -339,54 +195,49 @@
         </div>
         {{-- row --}}
 
-
-        {{--  RIGA SUBHEADER CLIENTE - DATI FATTUIRAZIONE --}}
-        <div class="row mt-3">
+        <div class="row mt-2">
           <div class="col">
-
-              <div class="sub_header">
-                <table width="100%" cellpadding="0" cellspacing="0">
-                  <tr>
-                    <td width="48%" valign="top">
-                      <div class="card">
-                        <div class="card-header">
-                          Cliente
-                        </div>
-                        <div class="card-body">
-                          <div class="dati_cliente">
-                          {!!nl2br($contratto->dati_cliente)!!}
-                          @if ($contratto->dati_referente != '')
-                          <br/>
-                          <br/>
-                          {!!nl2br($contratto->dati_referente)!!}
-                          @endif
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td width="4%" valign="top">
-                      &nbsp;
-                    </td>
-                    <td width="48%" valign="top">
-                      <div class="card">
-                        <div class="card-header">
-                          Dati fatturazione
-                        </div>
-                        <div class="card-body">
-                          <div class="dati_cliente">
-                          {!!nl2br($contratto->dati_fatturazione)!!}
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-              {{-- sub_header --}}
-          
+            <div>
+              <ul class="one_row">
+                <li><span>Organizzazione eventi</span></li>
+                <li>{!!$foglio->organizzazione_comunioni ? '<i class="fa-check"></i>' : '<i class="fa-check-empty"></i>'!!} comunioni</li>
+                <li>{!!$foglio->organizzazione_cresime ? '<i class="fa-check"></i>' : '<i class="fa-check-empty"></i>'!!} cresime</li>
+                <li>{!!$foglio->organizzazione_matrimoni ? '<i class="fa-check"></i>' : '<i class="fa-check-empty"></i>'!!} matrimoni</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col">
+            <div>
+              <ul class="one_row">
+                <li><span>Date apertura hotel</span></li>
+                <li>{{$foglio->dal->format('d/m/Y')}}</li>
+                <li>{{$foglio->al->format('d/m/Y')}}</li>
+              </ul>
+            </div>
           </div>
         </div>
         {{-- row --}}
+        <div class="row mt-2">
+          <div class="col">
+            <div>
+              <ul class="one_row">
+                <li><span>(In caso siate aperti in periodi dell’anno al di fuori della stagione estiva indicate quali):</span></li>
+              </ul>
+            </div>
+            <div>
+              <ul class="list">
+                <li>{!!$foglio->fiere ? '<i class="fa-check"></i>' : '<i class="fa-check-empty"></i>'!!} fiere</li>
+                <li>{!!$foglio->pasqua ? '<i class="fa-check"></i>' : '<i class="fa-check-empty"></i>'!!} pasqua</li>
+                <li>{!!$foglio->capodanno ? '<i class="fa-check"></i>' : '<i class="fa-check-empty"></i>'!!} capodanno</li>
+                <li>{!!$foglio->aprile_25 ? '<i class="fa-check"></i>' : '<i class="fa-check-empty"></i>'!!} 25 aprile</li>
+                <li>{!!$foglio->maggio_1 ? '<i class="fa-check"></i>' : '<i class="fa-check-empty"></i>'!!} 1° maggio</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
           
       </div>
       {{-- container --}}

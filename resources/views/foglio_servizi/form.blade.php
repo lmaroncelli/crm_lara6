@@ -194,7 +194,7 @@
         };
         
         $.ajax({
-            url: "{{ route('contratto-digitale.crea-pdf-ajax') }}",
+            url: "{{ route('foglio-servizi.crea-pdf-ajax') }}",
             type: 'POST',
             data: data,
             success: function(msg) {

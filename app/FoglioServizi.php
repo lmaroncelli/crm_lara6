@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Utility;
 use Illuminate\Database\Eloquent\Model;
 
 class FoglioServizi extends Model
@@ -79,6 +80,26 @@ class FoglioServizi extends Model
     {
         $this->attributes['prezzo_max'] =  str_ireplace(",", ".", $value);
     }
+
+    public function getApertura()
+    {
+        if (isset(Utility::getHotelApertura()[$this->apertura])) {
+            return Utility::getHotelApertura()[$this->apertura];
+        }
+        else {
+            return null;
+        }
+    }
+
+    public function getTipologia() {
+
+        if (isset(Utility::getFsTipologia()[$this->tipo])) {
+            return Utility::getFsTipologia()[$this->tipo];
+        } else {
+            return null;
+        }
+    }
+
 
 
 }

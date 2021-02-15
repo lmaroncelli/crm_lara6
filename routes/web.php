@@ -242,6 +242,8 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::post('foglio-servizi.crea-pdf-ajax', 'FoglioServiziController@creaPdfAjax')->name('foglio-servizi.crea-pdf-ajax');
+    
+    Route::get('pdf/{id}', 'FoglioServiziController@_crea_pdf');
 
 
     

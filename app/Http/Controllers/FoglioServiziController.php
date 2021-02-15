@@ -424,17 +424,26 @@ private function fieldsPiscina() {
 
 
 
-    private function _crea_pdf($id) {
+    public function _crea_pdf($id) {
+    // ! private function _crea_pdf($id) {
 
         $foglio = FoglioServizi::with(['commerciale',
                                         'infoPiscina',
                                         'centroBenessere',
-                                        'cliente.categoria'
+                                        'cliente.categoria',
+                                        'cliente.localita',
                                 ])
                                 ->find($id);
 
 
-        return view('foglio_servizi.foglio_servizi_pdf', compact('foglio'));
+        // ? DOMPDF and ICONS https://paulcracknell.com/87/laravel-dom-pdf-issues-font-awesome-and-a-unicode-work-around/
+        // ? &#9745; check     
+        // ? &#9744; check vuoto
+
+        //return view('foglio_servizi.foglio_servizi_pdf', compact('foglio'));
+
+        $pdf = PDF::loadView('foglio_servizi.foglio_servizi_pdf', compact('foglio'));
+        return $pdf->download('invoice.pdf');
 
         //$pdf = PDF::loadView('contratti_digitali.contratto_pdf', compact('contratto', 'commerciale_contratto', 'servizi_assoc', 'totali', 'n_servizi_per_pagina', 'chunk_servizi', 'n_sottotab'));
 
@@ -447,7 +456,7 @@ private function fieldsPiscina() {
 
         $pdf = $this->_crea_pdf($foglio_id);
 
-        return 'ok';
+        echo 'ok';
     }
 
 
