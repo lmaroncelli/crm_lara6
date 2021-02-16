@@ -380,9 +380,10 @@
     </div>
   </div>
 
-  <div class="row form-group" style="">
+  <div class="row form-group">
     <div class="col-md-12">
-      <input type="checkbox" name="pti_anno_prec" id="pti_anno_prec" value="1" {{ old('pti_anno_prec') || $foglio->pti_anno_prec ? 'checked' : '' }} class="beautiful_checkbox">       
+      <input type="hidden" name="pti_anno_prec" value="0">
+      <input type="checkbox" name="pti_anno_prec" id="pti_anno_prec" value="1" {{ old('pti_anno_prec') == '0' ? '' : $foglio->pti_anno_prec ? 'checked' : '' }} class="beautiful_checkbox">       
       <label for="pti_anno_prec"  class="font-weight-bold">Stessi punti di forza anno precedente:</label>
     </div>
   </div>
@@ -531,14 +532,14 @@
       N. locali e posti letto
         </label>
     </label>
-    <input type="hidden" name="numeri_anno_prec" value=0>
+    <input type="hidden" name="numeri_anno_prec" value="0">
     <div class="col-md-5">
       <input type="checkbox" 
       name="numeri_anno_prec" 
       id="numeri_anno_prec" 
       value="1" 
       {{ old('numeri_anno_prec') == '0' ? '' : (old('numeri_anno_prec') == 1 || $foglio->numeri_anno_prec ? 'checked' : '') }} class="beautiful_checkbox">       
-    <label for="numeri_anno_prec" class="font-weight-bold">Stessi numeri anno precedente</label>
+      <label for="numeri_anno_prec" class="font-weight-bold">Stessi numeri anno precedente</label>
     </div>
   </div>
 
@@ -548,6 +549,7 @@
       <div class="col-xl-3 col-md-6">
         <label class="font-weight-bold">
             NUMERO CAMERE: 
+        </label>
         <input type="text" name="n_camere" id="n_camere" class="form-control"  value="{{old('n_camere') != '' ?  old('n_camere') :  $foglio->n_camere}}">
       </div>
 

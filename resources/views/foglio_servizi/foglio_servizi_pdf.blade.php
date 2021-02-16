@@ -87,10 +87,21 @@
         page-break-after: always;
     }
 
+    ul {
+      list-style-type: none; 
+    }
+
+    ul.one_row {
+      margin: 0;
+      padding: 0;
+    }
+
     ul.list {
       display: inline; 
-      padding: 0 20px; 
+      padding: 0 0px; 
     }
+
+
 
     ul.one_row li:first-child {
       font-weight: bold;
@@ -104,6 +115,9 @@
       padding: 0 20px; 
     }
 
+    td.header {
+            font-weight: bold;
+          }
 
     div#firma {
         padding: 0;
@@ -163,7 +177,7 @@
                         <div class="card-body">
                           <table class="table">
                               <tr>
-                                <td width="50%" valign="top">
+                                <td valign="top">
                                   <ul>
                                     <li><span>Hotel</span> {{strtoupper($foglio->nome_hotel)}} {!! strtoupper($foglio->cliente->categoria->name) !!}</li>
                                     <li><span>Anno Stagione</span> {{ strtoupper($foglio->stagione) }}</li>
@@ -171,7 +185,7 @@
                                     <li><span>Apertura</span> {{ strtoupper($foglio->getApertura()) }}</li>
                                   </ul>
                                 </td>
-                                <td width="50%" valign="top">
+                                <td width="40%" valign="top">
                                   <ul>
                                     <li><span>Localita</span> {{strtoupper($foglio->cliente->localita->nome)}}</li>
                                     <li><span>Tipologia</span> {{ strtoupper($foglio->getTipologia()) }}</li>
@@ -235,8 +249,284 @@
                 <li>{!!$foglio->maggio_1 ? '<i class="fa-check"></i>' : '<i class="fa-check-empty"></i>'!!} 1° maggio</li>
               </ul>
             </div>
+            @if ($foglio->altra_apertura != '')
+              <div>  
+                <ul class="list">
+                  <li><i class="fa-check"></i> {{$foglio->altra_apertura}}</li>
+                </ul>
+              </div>
+            @endif
           </div>
         </div>
+        {{-- row --}}
+        <div class="row mt-2">
+          <div class="col">
+            @if ($foglio->numeri_anno_prec)
+              <div>
+                <ul class="one_row">
+                  <li><span>STESSI N. LOCALI/SUITE/APP.TI E POSTI LETTO ANNO PRECEDENTE</span></li>
+                </ul>
+              </div>
+            @else
+              <div>
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td width="25%" class="header">NUMERO CAMERE:</td>
+                    <td width="25%" class="header">NUMERO APPARTAMENTI:</td>
+                    <td width="25%" class="header">NUMERO SUITE:</td>
+                    <td width="25%" class="header">NUMERO LETTI:</td>			
+                  </tr>
+                  <tr>
+                    <td width="25%">{{$foglio->n_camere > 0 ? $foglio->n_camere : '......'}}</td>
+                    <td width="25%">{{$foglio->n_app > 0 ? $foglio->n_app : '......'}}</td>
+                    <td width="25%">{{$foglio->n_suite > 0 ? $foglio->n_suite : '......'}}</td>
+                    <td width="25%">{{$foglio->n_letti > 0 ? $foglio->n_letti : '......'}}</td>
+                  </tr>
+                </table>
+              </div>
+            @endif
+          </div>
+        </div>
+
+        <div class="row mt-2">
+          <div class="col">
+            <div>
+              <ul class="one_row">
+                <li><span>ORARIO APERTURA RECEPTION:</span></li>
+              </ul>
+            </div>
+            @if ($foglio->h_24)
+              <ul class="one_row">
+                <li><i class="fa-check"></i> H24</li>
+              </ul>
+            @else
+              <ul class="list">
+                <li>dalle&nbsp;{{$foglio->rec_dalle_ore}}:{{$foglio->rec_dalle_minuti}}&nbsp;&nbsp;&nbsp;alle&nbsp;{{$foglio->rec_alle_ore}}:{{$foglio->rec_alle_minuti}}</li>
+              </ul>
+            @endif
+          </div>
+        </div>
+
+        <div class="row mt-2">
+          <div class="col">
+            <div>
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td width="50%" class="header">ORARIO DI CHECK IN:</td>
+                  <td width="50%" class="header">ORARIO DI CHECK OUT:</td>
+                </tr>
+                <tr>
+                  <td width="50%">dalle ore:&nbsp;{{$foglio->checkin}}</td>
+                  <td width="50%">fino alle ore:&nbsp;{{$foglio->checkout}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-2">
+          <div class="col">
+            <div>
+              <ul class="one_row">
+                <li><span>ORARIO DEI PASTI:</span></li>
+              </ul>
+            </div>
+            @if ($foglio->pasti_anno_prec)
+              <div>
+                <ul class="list">
+                  <li><span>STESSI ORARI PASTI ANNO PRECEDENTE</span></li>
+                </ul>
+              </div>
+            @else
+              <div>
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr width="100%">
+                    <td width="10%">Colazione:&nbsp;&nbsp;</td>
+                    <td>dalle&nbsp;{{ $foglio->colazione_dalle_ore }}:{{ $foglio->colazione_dalle_minuti }}&nbsp;&nbsp;alle&nbsp;{{ $foglio->colazione_alle_ore }}:{{ $foglio->colazione_alle_minuti }}</td>
+                    <td width="8%">Pranzo:&nbsp;&nbsp;</td>
+                    <td>dalle&nbsp;{{ $foglio->pranzo_dalle_ore }}:{{ $foglio->pranzo_dalle_minuti }}&nbsp;&nbsp;alle&nbsp;{{ $foglio->pranzo_alle_ore }}:{{ $foglio->pranzo_alle_minuti }}</td>
+                    <td width="5%">Cena:&nbsp;&nbsp;</td>
+                    <td>dalle&nbsp;{{ $foglio->cena_dalle_ore }}:{{ $foglio->cena_dalle_minuti }}&nbsp;&nbsp;alle&nbsp;{{ $foglio->cena_alle_ore }}:{{ $foglio->cena_alle_minuti }}</td>	
+                  </tr>
+                </table>
+              </div>
+            @endif
+          </div>
+        </div>
+
+        <table class="p_break_after"><tr><td>&nbsp;</td></tr></table>
+
+        <div class="row mt-2">
+          <div class="col">
+            <div>
+              <ul class="one_row">
+                <li><span>TRATTAMENTI PRINCIPALI:</span></li>
+              </ul>
+            </div>
+            @foreach (Utility::getFsTrattamentiENote() as $key => $val)
+                @if ($foglio->$key && strpos($key,'note_') === false)
+                  <ul class="one_row">  
+                    <li>{{ $val }}</li>
+                @elseif($foglio->$key != '')
+                    <li>{{ $foglio->$key }}</li>
+                  </ul>
+                @endif
+            @endforeach
+          </div>
+        </div>
+
+        <div class="row mt-2">
+          <div class="col">
+            <div>
+              <ul class="one_row">
+                <li><span>SI CHIEDE CAPARRA AL MOMENTO DELLA PRENOTAZIONE?</span></li>
+              </ul>
+            </div>
+            <ul class="one_row">
+              <li>{{$foglio->caparra}}</li>
+              @if ($foglio->altra_caparra != '')     
+                &nbsp;&nbsp;&nbsp;<li>{{$foglio->altra_caparra}}</li>
+              @endif
+            </ul>
+          </div>
+        </div>
+        {{-- row --}}
+        <div class="row mt-2">
+          <div class="col">
+            <div>
+              <ul class="one_row">
+                <li><span>PAGAMENTI ACCETTATI</span></li>
+              </ul>
+            </div>
+            <div>
+              <ul class="list">
+                @foreach (Utility::getFsPagamenti() as $key => $val)
+                  <li>{!!$foglio->$key ? '<i class="fa-check"></i>' : '<i class="fa-check-empty"></i>'!!} {{$val}}</li>
+                @endforeach
+              </ul>
+            </div>
+            @if ($foglio->note_pagamenti != '')
+              <div>  
+                <ul class="list">
+                  <li>{{$foglio->note_pagamenti}}</li>
+                </ul>
+              </div>
+            @endif
+          </div>
+        </div>
+
+        {{-- row --}}
+        <div class="row mt-2">
+          <div class="col">
+            <div>
+              <ul class="one_row">
+                <li><span>LINGUE PARLATE</span></li>
+              </ul>
+            </div>
+            <div>
+              <ul class="list">
+                @foreach (Utility::getFsLingue() as $key => $val)
+                  <li>{!!$foglio->$key ? '<i class="fa-check"></i>' : '<i class="fa-check-empty"></i>'!!} {{$val}}</li>
+                @endforeach
+              </ul>
+            </div>
+            @if ($foglio->altra_lingua != '')
+              <div>  
+                <ul class="list">
+                  <li>{{$foglio->altra_lingua}}</li>
+                </ul>
+              </div>
+            @endif
+          </div>
+        </div>
+
+        {{-- row --}}
+        <div class="row mt-2">
+          <div class="col">
+            <div>
+              <ul class="one_row">
+                <li><span>9 PUNTI DI FORZA/SERVIZI</span></li>
+              </ul>
+            </div>
+            @if ($foglio->pti_anno_prec)
+              <div>
+                <ul class="list">
+                  <li><span>Stessi punti di forza anno precedente</span></li>
+                </ul>
+              </div>
+            @else
+              <div>
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  @for ($i = 1; $i < 10; $i++)
+                    @php $attr = 'pf_'.$i; @endphp                      
+                    @if ($i % 3 == 1)
+                      <tr width="100%">
+                      @php $col = 0; @endphp                      
+                    @endif
+                    <td  width="33%"><i class="fa-check"></i> {{ $foglio->$attr }}</td>
+                      @php $col++; @endphp
+                      @if ($col == 3)
+                      </tr>
+                      @endif                      
+                  @endfor 
+                </table>
+              </div>
+            @endif
+            @if ($foglio->note_pf != '')
+              <div> 
+                <ul class="list">
+                  <li>{{$foglio->note_pf}}</li>
+                </ul>
+              </div>
+            @endif
+          </div>
+        </div>
+
+        <table class="p_break_after"><tr><td>&nbsp;</td></tr></table>
+
+
+        @if ($foglio->piscina)
+        
+        <div class="row mt-2">
+          <div class="col">
+            <div>
+              <ul class="one_row">
+                <li><span>SEZIONE PISCINA</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-2">
+          <div class="col">
+            <div>
+              <ul class="one_row">
+                <li><span>INFO</span></li>
+              </ul>
+              <ul>
+                <li>Superficie: {{ $foglio->infoPiscina->sup }}  mq.</li>
+                @if ($foglio->infoPiscina->h)
+                  <li>Altezza unica: {{ $foglio->infoPiscina->h }}  cm.</li>
+                @else
+                  <li>Altezza min: {{ $foglio->infoPiscina->h_min }}  cm.</li>
+                  <li>Altezza mx: {{ $foglio->infoPiscina->h_max }}  cm.</li>
+                @endif
+                @if ($foglio->infoPiscina->aperto_annuale)
+                  <li>Apertura piscina: annuale</li>
+                @else
+                  <li>Apertura piscina: da {{Utility::getFsMesi()[$foglio->infoPiscina->aperto_dal]}} a {{Utility::getFsMesi()[$foglio->infoPiscina->aperto_al]}}</li>
+                @endif
+                @if ($foglio->infoPiscina->posizione != '')
+                  <li>Posizione piscina: {{$foglio->infoPiscina->posizione}}</li>
+                @endif
+              </ul>
+            </div>
+
+          </div>
+        </div>
+            
+        @endif
+
 
           
       </div>
