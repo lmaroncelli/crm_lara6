@@ -148,10 +148,20 @@
         right: 300px;
         bottom: 0px;
         font-size: 10px;
-        /*border: 1px solid green;*/
-
-
+        border: 1px solid green;
     }
+
+    div#avviso {
+      padding: 0;
+      margin: 0;
+      font-weight: bold;
+      text-align: left;
+      position: fixed;
+      left: 10px;
+      bottom: 100px;
+      font-size: 9px;
+    }
+
 
   </style>
 </head>
@@ -667,33 +677,65 @@
         {{-- centro benessere --}}
         
 
-        <table class="p_break_after"><tr><td>&nbsp;</td></tr></table>
-          @foreach ($gruppiServizi as $gruppo)
+        @foreach ($gruppiServizi as $gruppo)
+          
+          @if ($gruppo->id != 10 && $gruppo->id != 11 && $gruppo->id != 12  && $gruppo->id != 13)
+            <table class="p_break_after"><tr><td>&nbsp;</td></tr></table>
+          @endif
+        
+          @if ($gruppo->nome == 'Accessibilità hotel')
+            <table class="p_break_after"><tr><td>&nbsp;</td></tr></table>
+            
             <div class="row mt-2">
               <div class="col">
-                <div>
-                  <ul class="one_row">
-                    <li><span>{{$gruppo->nome}}</span></li>
-                  </ul>
-                  @foreach ($gruppo->elenco_servizi as $key => $servizio)
-                    
-                    @if (array_key_exists($servizio->id, $ids_servizi_associati))
-                      <ul class="one_row">
-                        <li><i class="fa-check"></i> {{$servizio->nome}}</li>
-                        <li>{{$ids_servizi_associati[$servizio->id]}}</li>
-                      </ul>
-                    @else
-                      <ul>
-                        <li><i class="fa-check-empty"></i> {{$servizio->nome}}</li>
-                      </ul>
-                    @endif
-                      
-                  @endforeach
-                </div>
+                <ul class="one_row">
+                  <li><span>Si richiede onestà e trasparenza nella compilazione di questi campi: l'hotel è unico responsabile di quanto pubblicato sul portale</span></li>
+                </ul>
               </div>
-            </div>  
-            @endforeach
+            </div>
+            <div class="row mt-2">
+              <div class="col">
+                <ul class="one_row">
+                  <li><span> L'hotel sarà inserito nel listing "hotel per disabili" solo in presenza di almeno un servizio per ogni categoria. In tutti gli altri casi i servizi indicati saranno visibili unicamente nella scheda hotel</span></li>
+                </ul>
+              </div>
+            </div>
+          @endif
 
+          <div class="row mt-2">
+            <div class="col">
+              <div>
+                <ul class="one_row">
+                  <li><span>{{$gruppo->nome}}</span></li>
+                </ul>
+                @foreach ($gruppo->elenco_servizi as $key => $servizio)
+                  
+                  @if (array_key_exists($servizio->id, $ids_servizi_associati))
+                    <ul class="one_row">
+                      <li><i class="fa-check"></i> {{$servizio->nome}}</li>
+                      <li>{{$ids_servizi_associati[$servizio->id]}}</li>
+                    </ul>
+                  @else
+                    <ul>
+                      <li><i class="fa-check-empty"></i> {{$servizio->nome}}</li>
+                    </ul>
+                  @endif
+                    
+                @endforeach
+              </div>
+            </div>
+          </div>  
+
+        @endforeach
+        {{-- Gruppi servizi --}}
+        
+        <!-- CAMPO FIRMA POSIZIONATA IN MODO ASSOLUTO -->
+        <div id="avviso">
+          La pubblicazione dei servizi avverrà a seguito di una valutazione d'idoneità da parte del nostro staff
+        </div>
+        <div id="firma">
+          {{ is_null($foglio->data_firma) || $foglio->data_firma == '' ? date('d/m/Y') : $foglio->data_firma->format('d/m/Y')}} &nbsp;&nbsp;Firma per accettazione
+        </div>
 
           
       </div>
