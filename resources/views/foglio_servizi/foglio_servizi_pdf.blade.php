@@ -148,7 +148,7 @@
         right: 300px;
         bottom: 0px;
         font-size: 10px;
-        border: 1px solid green;
+        /* border: 1px solid green; */
     }
 
     div#avviso {

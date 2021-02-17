@@ -710,7 +710,7 @@ jQuery(document).ready(function($){
   </div>
 
   <div class="col-md-1 text-right" @if (!$exists) style="display:none;" @endif  id="pdf_firmato">
-    <a href="{{asset('storage/precontratti').'/'.$contratto->nome_file.'_firmato.pdf'}}" target="_blank" class="btn btn-success btn-xs">Apri Pdf</a>
+    <a href="{{url('/storage/precontratti').'/'.$contratto->nome_file.'_firmato.pdf'}}" target="_blank" class="btn btn-success btn-xs">Apri Pdf</a>
   </div>
 
   

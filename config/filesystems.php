@@ -58,21 +58,30 @@ return [
         'precontratti' => [
             'driver' => 'local',
             'root' => storage_path('app/public/precontratti'),
-            'url' => env('APP_URL').'/storage/precontratti',
+            'url' => env('APP_URL').'/precontratti',
             'visibility' => 'public',
         ],
+
+        'fogliservizi' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/fogliservizi'),
+            'url' => env('APP_URL') . '/fogliservizi',
+            'visibility' => 'public',
+        ],
+
+        
 
         'contratti' => [
             'driver' => 'local',
             'root' => storage_path('app/public/contratti'),
-            'url' => env('APP_URL').'/storage/contratti',
+            'url' => env('APP_URL').'/contratti',
             'visibility' => 'public',
         ],
 
         'fatture' => [
             'driver' => 'local',
             'root' => storage_path('app/public/fatture'),
-            'url' => env('APP_URL').'/storage/fatture',
+            'url' => env('APP_URL').'/fatture',
             'visibility' => 'public',
         ],
 

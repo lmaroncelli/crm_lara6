@@ -1416,8 +1416,8 @@
     <a id="crea_pdf" href="#" class="btn btn-danger btn-xs">Crea Pdf con firma</a>
   </div>
 
-  <div class="col-xl-2 col-md-5 col-xs-12" id="pdf_firmato">
-    <a href="{{asset('storage/precontratti').'/'.$foglio->nome_file.'_firmato.pdf'}}" target="_blank" class="btn btn-success btn-xs">Apri Pdf</a>
+  <div class="col-xl-2 col-md-5 col-xs-12" @if (!$exists) style="display:none;" @endif   id="pdf_firmato">
+    <a href="{{url('/storage/fogliservizi').'/'.$foglio->nome_file.'_firmato.pdf'}}" target="_blank" class="btn btn-success btn-xs">Apri Pdf</a>
   </div>
 
   

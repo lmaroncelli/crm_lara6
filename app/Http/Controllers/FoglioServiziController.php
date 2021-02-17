@@ -3,19 +3,21 @@
 namespace App\Http\Controllers;
 
 use PDF;
-use SetaPDF_Core_Document;
-use SetaPDF_Core_Reader_File;
-use SetaPDF_Core_Writer_File;
 use App\User;
 use App\Cliente;
 use App\Utility;
+use SignatureField;
 use App\InfoPiscina;
 use App\FoglioServizi;
 use App\ServizioFoglio;
 use App\CentroBenessere;
+use SetaPDF_Core_Document;
 use App\GruppoServiziFoglio;
 use Illuminate\Http\Request;
+use SetaPDF_Core_Reader_File;
+use SetaPDF_Core_Writer_File;
 use App\ServizioAggiuntivoFoglio;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\FoglioServiziRequest;
 
 class FoglioServiziController extends Controller
@@ -262,10 +264,12 @@ private function fieldsPiscina() {
                     1 => "9081|parrucchiera in hotel adiacente di stessa gestione"
                 ]
         ]
-        */ 
+        */
+
+        $exists = Storage::disk('fogliservizi')->exists($foglio->nome_file . '_firmato.pdf');
 
         
-        return view('foglio_servizi.form', compact('foglio', 'commerciale_contratto', 'infoPiscina', 'centroBenessere', 'gruppiServizi', 'ids_servizi_associati', 'serv_agg'));
+        return view('foglio_servizi.form', compact('foglio', 'commerciale_contratto', 'infoPiscina', 'centroBenessere', 'gruppiServizi', 'ids_servizi_associati', 'serv_agg', 'exists'));
 
 
     }
@@ -422,10 +426,7 @@ private function fieldsPiscina() {
 
 
 
-
-
-    public function _crea_pdf($id) {
-    // ! private function _crea_pdf($id) {
+    private function _crea_pdf($id) {
 
         $foglio = FoglioServizi::with(['commerciale',
                                         'infoPiscina',
@@ -434,6 +435,8 @@ private function fieldsPiscina() {
                                         'cliente.localita',
                                 ])
                                 ->find($id);
+
+        $nome_file = $foglio->nome_file;
 
         // ids servizi associati al foglio
         $ids_servizi_associati = $foglio->servizi()->pluck('tblFoglioAssociaServizi.note', 'tblFoglioAssociaServizi.servizio_id')->toArray();
@@ -448,9 +451,42 @@ private function fieldsPiscina() {
         //return view('foglio_servizi.foglio_servizi_pdf', compact('foglio','ids_servizi_associati','gruppiServizi));
 
         $pdf = PDF::loadView('foglio_servizi.foglio_servizi_pdf', compact('foglio', 'ids_servizi_associati', 'gruppiServizi'));
-        return $pdf->download('invoice.pdf');
 
-        //$pdf = PDF::loadView('contratti_digitali.contratto_pdf', compact('contratto', 'commerciale_contratto', 'servizi_assoc', 'totali', 'n_servizi_per_pagina', 'chunk_servizi', 'n_sottotab'));
+        //return $pdf->download('invoice.pdf');
+
+        $filepdf_path = storage_path('app/public/fogliservizi') . '/' . $nome_file . '.pdf';
+        $filepdf_firmato_path = storage_path('app/public/fogliservizi') . '/' . $nome_file . '_firmato.pdf';
+
+        $pdf->save($filepdf_path);
+
+        $reader = new SetaPDF_Core_Reader_File($filepdf_path);
+        $writer = new SetaPDF_Core_Writer_File($filepdf_firmato_path);
+        $document = SetaPDF_Core_Document::load($reader, $writer);
+
+
+        $pages = $document->getCatalog()->getPages();
+        $pageCount = $pages->count();
+
+
+        ////////////////////////////////////////
+        // aggiungo le firme in ultima pagina //
+        ////////////////////////////////////////
+        SignatureField::add(
+            $document,
+            'CLIENTE 1',
+            $pageCount,
+            SignatureField::POSITION_RIGHT_BOTTOM,
+            array('x' => -40, 'y' => 5),
+            200,
+            50
+        );
+
+
+        // save and finish
+        $document->save()->finish();
+
+
+        return $pdf;
 
     }
 
