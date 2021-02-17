@@ -435,14 +435,19 @@ private function fieldsPiscina() {
                                 ])
                                 ->find($id);
 
+        // ids servizi associati al foglio
+        $ids_servizi_associati = $foglio->servizi()->pluck('tblFoglioAssociaServizi.note', 'tblFoglioAssociaServizi.servizio_id')->toArray();
+
+        // elenco GruppiServizi 
+        $gruppiServizi = GruppoServiziFoglio::with(['elenco_servizi'])->orderBy('order')->get();
 
         // ? DOMPDF and ICONS https://paulcracknell.com/87/laravel-dom-pdf-issues-font-awesome-and-a-unicode-work-around/
         // ? &#9745; check     
         // ? &#9744; check vuoto
 
-        //return view('foglio_servizi.foglio_servizi_pdf', compact('foglio'));
+        //return view('foglio_servizi.foglio_servizi_pdf', compact('foglio','ids_servizi_associati','gruppiServizi));
 
-        $pdf = PDF::loadView('foglio_servizi.foglio_servizi_pdf', compact('foglio'));
+        $pdf = PDF::loadView('foglio_servizi.foglio_servizi_pdf', compact('foglio', 'ids_servizi_associati', 'gruppiServizi'));
         return $pdf->download('invoice.pdf');
 
         //$pdf = PDF::loadView('contratti_digitali.contratto_pdf', compact('contratto', 'commerciale_contratto', 'servizi_assoc', 'totali', 'n_servizi_per_pagina', 'chunk_servizi', 'n_sottotab'));

@@ -109,6 +109,15 @@ class Utility extends Model
 			'5' => '&#9733;&#9733;&#9733;&#9733;&#9733;'
 	];
 
+	private static $hotel_categoria_pdf = [
+		'0' => 'seleziona',
+		'1' => '<i class="fa-star"></i>;',
+		'2' => '<i class="fa-star"></i><i class="fa-star"></i>',
+		'3' => '<i class="fa-star"></i><i class="fa-star"></i><i class="fa-star"></i>',
+		'3Sup' => '<i class="fa-star"></i><i class="fa-star"></i><i class="fa-star"></i>Sup',
+		'4' => '<i class="fa-star"></i><i class="fa-star"></i><i class="fa-star"></i><i class="fa-star"></i>',
+		'5' => '<i class="fa-star"></i><i class="fa-star"></i><i class="fa-star"></i><i class="fa-star"></i><i class="fa-star"></i>'
+	];
 
 	private static $hotel_apertura = [
 			'0' => 'seleziona', 
@@ -567,6 +576,11 @@ class Utility extends Model
 	public static function getHotelCategoria()
 	{
 		return self::$hotel_categoria;
+	}
+
+	public static function getHotelCategoriaPdf()
+	{
+		return self::$hotel_categoria_pdf;
 	}
 
 	public static function getHotelApertura()

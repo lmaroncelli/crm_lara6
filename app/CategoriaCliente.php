@@ -30,4 +30,13 @@ class CategoriaCliente extends Model
 
     }
 
+    public function getNamePdfAttribute()
+    {
+        if (isset(Utility::getHotelCategoriaPdf()[$this->id])) {
+            return Utility::getHotelCategoriaPdf()[$this->id];
+        } else {
+            return null;
+        }
+    }
+
 }

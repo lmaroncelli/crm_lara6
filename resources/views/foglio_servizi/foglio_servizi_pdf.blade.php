@@ -23,12 +23,20 @@
             font-size: 18px;
     }
 
-     .fa-check-empty:before {
+    .fa-check-empty:before {
             font-family: DejaVu Sans;
             content: "\2610";
             color:#000;
             font-style: normal;
             font-size: 18px;
+    }
+
+    .fa-star:before {
+      font-family: DejaVu Sans;
+      content: "\2605";
+      color:#000;
+      font-style: normal;
+      font-size: 15px;
     }
 
 
@@ -88,7 +96,14 @@
     }
 
     ul {
-      list-style-type: none; 
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    ul li:first-child {
+      margin: 0;
+      padding: 0; 
     }
 
     ul.one_row {
@@ -98,9 +113,15 @@
 
     ul.list {
       display: inline; 
-      padding: 0 0px; 
+      margin: 0;
+      padding: 0;
     }
 
+
+    ul.list li:first-child {
+      margin: 0;
+      padding: 0; 
+    }
 
 
     ul.one_row li:first-child {
@@ -171,21 +192,21 @@
               <div class="header_pdf">
                 <table width="100%" cellpadding="0" cellspacing="0">
                   <tr>
-                    <td width="60%" valign="top">
+                    <td width="70%" valign="top">
                       <div class="card">
                         <div class="card-header">MODULO SERVIZI HOTEL</div>
                         <div class="card-body">
-                          <table class="table">
+                          <table class="table" width="100%">
                               <tr>
-                                <td valign="top">
+                                <td width="50%" valign="top">
                                   <ul>
-                                    <li><span>Hotel</span> {{strtoupper($foglio->nome_hotel)}} {!! strtoupper($foglio->cliente->categoria->name) !!}</li>
+                                    <li><span>{{strtoupper($foglio->nome_hotel)}} {!! $foglio->cliente->categoria->namePdf !!}</span></li>
                                     <li><span>Anno Stagione</span> {{ strtoupper($foglio->stagione) }}</li>
                                     <li><span>WhatsApp</span> {{ strtoupper($foglio->whatsapp) }}</li>
                                     <li><span>Apertura</span> {{ strtoupper($foglio->getApertura()) }}</li>
                                   </ul>
                                 </td>
-                                <td width="40%" valign="top">
+                                <td width="50%" valign="top">
                                   <ul>
                                     <li><span>Localita</span> {{strtoupper($foglio->cliente->localita->nome)}}</li>
                                     <li><span>Tipologia</span> {{ strtoupper($foglio->getTipologia()) }}</li>
@@ -198,7 +219,7 @@
                         </div>
                       </div>
                     </td>
-                    <td width="40%" align="right">
+                    <td width="30%" align="right">
                       <img src="{{ asset('images/logo_pdf.png') }}">
                     </td>
                   </tr>
@@ -487,45 +508,191 @@
 
         @if ($foglio->piscina)
         
-        <div class="row mt-2">
-          <div class="col">
-            <div>
-              <ul class="one_row">
-                <li><span>SEZIONE PISCINA</span></li>
-              </ul>
+          <div class="row mt-2">
+            <div class="col">
+              <div>
+                <ul class="one_row">
+                  <li><span>SEZIONE PISCINA</span></li>
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="row mt-2">
-          <div class="col">
-            <div>
-              <ul class="one_row">
-                <li><span>INFO</span></li>
-              </ul>
-              <ul>
-                <li>Superficie: {{ $foglio->infoPiscina->sup }}  mq.</li>
-                @if ($foglio->infoPiscina->h)
-                  <li>Altezza unica: {{ $foglio->infoPiscina->h }}  cm.</li>
-                @else
-                  <li>Altezza min: {{ $foglio->infoPiscina->h_min }}  cm.</li>
-                  <li>Altezza mx: {{ $foglio->infoPiscina->h_max }}  cm.</li>
-                @endif
-                @if ($foglio->infoPiscina->aperto_annuale)
-                  <li>Apertura piscina: annuale</li>
-                @else
-                  <li>Apertura piscina: da {{Utility::getFsMesi()[$foglio->infoPiscina->aperto_dal]}} a {{Utility::getFsMesi()[$foglio->infoPiscina->aperto_al]}}</li>
-                @endif
-                @if ($foglio->infoPiscina->posizione != '')
-                  <li>Posizione piscina: {{$foglio->infoPiscina->posizione}}</li>
-                @endif
-              </ul>
+          <div class="row mt-2">
+            <div class="col">
+              <div>
+                <ul class="one_row">
+                  <li><span>INFO</span></li>
+                </ul>
+                <ul>
+                  <li>Superficie: {{ $foglio->infoPiscina->sup }}  mq.</li>
+                  @if ($foglio->infoPiscina->h)
+                    <li>Altezza unica: {{ $foglio->infoPiscina->h }}  cm.</li>
+                  @else
+                    <li>Altezza min: {{ $foglio->infoPiscina->h_min }}  cm.</li>
+                    <li>Altezza mx: {{ $foglio->infoPiscina->h_max }}  cm.</li>
+                  @endif
+                  @if ($foglio->infoPiscina->aperto_annuale)
+                    <li>Apertura piscina: annuale</li>
+                  @else
+                    <li>Apertura piscina: da {{Utility::getFsMesi()[$foglio->infoPiscina->aperto_dal]}} a {{Utility::getFsMesi()[$foglio->infoPiscina->aperto_al]}}</li>
+                  @endif
+                  @if ($foglio->infoPiscina->posizione != '')
+                    <li>Posizione piscina: {{$foglio->infoPiscina->posizione}}</li>
+                  @endif
+                </ul>
+              </div>
+
             </div>
-
           </div>
-        </div>
+          {{-- row --}}
+          <div class="row mt-2">
+            <div class="col">
+              <div>
+                <ul class="one_row">
+                  <li><span>CARATTERISTICHE</span></li>
+                </ul>
+              </div>
+              <div>
+                <table width="100%" cellpadding="0" cellspacing="0">
+                @php
+                  $row_carr = array_chunk(Utility::getFsCaratteristichePiscina(), 4, true);
+                @endphp
+                @foreach ($row_carr as $n_row => $caratteristichePiscina_in_row)
+                <tr>
+                  @foreach ($caratteristichePiscina_in_row as $carr => $carr_view)
+                    <td>{!!$foglio->infoPiscina->$carr ? '<i class="fa-check"></i>' : '<i class="fa-check-empty"></i>'!!} {{$carr_view}}</td>
+                  @endforeach
+                </tr>
+                  @endforeach
+                </table>
+              </div>
+              <div>
+                <ul>
+                  @if (!is_null($foglio->infoPiscina->peculiarita_piscina) && $foglio->infoPiscina->peculiarita_piscina != '')
+                    <li>{{$foglio->infoPiscina->peculiarita_piscina}}</li>
+                  @endif
+
+                  @if ($foglio->infoPiscina->lettini_dispo > 0)
+                    <li>N. lettini prendisole: {{$foglio->infoPiscina->lettini_dispo}}</li>
+                  @endif
+
+                  @if ($foglio->infoPiscina->espo_sole > 0 || $foglio->infoPiscina->espo_sole_tutto_giorno)
+                    <li>N. ore esposta al sole: {{$foglio->infoPiscina->espo_sole > 0 ? $foglio->infoPiscina->espo_sole : 'tutto il giorno'}}</li>
+                  @endif
+
+                </ul>
+              </div>
+            </div>
+          </div>
             
         @endif
+        {{-- Piscina --}}
+
+        <table class="p_break_after"><tr><td>&nbsp;</td></tr></table>
+
+        @if ($foglio->benessere)
+
+          <div class="row mt-2">
+            <div class="col">
+              <div>
+                <ul class="one_row">
+                  <li><span>SEZIONE CENTRO BENESSERE</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-2">
+            <div class="col">
+              <div>
+                <ul class="one_row">
+                  <li><span>INFO</span></li>
+                </ul>
+                <ul>
+                  <li>Superficie: {{ $foglio->centroBenessere->sup_b }}  mq.</li>
+                  <li>Area fitness: {{ $foglio->centroBenessere->area_fitness }} 
+                    {!! $foglio->centroBenessere->area_fitness == 'si' ? '&nbsp;&nbsp;&nbsp;'.$foglio->centroBenessere->sup_fitness . ' mq' : ''!!}
+                  </li>
+                  @if ($foglio->centroBenessere->aperto_annuale_b)
+                    <li>Apertura centro benessere: annuale</li>
+                  @else
+                    <li>Apertura centro benessere: da {{Utility::getFsMesi()[$foglio->centroBenessere->aperto_dal_b]}} a {{Utility::getFsMesi()[$foglio->infoPiscina->aperto_al_b]}}</li>
+                  @endif
+                  <li>A pagamento: {{ $foglio->centroBenessere->a_pagamento }}</li>
+                  <li>Posizione: @if ($foglio->centroBenessere->in_hotel) in hotel @else a {{$foglio->centroBenessere->distanza_hotel}} metri dall'hotel @endif
+                  </li>
+                  <li>Età minima per accedere: @if ($foglio->centroBenessere->eta_minima == 0) nessuna @else {{$foglio->centroBenessere->eta_minima}} anni @endif
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {{-- row --}}
+          <div class="row mt-2">
+            <div class="col">
+              <div>
+                <ul class="one_row">
+                  <li><span>CARATTERISTICHE</span></li>
+                </ul>
+              </div>
+              <div>
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  @php
+                    $row_carr = array_chunk(Utility::getFsCaratteristicheCentroBenessere(), 4, true);
+                  @endphp
+                  @foreach ($row_carr as $n_row => $caratteristicheCentroBenessere_in_row)
+                  <tr>
+                    @foreach ($caratteristicheCentroBenessere_in_row as $carr => $carr_view)
+                      <td>{!!$foglio->centroBenessere->$carr ? '<i class="fa-check"></i>' : '<i class="fa-check-empty"></i>'!!} {{$carr_view}}</td>
+                    @endforeach
+                  </tr>
+                  @endforeach
+                </table>
+              </div>
+              <div>
+                <ul>
+                  @if (!is_null($foglio->centroBenessere->peculiarita) && $foglio->centroBenessere->peculiarita != '')
+                    <li>{{$foglio->centroBenessere->peculiarita}}</li>
+                  @endif
+                  <li>Obbligo di prenotazione: {{ $foglio->centroBenessere->obbligo_prenotazione }}</li>
+                  <li>Uso in esclusiva: {{ $foglio->centroBenessere->uso_esclusivo }}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        @endif
+        {{-- centro benessere --}}
+        
+
+        <table class="p_break_after"><tr><td>&nbsp;</td></tr></table>
+          @foreach ($gruppiServizi as $gruppo)
+            <div class="row mt-2">
+              <div class="col">
+                <div>
+                  <ul class="one_row">
+                    <li><span>{{$gruppo->nome}}</span></li>
+                  </ul>
+                  @foreach ($gruppo->elenco_servizi as $key => $servizio)
+                    
+                    @if (array_key_exists($servizio->id, $ids_servizi_associati))
+                      <ul class="one_row">
+                        <li><i class="fa-check"></i> {{$servizio->nome}}</li>
+                        <li>{{$ids_servizi_associati[$servizio->id]}}</li>
+                      </ul>
+                    @else
+                      <ul>
+                        <li><i class="fa-check-empty"></i> {{$servizio->nome}}</li>
+                      </ul>
+                    @endif
+                      
+                  @endforeach
+                </div>
+              </div>
+            </div>  
+            @endforeach
 
 
           

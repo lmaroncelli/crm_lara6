@@ -367,7 +367,7 @@
     </div>
     <div class="row form-group">
       <div class="col-md-12">
-        <textarea name="note_organizzazione_matrimoni" class="form-control">{{old('note_organizzazione_matrimoni') != '' ?  old('note_organizzazione_matrimoni') :  $foglio->note_organizzazione_matrimoni}}</textarea>
+        <textarea name="note_organizzazione_matrimoni" class="form-control">{{ old('note_organizzazione_matrimoni') != '' ?  old('note_organizzazione_matrimoni') : $foglio->note_organizzazione_matrimoni }}</textarea>
       </div>
     </div>
   </div>
@@ -383,7 +383,7 @@
   <div class="row form-group">
     <div class="col-md-12">
       <input type="hidden" name="pti_anno_prec" value="0">
-      <input type="checkbox" name="pti_anno_prec" id="pti_anno_prec" value="1" {{ old('pti_anno_prec') == '0' ? '' : $foglio->pti_anno_prec ? 'checked' : '' }} class="beautiful_checkbox">       
+      <input type="checkbox" name="pti_anno_prec" id="pti_anno_prec" value="1" {{ old('pti_anno_prec') == '0' ? '' : ($foglio->pti_anno_prec ? 'checked' : '') }} class="beautiful_checkbox">       
       <label for="pti_anno_prec"  class="font-weight-bold">Stessi punti di forza anno precedente:</label>
     </div>
   </div>
