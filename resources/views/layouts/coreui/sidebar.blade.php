@@ -25,28 +25,31 @@
           </ul>
       </li>
 
+      @if (Auth::user()->hasType('A'))
 
-      <li class="nav-item">
-        <a class="nav-link" href="{{ route('fatture.index') }}">
-        <i class="nav-icon icon-wallet"></i>Fatture
-        </a>
-      </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ route('fatture.index') }}">
+          <i class="nav-icon icon-wallet"></i>Fatture
+          </a>
+        </li>
 
-      <li class="nav-item">
-        <a class="nav-link" href="{{ route('prefatture.index') }}">
-        <i class="nav-icon icon-wallet"></i>Prefatture
-        </a>
-      </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ route('prefatture.index') }}">
+          <i class="nav-icon icon-wallet"></i>Prefatture
+          </a>
+        </li>
 
-      <li class="nav-item nav-dropdown">
-        <a class="nav-link nav-dropdown-toggle" href="#">
-          <i class="nav-icon icon-clock"></i>Scadenziario
-        </a>
-          <ul class="nav-dropdown-items">
-            <li class="nav-item"><a class="nav-link" href="{{ route('scadenze.index') }}"><i class="nav-icon icon-close"></i>Non incassato</a></li>
-            {{-- <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-login"></i>Incassato(TD)</a></li> --}}
-          </ul>
-      </li>
+        <li class="nav-item nav-dropdown">
+          <a class="nav-link nav-dropdown-toggle" href="#">
+            <i class="nav-icon icon-clock"></i>Scadenziario
+          </a>
+            <ul class="nav-dropdown-items">
+              <li class="nav-item"><a class="nav-link" href="{{ route('scadenze.index') }}"><i class="nav-icon icon-close"></i>Non incassato</a></li>
+              {{-- <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-login"></i>Incassato(TD)</a></li> --}}
+            </ul>
+        </li>
+        
+      @endif
 
       <li class="nav-item nav-dropdown">
         <a class="nav-link nav-dropdown-toggle" href="#">

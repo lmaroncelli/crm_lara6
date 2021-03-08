@@ -6,6 +6,7 @@ namespace App;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use App\Scopes\ContrattoDigitaleCommercialeScope;
 
 class ContrattoDigitale extends Model
 {
@@ -34,6 +35,8 @@ class ContrattoDigitale extends Model
         static::addGlobalScope('data_creazione', function (Builder $builder) {
             $builder->where('data_creazione', '>',  Carbon::today()->subYears(1)->toDateTimeString());
         });
+
+        static::addGlobalScope(new ContrattoDigitaleCommercialeScope);
     }
 
 

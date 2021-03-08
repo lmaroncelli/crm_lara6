@@ -4,7 +4,7 @@ namespace App;
 use App\Associazione;
 use App\Pagamento;
 use App\Provincia;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -691,6 +691,26 @@ class Utility extends Model
 		$result = preg_replace("/[^a-zA-Z0-9\s\-,]+/", "", $s);
 		return $result;
 		} 
+
+	
+	public static function getClientiIdsCommerciale()
+		{
+		$clienti_commerciale_ids_arr = [];
+
+		$connected_id = Auth::id();
+		$clienti_visibili = DB::table('tblClienteVisibileCommerciale')->select('cliente_id')->where('user_id', $connected_id)->get();
+		$clienti_associati = DB::table('tblClienteAssociatoCommerciale')->select('cliente_id')->where('user_id', $connected_id)->get();
+		foreach ($clienti_visibili as $c) {
+			$clienti_commerciale_ids_arr[] = $c->cliente_id;
+		}
+		foreach ($clienti_associati as $c) {
+			$clienti_commerciale_ids_arr[] = $c->cliente_id;
+		}
+
+		$clienti_commerciale_ids_arr = array_unique($clienti_commerciale_ids_arr);
+		
+		return $clienti_commerciale_ids_arr;
+		}
 
 
 }

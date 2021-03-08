@@ -12,6 +12,7 @@ use App\ServizioFoto;
 use App\GruppoCliente;
 use App\CategoriaCliente;
 use App\TipologiaCliente;
+use App\Scopes\ClienteCommercialeScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Cliente extends Model
@@ -19,6 +20,12 @@ class Cliente extends Model
    protected $table = 'tblClienti';
 
    protected $guarded = ['id'];
+
+
+  protected static function booted()
+  {
+    static::addGlobalScope(new ClienteCommercialeScope);
+  }
 
 
    /**

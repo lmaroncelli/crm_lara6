@@ -68,6 +68,15 @@
                     </div>
                   </div>
                 @endif
+                @if (session('alert'))
+                  <div class="row">
+                    <div class="col-md-6 offset-md-3">
+                      <div class="alert alert-danger">
+                          {{ session('alert') }}
+                      </div>
+                    </div>
+                  </div>
+                @endif
                 @yield('content')
               </div>
             </div>

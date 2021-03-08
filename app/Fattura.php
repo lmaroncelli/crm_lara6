@@ -8,6 +8,7 @@ use App\Pagamento;
 use Carbon\Carbon;
 use App\AvvisiFattura;
 use App\RigaDiFatturazione;
+use App\Scopes\FatturaCommercialeScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -59,6 +60,8 @@ class Fattura extends Model
         static::addGlobalScope('data', function (Builder $builder) {
             $builder->where('data', '>',  Carbon::today()->subYears(1)->toDateString());
         });
+
+        static::addGlobalScope(new FatturaCommercialeScope);
     }
 
 

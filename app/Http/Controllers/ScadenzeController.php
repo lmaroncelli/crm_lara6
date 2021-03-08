@@ -20,6 +20,12 @@ class ScadenzeController extends Controller
 
 		use MyTrait;
 
+		
+		public function __construct()
+			{
+			$this->middleware('forbiddenIfType:C');
+			}
+
     public function index(Request $request)
      	{
 

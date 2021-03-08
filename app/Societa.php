@@ -5,6 +5,7 @@ namespace App;
 use App\Cliente;
 use App\Fattura;
 use App\RagioneSociale;
+use App\Scopes\SocietaCommercialeScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Societa extends Model
@@ -12,6 +13,12 @@ class Societa extends Model
    protected $table = 'tblSocieta';
 
    protected $guarded = ['id'];
+
+
+  protected static function booted()
+  {
+    static::addGlobalScope(new SocietaCommercialeScope);
+  }
 
 
 

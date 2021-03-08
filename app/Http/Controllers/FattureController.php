@@ -19,6 +19,11 @@ class FattureController extends Controller
 {
     use MyTrait;
 
+    public function __construct()
+      {
+      $this->middleware('forbiddenIfType:C');
+      }
+
     private function _validate_riga_fatturazione(Request $request)
       {
         
