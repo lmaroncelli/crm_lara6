@@ -16,6 +16,14 @@ use Illuminate\Database\Eloquent\Builder;
 
 class ConteggiController extends Controller
 {
+
+
+    public function __construct()
+    {
+      $this->middleware('forbiddenIfType:C')->only(['indexCommerciali']);
+    }
+
+
     /**
      * Display a listing of the resource.
      *

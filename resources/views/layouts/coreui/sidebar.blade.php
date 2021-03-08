@@ -67,7 +67,10 @@
         </a>
           <ul class="nav-dropdown-items">
             <li class="nav-item"><a class="nav-link" href="{{ route('vetrine.index') }}"><i class="nav-icon icon-screen-tablet"></i>Vetrine</a></li>
-            <li class="nav-item"><a class="nav-link" href=" {{ url('memorex') }} "><i class="nav-icon icon-book-open"></i>Memorex</a></li>
+            
+             @if (Auth::user()->hasType('A'))
+              <li class="nav-item"><a class="nav-link" href=" {{ url('memorex') }} "><i class="nav-icon icon-book-open"></i>Memorex</a></li>
+            @endif
 
             @if (Auth::user()->hasType('A'))
               <li class="nav-item"><a class="nav-link" href="{{ route('conteggi.index_commerciali') }}"><i class="nav-icon icon-calculator"></i>Conteggi</a></li>
@@ -80,17 +83,19 @@
           </ul>
       </li>
 
-      <li class="nav-item nav-dropdown">
-        <a class="nav-link nav-dropdown-toggle" href="#">
-          <i class="nav-icon icon-wrench"></i>Settings
-        </a>
-          <ul class="nav-dropdown-items">
-            <li class="nav-item"><a class="nav-link" href="{{ route('localita.index') }}"><i class="nav-icon icon-directions"></i>Localita</a></li>
-            <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-envelope"></i>Avvisi fatture(TD)</a></li>
-            <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-share"></i>Gruppi clienti(TD)</a></li>
-            <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-present"></i>Evidenze(TD)</a></li>
-          </ul>
-      </li>
+      @if (Auth::user()->hasType('A'))
+        <li class="nav-item nav-dropdown">
+          <a class="nav-link nav-dropdown-toggle" href="#">
+            <i class="nav-icon icon-wrench"></i>Settings
+          </a>
+            <ul class="nav-dropdown-items">
+              <li class="nav-item"><a class="nav-link" href="{{ route('localita.index') }}"><i class="nav-icon icon-directions"></i>Localita</a></li>
+              <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-envelope"></i>Avvisi fatture(TD)</a></li>
+              <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-share"></i>Gruppi clienti(TD)</a></li>
+              <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-present"></i>Evidenze(TD)</a></li>
+            </ul>
+        </li>
+      @endif
 
     </ul>
   </nav>  

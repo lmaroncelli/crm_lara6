@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\Validator;
 class LocalitaController extends Controller
 {
 
+		public function __construct()
+		{
+			$this->middleware('forbiddenIfType:C');
+		}
+
 		protected function validator_comune(array $data, $id = null)
 			{
 				if (is_null($id)) 

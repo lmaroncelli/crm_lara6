@@ -4,10 +4,11 @@ namespace App;
 
 use App\Cliente;
 use App\Fattura;
+use App\Utility;
 use App\Prodotto;
 use App\RigaDiFatturazione;
-use App\Utility;
 use Illuminate\Database\Eloquent\Model;
+use App\Scopes\ServizioCommercialeScope;
 
 class Servizio extends Model
 {
@@ -24,6 +25,13 @@ class Servizio extends Model
 
 
    protected $with = ['prodotto'];
+
+
+  protected static function booted()
+  {
+  
+    static::addGlobalScope(new ServizioCommercialeScope);
+  }
 
 
    public function prodotto()
