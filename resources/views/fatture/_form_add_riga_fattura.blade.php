@@ -30,7 +30,7 @@
                         </a>
                     </div>
                     <div class="col-lg-1" id="reset_servizi" style="display:none;">
-                        <a href="{{ route('fatture.edit',['fattura_id' => $fattura->id]) }}" class="btn btn-danger" title="refresh">
+                        <a href="{{ route('fatture.edit',$fattura->id) }}" class="btn btn-danger" title="refresh">
                             refresh
                         </a>
                     </div>

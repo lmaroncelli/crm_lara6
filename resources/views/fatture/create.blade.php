@@ -47,7 +47,7 @@
             <label class="col-xl-1 col-form-label" for="numero">Numero:</label>
             
             <div class="col-xl-2">
-                <input type="text" name="numero" id="numero" value="{{ old('numero') != '' ?  old('numero') : $fattura->numero}}"  class="form-control mr-1" placeholder="Numero">
+                <input type="text" name="numero_fattura" id="numero_fattura" value="{{ old('numero_fattura') != '' ?  old('numero_fattura') : $fattura->numero_fattura}}"  class="form-control mr-1" placeholder="Numero">
             </div>
 
             <div class="col-xl-1">

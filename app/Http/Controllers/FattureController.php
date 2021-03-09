@@ -51,7 +51,7 @@ class FattureController extends Controller
     private function _validate_scadenza(Request $request)
       {
        $validation_array = [
-              'data_scadenza' => 'required|date_format:"d/m/Y"|after:'.Carbon::today(),
+              'data_scadenza' => 'required|date_format:"d/m/Y"',
               'importo' => 'required|numeric',
           ];
 
@@ -238,10 +238,10 @@ class FattureController extends Controller
     public function store(Request $request)
     {
       $validatedData = $request->validate([
-             'societa' => 'required',
-             'societa_id' => 'required|integer',
-             'numero' => 'required',
-             'data' => 'required|date_format:"d/m/Y"'
+            'societa' => 'required',
+            //'societa_id' => 'required|integer',
+            'numero_fattura' => 'required|unique:tblFatture',
+            'data' => 'required|date_format:"d/m/Y"'
          ]);
 
       $fattura = Fattura::create($request->all());
@@ -362,6 +362,40 @@ class FattureController extends Controller
     return view('fatture.form', compact('fattura','riga_fattura', 'scadenza_fattura', 'servizio_prefill_arr','prefatture_da_associare','prefatture_associate','tipo_pagamento'));
     
     }
+
+
+    public function clonaPrefattura($id)
+      {
+
+        $pf = Fattura::with([
+          'righe',
+          'scadenze',
+        ])->find($id);
+
+        $clone = $pf->replicate();
+
+        $clone->tipo_id = 'F';
+        $clone->note .= ' - CLONATA';
+        $clone->push();
+        
+        foreach ($pf->righe as $riga_fatturazione) {
+          $cloned_riga_fatturazione = $riga_fatturazione->replicate();
+          $cloned_riga_fatturazione->fattura_id = $clone->id;
+          $cloned_riga_fatturazione->push();
+        }
+
+        foreach ($pf->scadenze as $scadenza) {
+          $cloned_scadenza = $scadenza->replicate();
+          $cloned_scadenza->fattura_id = $clone->id;
+          $cloned_scadenza->push();
+        }
+
+
+        return redirect('fatture/' . $clone->id . '/edit');
+
+      }
+
+
 
     /**
      * Update the specified resource in storage.

@@ -34,7 +34,7 @@
     @endif
       <div class="to-right">
         <div class="callout callout-noborder">
-          <a href="{{ route('fatture.create',['tipo_id' => $tipo]) }}" title="Nuova Fattura" class="btn btn-primary">
+          <a href="{{ url('fatture/create/'.$tipo) }}" title="Nuova Fattura" class="btn btn-primary">
             Nuova @if ($tipo == 'F') Fattura @else Prefattura @endif 
           </a>
         </div>
@@ -53,6 +53,12 @@
       
             @if (isset($fatture))
 							<div>
+								@foreach ($fatture as $fattura)
+								<form action="{{ route('fatture.destroy', $fattura->id) }}" method="POST" accept-charset="utf-8" class="deleteForm" id="delete_item_{{$fattura->id}}">
+										@csrf
+										@method('DELETE')
+								</form>
+								@endforeach
 								<table class="table table-responsive-sm m-table m-table--head-bg-success table-hover">
 										<thead>
 												<tr>
@@ -115,6 +121,9 @@
 														</th>
 														<th></th>
 														<th></th>
+														@if ($tipo = 'PF')
+														<th></th>
+														@endif
 														<th></th>
 												</tr>
 										</thead>
@@ -139,14 +148,13 @@
 																		</a>
 																	@endif
 																</td>
+																@if ($tipo = 'PF')
+																	<td>
+																			<a href="{{ route('prefatture.clona', $fattura->id) }}">clona</a>
+																	</td>
+																@endif
 																<td>
-																	<form action="{{ route('fatture.destroy', $fattura->id) }}" method="POST" accept-charset="utf-8" class="deleteForm" id="delete-riga-form">
-																			@csrf
-																			@method('DELETE')
-																			<a href="#" style="margin-bottom: 5px!important;" class="delete btn btn-danger m-btn m-btn--icon m-btn--icon-only"> 
-																					<i class="fas fa-trash-alt"></i>
-																			</a>
-																	</form>
+							                    <a data-id="{{$fattura->id}}" href="#" class="delete btn btn-danger"><i class="fas fa-trash-alt"></i></a>
 																</td>
 														</tr>
 												@endforeach

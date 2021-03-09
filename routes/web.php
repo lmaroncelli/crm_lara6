@@ -110,7 +110,7 @@ Route::middleware(['auth'])->group(function () {
     
     
     // sovrascrivo create
-    Route::get('fatture/create/{tipo_id?}', 'FattureController@create')->name('fatture.create');
+    Route::get('fatture/create/{tipo?}', 'FattureController@create')->name('fatture.create');
     // sovrascrivo edit
     Route::get('fatture/{fattura_id}/edit/{rigafattura_id?}/{scadenza_fattura_id?}', 'FattureController@edit')->name('fatture.edit');
 
@@ -144,6 +144,9 @@ Route::middleware(['auth'])->group(function () {
 
     // index prefatture
     Route::get('prefatture', 'FattureController@prefatture')->name('prefatture.index');
+
+    Route::get('prefatture/clona/{fattura_id}', 'FattureController@clonaPrefattura')->name('prefatture.clona');
+
     
 
 

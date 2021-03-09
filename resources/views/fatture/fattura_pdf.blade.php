@@ -286,8 +286,8 @@
     
       <?php if ( $fattura->tipo_id == 'PF' ) { ?>
       // Mark the document as a duplicate (avvicino la scritta ai box in fondo altrimenti si sovrappone al totale se ci sono molte voci)
-      $pdf->page_text($w/5, $h/2+160, "      Il presente documento non costituisce fattura valida ai fini del Dpr 633 26.10.72 e succ. mod.", $fontMetrics->get_font("verdana", "normal"),12, array(0.4196, 0.4196, 0.4196), 0, 0, -52);
-      $pdf->page_text($w/5, $h/2+175, "La fattura definitiva verra' emessa all'atto del pagamento del corrispettivo (Art. 6 3 c. Dpr 633/72)", $fontMetrics->get_font("verdana", "normal"),12, array(0.4196, 0.4196, 0.4196), 0, 0, -52);
+      $pdf->page_text($w/11, $h/2+90, "      Il presente documento non costituisce fattura valida ai fini del Dpr 633 26.10.72 e succ. mod.", $fontMetrics->get_font("verdana", "normal"),12, array(0.4196, 0.4196, 0.4196), 0, 0, 0);
+      $pdf->page_text($w/11, $h/2+105, "La fattura definitiva verra' emessa all'atto del pagamento del corrispettivo (Art. 6 3 c. Dpr 633/72)", $fontMetrics->get_font("verdana", "normal"),12, array(0.4196, 0.4196, 0.4196), 0, 0, 0);
       <?php } ?>
 
       $text = "Pagina {PAGE_NUM}/{PAGE_COUNT}";  
@@ -373,7 +373,9 @@
                         <th width="45%" class="underline text-left">Servizio</th>
                         <th class="underline text-right">Qta</th>
                         <th class="underline text-right">Prezzo</th>
-                        <th class="underline text-right">% Sconto</th>
+                        @if ($fattura->hasDiscount())
+                          <th class="underline text-right">% Sconto</th>  
+                        @endif
                         <th class="underline text-right">Netto</th>
                         <th class="underline text-right">Al.IVA</th>
                         <th class="underline text-right">IVA</th>
@@ -386,13 +388,15 @@
                         <td>{{$riga->servizio}}</td>
                         <td class="text-right">{{$riga->qta}}</td>
                         <td class="text-right">{{App\Utility::formatta_cifra($riga->totale_netto)}}</td>
-                        <td class="text-right">
-                          @if ($riga->perc_sconto == 0)
-                            /
-                          @else
-                          {{$riga->perc_sconto}}%
-                          @endif
-                        </td>
+                        @if ($fattura->hasDiscount())
+                          <td class="text-right">
+                            @if ($riga->perc_sconto == 0)
+                              /
+                            @else
+                            {{$riga->perc_sconto}}%
+                            @endif
+                          </td>
+                        @endif
                         <td class="text-right">{{App\Utility::formatta_cifra($riga->totale_netto_scontato)}}</td>
                         <td class="text-right">{{$riga->al_iva}}</td>
                         <td class="text-right">{{App\Utility::formatta_cifra($riga->iva)}}</td>
@@ -409,28 +413,28 @@
 
                 @if ($num_sottotab == $n_sottotab)
                   <tr>
-                    <th colspan="7" class="text-right underline">&nbsp;</th>
+                    <th @if ($fattura->hasDiscount()) colspan="7" @else colspan="6" @endif  class="text-right underline">&nbsp;</th>
                     <th class="text-right underline">Totali</th>
                   </tr>
                   <tr class="totale">
-                    <td colspan="6" class="text-right">Totale Netto</td>
+                    <td @if ($fattura->hasDiscount()) colspan="6" @else colspan="5" @endif class="text-right">Totale Netto</td>
                     <td colspan="2" class="text-right">{{App\Utility::formatta_cifra($tot_netto, '€')}}</th>
                   </tr>
                   <tr class="totale">
-                    <td colspan="6" class="text-right">Totale IVA</td>
+                    <td @if ($fattura->hasDiscount()) colspan="6" @else colspan="5" @endif class="text-right">Totale IVA</td>
                     <td colspan="2" class="text-right">{{App\Utility::formatta_cifra($tot_iva, '€')}}</th>
                   </tr>
                   <tr class="totale">
                     <td colspan="8">&nbsp;</td>
                   </tr>
                   <tr class="totale">
-                    <td colspan="5" class="text-right">&nbsp;</td>
+                    <td @if ($fattura->hasDiscount()) colspan="5" @else colspan="4" @endif class="text-right">&nbsp;</td>
                     <td class="text-right totalone">Totale</td>
                     <td colspan="2" class="text-right totalone">{{App\Utility::formatta_cifra($tot, '€')}}</th>
                   </tr>
                 @else
                   <tr>
-                    <th colspan="6" class="text-right underline">&nbsp;</th>
+                    <th @if ($fattura->hasDiscount()) colspan="6" @else colspan="5" @endif class="text-right underline">&nbsp;</th>
                     <th colspan="2" class="text-right underline">Segue >>></th>
                   </tr>
                 @endif

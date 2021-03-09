@@ -14,7 +14,7 @@
 					</select>
 				@endif
 				<span style="float: right">
-					<a href="{{ route('fatture.index') }}" class="btn btn-warning" type="button"><i class="far fa-caret-square-left"></i></a>
+					<a href="{{ $fattura->tipo_id == 'F' ? route('fatture.index') : route('prefatture.index') }}" class="btn btn-warning" type="button"><i class="far fa-caret-square-left"></i></a>
 				</span>
     </div>
 @endsection

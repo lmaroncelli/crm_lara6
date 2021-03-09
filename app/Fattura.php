@@ -228,6 +228,21 @@ class Fattura extends Model
       }
 
 
+    public function hasDiscount()
+      {
+        $sconto = false;
+
+        foreach ($this->righe as $r) {
+          if($r->perc_sconto > 0) {
+            $sconto = true;
+            break;
+          }
+        }
+
+        return $sconto;
+      }
+
+
 
 
    public function getTotale($save=false)
