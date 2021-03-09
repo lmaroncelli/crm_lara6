@@ -20,7 +20,7 @@
         </a>
           <ul class="nav-dropdown-items">
             <li class="nav-item"><a class="nav-link" href="{{ route('contratto-digitale.index') }}"><i class="nav-icon icon-note"></i>Precontratti</a></li>
-            <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-tag"></i>Fogli Servizi(TD)</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('foglio-servizi.index') }}"><i class="nav-icon icon-tag"></i>Fogli Servizi</a></li>
             <li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon icon-note"></i>Precontratti HM(TD)</a></li>
           </ul>
       </li>

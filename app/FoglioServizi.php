@@ -3,7 +3,10 @@
 namespace App;
 
 use App\Utility;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use App\Scopes\FoglioServizioCommercialeScope;
 
 class FoglioServizi extends Model
 {
@@ -26,6 +29,16 @@ class FoglioServizi extends Model
         'dal',
         'al'
     ];
+
+
+    protected static function booted()
+    {
+        static::addGlobalScope('data_creazione', function (Builder $builder) {
+            $builder->where('data_creazione', '>',  Carbon::today()->subYears(1)->toDateTimeString());
+        });
+
+        static::addGlobalScope(new FoglioServizioCommercialeScope);
+    }
 
 
     public function commerciale()

@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use SetaPDF_Core_Reader_File;
 use SetaPDF_Core_Writer_File;
 use App\ServizioAggiuntivoFoglio;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\FoglioServiziRequest;
 
@@ -118,9 +119,99 @@ private function fieldsPiscina() {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, $all = null)
     {
-        //
+        // campo libero
+        $qf = $request->get('qf');
+        $field = $request->get('field');
+
+        $orderby = $request->get('orderby');
+        $order = $request->get('order');
+
+
+        if (is_null($order)) {
+            $order = 'desc';
+        }
+
+        if (is_null($orderby)) {
+            $orderby = 'id';
+        }
+
+        if (!is_null($all) && $all == 'all') {
+            $url_index = 'foglio-servizi/all';
+            $fogli = FoglioServizi::withoutGlobalScope('data_creazione')->with(['commerciale', 'cliente']);
+            $all = 1;
+        } else {
+            $url_index = 'foglio-servizi';
+            $fogli = FoglioServizi::with(['commerciale', 'cliente']);
+            $all = 0;
+        }
+
+        $join_users = 0;
+        $join_clienti = 0;
+
+        if (!is_null($qf) && $field != '0') {
+            if ($field == 'commerciale') {
+                $fogli = $fogli
+                    ->select(DB::raw('tblFogliServizi.*, users.name as nome_commerciale'))
+                    ->join('users', 'users.id', '=', 'tblFogliServizi.user_id')
+                    ->with([
+                        'commerciale',
+                        'cliente'
+                    ])
+                    ->where('users.name', 'LIKE', '%' . $qf . '%');
+
+
+                $join_users = 1;
+            } elseif ($field == 'cliente') {
+                $fogli = $fogli
+                    ->select(DB::raw('tblFogliServizi.*, tblClienti.nome as nome_cliente'))
+                    ->leftjoin('tblClienti', 'tblClienti.id', '=', 'tblFogliServizi.cliente_id')
+                    ->with([
+                        'commerciale',
+                        'cliente'
+                    ])
+                    ->where('tblClienti.nome', 'LIKE', '%' . $qf . '%');
+
+                $join_clienti = 1;
+            }
+        }
+
+        if ($orderby == 'nome_commerciale' && !$join_users) {
+            $fogli = $fogli
+                ->select(DB::raw('tblFogliServizi.*, users.name as nome_commerciale'))
+                ->join('users', 'users.id', '=', 'tblFogliServizi.user_id')
+                ->with([
+                    'commerciale',
+                    'cliente'
+                ]);
+        } elseif ($orderby == 'nome_cliente' && !$join_clienti) {
+            $fogli = $fogli
+                ->select(DB::raw('tblFogliServizi.*, tblClienti.nome as nome_cliente'))
+                ->leftjoin('tblClienti', 'tblClienti.id', '=', 'tblFogliServizi.cliente_id')
+                ->with([
+                    'commerciale',
+                    'cliente'
+                ]);
+        }
+
+        $fogli = $fogli->orderBy($orderby, $order);
+
+        $to_append = ['order' => $order, 'orderby' => $orderby];
+
+        if (!is_null($qf) && $field != '0') {
+            $to_append['qf'] = $qf;
+            $to_append['field'] = $field;
+        }
+
+
+        $fogli = $fogli->paginate(15)->setpath('')->appends($to_append);
+
+        $campi_fogli_search[] = 'campo in cui cercare';
+        $campi_fogli_search['commerciale'] = 'commerciale';
+        $campi_fogli_search['cliente'] = 'cliente';
+
+        return view('foglio_servizi.index', compact('fogli', 'campi_fogli_search', 'url_index', 'all'));
     }
 
     /**

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Database\Eloquent\Builder;
 
-class ContrattoDigitaleCommercialeScope implements Scope
+class FoglioServizioCommercialeScope implements Scope
 {
   /**
    * Apply the scope to a given Eloquent query builder.
@@ -27,8 +27,9 @@ class ContrattoDigitaleCommercialeScope implements Scope
 
     if (Auth::check()) {
       if (Auth::user()->hasType('C')) {
- 
+
         $builder->where('user_id', Auth::id());
+
         
       }
     }

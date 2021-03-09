@@ -232,6 +232,8 @@ Route::middleware(['auth'])->group(function () {
     ////////////////////
 
 
+    Route::get('foglio-servizi/{all?}', 'FoglioServiziController@index');
+
     Route::resource('foglio-servizi', 'FoglioServiziController');
 
     Route::post('load-cliente-foglio-servizi-ajax', 'FoglioServiziController@loadClienteFoglioServiziAjax')->name('load-cliente-foglio-servizi-ajax');
