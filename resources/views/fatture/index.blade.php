@@ -121,7 +121,7 @@
 														</th>
 														<th></th>
 														<th></th>
-														@if ($tipo = 'PF')
+														@if ($tipo == 'PF')
 														<th></th>
 														@endif
 														<th></th>
@@ -148,7 +148,7 @@
 																		</a>
 																	@endif
 																</td>
-																@if ($tipo = 'PF')
+																@if ($fattura->tipo_id == 'PF')
 																	<td>
 																			<a href="{{ route('prefatture.clona', $fattura->id) }}">clona</a>
 																	</td>

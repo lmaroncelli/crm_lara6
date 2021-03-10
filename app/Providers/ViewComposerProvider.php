@@ -28,6 +28,7 @@ class ViewComposerProvider extends ServiceProvider
         view()->composer('clienti.index','App\Http\Composers\ClientiIndexComposer');
         view()->composer('fatture.create','App\Http\Composers\FattureFormComposer');
         view()->composer('fatture.form','App\Http\Composers\FattureFormComposer');
+        view()->composer('fatture.clone_init','App\Http\Composers\FattureFormComposer');
         view()->composer('fatture.index','App\Http\Composers\FattureIndexComposer');
         view()->composer('societa._ricerca_societa','App\Http\Composers\SocietaIndexComposer');
         view()->composer('servizi.index','App\Http\Composers\ServiziIndexComposer');

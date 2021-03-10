@@ -4,16 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Cliente;
 use App\Fattura;
-use App\Pagamento;
-use App\RagioneSociale;
-use App\RigaDiFatturazione;
-use App\ScadenzaFattura;
-use App\Servizio;
 use App\Societa;
 use App\Utility;
+use App\Servizio;
+use App\Pagamento;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
+use App\RagioneSociale;
 use App\MyTrait\MyTrait;
+use App\ScadenzaFattura;
+use App\RigaDiFatturazione;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class FattureController extends Controller
 {
@@ -367,35 +368,78 @@ class FattureController extends Controller
     public function clonaPrefattura($id)
       {
 
-        $pf = Fattura::with([
-          'righe',
-          'scadenze',
-        ])->find($id);
+        //? Verifico se la prefattura è GIA' CLONATA e prendo la FATTURA CORRISPONDENTE
+        $cloned = DB::table('tblFatturePrefatture')->where('prefattura_id', $id)->first();
 
-        $clone = $pf->replicate();
+        if (!is_null($cloned)) {
 
-        $clone->tipo_id = 'F';
-        $clone->note .= ' - CLONATA';
-        $clone->push();
-        
-        foreach ($pf->righe as $riga_fatturazione) {
-          $cloned_riga_fatturazione = $riga_fatturazione->replicate();
-          $cloned_riga_fatturazione->fattura_id = $clone->id;
-          $cloned_riga_fatturazione->push();
+            $clone = Fattura::with([
+                      'righe',
+                      'scadenze',
+                    ])->find($cloned->fattura_id);
+
+            if(is_null($clone)) {
+              die('La fattura clonata associata è inesistente!!!');
+            }
+
+        } else {
+
+          $pf = Fattura::with([
+            'righe',
+            'scadenze',
+          ])->find($id);
+  
+          $clone = $pf->replicate();
+  
+          $clone->tipo_id = 'F';
+          $clone->numero_fattura = '';
+          $clone->note .= ' - CLONATA';
+          $clone->push();
+          
+          foreach ($pf->righe as $riga_fatturazione) {
+            $cloned_riga_fatturazione = $riga_fatturazione->replicate();
+            $cloned_riga_fatturazione->fattura_id = $clone->id;
+            $cloned_riga_fatturazione->push();
+          }
+  
+          foreach ($pf->scadenze as $scadenza) {
+            $cloned_scadenza = $scadenza->replicate();
+            $cloned_scadenza->fattura_id = $clone->id;
+            $cloned_scadenza->push();
+          }
+  
+  
+          
+          //? ASSOCIO LA PREFATTURA ALLA FATTURA IN MODO CHE NON SIA PIU' ASSOCIABILE/CLONABILE
+          DB::table('tblFatturePrefatture')->insert(['fattura_id' => $clone->id, 'prefattura_id' => $pf->id]);
+          
         }
-
-        foreach ($pf->scadenze as $scadenza) {
-          $cloned_scadenza = $scadenza->replicate();
-          $cloned_scadenza->fattura_id = $clone->id;
-          $cloned_scadenza->push();
-        }
+        $tipo_pagamento = Pagamento::where('cod_PA', '!=', NULL)->where('cod', '!=', -1)->orderBy('nome', 'asc')->pluck('nome', 'cod');
+        $last_fatture = Fattura::getLastNumber($clone->tipo_id);
 
 
-        return redirect('fatture/' . $clone->id . '/edit');
+        return view('fatture.clone_init', ['fattura' => $clone, 'tipo_pagamento' => $tipo_pagamento, 'tipo_id' => $clone->tipo_id, 'last_fatture' => $last_fatture]);
 
       }
 
 
+
+    public function storePrefatturaClonata(Request $request, $id) {
+
+      $validatedData = $request->validate([
+        'societa' => 'required',
+        'numero_fattura' => 'required|unique:tblFatture',
+        'data' => 'required|date_format:"d/m/Y"'
+      ]);
+
+      $fattura = Fattura::find($id);
+
+      $fattura->update($request->all());
+
+      return redirect('fatture/' . $fattura->id . '/edit');
+    }
+
+    
 
     /**
      * Update the specified resource in storage.

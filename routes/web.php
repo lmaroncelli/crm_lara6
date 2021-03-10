@@ -146,6 +146,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('prefatture', 'FattureController@prefatture')->name('prefatture.index');
 
     Route::get('prefatture/clona/{fattura_id}', 'FattureController@clonaPrefattura')->name('prefatture.clona');
+    Route::post('prefatture/clona/{fattura_id}', 'FattureController@storePrefatturaClonata')->name('prefatture.store-clonata');
 
     
 
