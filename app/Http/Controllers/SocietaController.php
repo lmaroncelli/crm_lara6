@@ -221,9 +221,9 @@ class SocietaController extends Controller
         $societa = Societa::with(['ragioneSociale.localita.comune.provincia','cliente'])->find($societa_id);
 
         
-        $fatture = $societa->fatture()->orderBy($orderby, $order)->get();
+        $fatture = $societa->solo_fatture()->orderBy($orderby, $order)->get();
 
-        $prefatture = $societa->prefatture;
+        $prefatture = $societa->prefatture()->orderBy($orderby, $order)->get();
 
         $ragioneSociale = $societa->ragioneSociale;
         

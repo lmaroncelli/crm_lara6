@@ -121,6 +121,7 @@
 														</th>
 														<th></th>
 														<th></th>
+														<th></th>
 														@if ($tipo == 'PF')
 														<th></th>
 														@endif
@@ -136,6 +137,12 @@
 																<td>{{App\Utility::formatta_cifra($fattura->totale,'€')}}</td>
 																<td>{!!optional(optional($fattura->societa)->ragioneSociale)->nome!!}</td>
 																<td>{{optional(optional($fattura->societa)->cliente)->nome}}</td>
+
+																<td>
+																	@if ($fattura->fatturaChiusa())
+																		<a class="btn btn-danger" href="{{ route('fatture.pdf', $fattura->id) }}" target="_blank"><i class="fas fa-file-pdf"></i></a>
+																	@endif
+																</td>
 																<td>
 																	<a href="{{ route('societa-fatture',['cliente_id' => optional($fattura->societa)->cliente_id, 'societa_id' => $fattura->societa_id]) }}" style="margin-bottom: 5px!important;" class="btn btn-warning m-btn m-btn--icon m-btn--icon-only">
 																		<i class="fas fa-list"></i>
@@ -150,11 +157,17 @@
 																</td>
 																@if ($fattura->tipo_id == 'PF')
 																	<td>
-																			<a href="{{ route('prefatture.clona', $fattura->id) }}">clona</a>
+																		@if (!$fattura->fatture_count)
+																			<a href="{{ route('prefatture.clona', $fattura->id) }}" style="margin-bottom: 5px!important;" class="btn btn-success m-btn m-btn--icon m-btn--icon-only">
+																				<i class="far fa-object-ungroup"></i>
+																			</a>
+																		@else
+																			<a href="{{ route('fatture.edit', $fattura->fatture->first()->id) }}">{{$fattura->fatture->first()->numero_fattura}}</a>
+																		@endif
 																	</td>
 																@endif
 																<td>
-							                    <a data-id="{{$fattura->id}}" href="#" class="delete btn btn-danger"><i class="fas fa-trash-alt"></i></a>
+							                    <a data-id="{{$fattura->id}}" href="#" class="delete btn-pill  btn btn-danger"><i class="fas fa-trash-alt"></i></a>
 																</td>
 														</tr>
 												@endforeach

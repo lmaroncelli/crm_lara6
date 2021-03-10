@@ -36,12 +36,17 @@ class Societa extends Model
 
   public function fatture()
   {
-      return $this->hasMany(Fattura::class, 'societa_id', 'id');
+      return $this->hasMany(Fattura::class, 'societa_id', 'id')->withoutGlobalScope('data');
   }
 
   public function prefatture()
   {
-      return $this->hasMany(Fattura::class, 'societa_id', 'id')->where('tipo_id', 'PF');
+      return $this->hasMany(Fattura::class, 'societa_id', 'id')->where('tipo_id', 'PF')->withoutGlobalScope('data');
+  }
+
+  public function solo_fatture()
+  {
+    return $this->hasMany(Fattura::class, 'societa_id', 'id')->where('tipo_id', 'F')->withoutGlobalScope('data');
   }
 
 

@@ -200,8 +200,10 @@ class Fattura extends Model
                       'pagamento',
                       'societa.ragioneSociale',
                       'societa.cliente',
+                      'fatture'
                     ]
                   )
+                  ->withCount('fatture')
                   ->tipo($tipo);
 
       if($orderby == 'nome_pagamento')

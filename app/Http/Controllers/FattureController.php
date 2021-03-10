@@ -379,7 +379,8 @@ class FattureController extends Controller
                     ])->find($cloned->fattura_id);
 
             if(is_null($clone)) {
-              die('La fattura clonata associata è inesistente!!!');
+              DB::table('tblFatturePrefatture')->where('prefattura_id', $id)->delete();
+              die('La fattura clonata associata è inesistente ed è stata cancellata!!!');
             }
 
         } else {
@@ -393,7 +394,6 @@ class FattureController extends Controller
   
           $clone->tipo_id = 'F';
           $clone->numero_fattura = '';
-          $clone->note .= ' - CLONATA';
           $clone->push();
           
           foreach ($pf->righe as $riga_fatturazione) {
@@ -401,14 +401,6 @@ class FattureController extends Controller
             $cloned_riga_fatturazione->fattura_id = $clone->id;
             $cloned_riga_fatturazione->push();
           }
-  
-          foreach ($pf->scadenze as $scadenza) {
-            $cloned_scadenza = $scadenza->replicate();
-            $cloned_scadenza->fattura_id = $clone->id;
-            $cloned_scadenza->push();
-          }
-  
-  
           
           //? ASSOCIO LA PREFATTURA ALLA FATTURA IN MODO CHE NON SIA PIU' ASSOCIABILE/CLONABILE
           DB::table('tblFatturePrefatture')->insert(['fattura_id' => $clone->id, 'prefattura_id' => $pf->id]);
@@ -461,8 +453,13 @@ class FattureController extends Controller
      */
     public function destroy($id)
     {
-      Fattura::destroy($id);
-      return redirect()->route('fatture.index')->with('status', 'Fattura elimnata correttamente!');
+      $f = Fattura::find($id);
+
+      $route = $f->tipo_id == 'F' ? 'fatture.index' : 'prefatture.index';
+
+      $f->delete();
+
+      return redirect()->route($route)->with('status', 'Fattura elimnata correttamente!');
     }
 
 

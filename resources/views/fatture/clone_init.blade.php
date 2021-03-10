@@ -81,11 +81,7 @@
         </div>
 
         <button type="submit" class="btn btn-success">
-            @if ($fattura->exists)
-                Modifica
-            @else
-                Crea
-            @endif
+            Clona
         </button>
         <button type="reset"  title="Annulla" class="btn btn-secondary">Annulla</button>
 
