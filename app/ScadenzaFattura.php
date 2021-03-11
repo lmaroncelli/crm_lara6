@@ -23,9 +23,8 @@ class ScadenzaFattura extends Model
 
    public function fattura()
    {
-       return $this->belongsTo(Fattura::class, 'fattura_id', 'id');
+       return $this->belongsTo(Fattura::class, 'fattura_id', 'id')->withoutGlobalScope('data');
    }
-
 
    public function setDataScadenzaAttribute($value)
     {

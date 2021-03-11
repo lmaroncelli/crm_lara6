@@ -273,8 +273,12 @@ Route::middleware(['auth'])->group(function () {
     //////////////
     // Scadenze //
     //////////////
-    Route::post('servizi/send_mail_avviso_pagamento_ajax','ScadenzeController@sendMailAvvisoPagamentoAjax')->name('send-mail-avviso-pagamento-ajax');    
+    Route::post('servizi/send_mail_avviso_pagamento_ajax','ScadenzeController@sendMailAvvisoPagamentoAjax')->name('send-mail-avviso-pagamento-ajax');  
+
     Route::get('scadenze', 'ScadenzeController@index')->name('scadenze.index');
+    Route::get('incassate', 'ScadenzeController@incassate')->name('scadenze.incassate');
+
+    Route::post('scadenze/switch_scadenza_ajax', 'ScadenzeController@switchScadenzaAjax')->name('switch-scadenza-ajax');  
 
     Route::get('scadenze_csv', 'ScadenzeController@export_csv')->name('scadenze.csv');
 

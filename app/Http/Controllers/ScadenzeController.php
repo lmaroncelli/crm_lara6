@@ -26,10 +26,28 @@ class ScadenzeController extends Controller
 			$this->middleware('forbiddenIfType:C');
 			}
 
-    public function index(Request $request)
-     	{
+		public function incassate(Request $request) {
 
-			//dd($request->all());
+			return $this->index($request, 1);
+
+		}
+
+
+
+		public function switchScadenzaAjax(Request $request) {
+			$scadenza_id = $request->scadenza_id;
+			$pagata = $request->pagata;
+
+			$s = ScadenzaFattura::find($scadenza_id);
+			$s->pagata = $pagata;
+			$s->save();
+
+			return "ok";
+
+		}
+
+    public function index(Request $request, $pagata = 0)
+     	{
 				
      	$to_append = [];
 
@@ -55,23 +73,94 @@ class ScadenzeController extends Controller
             ];
 
 				$filter = 0;
+
+
+			//////////////////////////////////////
+			// Ricerca campo libero del cliente //
+			//////////////////////////////////////
+
+			// se ho inserito un valore da cercare ed ho selzionato un campo
+			// campo libero
+      $qf = $request->get('qf');
+      $field = $request->get('field');
+
+			if (!is_null($qf) && $field != '0') {
+
+				if ($field == 'numero_fattura') {
+						
+						$scadenze = ScadenzaFattura::getScadenzeEagerLoaded()
+							->whereHas(
+								'fattura',
+								function ($q) use ($field, $qf){
+									$q->where('tipo_id', '!=', 'NC')->where($field, $qf);
+								}
+							)
+							->where('tblScadenzeFattura.pagata', $pagata);
+
+				} elseif ($field == 'cliente_nome') {
+
+							$scadenze = ScadenzaFattura::getScadenzeEagerLoaded()
+							->whereHas(
+								'fattura',
+								function ($q) {
+									$q->where('tipo_id', '!=', 'NC');
+								}
+							)
+							->where('tblScadenzeFattura.pagata', $pagata);
+
+							$scadenze = $scadenze
+									->join('tblFatture', 'tblScadenzeFattura.fattura_id', '=', 'tblFatture.id')
+									->join('tblSocieta', 'tblFatture.societa_id', '=', 'tblSocieta.id')
+									->join('tblClienti', 'tblSocieta.cliente_id', '=', 'tblClienti.id')
+									->where('tblClienti.nome','LIKE', '%'.$qf.'%');
+			
+				} elseif ($field == 'importo') {
+
+						$scadenze = ScadenzaFattura::getScadenzeEagerLoaded()
+							->whereHas(
+								'fattura',
+								function ($q) {
+									$q->where('tipo_id', '!=', 'NC');
+								}
+							)
+							->where('tblScadenzeFattura.pagata', $pagata)
+							->where('tblScadenzeFattura.importo', $qf);
+				
+				} elseif ($field == 'note') {
+
+						$scadenze = ScadenzaFattura::getScadenzeEagerLoaded()
+							->whereHas(
+								'fattura',
+								function ($q) {
+									$q->where('tipo_id', '!=', 'NC');
+								}
+							)
+							->where('tblScadenzeFattura.pagata', $pagata)
+							->where('tblScadenzeFattura.note', 'LIKE', '%' . $qf . '%');
+
+				}
+
+
+				$filter = 1;
+			}
 			
 
 			if( $request->has('commerciale_id') && $request->get('commerciale_id') !=0 )
       	{
 				$to_append['commerciale_id'] = $request->get('commerciale_id');
 
-				$scadenze = ScadenzaFattura::getScadenzeEagerLoaded()
-					->whereHas(
-					'fattura' , function($q) {
-					$q->where('tipo_id','!=','NC');
-					})
-					->where('tblScadenzeFattura.pagata',0)
-					->get();
+				if (!$filter) {
+						$scadenze = ScadenzaFattura::getScadenzeEagerLoaded()
+							->whereHas(
+							'fattura' , function($q) {
+							$q->where('tipo_id','!=','NC');
+							})
+							->where('tblScadenzeFattura.pagata', $pagata);
+				}
 				
 				$scadenze_commerciale_ids = [];
 				
-				foreach ($scadenze as $scadenza) 
+				foreach ($scadenze->get() as $scadenza) 
 					{
 					if(in_array( $request->get('commerciale_id'), $scadenza->fattura->societa->cliente->associato_a_commerciali->pluck('id')->toArray())) 
 						{
@@ -84,7 +173,7 @@ class ScadenzeController extends Controller
 					'fattura' , function($q) {
 					$q->where('tipo_id','!=','NC');
 					})
-					->where('tblScadenzeFattura.pagata',0)
+					->where('tblScadenzeFattura.pagata', $pagata)
 					->whereIn('tblScadenzeFattura.id',$scadenze_commerciale_ids);
 
 				
@@ -102,7 +191,7 @@ class ScadenzeController extends Controller
 						'fattura' , function($q) {
 						$q->where('tipo_id','!=','NC');
 						})
-						->where('tblScadenzeFattura.pagata',0);
+						->where('tblScadenzeFattura.pagata', $pagata);
 					
 					$filter = 1;
 					}
@@ -127,7 +216,7 @@ class ScadenzeController extends Controller
 						'fattura' , function($q) {
 						$q->where('tipo_id','!=','NC');
 						})
-						->notPagata()
+						->where('tblScadenzeFattura.pagata', $pagata)
 						->where('data_scadenza', '>=', Carbon::createFromFormat('d/m/Y',$request->get('scadenza_dal'))->toDateString());  
 						
 						$filter = 1;
@@ -152,7 +241,7 @@ class ScadenzeController extends Controller
 					'fattura' , function($q) {
 					$q->where('tipo_id','!=','NC');
 					})
-					->notPagata()
+					->where('tblScadenzeFattura.pagata', $pagata)
 					->where('data_scadenza', '<=', Carbon::createFromFormat('d/m/Y',$request->get('scadenza_al'))->toDateString());  
 
 					$filter = 1;
@@ -166,7 +255,7 @@ class ScadenzeController extends Controller
 			
 				
 
-			if(!$filter)
+			if(!$filter && !$pagata)
 				{
 
 				$scadenze = ScadenzaFattura::getScadenzeEagerLoaded()
@@ -174,7 +263,7 @@ class ScadenzeController extends Controller
 							'fattura' , function($q) {
 							$q->where('tipo_id','!=','NC');
 							})
-							->where('tblScadenzeFattura.pagata',0);  
+							->where('tblScadenzeFattura.pagata', $pagata);  
 
 				if ($orderby == 'tipo_pagamento') 
 					{					
@@ -194,28 +283,36 @@ class ScadenzeController extends Controller
 				}
 
 
+			
+			if (isset($scadenze)) {
 
+				if($orderby == 'data_scadenza' || $orderby == 'importo')
+					{
+					$scadenze = $scadenze->orderBy($orderby,$order);
+					}
+	
+				if($orderby == 'giorni_rimasti')
+					{
+					$scadenze = $scadenze->orderByRaw("to_days(date_format(`tblScadenzeFattura`.`data_scadenza`,'%Y-%m-%d')) - to_days(now()) $order");
+					}
+	
+	
+				$scadenze_csv = $scadenze;
+	
+				$scadenze_csv = $scadenze_csv->get();
+	
+				// metto la query in sessione per utilizzarla nella creazione del CSV
+				$request->session()->put('scadenze_csv', $scadenze_csv); 
+	
+				$scadenze = $scadenze
+										->paginate(50)->setpath('')->appends($to_append);
+			
+			} else {
 
-			if($orderby == 'data_scadenza' || $orderby == 'importo')
-				{
-				$scadenze = $scadenze->orderBy($orderby,$order);
-				}
+				$scadenze = null;
+			
+			}
 
-			if($orderby == 'giorni_rimasti')
-				{
-				$scadenze = $scadenze->orderByRaw("to_days(date_format(`tblScadenzeFattura`.`data_scadenza`,'%Y-%m-%d')) - to_days(now()) $order");
-				}
-
-
-			$scadenze_csv = $scadenze;
-
-			$scadenze_csv = $scadenze_csv->get();
-
-			// metto la query in sessione per utilizzarla nella creazione del CSV
-			$request->session()->put('scadenze_csv', $scadenze_csv); 
-
-			$scadenze = $scadenze
-									->paginate(50)->setpath('')->appends($to_append);
 
 
 			$pagamenti_fattura = Pagamento::whereNotNull('cod_PA')->where('cod','>',0)->get()->pluck('nome','id');
@@ -230,7 +327,7 @@ class ScadenzeController extends Controller
 											'fattura' , function($q) {
 											$q->where('tipo_id','!=','NC');
 											})
-											->notPagata()
+											->where('tblScadenzeFattura.pagata', $pagata)
 											->orderBy('data_scadenza','desc');
 
 			// in questo modo ho preso le date distinte
@@ -245,7 +342,9 @@ class ScadenzeController extends Controller
 				$date[] =  Carbon::createFromFormat('Y-m-d',$data_s)->format('d/m/Y');
 				}
 
-				return view('scadenze.index', compact('scadenze','pagamenti_fattura','date','commerciali'));
+			
+	
+			return view('scadenze.index', compact('scadenze','pagamenti_fattura','date','commerciali', 'pagata'));
 
 			}
 			

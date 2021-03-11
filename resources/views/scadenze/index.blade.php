@@ -38,13 +38,14 @@
 
             @include('scadenze._ricerca_scadenze')
             
-            @if (isset($scadenze))
+            @if (isset($scadenze) && !is_null($scadenze))
             
               <div>
                   <table class="table table-responsive m-table m-table--head-bg-success wrapper">
                       <tbody>
                           @foreach ($scadenze as $s)
-                              <tr>
+                              <tr class="main row_{{$s->id}}">
+                                <th></th>
                                 <th>N. Fattura</th>
                                 <th class="order" data-orderby="data_scadenza" @if (\Request::get('orderby') == 'data_scadenza' && \Request::get('order') == 'asc') data-order='desc' @else data-order='asc' @endif>
                                     Scadenza 
@@ -66,16 +67,20 @@
                                           @endif
                                       @endif
                                   </th>
-                                  <th class="order" data-orderby="giorni_rimasti" @if (\Request::get('orderby') == 'giorni_rimasti' && \Request::get('order') == 'asc') data-order='desc' @else data-order='asc' @endif>
-                                      Giorni rimanenti 
-                                      @if (\Request::get('orderby') == 'giorni_rimasti') 
-                                          @if (\Request::get('order') == 'asc')
-                                              <i class="fa fa-sort-numeric-down"></i>
-                                          @else 
-                                              <i class="fa fa-sort-numeric-up"></i> 
-                                          @endif
-                                      @endif
-                                  </th>
+
+                                  @if (!$pagata)
+                                    <th class="order" data-orderby="giorni_rimasti" @if (\Request::get('orderby') == 'giorni_rimasti' && \Request::get('order') == 'asc') data-order='desc' @else data-order='asc' @endif>
+                                        Giorni rimanenti 
+                                        @if (\Request::get('orderby') == 'giorni_rimasti') 
+                                            @if (\Request::get('order') == 'asc')
+                                                <i class="fa fa-sort-numeric-down"></i>
+                                            @else 
+                                                <i class="fa fa-sort-numeric-up"></i> 
+                                            @endif
+                                        @endif
+                                    </th>
+                                  @endif
+                                  
                                   <th class="order" data-orderby="tipo_pagamento" @if (\Request::get('orderby') == 'tipo_pagamento' && \Request::get('order') == 'asc') data-order='desc' @else data-order='asc' @endif>
                                       Tipo pagamento 
                                       @if (\Request::get('orderby') == 'tipo_pagamento') 
@@ -89,20 +94,31 @@
                                   <th>Commerciale</th>
                                   <th>Note</th>
                               </tr>
-                              <tr class="main">
+                              <tr class="main row_{{$s->id}}">
+                                <td>
+                                  @if (!$pagata)
+                                    <a href="#" class="btn btn-warning m-btn m-btn--icon m-btn--icon-only switch_incassata" data-id="{{$s->id}}"><i class="nav-icon icon-login"></i></a>
+                                  @else
+                                    <a href="#" class="btn btn-danger m-btn m-btn--icon m-btn--icon-only switch_da_pagare" data-id="{{$s->id}}"><i class="nav-icon icon-close"></i></a>
+                                  @endif
+                                </td>
                                 <th scope="row">{{optional($s->fattura)->numero_fattura}}</th>
                                 <td>{{optional($s->data_scadenza)->format('d/m/Y')}}</td>
                                 <td>{{Utility::formatta_cifra($s->importo,'€')}}</td>
-                                <td>
-                                  @if ($s->giorni_rimasti <= 0)
-                                    <i class="bg-danger p-1 m-1">{{$s->giorni_rimasti}}</i>
-                                  @elseif ($s->giorni_rimasti > 0 && $s->giorni_rimasti < 15)
-                                    <i class="bg-warning p-1 m-1" style="color:#000;">{{$s->giorni_rimasti}}</i>
-                                  @else
-                                    {{$s->giorni_rimasti}}
-                                  @endif
-                                <a href="#" class="send_mail_notification" data-id="{{$s->id}}"><i class="fas fa-envelope"></i></a>
-                                </td>
+
+                                @if (!$pagata)
+                                  <td>
+                                    @if ($s->giorni_rimasti <= 0)
+                                      <i class="bg-danger p-1 m-1">{{$s->giorni_rimasti}}</i>
+                                    @elseif ($s->giorni_rimasti > 0 && $s->giorni_rimasti < 15)
+                                      <i class="bg-warning p-1 m-1" style="color:#000;">{{$s->giorni_rimasti}}</i>
+                                    @else
+                                      {{$s->giorni_rimasti}}
+                                    @endif
+                                    <a href="#" class="send_mail_notification" data-id="{{$s->id}}"><i class="fas fa-envelope"></i></a>
+                                  </td>
+                                @endif
+                                
                                 <td>{{optional(optional($s->fattura)->pagamento)->nome}}</td>
                                 <td>{{optional(optional(optional($s->fattura)->societa)->cliente)->commerciali()}}</td>
                                 <td style="width: 35%;">{{$s->note}}</td>
@@ -110,11 +126,11 @@
                               @php
                                 $fattura = $s->fattura;
                               @endphp
-                              <tr class="dettaglio_fattura">
+                              <tr class="dettaglio_fattura row_{{$s->id}}">
                                 <td colspan="1" style="text-align: right"><i class="fas fa-angle-right"></i></td>
                                 <td colspan="6">Dettaglio Fattura</td>
                               </tr>
-                              <tr class="riga_fattura">
+                              <tr class="riga_fattura ">
                                 <td colspan="1">&nbsp;</td>
                                 <td colspan="6">
                                   <table class="table table-responsive-sm m-table m-table--head-bg-success">
@@ -136,11 +152,11 @@
                                 </td>
                               </tr>
                               @if ($fattura->avvisi->count())
-                                <tr class="avvisi_scadenze">
+                                <tr class="avvisi_scadenze row_{{$s->id}}">
                                   <td colspan="1" style="text-align: right"><i class="fas fa-angle-right"></i></td>
                                   <td colspan="6">Avvisi Scadenze</td>
                                 </tr>
-                                <tr class="riga_scadenze">
+                                <tr class="riga_scadenze row_{{$s->id}}">
                                   <td colspan="1">&nbsp;</td>
                                   <td colspan="6">
                                      <table class="table table-responsive-sm m-table m-table--head-bg-success">
@@ -184,6 +200,27 @@
 
 @section('js')
     <script type="text/javascript" charset="utf-8">
+
+        
+
+        function ajaxSwtch(data, scadenza_id) {
+
+          $.ajax({
+                  url: "{{ route('switch-scadenza-ajax') }}",
+                  type: 'POST',
+                  data: data,
+                  success: function(msg) {
+                      $(".row_"+scadenza_id).fadeOut();
+                      $(".spinner_lu").hide();
+                  },
+                  error: function() {
+                    $(".spinner_lu").hide();
+                  }
+              });
+
+        }
+      
+
 
         $(document).ready(function(){
             
@@ -232,6 +269,57 @@
                     $(".spinner_lu").hide();
                   }
               });
+
+          });
+
+
+
+
+
+          $(".switch_incassata").click(function(e){
+
+              e.preventDefault();
+
+              if (window.confirm('Sicuro?')) {
+                
+              
+                  $(".spinner_lu").show();
+
+
+                  let scadenza_id = $(this).data("id");
+                                
+                  data = {
+                    scadenza_id:scadenza_id,
+                    pagata:1
+                      };
+
+                  ajaxSwtch(data, scadenza_id);
+
+              }
+              
+          });
+
+
+          
+
+          $(".switch_da_pagare").click(function(e){
+
+              e.preventDefault();
+
+              if (window.confirm('Sicuro?')) {
+
+                    $(".spinner_lu").show();
+
+
+                    let scadenza_id = $(this).data("id");
+                                  
+                    data = {
+                      scadenza_id:scadenza_id,
+                      pagata:0
+                        };
+                    
+                    ajaxSwtch(data, scadenza_id);
+              }
 
           });
   
